@@ -1,3 +1,9 @@
+# WEB_MES
+## Web Manufacturing execution system 
+
+![alt text](https://github.com/billyboy35/WEB_MES/blob/main/MES_VIEW_DEMO.PNG)
+
+
 # Git
 * [télécharger git](https://git-scm.com/download/win)
 * choix par défaut
