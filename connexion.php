@@ -1,21 +1,22 @@
-<?php	session_start();
+<?php session_start();
 
-	header(	'content-type:	text/html;	charset=utf-8'	);
+	header( 'content-type: text/html; charset=utf-8' );
 
 	//phpinfo();
 
-	//include	pour	la	connection	à	la	base	SQL	
-	require_once	'include/include_connection_sql.php';
-	//include	pour	les	fonctions
-	require_once	'include/include_fonctions.php';
-	//include	pour	les	constantes
-	require_once	'include/include_recup_config.php';
-	
+	//include for the connection to the SQL database
+	require_once 'include/include_connection_sql.php';
+	// include for functions
+	require_once 'include/include_fonctions.php';
+	// include for the constants
+	require_once 'include/include_recup_config.php';
+
+
 	if(isset($_POST['nom'])	AND	isset($_POST['mdp'])){
-		
+
 		$nom	=	addslashes($_POST['nom']);
 		$mdp	=	addslashes($_POST['mdp']);
-		
+
 		if(!empty($nom)	or	strlen($mdp)	>	4)
 		{
 			if(!empty($mdp))
@@ -23,19 +24,19 @@
 				$res	=	$bdd->query('SELECT	count(*)	as	nb	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
 				$data	=	$res->fetch();
 				$nb	=	$data['nb'];
-				
+
 				if($nb	==1	)
 				{
 					$reponse	=	$bdd	->	query('SELECT	statu	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
 					$verification_statut	=	$reponse->fetch();
-					
+
 					if($verification_statut['statu']	!=	'1')
 					{
 						stop('Votre	compte	a	été	suspendu.',	2,	'connexion.php');
 					}
 					else
 					{
-						
+
 						if($bdd->exec("UPDATE	".	TABLE_ERP_EMPLOYEES	."	SET	connexion='".		time()	."'	WHERE	NAME='".	$nom	."'	AND	PASSWORD='".	$mdp	."'"))
 						{
 							$_SESSION['nom']	=	$nom;
@@ -47,7 +48,7 @@
 							<head>
 								<title>'. $CompanyName .'</title>
 								<link	rel="stylesheet"	media="screen"	type="text/css"	title="deco"	href="css/stylesheet.css"	/>
-								<link rel="stylesheet" media="screen" type="text/css" title="deco" href="css/content.css" 
+								<link rel="stylesheet" media="screen" type="text/css" title="deco" href="css/content.css"
 								<link	rel="stylesheet"	media="screen"	type="text/css"	title="deco"	href="css/tableaux.css"	/>
 								<link	rel="stylesheet"	media="screen"	type="text/css"	title="deco"	href="css/forms.css"	/>
 								<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -58,7 +59,7 @@
 							</head>
 							<body	>
 								<div class="transition" >
-									<p>	
+									<p>
 										Message	n°	3:<br	/>
 										<br	/>
 										<strong>Vous	êtes	bien	connecté(e).</strong><br	/>
@@ -72,12 +73,12 @@
 									</p>
 								</div>
 							</body>
-							</html>	';	
+							</html>	';
 							exit;
-							
-							
+
+
 							stop('Vous	êtes	bien	connecté(e).',	3,	'index.php');
-							
+
 						}
 						else
 						{
@@ -101,20 +102,20 @@
 		}
 	}
 	elseif	(isset($_GET['action'])	&	$_GET['action']=="deconnexion"){
-		
+
 		session_unset();
 		session_destroy();
-	
+
 		stop('Vous	êtes	bien	déconnecté(e).',	4,	'connexion.php');
 	}
 	elseif	(isset($_GET['action'])	&	$_GET['action']=="deco_probleme"){
-	
+
 		session_unset();
 		session_destroy();
-		
+
 		stop('Vous	avez	été	déconnecté	de	force.',	5,	'connexion.php');
 	}
-	
+
 ?>
 
 <!DOCTYPE	html	PUBLIC	"-//W3C//DTD	XHTML	1.0	Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

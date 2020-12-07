@@ -4,54 +4,55 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_4'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
 	$contenu = "";
-	
+
 	if(isset($_FILES['fichier_csv'])){
-		
+
 		$contenu = '<p class="message">';
-		
+
 		if(empty($_POST['numero_cmd_MI'])){
-			
+
 			$contenu = $contenu .'Aucun numéro de commande saisie';
-			
+
 		}
 		else{
-			
+
 			$dossier = 'upload/';
 			$fichier = basename($_FILES['fichier_csv']['name']);
-			
+
 			if(move_uploaded_file($_FILES['fichier_csv']['tmp_name'], $dossier . $fichier))
 			{
 				$contenu = $contenu . 'Upload du fichier effectué avec succès !<br/>';
-				
+
 				$contenu = $contenu .  'Chemin du fichier : upload/'.$_FILES['fichier_csv']['name'].'<br><br>Resultat Import SQL : <br/>';
-		 
+
 				$fichier = fopen("upload/".$_FILES['fichier_csv']['name'], "r");
-				
+
 				$date_MI = join('-',array_reverse(explode('/',$_POST['DATE_CONF'])));
-						
+
 				$nom_devis = '';
-						
+
 				$i = 0;
 				echo feof($fichier);
 				//tant qu'on est pas a la fin du fichier :
@@ -59,16 +60,16 @@
 				{
 					// On recupere toute la ligne
 					$LigneFichier = addslashes(fgets($fichier));
-					
+
 					//On met dans un tableau les differentes valeurs trouvés (ici séparées par un ';')
 					$tableauValeurs = explode(';', $LigneFichier);
-					
+
 					if(!empty($tableauValeurs[2]) AND $i > 0){
-						
+
 						if($i == 1) $nom_devis = $tableauValeurs[62];
-							
-						// On crée la requete pour inserer les donner 
-						$req = $bdd->exec("INSERT INTO `". TABLE_ERP_PLANNING ."` VALUE ('' 
+
+						// On crée la requete pour inserer les donner
+						$req = $bdd->exec("INSERT INTO `". TABLE_ERP_PLANNING ."` VALUE (''
 														,'0'
 														,'0'
 														,'". $_POST['numero_cmd_MI'] ."'
@@ -123,10 +124,10 @@
 														, '". Remplace_virgule($tableauValeurs[60])."'
 														, '". $nom_devis ."') ");
 					}
-					
+
 					$i++;
 				}
-				
+
 				//vérification et envoi d'une réponse à l'utilisateur
 				if ($req)
 				{
@@ -143,31 +144,31 @@
 				$contenu = $contenu . 'Echec de l\'upload ! ou fichier non transmit.<br/>';
 			}
 		}
-		
+
 		$contenu = $contenu . '</p>';
 	}
 	elseif(isset($_POST['AJOUT_REF_PLANNING'])){
-		
+
 		$contenu = '<p class="message">';
-		
+
 		if(empty($_POST['QT'])){
-			
+
 			$contenu = $contenu .'Merci d\'indiquer une Qt<br/>';
 		}
 		else{
-			
+
 			$ValeurSaisie = $_POST['AJOUT_REF_PLANNING'];
-			
+
 			$req = $bdd->prepare('SELECT * FROM `'. TABLE_ERP_PIECE_RECURENTE .'` WHERE id= ?');
 			$req->execute(array($ValeurSaisie));
-			
+
 			$donnees = $req->fetch();
-			
-			
+
+
 			if(isset($_POST['stock'])){
-				
+
 				$numero_cmd_MI =  "STOCK-" . id_aleatoire(6);
-				
+
 				$TYPE = '3';
 				$PRIX_U = '';
 				$DATE_CLIENT = '0000-00-00';
@@ -181,12 +182,12 @@
 				$TRANSPORTEUR = '';
 				$POIDS = round($_POST['QT']*$donnees['POIDS'],2);
 				$nom_devis = $_POST['numero_cmd_MI'];
-			
+
 			}
 			elseif(isset($_POST['appel'])){
-				
+
 				$numero_cmd_MI = $_POST['numero_cmd_MI'];
-				
+
 				$TYPE = '4';
 				$PRIX_U = Remplace_virgule($donnees['PRIX_U']);
 				$date_MI = join('-',array_reverse(explode('/',$_POST['DATE_CONF'])));
@@ -202,9 +203,9 @@
 				$nom_devis = "Récurrent";
 			}
 			else{
-				
+
 				$numero_cmd_MI = $_POST['numero_cmd_MI'];
-				
+
 				$TYPE = '0';
 				$PRIX_U = Remplace_virgule($donnees['PRIX_U']);
 				$date_MI = join('-',array_reverse(explode('/',$_POST['DATE_CONF'])));
@@ -219,8 +220,8 @@
 				$POIDS = round($_POST['QT']*$donnees['POIDS'],2);
 				$nom_devis = "Récurrent";
 			}
-			
-			
+
+
 			$req = $bdd->exec("INSERT INTO `". TABLE_ERP_PLANNING ."` VALUE (''
 														,'". $donnees['id'] ."'
 														,'". $TYPE ."'
@@ -275,7 +276,7 @@
 														,'". addslashes($donnees['COMMENTAIRES']) ."'
 														,'". $POIDS ."'
 														, '". $nom_devis ."')");
-														
+
 				if ($req)
 				{
 					$contenu = $contenu . ' Ajout au planning effectué avec succès <a href="planning.php?ref_CO='. $numero_cmd_MI .'"> Vérifier la commande </a><br/>';
@@ -285,23 +286,23 @@
 					$contenu = $contenu . 'Echec dans l\'ajout dans la base de données 2<br/>';
 				}
 		}
-		
+
 		$contenu = $contenu. '</p>';
 	}
 	elseif(isset($_POST['AJOUT_CLIENT_RECURENTE']) AND isset($_POST['PLAN'])){
-			
+
 		$contenu ='<p class="message">';
-	
+
 		If (empty($_POST['AJOUT_CLIENT_RECURENTE'])){
-			
+
 			$contenu = $contenu .'Aucun Client selectionné<br/>';
 		}
 		elseif(empty($_POST['PLAN'])) {
-			
+
 			$contenu = $contenu .'Merci de rentrer un N° de Plan<br/>';
 		}
 		else{
-		
+
 			$res = $bdd->query('select count(*) as nb from `'. TABLE_ERP_PIECE_RECURENTE .'` WHERE  PLAN = \''. $_POST['PLAN'] .'\'');
 			$data = $res->fetch();
 			$nb = $data['nb'];
@@ -312,20 +313,20 @@
 							<input type="button" value="Retour" onClick="window.history.back()">';
 			}
 			else{
-			
+
 				$dossier_plan = 'plan/'. $_POST['AJOUT_CLIENT_RECURENTE'] .'/';
 				if(!is_dir($dossier_plan)){
 				   mkdir($dossier_plan);
 				}
 
 				$fichier_plan = basename($_FILES['fichier_plan_pdf']['name']);
-				
+
 				if(move_uploaded_file($_FILES['fichier_plan_pdf']['tmp_name'], $dossier_plan . $fichier_plan)) //Si la fonction renvoie TRUE, c'est que ça a fonctionné...
 				{
-					
-					
+
+
 					$contenu = $contenu . 'Upload du fichier effectué avec succès ! <br/>';
-					
+
 					if(!isset($_POST['ORBITALE'])) {$orbitale = "";}else{$orbitale = "1";}
 					if(!isset($_POST['EBAV_CHAMPS'])) {$ebav_champs = "";}else{$ebav_champs = "1";}
 					if(!isset($_POST['SUP_MICRO_ATTACHE'])) {$sup_micro_attache = "";}else{$sup_micro_attache = "1";}
@@ -334,7 +335,7 @@
 					if(!isset($_POST['TARAUDAGE'])) {$taraudage = "";}else{$taraudage = "1";}
 					if(!isset($_POST['FRAISURAGE'])) {$fraisurage = "";}else{$fraisurage = "1";}
 					if(!isset($_POST['INSERT_P'])) {$insert_p = "";}else{$insert_p = "1";}
-					
+
 					$req = $bdd->exec("INSERT INTO `". TABLE_ERP_PIECE_RECURENTE ."` VALUE (''
 																,'". addslashes($_POST['AJOUT_CLIENT_RECURENTE']) ."'
 																,'". addslashes($_POST['PLAN']) ."'
@@ -380,16 +381,16 @@
 																,''
 																,''
 																,'')");
-																
+
 					//vérification et envoi d'une réponse à l'utilisateur
 					if ($req)
 					{
 						$reponse = $bdd->query('SELECT MAX(id) FROM '. TABLE_ERP_PIECE_RECURENTE .'');
 						$data = $reponse->fetch();
 
-						
+
 						$res = $bdd->query('select count(*) as nb from `'. TABLE_ERP_PIECE_RECURENTE .'` WHERE  PLAN = \''. $_POST['PLAN'] .'\'');
-						
+
 						$contenu = $contenu . 'Ajout dans la base de données effectué avec succès <br/>
 											<br/>
 											Voir <a href="plan.php?ref='. $data[0] .'">'. $_POST['PLAN'] .'</a>';
@@ -410,22 +411,22 @@
 		$contenu = $contenu . '</p>';
 	}
 	else{
-		
+
 		$jour_select ='<option value=""></option>';
 		for($i=1; $i<=31; $i++)
 		{
 			$jour_select =  $jour_select .'<option value="'. $i .'">'. $i .'</option>';
 		}
-			
+
 		$mois_select ='<option value=""></option>';
 		for($i=1; $i<=12; $i++)
 		{
 			$mois_select =  $mois_select .'<option value="'. $i .'">'. $i .'</option>';
 		}
-	 
+
 		$annee_select_encour = '';
 		$annee_select ='<option value=""></option>';
-			
+
 		for($i=2014; $i<=2017; $i++)
 		{
 			///if($i == date('Y'))
@@ -434,49 +435,49 @@
 			//}
 			$annee_select =  $annee_select .'<option value="'. $i .'"'. $annee_select_encour .'>'. $i .'</option>';
 		}
-			
+
 		$Sem_prod ='<option value=""></option>';
 		for($i=1; $i<=52; $i++)
 		{
 			$Sem_prod =  $Sem_prod .'<option value="'. $i .'">'. $i .'</option>';
 		}
-			
+
 		$Sem_prod_nuit ='';
 		for($i=1; $i<=52; $i++)
 		{
 
 			$Sem_prod_nuit =  $Sem_prod_nuit .'<option value="'. $i .' nuit">'. $i .' de nuit</option>';
 		}
-			
-			
+
+
 		$Select_piece_recurente = '<option value=""></option>';
 		$reponse = $bdd -> query('SELECT DISTINCT id, CLIENT, PLAN FROM `'. TABLE_ERP_PIECE_RECURENTE .'` ORDER BY CLIENT, PLAN ');
 		while ($donneesSelectZone = $reponse->fetch())
 		{
-				
+
 			if($client_en_cours != $donneesSelectZone['CLIENT']){
-					
+
 				$Select_piece_recurente = $Select_piece_recurente .'
 										<option value=""></option>';
 			}
-				
+
 			$Select_piece_recurente = $Select_piece_recurente .'
 										<option value="'. $donneesSelectZone['id'] .'">'. $donneesSelectZone['CLIENT'] .' - '. $donneesSelectZone['PLAN'] .'</option>';
-				
+
 			$client_en_cours = $donneesSelectZone['CLIENT'];
 		}
-			
+
 		$Select_client ='<option value=""></option>';
-					
+
 		$reponse = $bdd -> query('SELECT DISTINCT CLIENT FROM `'. TABLE_ERP_PLANNING .'` WHERE  `'. TABLE_ERP_PLANNING .'`.sup!=1 ORDER BY CLIENT ');
 		while ($donneesSelectZone = $reponse->fetch())
 		{
 			$Select_client = $Select_client .'<option value="'. $donneesSelectZone['CLIENT'] .'">'. $donneesSelectZone['CLIENT'] .'</option>';
-				
+
 		}
 
 		$reponse->closeCursor();
-			
+
 		$contenu = $contenu. '
 					<form  method="post" action="insertion.php" class="content-form" enctype="multipart/form-data">
 						<table class="content-table">
@@ -525,10 +526,10 @@
 								</tr>
 								<tr>
 									<td style="text-align:left;">
-										Laser : <select name="SemLaser">'. $Sem_prod . $Sem_prod_nuit .'</select> 
+										Laser : <select name="SemLaser">'. $Sem_prod . $Sem_prod_nuit .'</select>
 									</td>
 									<td style="text-align:left;">
-										EBAVURAGE : <select name="SemEbav">'. $Sem_prod .'</select>  
+										EBAVURAGE : <select name="SemEbav">'. $Sem_prod .'</select>
 										</td>
 									<td  style="text-align:left;">
 										Parachèvement : <select name="SemPara">'. $Sem_prod .'</select> <br/>
@@ -536,10 +537,10 @@
 								</tr>
 								<tr>
 									<td  style="text-align:left;">
-										Pliage : <select name="SemPLiage">'. $Sem_prod .'</select> 
+										Pliage : <select name="SemPLiage">'. $Sem_prod .'</select>
 									</td>
 									<td  style="text-align:left;">
-										Soudure MIG : <select name="SemMIG">'. $Sem_prod .'</select>  
+										Soudure MIG : <select name="SemMIG">'. $Sem_prod .'</select>
 									</td>
 									<td  style="text-align:left;">
 										Soudure TIG : <select name="SemTIG">'. $Sem_prod .'</select> <br/>
@@ -547,15 +548,15 @@
 								</tr>
 								<tr>
 									<td colspan="3" >
-										<input type="submit" value="Inserer" /> 
+										<input type="submit" value="Inserer" />
 									</td>
 								</tr>
 							<tbody>
 						</table>
 					</form>
-					
-					
-					
+
+
+
 					<form  method="post" action="insertion.php" class="content-form">
 						<table class="content-table">
 							<thead>
@@ -629,10 +630,10 @@
 								</tr>
 								<tr>
 									<td style="text-align:left;">
-										Laser : <select name="SemLaser">'. $Sem_prod . $Sem_prod_nuit .'</select> 
+										Laser : <select name="SemLaser">'. $Sem_prod . $Sem_prod_nuit .'</select>
 									</td>
 									<td style="text-align:left;">
-										Ebavurage : <select name="SemEbav">'. $Sem_prod .'</select>  
+										Ebavurage : <select name="SemEbav">'. $Sem_prod .'</select>
 										</td>
 									<td  style="text-align:left;">
 										Parachèvement : <select name="SemPara">'. $Sem_prod .'</select> <br/>
@@ -640,10 +641,10 @@
 								</tr>
 								<tr>
 									<td style="text-align:left;">
-										Pliage : <select name="SemPLiage">'. $Sem_prod .'</select> 
+										Pliage : <select name="SemPLiage">'. $Sem_prod .'</select>
 									</td>
 									<td  style="text-align:left;">
-										Soudure MIG : <select name="SemMIG">'. $Sem_prod .'</select>  
+										Soudure MIG : <select name="SemMIG">'. $Sem_prod .'</select>
 									</td>
 									<td  style="text-align:left;">
 										Soudure TIG : <select name="SemTIG">'. $Sem_prod .'</select> <br/>
@@ -651,22 +652,22 @@
 								</tr>
 								<tr>
 									<td colspan="3" >
-										<input type="submit" value="Inserer" /> 
+										<input type="submit" value="Inserer" />
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</form>
-					
-					
-					
+
+
+
 					<form  method="post" action="insertion.php" class="content-form"  enctype= "multipart/form-data">
 						<table class="content-table">
 							<thead>
 								<tr>
 									<th colspan="3"   >
 										<p>
-											Ajouter une référence récurente 
+											Ajouter une référence récurente
 										</p>
 									</th>
 								</tr>
@@ -691,7 +692,7 @@
 									<td colspan="3" style="text-align:left;">
 										Prix Unitaire : <input type="text" name="PRIX_U" id="PRIX_U" />
 									</td>
-									
+
 								</tr>
 								<tr>
 									<td colspan="2" style="text-align:left;">
@@ -700,7 +701,7 @@
 												</select>
 									</td>
 									<td style="text-align:left;">
-										Epaisseur  : 
+										Epaisseur  :
 										<select name="EPAISSEUR">
 													'. LISTE_EPAISSEUR .'
 										</select>
@@ -721,7 +722,7 @@
 									<td  colspan="3"  style="text-align:left;">
 										Temps Ebavurage en s/p : <input type="text" name="TPS_EBAV" id="TPS_EBAV"  size="2"/>
 									</td>
-									
+
 								</tr>
 								<tr>
 									<td  colspan="3" style="text-align:left;">
@@ -757,9 +758,9 @@
 								</tr>
 								<tr>
 									<td  colspan="3"  style="text-align:left;">
-										Sous-traitance 1 --  
-										Fournisseur : <input type="text" name="FOURNISSEUR_1" id="FOURNISSEUR_1" size="4" /> --  
-										Prix : <input type="text" name="PRIX_SST1" id="PRIX_SST1" size="2" /> -- 
+										Sous-traitance 1 --
+										Fournisseur : <input type="text" name="FOURNISSEUR_1" id="FOURNISSEUR_1" size="4" /> --
+										Prix : <input type="text" name="PRIX_SST1" id="PRIX_SST1" size="2" /> --
 										N°Offre <input type="text" name="NUM_OFFRE_1" id="NUM_OFFRE_1" size="4" />
 										Ordre :
 										<select name="ORDRE_1">
@@ -828,7 +829,7 @@
 								</tr>
 								<tr>
 									<td >
-										Transporteur : 
+										Transporteur :
 										<select name="TRANSPORTEUR">
 											'. TRANSPORT_LISTE .'
 										</select>
@@ -848,7 +849,7 @@
 								</tr>
 								<tr>
 									<td colspan="3" >
-										<input type="submit" value="Inserer" /> 
+										<input type="submit" value="Inserer" />
 									</td>
 								</tr>
 							<tbody>
@@ -867,13 +868,13 @@
 ?>
 </head>
 <body>
-    
+
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
 
 	Echo $contenu;
-	
+
 ?>
 
 </body>

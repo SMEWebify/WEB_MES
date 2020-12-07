@@ -4,32 +4,32 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	///////////////////////////
 	//// APPAREIL DE MESURE ///
 	//////////////////////////
-	
+
 	if(isset($_POST['AddCODEAppareil']) AND !empty($_POST['AddCODEAppareil'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_APP_MESURE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEAppareil']) ."',
 																		'". addslashes($_POST['AddLABELAppareil']) ."',
@@ -37,11 +37,11 @@
 																		'". addslashes($_POST['AddUSERAppareil']) ."',
 																		'". addslashes($_POST['AddIMMATAppareil']) ."',
 																		'". addslashes($_POST['AddDATEAppareil']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_Appareil']) AND !empty($_POST['id_Appareil'])){
-		
+
 		$UpdateIdAppareil = $_POST['id_Appareil'];
 		$UpdateCODEAppareil = $_POST['UpdateCODEAppareil'];
 		$UpdateLABELAppareil = $_POST['UpdateLABELAppareil'];
@@ -49,10 +49,10 @@
 		$UpdateUSERAppareil = $_POST['UpdateUSERAppareil'];
 		$UpdateSERIALAppareil = $_POST['UpdateSERIALAppareil'];
 		$UpdateDATEAppareil = $_POST['UpdateDATEAppareil'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdAppareil as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_QL_APP_MESURE .'` SET  CODE = \''. addslashes($UpdateCODEAppareil[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELAppareil[$i]) .'\',
 																RESSOURCE_ID = \''. addslashes($UpdateRESSOURCEAppareil[$i]) .'\',
@@ -63,19 +63,19 @@
 			$i++;
 		}
 	}
-	
+
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
 	while ($donnees_membre = $req->fetch())
 	{
 		 $EmployeeListe .=  '<option value="'. $donnees_membre['idUSER'] .'">'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 
 	}
-	
+
 	$RessourcesListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
 	while ($DonneesRessource = $req->fetch())
@@ -83,7 +83,7 @@
 		$RessourcesListe .='<option value="'. $DonneesRessource['Id'] .'">'. $DonneesRessource['LABEL'] .'</option>';
 	}
 
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_APP_MESURE .'.Id,
 									'. TABLE_ERP_QL_APP_MESURE .'.CODE,
@@ -99,7 +99,7 @@
 									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
 									LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`USER_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser`
 									ORDER BY Id');
-									
+
 	while ($donnees_Appareil = $req->fetch())
 	{
 		 $contenu1 = $contenu1 .'
@@ -125,42 +125,42 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	////////////////////////
 	//// DEFAUTS         ///
 	///////////////////////
-	
+
 	if(isset($_POST['AddCODEDefaut']) AND !empty($_POST['AddCODEDefaut'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEFAUT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEDefaut']) ."',
 																		'". addslashes($_POST['AddLABELDefaut']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_Defaut']) AND !empty($_POST['id_Defaut'])){
-		
+
 		$UpdateIdDefaut = $_POST['id_Defaut'];
 		$UpdateCODEDefaut = $_POST['UpdateCODEDefaut'];
 		$UpdateLABELDefaut = $_POST['UpdateLABELDefaut'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdDefaut as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_DEFAUT .'` SET  CODE = \''. addslashes($UpdateCODEDefaut[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELDefaut[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_DEFAUT .'.Id,
 									'. TABLE_ERP_DEFAUT .'.CODE,
 									'. TABLE_ERP_DEFAUT .'.LABEL
 									FROM `'. TABLE_ERP_DEFAUT .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_defaut = $req->fetch())
 	{
 		 $contenu2 = $contenu2 .'
@@ -171,42 +171,42 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	///////////////
 	//// CAUSES ////
 	///////////////
-	
+
 	if(isset($_POST['AddCODECauses']) AND !empty($_POST['AddCODECauses'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CAUSES ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECauses']) ."',
 																		'". addslashes($_POST['AddLABELCauses']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_Causes']) AND !empty($_POST['id_Causes'])){
-		
+
 		$UpdateIdCauses = $_POST['id_Causes'];
 		$UpdateCODECauses = $_POST['UpdateCODECauses'];
 		$UpdateLABELCauses = $_POST['UpdateLABELCauses'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdCauses as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_QL_CAUSES .'` SET  CODE = \''. addslashes($UpdateCODECauses[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELCauses[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_CAUSES .'.Id,
 									'. TABLE_ERP_QL_CAUSES .'.CODE,
 									'. TABLE_ERP_QL_CAUSES .'.LABEL
 									FROM `'. TABLE_ERP_QL_CAUSES .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_Causes = $req->fetch())
 	{
 		 $contenu3 = $contenu3 .'
@@ -217,42 +217,42 @@
 				</tr>';
 		$i++;
 	}
-	
+
 	////////////////////////
 	////  Corresction  ////
 	///////////////////////
 
-	
+
 	if(isset($_POST['AddCODECorrection']) AND !empty($_POST['AddCODECorrection'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CORRECTIONS ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECorrection']) ."',
 																		'". addslashes($_POST['AddLABELCorrection'])  ."')");
 	}
-	
+
 	if(isset($_POST['id_Correction']) AND !empty($_POST['id_Correction'])){
-		
+
 		$UpdateIdCorrection = $_POST['id_Correction'];
 		$UpdateCODECorrection = $_POST['UpdateCODECorrection'];
 		$UpdateLABELCorrection = $_POST['UpdateLABELCorrection'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdCorrection as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_QL_CORRECTIONS .'` SET  CODE = \''. addslashes($UpdateCODECorrection[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELCorrection[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_CORRECTIONS .'.Id,
 									'. TABLE_ERP_QL_CORRECTIONS .'.CODE,
 									'. TABLE_ERP_QL_CORRECTIONS .'.LABEL
 									FROM `'. TABLE_ERP_QL_CORRECTIONS .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_correction = $req->fetch())
 	{
 		 $contenu4 = $contenu4 .'

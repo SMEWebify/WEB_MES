@@ -4,28 +4,29 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
 	if(isset($_POST['Addnom_ajout']) AND !empty($_POST['Addnom_ajout'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_EMPLOYEES ." VALUE ('0',
 																		'". $_POST['Addcode_ajout'] ."',
 																		'',
@@ -41,13 +42,13 @@
 																		'". $_POST['Addmdp_ajout'] ."',
 																		'". $_POST['Addposte_ajout'] ."',
 																		'". $_POST['Addsection_ajout'] ."')");
-																		
-		
+
+
 	}
-	
+
 	if(isset($_POST['AddRight']) AND !empty($_POST['AddRight'])){
-	
-		
+
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_RIGHTS ." VALUE ('0',
 																		'". $_POST['AddRight'] ."',
 																		'". $_POST['Addpage_1_ajout'] ."',
@@ -61,19 +62,19 @@
 																		'". $_POST['Addpage_9_ajout'] ."',
 																		'". $_POST['Addpage_10_ajout'] ."')");
 	}
-	
+
 	if(isset($_POST['id_membre']) AND !empty($_POST['id_membre'])){
-		
+
 		$id_membre = $_POST['id_membre'];
 		$CODEmembre = $_POST['CODEmembre'];
 		$nom_membre = $_POST['nom_membre'];
 		$mdp_membre = $_POST['mdp_membre'];
 		$poste_membre = $_POST['poste_membre'];
 		$SECTIONmembre = $_POST['SECTIONmembre'];
-		
+
 		$i = 0;
 		foreach ($id_membre as $id_generation) {
-		
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $CODEmembre[$i] .'\',
 																NAME = \''. addslashes($nom_membre[$i]) .'\',
 																PASSWORD = \''. addslashes($mdp_membre[$i]) .'\',
@@ -83,9 +84,9 @@
 			$i++;
 		}
 	}
-	
+
 	if(isset($_POST['id_Right']) AND !empty($_POST['id_Right'])){
-		
+
 		$UpdateIdRight = $_POST['id_Right'];
 		$UpdateNameRight = $_POST['RIGHT_NAME'];
 		$UpdatePage_1 = $_POST['page_1_membre'];
@@ -98,10 +99,10 @@
 		$UpdatePage_8 = $_POST['page_8_membre'];
 		$UpdatePage_9 = $_POST['page_9_membre'];
 		$UpdatePage_10 = $_POST['page_10_membre'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdRight as $id_generation) {
-			
+
 			If(empty($UpdatePage_1[$i])) $FinalUpdatePage_1 = 0; else $FinalUpdatePage_1 = 1;
 			If(empty($UpdatePage_2[$i])) $FinalUpdatePage_2 = 0; else $FinalUpdatePage_2 = 1;
 			If(empty($UpdatePage_3[$i])) $FinalUpdatePage_3 = 0; else $FinalUpdatePage_3 = 1;
@@ -112,7 +113,7 @@
 			If(empty($UpdatePage_8[$i])) $FinalUpdatePage_8 = 0; else $FinalUpdatePage_8 = 1;
 			If(empty($UpdatePage_9[$i])) $FinalUpdatePage_9 = 0; else $FinalUpdatePage_9 = 1;
 			If(empty($UpdatePage_10[$i])) $FinalUpdatePage_10 = 0; else $FinalUpdatePage_10 = 1;
-		
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_RIGHTS .'` SET  RIGHT_NAME = \''. addslashes($UpdateNameRight[$i]) .'\',
 																page_1 = \''. $FinalUpdatePage_1 .'\',
 																page_2 = \''. $FinalUpdatePage_2 .'\',
@@ -124,24 +125,24 @@
 																page_8 = \''. $FinalUpdatePage_8 .'\',
 																page_9 = \''. $FinalUpdatePage_9 .'\',
 																page_10 = \''. $FinalUpdatePage_10 .'\'
-																
+
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	$req = $bdd -> query('SELECT Id, RIGHT_NAME   FROM '. TABLE_ERP_RIGHTS .'');
 	while ($DonneesRight = $req->fetch())
 	{
 		$RightListe .='<option value="'. $DonneesRight['Id'] .'">'. $DonneesRight['RIGHT_NAME'] .'</option>';
 	}
-	
+
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'');
 	while ($DonneesSection = $req->fetch())
 	{
 		$SectionListe .='<option value="'. $DonneesSection['Id'] .'">'. $DonneesSection['LABEL'] .'</option>';
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.IdUser,
 									'. TABLE_ERP_EMPLOYEES .'.CODE,
@@ -153,15 +154,15 @@
 									'. TABLE_ERP_EMPLOYEES .'.SECTION_ID,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME,
 									'. TABLE_ERP_SECTION .'.LABEL
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
 									LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`');
-									
 
-	
+
+
 	while ($donnees_membre = $req->fetch())
 	{
-		
+
 		 $contenu1 = $contenu1 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_membre[]" id="id_membre" value="'. $donnees_membre['IdUser'] .'"></td>
@@ -184,7 +185,7 @@
 				</tr>	';
 		$i++;
 	}
-			
+
 	$contenu4;
 	$req = $bdd -> query('SELECT Id, RIGHT_NAME, page_1, page_2, page_3, page_4, page_5, page_6, page_7, page_8, page_9, page_10   FROM '. TABLE_ERP_RIGHTS .'');
 	while ($DonneesRight = $req->fetch())
@@ -255,7 +256,7 @@
 					</td>
 				</tr>	';
 	}
-	
+
 	?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -283,7 +284,7 @@
 					<thead>
 						<tr>
 							<th colspan="7">
-								 
+
 							</th>
 						</tr>
 						<tr>

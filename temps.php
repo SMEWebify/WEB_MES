@@ -4,32 +4,33 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	////////////////////////
 	//// EVENT MACHINE////
 	///////////////////////
-	
+
 	if(isset($_POST['AddCODEEventMach']) AND !empty($_POST['AddCODEEventMach'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_EVENT_MACHINE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEEventMach']) ."',
 																		'". addslashes($_POST['AddORDREEventMach']) ."',
@@ -38,11 +39,11 @@
 																		'". addslashes($_POST['AddCOLOREventMach']) ."',
 																		'". addslashes($_POST['AddETATEventMach']) ."'
 																		)");
-															
+
 	}
-	
+
 	if(isset($_POST['id_EventMach']) AND !empty($_POST['id_EventMach'])){
-		
+
 		$UpdateIdEventMach = $_POST['id_EventMach'];
 		$UpdateORDREEventMach = $_POST['UpdateORDREEventMach'];
 		$UpdateCODEEventMach = $_POST['UpdateCODEEventMach'];
@@ -50,10 +51,10 @@
 		$UpdateMASKEventMach = $_POST['UpdateMASKEventMach'];
 		$UpdateCOLOREventMach = $_POST['UpdateCOLOREventMach'];
 		$UpdateETATEventMach = $_POST['UpdateETATEventMach'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdEventMach as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_EVENT_MACHINE .'` SET  CODE = \''. addslashes($UpdateCODEEventMach[$i]) .'\',
 																ORDRE = \''. addslashes($UpdateORDREEventMach[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELEventMach[$i]) .'\',
@@ -64,7 +65,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EVENT_MACHINE .'.Id,
 									'. TABLE_ERP_EVENT_MACHINE .'.CODE,
@@ -75,7 +76,7 @@
 									'. TABLE_ERP_EVENT_MACHINE .'.ETAT
 									FROM `'. TABLE_ERP_EVENT_MACHINE .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_EventMach = $req->fetch())
 	{
 		 $contenu1 = $contenu1 .'
@@ -102,19 +103,19 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	////////////////////////
 	//// IMPRODUCT TIME ////
 	///////////////////////
-	
+
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_EVENT_MACHINE .'');
 	while ($DonneesEvent = $req->fetch())
 	{
 		$EventListe .='<option value="'. $DonneesEvent['Id'] .'">'. $DonneesEvent['LABEL'] .'</option>';
 	}
-	
+
 	if(isset($_POST['AddLABELImproductTime']) AND !empty($_POST['AddLABELImproductTime'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_EVENT_IMPRODUC_TIME ." VALUE ('0',
 																		'". addslashes($_POST['AddLABELImproductTime']) ."',
 																		'". addslashes($_POST['AddETATImproductTime']) ."',
@@ -122,18 +123,18 @@
 																		'". addslashes($_POST['AddMASKImproductTime']) ."'
 																		)");
 	}
-	
+
 	if(isset($_POST['id_ImproductTime']) AND !empty($_POST['id_ImproductTime'])){
-		
+
 		$UpdateIdEventMach = $_POST['id_ImproductTime'];
 		$UpdateLABELImproductTime = $_POST['UpdateLABELImproductTime'];
 		$UpdateETATImproductTime = $_POST['UpdateETATImproductTime'];
 		$UpdateRESSImproductTime = $_POST['UpdateRESSImproductTime'];
 		$UpdateMASKImproductTime = $_POST['UpdateMASKImproductTime'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdEventMach as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_EVENT_IMPRODUC_TIME .'` SET LABEL = \''. addslashes($UpdateLABELImproductTime[$i]) .'\',
 																		ETAT_MACHINE = \''. addslashes($UpdateETATImproductTime[$i]) .'\',
 																		RESSOURCE_NEC = \''. addslashes($UpdateRESSImproductTime[$i]) .'\',
@@ -142,7 +143,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EVENT_IMPRODUC_TIME .'.Id,
 									'. TABLE_ERP_EVENT_IMPRODUC_TIME .'.LABEL,
@@ -153,7 +154,7 @@
 									FROM `'. TABLE_ERP_EVENT_IMPRODUC_TIME .'`
 									LEFT JOIN `'. TABLE_ERP_EVENT_MACHINE .'` ON `'. TABLE_ERP_EVENT_MACHINE .'`.`id` = `'. TABLE_ERP_EVENT_IMPRODUC_TIME .'`.`ETAT_MACHINE`
 									ORDER BY Id');
-									
+
 	while ($donnees_ImproductTime = $req->fetch())
 	{
 		 $contenu2 = $contenu2 .'
@@ -181,13 +182,13 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	////////////////////////
 	//// TYPE ABSENCE ////
 	///////////////////////
-	
+
 	if(isset($_POST['AddCODEAbs']) AND !empty($_POST['AddCODEAbs'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_TYPE_ABS ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEAbs']) ."',
 																		'". addslashes($_POST['AddLABELAbs']) ."',
@@ -195,19 +196,19 @@
 																		'". addslashes($_POST['AddCOLORAbs']) ."',
 																		'". addslashes($_POST['AddTYPEAbs']) ."')");
 	}
-	
+
 	if(isset($_POST['id_Abs']) AND !empty($_POST['id_Abs'])){
-		
+
 		$UpdateIdAbs = $_POST['id_Abs'];
 		$UpdateCODEdAbs = $_POST['UpdateCODEdAbs'];
 		$UpdateLABELdAbs = $_POST['UpdateLABELdAbs'];
 		$UpdatePAYEAbs = $_POST['UpdatePAYEAbs'];
 		$UpdateCOLORAbs = $_POST['UpdateCOLORAbs'];
 		$UpdateTYPEAbs = $_POST['UpdateTYPEAbs'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdAbs as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_TYPE_ABS .'` SET CODE = \''. addslashes($UpdateCODEdAbs[$i]) .'\',
 																		LABEL = \''. addslashes($UpdateLABELdAbs[$i]) .'\',
 																		PAYE = \''. addslashes($UpdatePAYEAbs[$i]) .'\',
@@ -217,7 +218,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_TYPE_ABS .'.Id,
 									'. TABLE_ERP_TYPE_ABS .'.CODE,
@@ -227,7 +228,7 @@
 									'. TABLE_ERP_TYPE_ABS .'.TYPE_JOUR
 									FROM `'. TABLE_ERP_TYPE_ABS .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_TypeAbs = $req->fetch())
 	{
 		 $contenu3 = $contenu3 .'
@@ -252,29 +253,29 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	////////////////////////
 	//// JOURS FERIER ////
 	///////////////////////
-	
+
 	if(isset($_POST['AddLABELFerier']) AND !empty($_POST['AddLABELFerier'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_FERIER ." VALUE ('0',
 																		'". addslashes($_POST['AddFixeFerier']) ."',
 																		'". addslashes($_POST['AddDATEFerier']) ."',
 																		'". addslashes($_POST['AddLABELFerier']) ."')");
 	}
-	
+
 	if(isset($_POST['id_Ferrier']) AND !empty($_POST['id_Ferrier'])){
-		
+
 		$UpdateIdFerier = $_POST['id_Ferrier'];
 		$UpdateFIXEFerier = $_POST['UpdateFIXEFerier'];
 		$UpdateDATEFerier = $_POST['UpdateDATEFerier'];
 		$UpdateLABELFerier = $_POST['UpdateLABELFerier'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdFerier as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_FERIER .'` SET FIXE = \''. addslashes($UpdateFIXEFerier[$i]) .'\',
 															DATE = \''. addslashes($UpdateDATEFerier[$i]) .'\',
 															LABEL = \''. addslashes($UpdateLABELFerier[$i]) .'\'
@@ -282,7 +283,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_FERIER .'.Id,
 									'. TABLE_ERP_FERIER .'.FIXE,
@@ -290,7 +291,7 @@
 									'. TABLE_ERP_FERIER .'.LABEL
 									FROM `'. TABLE_ERP_FERIER .'`
 									ORDER BY DATE');
-									
+
 	while ($donnees_Ferier = $req->fetch())
 	{
 		 $contenu4 = $contenu4 .'

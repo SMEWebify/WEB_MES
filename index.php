@@ -4,36 +4,36 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
-	
+
+
 	$req = $bdd->query("SELECT id, ETAT, TIMESTAMP, TEXT FROM ". TABLE_ERP_INFO_GENERAL ." WHERE ETAT =1 ORDER BY id DESC LIMIT 0, 10");
-		
+
 		$class = array('left', 'right');
 		$nb = count($class);
 		$i = 0;
-		
+
 		while ($donnees = $req->fetch()){
-				
+
 				$info_secteur = $info_secteur .'
 				<div class="container-timeline '.$class[$i%$nb].'">
 					<div class="content-timeline">
@@ -43,7 +43,7 @@
 				</div>';
 		$i++;
 		}
-		
+
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
@@ -53,7 +53,7 @@
 									'. TABLE_ERP_EMPLOYEES .'.FONCTION,
 									'. TABLE_ERP_SECTION .'.LABEL,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
 									LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`');
 	while ($donnees_membre = $req->fetch())
@@ -63,7 +63,7 @@
 		}
 		else{
 			$image = 'images/Profils/img_avatar.png';
-			
+
 		}
 		$Employees .=  '<div class="column">
 							<div class="card">
@@ -76,7 +76,7 @@
 						  </div>';
 		$i++;
 	}
-	
+
 	$contenu = '
 					<div id="info_millieu">
 						<table class="content-table">
@@ -100,7 +100,7 @@
 							</tr>
 
 							'. $retard_cmd .'
-							
+
 							<tr>
 								<td colspan="2"  >
 									Commande au départ Aurjoud\'hui
@@ -109,22 +109,22 @@
 							</tr>
 
 							'. $départ_cmd .'
-							
+
 							<tr>
 								<td colspan="2" >
 									Commande au départ demain
 								</td>
 							</tr>
-							
+
 							'. $départ_48_cmd .'
 							<tr>
 								<td colspan="2" >
-									Commande à confirmer ('. $i_cmd_a_confirmer .')  
+									Commande à confirmer ('. $i_cmd_a_confirmer .')
 								</td>
 							</tr>
-							
+
 							'. $cmd_a_confirmer .'
-							
+
 						</table>
 					</div>';
 	?>

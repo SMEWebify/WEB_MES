@@ -4,54 +4,55 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
 
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	$contenu = '';
 
-	
+
 	///////////////////////////////
 	//// COMMMENT ////
 	///////////////////////////////
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	COMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// GENERAL UPDATE ////
 	///////////////////////////////
 	if(isset($_POST['RepsComDevis']) AND !empty($_POST['RepsComDevis'])){
 		$PostRepsComDevis= $_POST['RepsComDevis'];
 		$PostRespTechDevis = $_POST['RespTechDevis'];
-		
+
 		if($_POST['RepsComDevis'] == 'null'){ $PostRepsComDevis = 0; }
 		if($_POST['RespTechDevis'] == 'null'){ $PostRespTechDevis = 0; }
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	RESP_COM_ID='". addslashes($PostRepsComDevis) ."',
 																RESP_TECH_ID='". addslashes($PostRespTechDevis) ."'
 																		WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
-																		
+
 	}
-	
+
 	///////////////////////////////
 	//// COMMERCIAL UPDATE ////
 	///////////////////////////////
@@ -60,14 +61,14 @@
 		$PostModeRegDevis = $_POST['ModeRegDevis'];
 		$PostEcheancierDevis = $_POST['EcheancierDevis'];
 		$PostModeLivraisonDevis = $_POST['ModeLivraisonDevis'];
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	COND_REG_CLIENT_ID='". addslashes($PostCondiRegDevis) ."',
 																MODE_REG_CLIENT_ID='". addslashes($PostModeRegDevis) ."',
 																ECHEANCIER_ID='". addslashes($PostEcheancierDevis) ."',
 																TRANSPORT_ID='". addslashes($PostModeLivraisonDevis) ."'
 															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// CLIENT INFO UPDATE ////
 	///////////////////////////////
@@ -75,53 +76,53 @@
 		$PostContactDevis= $_POST['ContactDevis'];
 		$PostAdresseLivraisonDevis = $_POST['AdresseLivraisonDevis'];
 		$PostAdresseFacturationDevis = $_POST['AdresseFacturationDevis'];
-		
+
 		if($_POST['ContactDevis'] == 'null'){ $PostContactDevis = 0; }
 		if($_POST['AdresseLivraisonDevis'] == 'null'){ $PostAdresseLivraisonDevis = 0; }
 		if($_POST['AdresseFacturationDevis'] == 'null'){ $PostAdresseFacturationDevis = 0; }
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	CONTACT_ID='". addslashes($PostContactDevis) ."',
 																ADRESSE_ID='". addslashes($PostAdresseLivraisonDevis) ."',
 																FACTURATION_ID='". addslashes($PostAdresseFacturationDevis) ."'
 															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// DELETE LIGNE ////
 	///////////////////////////////
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-		
+
 		$req = $bdd->exec("DELETE FROM ". TABLE_ERP_DEVIS_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// ACCEUIL DEVIS  ////
 	///////////////////////////////
 	if(isset($_POST['DevisDATE_VALIDITE']) AND !empty($_POST['DevisDATE_VALIDITE'])){
-		
-		
+
+
 		$PostDevisLABEL= $_POST['DevisLABEL'];
 		$PostDevisLABELIndice = $_POST['DevisLABELIndice'];
 		$PostDevisReference = $_POST['DevisReference'];
 		$PostDevisDATE_VALIDITE = $_POST['DevisDATE_VALIDITE'];
 		$PostDevisEtat = $_POST['EtatDevis'];
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	LABEL='". addslashes($PostDevisLABEL) ."',
 																LABEL_INDICE='". addslashes($PostDevisLABELIndice) ."',
 																REFERENCE='". addslashes($PostDevisReference) ."',
 																DATE_VALIDITE='". addslashes($PostDevisDATE_VALIDITE) ."',
 																ETAT='". addslashes($PostDevisEtat) ."'
 															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
-															
+
 		if(isset($_POST['DevisMajLigne']) AND !empty($_POST['DevisMajLigne'])){
-			
+
 			$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET 	ETAT='". addslashes($PostDevisEtat) ."'
 															WHERE 	DEVIS_ID='". addslashes($_POST['IdDevis'])."'");
 		}
 	}
-	
+
 	if(isset($_POST['AddDevis']) And !empty($_POST['AddDevis'])){
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_NUM_DOC .'.Id,
 									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
 									'. TABLE_ERP_NUM_DOC .'.MODEL,
@@ -130,9 +131,9 @@
 									FROM `'. TABLE_ERP_NUM_DOC .'`
 									WHERE DOC_TYPE=8');
 		$donnees_Num_doc = $req->fetch();
-		
+
 		$CODE = NumDoc($donnees_Num_doc['MODEL'],$donnees_Num_doc['COMPTEUR'], $donnees_Num_doc['DIGIT']);
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEVIS ." VALUE ('0',
 																				'". $CODE ."',
 																				'1',
@@ -154,20 +155,20 @@
 																				'0',
 																				'0',
 																				'')");
-																				
+
 		$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (8)');
-			
+
 		$req = $bdd->query("SELECT CODE FROM ". TABLE_ERP_DEVIS ." ORDER BY id DESC LIMIT 0, 1");
 		$DonneesDevis = $req->fetch();
 		$req->closeCursor();
 		$CODEDevisAjout = $DonneesDevis['CODE'];
-		
+
 	}
-	
+
 	$req = $bdd->query('SELECT '. TABLE_ERP_DEVIS .'.CODE,
 								'. TABLE_ERP_DEVIS .'.LABEL,
 								'. TABLE_ERP_CLIENT_FOUR .'.NAME
-								FROM '. TABLE_ERP_DEVIS .' 
+								FROM '. TABLE_ERP_DEVIS .'
 									LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
 								ORDER BY  '. TABLE_ERP_DEVIS .'.id DESC');
 	while ($donnees_Devis = $req->fetch())
@@ -175,22 +176,22 @@
 		$ListeQuote .= '<option  value="'. $donnees_Devis['CODE'] .'" >';
 		$ListeQuotePrincipale  .= '<li><a href="devis.php?id='. $donnees_Devis['CODE'] .'">'. $donnees_Devis['CODE'] .' - '. $donnees_Devis['NAME'] .' </a></li>';
 	}
-	
 
-	
+
+
 	if(isset($_GET['id']) And !empty($_GET['id']) Or isset($_POST['AddDevis']) And !empty($_POST['AddDevis'])){
-		
-		
+
+
 		if(isset($_GET['id'])){$CODEDevis = addslashes($_GET['id']);}
 		if(isset($_POST['AddDevis']) And !empty($_POST['AddDevis'])){$CODEDevis = $CODEDevisAjout;}
-			
+
 		$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_DEVIS ." WHERE CODE = '". $CODEDevis."'");
 		$data = $req->fetch();
 		$req->closeCursor();
 		$nb = $data['nb'];
-			
+
 		if($nb=1){
-			
+
 				$req = $bdd -> query('SELECT '. TABLE_ERP_DEVIS .'.Id,
 									'. TABLE_ERP_DEVIS .'.CODE,
 									'. TABLE_ERP_DEVIS .'.INDICE,
@@ -221,9 +222,9 @@
 									WHERE '. TABLE_ERP_DEVIS .'.CODE = \''. $CODEDevis.'\' ');
 			$DonneesDevis = $req->fetch();
 			$req->closeCursor();
-			
+
 			$titleOnglet1 = "Mettre à jours";
-			
+
 			$IDDevisSQL = $DonneesDevis['Id'];
 			$CommentaireDevis = $DonneesDevis['COMENT'];
 			$DevisCLIENT_ID = $DonneesDevis['CLIENT_ID'];
@@ -239,62 +240,62 @@
 			$DevisMODE_REG_ID = $DonneesDevis['MODE_REG_CLIENT_ID'];
 			$DevisEcheancier_ID = $DonneesDevis['ECHEANCIER_ID'];
 			$DevisTransport_ID = $DonneesDevis['TRANSPORT_ID'];
-			
+
 			$DevisCODE = $DonneesDevis['CODE'];
 			$DevisINDICE = $DonneesDevis['INDICE'];
 			$DevisLABEL = $DonneesDevis['LABEL'];
 			$DevisLABEL_INDICE = $DonneesDevis['LABEL_INDICE'];
-			
+
 			$DevisDATE = $DonneesDevis['DATE'];
 			$DevisDATE_VALIDITE = $DonneesDevis['DATE_VALIDITE'];
 			$DevisETAT = $DonneesDevis['ETAT'];
 			$DevisREFERENCE = $DonneesDevis['REFERENCE'];
-			
+
 			$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-									
+
 			 $EmployeeListe1 .=  '<option value="null" '. selected($DevisRESP_COM_ID, 0) .'>Aucun</option>';
 			 $EmployeeListe2 .=  '<option value="null" '. selected($DevisRESP_TECH_ID, 0) .'>Aucun</option>';
-			
+
 			while ($donnees_membre = $req->fetch())
 			{
 				 $EmployeeListe1 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($DevisRESP_COM_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 				 $EmployeeListe2 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($DevisRESP_TECH_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
 			while ($DonneesModeReg = $req->fetch())
 			{
 				$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($DevisCONDI_REG_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
 			while ($DonneesConditionReg = $req->fetch())
 			{
 				$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($DevisMODE_REG_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_ECHEANCIER_TYPE .'');
 			while ($DonneesEcheancier = $req->fetch())
 			{
 				$EcheancierListe1 .='<option value="'. $DonneesEcheancier['Id'] .'" '. selected($DevisEcheancier_ID, $DonneesEcheancier['Id']) .'>'. $DonneesEcheancier['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_TRANSPORT .'');
 			while ($DonneesTransport = $req->fetch())
 			{
 				$TransportListe1 .='<option value="'. $DonneesTransport['Id'] .'" '. selected($DevisTransport_ID, $DonneesTransport['Id']) .'>'. $DonneesTransport['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$ContactDevisListe1 =  '<option value="null" '. selected($DevisCONTACT_ID, 0) .'>Aucun</option>';
 			$req = $bdd -> query('SELECT Id, PRENOM, NOM FROM '. TABLE_ERP_CONTACT .' WHERE ID_COMPANY=\''. $DevisCLIENT_ID.'\'');
 			while ($DonneesContact = $req->fetch())
@@ -302,7 +303,7 @@
 				$ContactDevisListe1 .='<option value="'. $DonneesContact['Id'] .'" '. selected($DevisCONTACT_ID, $DonneesContact['Id']) .'>'. $DonneesContact['PRENOM'] .' '. $DonneesContact['NOM'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$AdresseLivraisonListe1 =  '<option value="null" '. selected($DevisADRESSE_ID, 0) .'>Aucune</option>';
 			$req = $bdd -> query('SELECT id, LABEL, ADRESSE, CITY FROM '. TABLE_ERP_ADRESSE .' WHERE ID_COMPANY=\''. $DevisCLIENT_ID.'\' AND ADRESS_LIV=\'1\'');
 			while ($DonneesAdresse = $req->fetch())
@@ -310,7 +311,7 @@
 				$AdresseLivraisonListe1 .='<option value="'. $DonneesAdresse['id'] .'" '. selected($DevisADRESSE_ID, $DonneesAdresse['id']) .'>'. $DonneesAdresse['LABEL'] .' - '. $DonneesAdresse['ADRESSE'] .' - '. $DonneesAdresse['CITY'] .' </option>';
 			}
 			$req->closeCursor();
-			
+
 			$AdresseFacturationListe1 =  '<option value="null" '. selected($DevisFACTURATION_ID, 0) .'>Aucune</option>';
 			$req = $bdd -> query('SELECT id, LABEL, ADRESSE, CITY FROM '. TABLE_ERP_ADRESSE .' WHERE ID_COMPANY=\''. $DevisCLIENT_ID.'\' AND ADRESS_FAC=\'1\' ');
 			while ($DonneesAdresse = $req->fetch())
@@ -318,8 +319,8 @@
 				$AdresseFacturationListe1 .='<option value="'. $DonneesAdresse['id'] .'" '. selected($DevisFACTURATION_ID, $DonneesAdresse['id']) .'>'. $DonneesAdresse['LABEL'] .' - '. $DonneesAdresse['ADRESSE'] .' - '. $DonneesAdresse['CITY'] .' </option>';
 			}
 			$req->closeCursor();
-			
-			$DevisAcceuil = 
+
+			$DevisAcceuil =
 				'<table class="content-table">
 					<thead>
 						<tr>
@@ -336,7 +337,7 @@
 								Code et libellé du devis :
 							</td>
 							<td>
-								'. $DevisCODE .' 
+								'. $DevisCODE .'
 							</td>
 							<td>
 								<input type="text" name="DevisLABEL" value="'. $DevisLABEL .'" placeholder="Libellé du devis">
@@ -347,7 +348,7 @@
 								Indice et libellé de version  :
 							</td>
 							<td>
-								'. $DevisINDICE .' 
+								'. $DevisINDICE .'
 							</td>
 							<td>
 								<input type="text" name="DevisLABELIndice" value="'. $DevisLABEL_INDICE .'" placeholder="Libellé de la version">
@@ -382,7 +383,7 @@
 						</tr>
 						<tr>
 							<td>
-								Etat du devis : 
+								Etat du devis :
 							</td>
 							<td>
 								<select name="EtatDevis">
@@ -405,7 +406,7 @@
 						</tr>
 					</tbody>
 				</table>';
-				
+
 			$DevisGeneral = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -452,7 +453,7 @@
 					</tr>
 				</tbody>
 			</table>';
-			
+
 		$DevisInfoClient = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -501,8 +502,8 @@
 					</tr>
 				</tbody>
 			</table>';
-				
-				
+
+
 		$DevisInfoCommercial = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -561,7 +562,7 @@
 					</tr>
 				</tbody>
 			</table>';
-				
+
 			$DevisCommentaire = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -585,17 +586,17 @@
 					</tr>
 				</tbody>
 			</table>';
-			
+
 						///////////////////////////////
 						////DEBUT GESTION DES LIGNE DE DEVIS  ////
 						///////////////////////////////
-						
+
 									///////////////////////////////
 									//// AJOUT DE LIGNE  ////
 									///////////////////////////////
-						
+
 						if(isset($_POST['AddORDRELigneDevis']) AND !empty($_POST['AddORDRELigneDevis'])){
-							
+
 							$AddORDRELigneDevis = $_POST['AddORDRELigneDevis'];
 							$AddARTICLELigneDevis = $_POST['AddARTICLELigneDevis'];
 							$AddLABELLigneDevis = $_POST['AddLABELLigneDevis'];
@@ -605,10 +606,10 @@
 							$AddRemiseLigneDevis = $_POST['AddRemiseLigneDevis'];
 							$AddTVALigneDevis = $_POST['AddTVALigneDevis'];
 							$AddDELAISigneDevis = $_POST['AddDELAISigneDevis'];
-							
+
 							$i = 0;
 							foreach ($AddORDRELigneDevis as $id_generation) {
-								
+
 								$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEVIS_LIGNE ." VALUE ('0',
 																									'". $IDDevisSQL ."',
 																									'". addslashes($AddORDRELigneDevis[$i]) ."',
@@ -624,9 +625,9 @@
 								$i++;
 							}
 						}
-						
+
 						if(isset($_POST['UpdateIdLigneDevis']) AND !empty($_POST['UpdateIdLigneDevis'])){
-							
+
 							$UpdateIdLigneDevis = $_POST['UpdateIdLigneDevis'];
 							$UpdateORDRELigneDevis = $_POST['UpdateORDRELigneDevis'];
 							$UpdateIDArticleLigneDevis = $_POST['UpdateIDArticleLigneDevis'];
@@ -638,11 +639,11 @@
 							$UpdateDELAISLigneDevis = $_POST['UpdateDELAISLigneDevis'];
 							$UpdateTVALigneDevis = $_POST['UpdateTVALigneDevis'];
 							$UpdateETATLigneDevis = $_POST['UpdateETATLigneDevis'];
-							
-							
+
+
 							$i = 0;
 							foreach ($UpdateIdLigneDevis as $id_generation) {
-								
+
 								$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET 	ORDRE='". addslashes($UpdateORDRELigneDevis[$i]) ."',
 																						ARTICLE_CODE='". addslashes($UpdateIDArticleLigneDevis[$i]) ."',
 																						LABEL='". addslashes($UpdateLABELLigneDevis[$i]) ."',
@@ -657,18 +658,18 @@
 								$i++;
 							}
 						}
-						
+
 									///////////////////////////////
 									//// LISTE DES LIGNES  ////
 									///////////////////////////////
-									
+
 						$UnitListe ='<option value="0">Aucune</option>';
 						$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_UNIT .'');
 						while ($DonneesUnit = $req->fetch()){
 							$UnitListe .='<option value="'. $DonneesUnit['Id'] .'" '. selected($ArticleUNIT_ID, $DonneesUnit['Id']) .'>'. $DonneesUnit['LABEL'] .'</option>';
 						}
 						$req->closeCursor();
-						
+
 						$ListeArticleJava  ='"';
 						$req = $bdd->query("SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL");
 						while ($donnees_Article = $req->fetch())
@@ -678,15 +679,15 @@
 						}
 						$ListeArticleJava  .='"';
 						$req->closeCursor();
-					
+
 						$req = $bdd -> query('SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .' ORDER BY TAUX DESC');
 						while ($DonneesTVA = $req->fetch())
 						{
 							$TVAListe .='<option value="'. $DonneesTVA['Id'] .'">'. $DonneesTVA['TAUX'] .'%</option>';
 						}
 						$req->closeCursor();
-						
-						$req = $bdd -> query('SELECT  '. TABLE_ERP_DEVIS_LIGNE .'.Id, 
+
+						$req = $bdd -> query('SELECT  '. TABLE_ERP_DEVIS_LIGNE .'.Id,
 														'. TABLE_ERP_DEVIS_LIGNE .'.ORDRE,
 														'. TABLE_ERP_DEVIS_LIGNE .'.ARTICLE_CODE,
 														'. TABLE_ERP_DEVIS_LIGNE .'.LABEL,
@@ -703,19 +704,19 @@
 														FROM '. TABLE_ERP_DEVIS_LIGNE .'
 															LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
 															LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-															WHERE '. TABLE_ERP_DEVIS_LIGNE .'.DEVIS_ID = \''. $IDDevisSQL.'\' 
+															WHERE '. TABLE_ERP_DEVIS_LIGNE .'.DEVIS_ID = \''. $IDDevisSQL.'\'
 														ORDER BY '. TABLE_ERP_DEVIS_LIGNE .'.ORDRE ');
 						$tableauTVA = array();
-						
+
 						while ($DonneesListeLigneDuDevis = $req->fetch()){
-							
-							$TotalLigneHTEnCours = ($DonneesListeLigneDuDevis['QT']*$DonneesListeLigneDuDevis['PRIX_U'])-($DonneesListeLigneDuDevis['QT']*$DonneesListeLigneDuDevis['PRIX_U'])*($DonneesListeLigneDuDevis['REMISE']/100); 
+
+							$TotalLigneHTEnCours = ($DonneesListeLigneDuDevis['QT']*$DonneesListeLigneDuDevis['PRIX_U'])-($DonneesListeLigneDuDevis['QT']*$DonneesListeLigneDuDevis['PRIX_U'])*($DonneesListeLigneDuDevis['REMISE']/100);
 							$TotalLigneTVAEnCours =  $TotalLigneHTEnCours*($DonneesListeLigneDuDevis['TAUX']/100) ;
 							$TotalLigneTTCEnCours = $TotalLigneTVAEnCours+$TotalLigneHTEnCours;
-							
+
 							$TotalLigneDevisHT += $TotalLigneHTEnCours;
 							$TotalLigneDevisTTC += $TotalLigneTVAEnCours+$TotalLigneHTEnCours;
-							
+
 							if(array_key_exists($DonneesListeLigneDuDevis['TVA_ID'], $tableauTVA)){
 								$tableauTVA[$DonneesListeLigneDuDevis['TVA_ID']][0] += $TotalLigneHTEnCours;
 								$tableauTVA[$DonneesListeLigneDuDevis['TVA_ID']][2] += $TotalLigneTVAEnCours;
@@ -724,8 +725,8 @@
 							else{
 								$tableauTVA[$DonneesListeLigneDuDevis['TVA_ID']] = array($TotalLigneHTEnCours, $DonneesListeLigneDuDevis['TAUX'], $TotalLigneTVAEnCours, $TotalLigneTTCEnCours);
 							}
-							
-							
+
+
 							$DetailLigneDuDevis .='
 							<tr>
 								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="'. $DonneesListeLigneDuDevis['Id'] .'"><a href="devis.php?id='. $_GET['id'] .'&amp;delete='. $DonneesListeLigneDuDevis['Id'] .'" title="Supprimer la ligne">x</a></td>
@@ -766,7 +767,7 @@
 									</select>
 								</td>
 							</tr>';
-							
+
 							$LignePourCommande .='
 							<tr>
 								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="'. $DonneesListeLigneDuDevis['Id'] .'"></td>
@@ -784,12 +785,12 @@
 								<td>'. $DonneesListeLigneDuDevis['DELAIS'] .'</td>
 							</tr>';
 						}
-						
+
 			$req = $bdd->query('SELECT '. TABLE_ERP_COMMANDE .'.id,
 										'. TABLE_ERP_COMMANDE .'.CODE,
 										'. TABLE_ERP_COMMANDE .'.LABEL,
 										'. TABLE_ERP_CLIENT_FOUR .'.NAME
-								FROM '. TABLE_ERP_COMMANDE .' 
+								FROM '. TABLE_ERP_COMMANDE .'
 									LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_COMMANDE .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
 								ORDER BY '. TABLE_ERP_COMMANDE .'.id');
 							while ($donnees_commande = $req->fetch())
@@ -801,7 +802,7 @@
 											</td>
 										</tr>';
 							}
-							
+
 						$DevisAssitCommande = '
 							<div class="column">
 								<table class="content-table" >
@@ -866,14 +867,14 @@
 							</div>';
 
 						$req->closeCursor();
-									
+
 						///////////////////////////////
 						//// FIN GESTION DES LIGNE DE DEVIS   ////
 						///////////////////////////////
-				
+
 				asort($tableauTVA);
 				 foreach($tableauTVA as $key => $value){
-					
+
 					$DetailLigneTVA .='
 						<tr>
 							<th></th>
@@ -981,17 +982,17 @@
 					</tr>
 				</tbody>
 			</table>';
-			
+
 		}
-	
-				
+
+
 			$req = $bdd->query("SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME");
 			while ($donnees_ste = $req->fetch())
 			{
 				$ListeSte .= '<option  value="'. $donnees_ste['id'] .'" >'. $donnees_ste['NAME'] .'</option>';
 			}
-	
-			$Acceuil = 
+
+			$Acceuil =
 				'<div class="column">
 					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un devis">
 					<ul id="myUL">
@@ -1026,7 +1027,7 @@
 								<th colspan="5">
 									  <br/>
 								</th>
-								
+
 							</tr>
 						</thead>
 						<tbody>
@@ -1055,14 +1056,14 @@
 				<div id="piechart" style="width: 100%; height: 300px;"></div>
 				<div id="columnchart_values" style="width: 100%; height: 300px;"></div>
 			</div>';
-			
+
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
 		$actionForm = 'devis.php?id='. $_GET['id'] .'';
-		
+
 	}
 	elseif(isset($_GET['id']) AND !empty($_GET['id'])){
 		$ParDefautDiv1 = '';
@@ -1070,7 +1071,7 @@
 		$ParDefautDiv3 = '';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
 		$actionForm = 'devis.php?id='. $_GET['id'] .'';
-		
+
 	}
 	else{
 		$ParDefautDiv3 = '';
@@ -1110,10 +1111,10 @@
 				If ($donnees_Etat['ETAT'] == 4) {$Etat = 'Décliné';}
 				If ($donnees_Etat['ETAT'] == 5) {$Etat = 'Fermé';}
 				If ($donnees_Etat['ETAT'] == 6) {$Etat = 'Obselète';}
-			
+
 				$ListeEtat .= ", ['". $Etat ."',". $donnees_Etat['CountEtat'] ."]";
 			}
-			
+
 			echo $ListeEtat;
 ?>
         ]);
@@ -1171,9 +1172,9 @@ $(document).ready(function() {
 		var AddRemiseLigneDevis = $("#AddRemiseLigneDevis").val();
 		var AddTVALigneDevis = $("#AddTVALigneDevis").val();
 		var AddDELAISigneDevis = $("#AddDELAISigneDevis").val();
-		
+
 		var TotalPrix = (AddQTLigneDevis*AddPrixLigneDevis)-(AddQTLigneDevis*AddPrixLigneDevis)*(AddRemiseLigneDevis/100);
-		
+
 		var ligne = "<tr>";
 		var ligne = ligne + "<td><input type=\"checkbox\" name=\"select\"></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddORDRELigneDevis[]\" value=\""+ AddORDRELigneDevis +"\" id=\"number\" required=\"required\"></td>";
@@ -1203,12 +1204,12 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-    
+
 <?php
 
 	//include interface
 	require_once 'include/include_interface.php';
-	
+
 
 
 ?>
@@ -1232,7 +1233,7 @@ $(document).ready(function() {
 	}
 ?>
 		<div class="DataListDroite">
-			<form method="get" name="devis" action="<?php echo $actionForm; ?>">  
+			<form method="get" name="devis" action="<?php echo $actionForm; ?>">
 				Devis : <input list="devis" name="id" id="id" placeholder="Ex: DV201118-01">
 				<datalist id="devis">
 					<?php echo $ListeQuote; ?>
@@ -1243,7 +1244,7 @@ $(document).ready(function() {
 	</div>
 	<div id="div1" class="tabcontent">
 			<?php echo $Acceuil; ?>
-	</div>	
+	</div>
 	<div id="div2" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $DevisAcceuil; ?>
@@ -1258,26 +1259,26 @@ $(document).ready(function() {
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $DevisGeneral; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div5" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $DevisInfoClient; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div6" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $DevisInfoCommercial; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div7" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $DevisCommentaire; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div8" class="tabcontent">
 		<form method="post" name="Coment" action="commandes.php" class="content-form" >
-			<?php echo $DevisAssitCommande; ?> 
+			<?php echo $DevisAssitCommande; ?>
 		</form>
-	</div>	
+	</div>
 </body>
 </html>

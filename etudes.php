@@ -4,72 +4,73 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	///////////////////////////////
 	//// COMMMENT ////
 	///////////////////////////////
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_ARTICLE ." SET 	COMMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
 	}
-																		
+
 	////////////////////
 	////  ARTICLES  ////
 	////////////////////
-	
+
 	$titleOnglet1 = "Ajouter un Aricle";
 	$actionForm = 'etudes.php';
-	
+
 	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		if(isset($_POST['CODEAtricle'])){
-			
-			
+
+
 			$req = $bdd->query("SELECT COUNT(ID) as nb FROM ". TABLE_ERP_ARTICLE ." WHERE id = '". addslashes($_POST['IDArticle'])."'");
-			
+
 			$data = $req->fetch();
 			$req->closeCursor();
 			$nb = $data['nb'];
-			
-			
+
+
 			if($nb>=1){
-				
-				
+
+
 				$titleOnglet1 = "Mettre à jours";
-				
+
 				$dossier = 'images/ArticlesImage/';
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
-					
+
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-				
+
 				$InsertImage = $dossier.$fichier;
-		
+
 				If(empty($fichier)){
 					$AddSQL = '';
 				}
 				else{
 					$AddSQL = ', IMAGE = \''. addslashes($InsertImage) .'\'';
 				}
-				
+
 				$req = $bdd->exec("UPDATE  ". TABLE_ERP_ARTICLE ." SET 	LABEL='". addslashes($_POST['LABELAtricle']) ."',
 																			IND='". addslashes($_POST['INDArticle']) ."',
 																			PRESTATION_ID='". addslashes($_POST['PRESTA_IDAtricle']) ."',
@@ -90,7 +91,7 @@
 																			SUR_Z='". addslashes($_POST['SURDIMZArticle']) ."'
 																			". $AddSQL ."
 																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
-				
+
 				$req = $bdd->query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -119,21 +120,21 @@
 									FROM '. TABLE_ERP_ARTICLE .'
 										LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_ARTICLE .'`.`UNITE_ID` = `'. TABLE_ERP_UNIT .'`.`id`
 										LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_ARTICLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id` 
+										LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id`
 									WHERE '. TABLE_ERP_ARTICLE .'.id = '. addslashes($_POST['IDArticle']).'');
 			}
 			else{
-				
+
 				$titleOnglet1 = "Mettre à jours";
-				
-				
+
+
 				$dossier = 'images/ArticlesImage/';
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
-					
+
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-				
+
 				$InsertImage = $dossier.$fichier;
-				
+
 				$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ARTICLE ." VALUE ('0',
 																				'". addslashes($_POST['CODEAtricle']) ."',
 																				'". addslashes($_POST['LABELAtricle']) ."',
@@ -156,8 +157,8 @@
 																				'". addslashes($_POST['SURDIMZArticle']) ."',
 																				'',
 																				'". addslashes($InsertImage) ."')");
-				
-				
+
+
 				$req = $bdd->query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -191,11 +192,11 @@
 			}
 		}
 		else{
-			
+
 			$Name = preg_replace('#-+#',' ', addslashes($_GET['id']));
 
 			$titleOnglet1 = "Mettre à jours";
-			
+
 			$req = $bdd -> query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -228,10 +229,10 @@
 										LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id`
 									WHERE '. TABLE_ERP_ARTICLE .'.LABEL = \''. $Name.'\'');
 		}
-		
+
 		$DonneesArticle = $req->fetch();
 		$req->closeCursor();
-		
+
 		$ArticleId = $DonneesArticle['ID'];
 		$ArticleCODE = $DonneesArticle['CODE'];
 		$ArticleLabel = $DonneesArticle['LABEL'];
@@ -258,17 +259,17 @@
 		$ArticleSurZ = $DonneesArticle['SUR_Z'];
 		$ArticleComment = $DonneesArticle['COMMENT'];
 		$ArticleImage = $DonneesArticle['IMAGE'];
-		
+
 		$actionForm = 'etudes.php?id='. $ArticleLabel .'';
 	}
-	
+
 	$PrestaListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'');
 	while ($DonneesPresta = $req->fetch()){
 		$PrestaListe .='<option value="'. $DonneesPresta['Id'] .'" '. selected($ArticlePrestaId, $DonneesPresta['Id']) .' >'. $DonneesPresta['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
-	
+
 	$FamilleListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SOUS_FAMILLE .'');
 	while ($DonneesFamille = $req->fetch()){
@@ -284,7 +285,7 @@
 		$UnitListeInit .='<option value="'. $DonneesUnit['Id'] .'>'. $DonneesUnit['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
-	
+
 	if(!empty($ArticleCODE)){$DisplayCode = '<input type="hidden" name="CODEAtricle" value="'. $ArticleCODE .'">' .$ArticleCODE;}
 	else{ $DisplayCode ='<input type="text" name="CODEAtricle" required="required">'; }
 
@@ -304,10 +305,10 @@
 					</td>
 					<td >
 						<input type="text" name="LABELAtricle" value="'. $ArticleLabel .'" >
-					</td>	
+					</td>
 					<td >
 						<input type="text" name="INDArticle" value="'. $ArticleInd .'" size="10">
-					</td>	
+					</td>
 					<td >
 						<select name="PRESTA_IDAtricle">
 							'. $PrestaListe .'
@@ -402,10 +403,10 @@
 					</td>
 					<td >
 						<input type="number" name="DIMYArticle" value="'. $ArticleDimY .'" size="10" required="required">
-					</td>	
+					</td>
 					<td >
 						<input type="number" name="DIMZArticle" value="'. $ArticleDimZ .'" required="required">
-					</td>	
+					</td>
 					<td >
 						<input type="number" name="SURDIMXArticle" value="'. $ArticleSurX .'" size="10" required="required">
 					</td>
@@ -426,22 +427,22 @@
 					<td colspan=6"><img src="'. $ArticleImage .'" title="Image article" alt="Article" /></td>
 				</tr>
 				';
-				
+
 	$req = $bdd->query("SELECT * FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL");
 	while ($donnees_Article = $req->fetch())
 	{
 		$ListeArticle .= '<option  value="'. $donnees_Article['LABEL'] .'" >';
 		$FormListeArticle .= '<option value="'. $donnees_Article['id'] .'" >'. $donnees_Article['LABEL'] .'</option>';
 	}
-	
+
 	$req->closeCursor();
-	
+
 	///////////////////////////////
 	//// DECOUPAGE TECHNIQUE ////
 	///////////////////////////////
-							
+
 	if(isset($_POST['AddORDREDecoupTech']) AND !empty($_POST['AddORDREDecoupTech'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEC_TECH ." VALUE ('0',
 																		'". addslashes($ArticleId) ."',
 																		'". addslashes($_POST['AddORDREDecoupTech']) ."',
@@ -451,11 +452,11 @@
 																		'". addslashes($_POST['AddTPSPRODDecoupTech']) ."',
 																		'". addslashes($_POST['AddCOUTDecoupTech']) ."',
 																		'". addslashes($_POST['AddPRIXDecoupTech']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_DecoupTech']) AND !empty($_POST['id_DecoupTech'])){
-		
+
 		$UpdateIdDecoupTech = $_POST['id_DecoupTech'];
 		$UpdateORDREDecoupTech = $_POST['UpdateORDREDecoupTech'];
 		$UpdatePRESTADecoupTech = $_POST['UpdatePRESTADecoupTech'];
@@ -464,10 +465,10 @@
 		$UpdateTPSPRODDecoupTech = $_POST['UpdateTPSPRODDecoupTech'];
 		$UpdateCOUTDecoupTech = $_POST['UpdateCOUTDecoupTech'];
 		$UpdatePRIXDecoupTech = $_POST['UpdatePRIXDecoupTech'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdDecoupTech as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_DEC_TECH .'` SET  ORDRE = \''. addslashes($UpdateORDREDecoupTech[$i]) .'\',
 																PRESTA_ID = \''. addslashes($UpdatePRESTADecoupTech[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELDecoupTech[$i]) .'\',
@@ -479,14 +480,14 @@
 			$i++;
 		}
 	}
-	
+
 	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		$iDecoupTech = 0;
 		$TtTpsPrepa = 0;
 		$TtTpsProd = 0;
 		$TtCout = 0;
 		$TtPrix = 0;
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_DEC_TECH .'.Id,
 										'. TABLE_ERP_DEC_TECH .'.ORDRE,
 										'. TABLE_ERP_DEC_TECH .'.PRESTA_ID,
@@ -498,20 +499,20 @@
 										'. TABLE_ERP_PRESTATION .'.LABEL AS PRESTA_LABEL
 										FROM `'. TABLE_ERP_DEC_TECH .'`
 											LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_DEC_TECH .'`.`PRESTA_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-										WHERE '. TABLE_ERP_DEC_TECH .'.ARTICLE_ID = '. $ArticleId .' 
+										WHERE '. TABLE_ERP_DEC_TECH .'.ARTICLE_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_DEC_TECH .'.ORDRE');
-										
+
 		while ($donnees_DecoupTech = $req->fetch()){
-			
+
 			$PrestaListe ='<option value="0">Aucune</option>';
 			$Subreq = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'');
 			while ($DonneesPresta = $Subreq->fetch())
 			{
 				$PrestaListe .='<option value="'. $DonneesPresta['Id'] .'" '. selected($DonneesPresta['Id'], $donnees_DecoupTech['PRESTA_ID']) .' >'. $DonneesPresta['LABEL'] .'</option>';
 			}
-		
+
 			 $DecoupageTechnique .= '
-			 
+
 					<tr>
 						<td></td>
 						<td>
@@ -529,14 +530,14 @@
 						<td><input type="number"  name="UpdateCOUTDecoupTech[]" value="'. $donnees_DecoupTech['COUT'] .'" step=".001" required="required"></td>
 						<td><input type="number"  name="UpdatePRIXDecoupTech[]" value="'. $donnees_DecoupTech['PRIX'] .'" step=".001" required="required"></td>
 					</tr>';
-					
+
 			$iDecoupTech++;
 			$TtTpsPrepa += $donnees_DecoupTech['TPS_PREP'];
 			$TtTpsProd += $donnees_DecoupTech['TPS_PRO'];
 			$TtCout += $donnees_DecoupTech['COUT'];
 			$TtPrix += $donnees_DecoupTech['PRIX'];
 		}
-		
+
 		if($iDecoupTech>=1){
 			$DecoupageTechnique .='
 					<tr>
@@ -550,19 +551,19 @@
 						<td>'. $TtPrix .'</td>
 					</tr>';
 			$iDecoupTech = "(". $iDecoupTech .")";
-			
+
 		}
 		else{
 			$iDecoupTech= "";
 		}
 	}
-	
+
 	///////////////////////////////
 	//// NOMENCLATURE ////
 	///////////////////////////////
-							
+
 	if(isset($_POST['AddORDRENomencl']) AND !empty($_POST['AddORDRENomencl'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_NOMENCLATURE ." VALUE ('0',
 																		'". addslashes($_POST['AddORDRENomencl']) ."',
 																		'". addslashes($ArticleId) ."',
@@ -572,11 +573,11 @@
 																		'". addslashes($_POST['AddTUNITNomencl']) ."',
 																		'". addslashes($_POST['AddPRIXUNomencl']) ."',
 																		'". addslashes($_POST['AddPRIXACHATNomencl']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['UpdateIdNomencl']) AND !empty($_POST['UpdateIdNomencl'])){
-		
+
 		$UpdateIdNomencl = $_POST['UpdateIdNomencl'];
 		$UpdateORDRENomencl = $_POST['UpdateORDRENomencl'];
 		$UpdateARTICLENomencl = $_POST['UpdateARTICLENomencl'];
@@ -585,10 +586,10 @@
 		$UpdateUNITNomencl = $_POST['UpdateUNITNomencl'];
 		$UpdatePRIXUNomencl = $_POST['UpdatePRIXUNomencl'];
 		$UpdatePRIXACHATNomencl = $_POST['UpdatePRIXACHATNomencl'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdNomencl as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_NOMENCLATURE .'` SET  ORDRE = \''. addslashes($UpdateORDRENomencl[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELNomencl[$i]) .'\',
 																QT = \''. addslashes($UpdateQTNomencl[$i]) .'\',
@@ -598,12 +599,12 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
-		
+
 	}
-	
+
 	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		$iNomencl = 0;
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_NOMENCLATURE .'.Id,
 										'. TABLE_ERP_NOMENCLATURE .'.ORDRE,
 										'. TABLE_ERP_NOMENCLATURE .'.PARENT_ID,
@@ -618,13 +619,13 @@
 										FROM `'. TABLE_ERP_NOMENCLATURE .'`
 											LEFT JOIN `'. TABLE_ERP_ARTICLE .'` ON `'. TABLE_ERP_NOMENCLATURE .'`.`ARTICLE_ID` = `'. TABLE_ERP_ARTICLE .'`.`id`
 											LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_NOMENCLATURE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-										WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = '. $ArticleId .' 
+										WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_NOMENCLATURE .'.ORDRE');
-										
+
 		while ($donnees_Nomencl = $req->fetch())
 		{
 			 $Nomenclature .= '
-			 
+
 					<tr>
 						<td></td>
 						<td>
@@ -633,7 +634,7 @@
 						</td>
 						<td>
 							<input type="hidden" name="UpdateARTICLENomencl[]" value="'. $donnees_Nomencl['ARTICLE_ID'] .'">
-							'. $donnees_Nomencl['ARTICLE_LABEL'] .' 
+							'. $donnees_Nomencl['ARTICLE_LABEL'] .'
 						</td>
 						<td><input type="text"  name="UpdateLABELNomencl[]" value="'. $donnees_Nomencl['LABEL'] .'" required="required"></td>
 						<td><input type="number"  name="UpdateQTNomencl[]" value="'. $donnees_Nomencl['QT'] .'" step=".001" required="required"></td>
@@ -646,10 +647,10 @@
 						<td><input type="number"  name="UpdatePRIXUNomencl[]" value="'. $donnees_Nomencl['PRIX_U'] .'" step=".001" required="required"></td>
 						<td><input type="number"  name="UpdatePRIXACHATNomencl[]" value="'. $donnees_Nomencl['PRIX_ACHAT'] .'" step=".001" required="required"></td>
 					</tr>';
-					
+
 			$iNomencl++;
 		}
-		
+
 		if($iNomencl>=1){
 			$iNomencl = "(". $iNomencl .")";
 		}
@@ -657,31 +658,31 @@
 			$iNomencl= "";
 		}
 	}
-	
+
 	///////////////////////////////
 	//// SOUS-ENSEMBLE ////
 	///////////////////////////////
-							
+
 	if(isset($_POST['AddORDRESousEns']) AND !empty($_POST['AddORDRESousEns'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_SOUS_ENSEMBLE ." VALUE ('0',
 																		'". addslashes($ArticleId) ."',
 																		'". addslashes($_POST['AddORDRESousEns']) ."',
 																		'". addslashes($_POST['AddARTICLESousEns']) ."',
 																		'". addslashes($_POST['AddQTSousEns']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['UpdateIdSousEns']) AND !empty($_POST['UpdateIdSousEns'])){
-		
+
 		$UpdateIdSousEns = $_POST['UpdateIdSousEns'];
 		$UpdateORDRESousEns = $_POST['UpdateORDRESousEns'];
 		$UpdateARTICLESousEns = $_POST['UpdateARTICLESousEns'];
 		$UpdateQTSousEns = $_POST['UpdateQTSousEns'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdSousEns as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_SOUS_ENSEMBLE .'` SET  ORDRE = \''. addslashes($UpdateORDRESousEns[$i]) .'\',
 																	ARTICLE_ID = \''. addslashes($UpdateARTICLESousEns[$i]) .'\',
 																	QT = \''. addslashes($UpdateQTSousEns[$i]) .'\'
@@ -689,10 +690,10 @@
 			$i++;
 		}
 	}
-	
+
 	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		$iSousEns = 0;
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_SOUS_ENSEMBLE .'.Id,
 										'. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID,
 										'. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE,
@@ -701,9 +702,9 @@
 										'. TABLE_ERP_ARTICLE .'.LABEL AS LABEL_ARTICLE
 										FROM `'. TABLE_ERP_SOUS_ENSEMBLE .'`
 											LEFT JOIN `'. TABLE_ERP_ARTICLE .'` ON `'. TABLE_ERP_SOUS_ENSEMBLE .'`.`ARTICLE_ID` = `'. TABLE_ERP_ARTICLE .'`.`id`
-										WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = '. $ArticleId .' 
+										WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE');
-										
+
 		while ($donnees_SousEns = $req->fetch())
 		{
 			 $SousEnsemble .= '
@@ -719,10 +720,10 @@
 						<td><input type="number"  name="UpdateQTSousEns[]" value="'. $donnees_SousEns['QT'] .'" step=".001"></td>
 						<td><a href="etudes.php?id='. $donnees_SousEns['LABEL_ARTICLE'] .'">--></a></td>
 					</tr>';
-					
+
 			$iSousEns++;
 		}
-		
+
 		if($iSousEns>=1){
 			$iSousEns = "(". $iSousEns .")";
 		}
@@ -730,7 +731,7 @@
 			$iSousEns= "";
 		}
 	}
-	
+
 	///////////////////////////////
 	//// IMPUTATION ////
 	///////////////////////////////
@@ -739,37 +740,37 @@
 									'. TABLE_ERP_IMPUT_COMPTA .'.LABEL
 									FROM `'. TABLE_ERP_IMPUT_COMPTA .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_IMPUT = $req->fetch())
 	{
 		$ListeImput .='<option value="'. $donnees_IMPUT['Id'] .'">'. $donnees_IMPUT['CODE'] .' - '. $donnees_IMPUT['LABEL'] .'</option>';
 	}
-	
+
 	if(isset($_POST['AddORDREImputation']) AND !empty($_POST['AddORDREImputation'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_IMPUT_COMPTA_LIGNE ." VALUE ('0',
 																		'". addslashes($_POST['IDArticle']) ."',
 																		'". addslashes($_POST['AddORDREImputation']) ."',
 																		'". addslashes($_POST['AddIdImpuration']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['UpdateIdImputationLigne']) AND !empty($_POST['UpdateIdImputationLigne'])){
-		
+
 		$UpdateIdImputationLigne = $_POST['UpdateIdImputationLigne'];
 		$UpdateORDREImputation = $_POST['UpdateORDREImputation'];
 		$UpdateIdImpuration = $_POST['UpdateIdImpuration'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdImputationLigne as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_IMPUT_COMPTA_LIGNE .'` SET  ORDRE = \''. addslashes($UpdateORDREImputation[$i]) .'\',
 																IMPUTATION_ID = \''. addslashes($UpdateIdImpuration[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	if(isset($_GET['id']) AND !empty($_GET['id'])){
 
 		$req = $bdd -> query('SELECT '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.Id,
@@ -782,26 +783,26 @@
 										FROM `'. TABLE_ERP_IMPUT_COMPTA_LIGNE .'`
 											LEFT JOIN `'. TABLE_ERP_IMPUT_COMPTA .'` ON `'. TABLE_ERP_IMPUT_COMPTA_LIGNE .'`.`IMPUTATION_ID` = `'. TABLE_ERP_IMPUT_COMPTA .'`.`ID`
 											LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_IMPUT_COMPTA .'`.`TVA` = `'. TABLE_ERP_TVA .'`.`ID`
-										WHERE '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.ARTICLE_ID = '. $ArticleId .' 
+										WHERE '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.ARTICLE_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.ORDRE');
-										
+
 		while ($donnees_Imput = $req->fetch())
 		{
-			if($donnees_Imput['TYPE_IMPUTATION'] == 1) $TypeImputation = "Achat"; 
-			if($donnees_Imput['TYPE_IMPUTATION'] == 2) $TypeImputation = "Achat (stock)"; 
+			if($donnees_Imput['TYPE_IMPUTATION'] == 1) $TypeImputation = "Achat";
+			if($donnees_Imput['TYPE_IMPUTATION'] == 2) $TypeImputation = "Achat (stock)";
 			if($donnees_Imput['TYPE_IMPUTATION'] == 3) $TypeImputation = "Acompte";
-			if($donnees_Imput['TYPE_IMPUTATION'] == 4) $TypeImputation = "Acompte (avec TVA)"; 	
+			if($donnees_Imput['TYPE_IMPUTATION'] == 4) $TypeImputation = "Acompte (avec TVA)";
 			if($donnees_Imput['TYPE_IMPUTATION'] == 5) $TypeImputation = "Autre";
-			if($donnees_Imput['TYPE_IMPUTATION'] == 6) $TypeImputation = "TVA"; 
-									
+			if($donnees_Imput['TYPE_IMPUTATION'] == 6) $TypeImputation = "TVA";
+
 			 $donnees_ImputCompta .= '
-			 
+
 					<tr>
 						<td>
 							<input type="hidden" name="UpdateIdImputationLigne[]" id="UpdateIdImputationLigne" value="'. $donnees_Imput['Id'] .'">
 						</td>
 						<td>
-							
+
 							<input type="number" name="UpdateORDREImputation[]" value="'. $donnees_Imput['ORDRE'] .'">
 						</td>
 						<td>
@@ -813,33 +814,33 @@
 						<td>'. $donnees_Imput['LABEL_TVA'] .'</td>
 						<td>'. $TypeImputation .'</td>
 					</tr>';
-					
+
 		}
 	}
-	
+
 	///////////////
 	//// UNITS ////
 	///////////////
-	
+
 	if(isset($_POST['AddCODEUnit']) AND !empty($_POST['AddCODEUnit'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_UNIT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEUnit']) ."',
 																		'". addslashes($_POST['AddLABELUnit']) ."',
 																		'". addslashes($_POST['AddTYPEUnit']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_unit']) AND !empty($_POST['id_unit'])){
-		
+
 		$UpdateIdUnit = $_POST['id_unit'];
 		$UpdateCODEUnit = $_POST['UpdateCODEUnit'];
 		$UpdateLABELUnit = $_POST['UpdateLABELUnit'];
 		$UpdateTYPEUnit = $_POST['UpdateTYPEUnit'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdUnit as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_UNIT .'` SET  CODE = \''. addslashes($UpdateCODEUnit[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELUnit[$i]) .'\',
 																TYPE = \''. addslashes($UpdateTYPEUnit[$i]) .'\'
@@ -847,7 +848,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_UNIT .'.Id,
 									'. TABLE_ERP_UNIT .'.CODE,
@@ -855,7 +856,7 @@
 									'. TABLE_ERP_UNIT .'.TYPE
 									FROM `'. TABLE_ERP_UNIT .'`
 									ORDER BY TYPE');
-									
+
 	while ($donnees_unit = $req->fetch()){
 		 $contenu2 = $contenu2 .'
 				<tr>
@@ -874,41 +875,41 @@
 				</tr>';
 		$i++;
 	}
-	
+
 	////////////////////////
 	////  SOUS-FAMILLE  ////
 	///////////////////////
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_PRESTATION .'.Id,
 									'. TABLE_ERP_PRESTATION .'.CODE,
 									'. TABLE_ERP_PRESTATION .'.LABEL
 									FROM `'. TABLE_ERP_PRESTATION .'`
 									ORDER BY ORDRE');
-									
-	
+
+
 	while ($donnees_presta = $req->fetch()){
 		$SectionListe .='<option value="'. $donnees_presta['Id'] .'">'. $donnees_presta['CODE'] .' - '. $donnees_presta['LABEL'] .'</option>';
 	}
-	
+
 	if(isset($_POST['AddCODESousFamille']) AND !empty($_POST['AddCODESousFamille'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_SOUS_FAMILLE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODESousFamille']) ."',
 																		'". addslashes($_POST['AddLABELSousFamille']) ."',
 																		'". addslashes($_POST['AddRESSOURCESousFamille']) ."')");
 	}
-	
+
 	if(isset($_POST['id_sous_famille']) AND !empty($_POST['id_sous_famille'])){
-		
+
 		$UpdateIdSousFamille = $_POST['id_sous_famille'];
 		$UpdateCODESousFamille = $_POST['UpdateCODESousFamille'];
 		$UpdateLABELSousFamille = $_POST['UpdateLABELSousFamille'];
 		$AddTRESSOURCESousFamille = $_POST['AddTRESSOURCESousFamille'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdSousFamille as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_SOUS_FAMILLE .'` SET  CODE = \''. addslashes($UpdateCODESousFamille[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSousFamille[$i]) .'\',
 																PRESTATION_ID = \''. addslashes($AddTRESSOURCESousFamille[$i]) .'\'
@@ -916,7 +917,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_SOUS_FAMILLE .'.Id,
 									'. TABLE_ERP_SOUS_FAMILLE .'.CODE,
@@ -927,7 +928,7 @@
 									FROM `'. TABLE_ERP_SOUS_FAMILLE .'`
 									LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_SOUS_FAMILLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
 									ORDER BY Id');
-									
+
 	while ($donnees_id_sous_famille = $req->fetch()){
 		 $contenu3 = $contenu3 .'
 				<tr>
@@ -978,7 +979,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div9')" >Unités</button>
 		<button class="tablinks" onclick="openDiv(event, 'div10')">Sous-Famille</button>
 		<div class="DataListDroite">
-			<form method="get" name="article" action="<?php echo $actionForm; ?>">  
+			<form method="get" name="article" action="<?php echo $actionForm; ?>">
 				Liste Article : <input list="article" name="id" id="id" placeholder="Ex: Platine" >
 				<datalist id="article">
 					<?php echo $ListeArticle; ?>
@@ -996,7 +997,7 @@
 								  <br/>
 							</th>
 							<th>
-							
+
 							</th>
 						</tr>
 					</thead>
@@ -1195,7 +1196,7 @@
 				</tbody>
 			</table>
 		</form>
-	
+
 	</div>
 	<div id="div8" class="tabcontent" >
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
@@ -1303,7 +1304,7 @@
 			</form>
 		</div>
 	</div>
-	
+
 
 </body>
 </html>

@@ -4,35 +4,36 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	if(isset($_POST['AddPosteCharge']) AND !empty($_POST['AddPosteCharge'])){
 
 		$dossier = 'images/Presta/';
 		$fichier = basename($_FILES['IMAGEPosteCharge']['name']);
-			
+
 		move_uploaded_file($_FILES['IMAGEPosteCharge']['tmp_name'], $dossier . $fichier);
-		
+
 		$IsertPrestaImage = $dossier.$fichier;
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_PRESTATION ." VALUE ('0',
 																		'". addslashes($_POST['CODEPosteCharge']) ."',
 																		'". $_POST['ORDREPosteCharge'] ."',
@@ -43,11 +44,11 @@
 																		'". $_POST['COLORPosteCharge'] ."',
 																		'". addslashes($IsertPrestaImage) ."',
 																		'')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_presta']) AND !empty($_POST['id_presta'])){
-		
+
 		$UpdateIdPresta = $_POST['id_presta'];
 		$UpdateORDREpresta = $_POST['ORDREpresta'];
 		$UpdateCODEpresta = $_POST['CODEpresta'];
@@ -57,10 +58,10 @@
 		$UpdateMARGEpresta = $_POST['MARGEpresta'];
 		$UpdateCOLORpresta = $_POST['COLORpresta'];
 		$UpdateINAGEpresta = $_POST['INAGEpresta'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdPresta as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  CODE = \''. addslashes($UpdateCODEpresta[$i]) .'\',
 																ORDRE = \''. $UpdateORDREpresta[$i] .'\',
 																LABEL = \''. addslashes($UpdateLABELpresta[$i]) .'\',
@@ -73,11 +74,11 @@
 			$i++;
 		}
 	}
-	
-	if(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
-					
 
-		
+	if(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
+
+
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_SECTION ." VALUE ('0',
 																		'". $_POST['ORDRESection'] ."',
 																		'". addslashes($_POST['CODESection']) ."',
@@ -85,11 +86,11 @@
 																		'". $_POST['TAUXHSection'] ."',
 																		'". $_POST['RESPSection'] ."',
 																		'". $_POST['COLORSection'] ."')");
-															
+
 	}
-						
+
 	if(isset($_POST['id_section']) AND !empty($_POST['id_section'])){
-		
+
 		$UpdateIdSection = $_POST['id_section'];
 		$UpdateORDRESection = $_POST['UpdateORDRESection'];
 		$UpdateCODESection = $_POST['UpdateCODESection'];
@@ -97,10 +98,10 @@
 		$UpdateTAUX_HSection = $_POST['UpdateTAUX_HSection'];
 		$UpdateRESPONSABLESection = $_POST['UpdateRESPONSABLESection'];
 		$UpdateCOLORSection = $_POST['UpdateCOLORSection'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdSection as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_SECTION .'` SET  ORDRE = \''. $UpdateORDRESection[$i] .'\',
 																CODE = \''. addslashes($UpdateCODESection[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSection[$i]) .'\',
@@ -111,16 +112,16 @@
 			$i++;
 		}
 	}
-	
+
 	if(isset($_POST['AddRessource']) AND !empty($_POST['AddRessource'])){
-		
+
 		$dossier = 'images/Ressources/';
 		$fichier = basename($_FILES['IMAGERessource']['name']);
-			
+
 		move_uploaded_file($_FILES['IMAGERessource']['tmp_name'], $dossier . $fichier);
-		
+
 		$IsertPrestaImage = $dossier.$fichier;
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_RESSOURCE ." VALUE ('0',
 																		'". addslashes($_POST['CODERessource']) ."',
 																		'". addslashes($_POST['AddRessource']) ."',
@@ -130,25 +131,25 @@
 																		'". $_POST['CAPARessource'] ."',
 																		'". $_POST['SECTIONRessource'] ."',
 																		'". $_POST['COLORRessource'] ."')");
-															
+
 	}
-	
+
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
 	while ($donnees_membre = $req->fetch())
 	{
 		 $EmployeeListe .=  '<option value="'. $donnees_membre['idUSER'] .'">'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 
 	}
-	
+
 	//------------------------------
-	// PRESTA 
+	// PRESTA
 	//------------------------------
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_PRESTATION .'.Id,
 									'. TABLE_ERP_PRESTATION .'.CODE,
@@ -162,10 +163,10 @@
 									'. TABLE_ERP_PRESTATION .'.RESSOURCE_ID
 									FROM `'. TABLE_ERP_PRESTATION .'`
 									ORDER BY ORDRE');
-									
 
 
-	
+
+
 	while ($donnees_presta = $req->fetch())
 	{
 		 $contenu1 = $contenu1 .'
@@ -194,17 +195,17 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	//------------------------------
-	// RESSOURCES 
+	// RESSOURCES
 	//------------------------------
-	
+
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'');
 	while ($DonneesSection = $req->fetch())
 	{
 		$SectionListe .='<option value="'. $DonneesSection['Id'] .'">'. $DonneesSection['LABEL'] .'</option>';
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_RESSOURCE .'.Id,
 									'. TABLE_ERP_RESSOURCE .'.CODE,
@@ -219,7 +220,7 @@
 									FROM `'. TABLE_ERP_RESSOURCE .'`
 									LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_RESSOURCE .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`
 									ORDER BY ORDRE');
-	
+
 	while ($donnees_Ressources = $req->fetch())
 	{
 		 $contenu2 = $contenu2 .'
@@ -247,11 +248,11 @@
 				</tr>';
 		$i++;
 	}
-	
+
 	//------------------------------
-	// SECTION 
+	// SECTION
 	//------------------------------
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_SECTION .'.Id,
 								'. TABLE_ERP_SECTION .'.ORDRE,
@@ -269,7 +270,7 @@
 								ORDER BY '. TABLE_ERP_SECTION .'.ORDRE');
 	while ($donnees_section = $req->fetch())
 	{
-		
+
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_section[]" id="id_section" value="'. $donnees_section['Id'] .'"></td>
@@ -287,11 +288,11 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	//------------------------------
-	// ZONE DE STOCKAGE 
+	// ZONE DE STOCKAGE
 	//------------------------------
-	
+
 	$RessourcesListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
 	while ($DonneesRessource = $req->fetch())
@@ -301,26 +302,26 @@
 
 	if(isset($_POST['AddCODEZoneStock']) AND !empty($_POST['AddCODEZoneStock'])){
 
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_STOCK_ZONE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEZoneStock']) ."',
 																		'". addslashes($_POST['AddLABELZoneStock']) ."',
 																		'". $_POST['AddRESSOURCEZoneStock'] ."',
 																		'". $_POST['AddCOLORZoneStock'] ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_ZoneStock']) AND !empty($_POST['id_ZoneStock'])){
-		
+
 		$UpdateIdZoneStock = $_POST['id_ZoneStock'];
 		$UpdateCODEZoneStock = $_POST['UpdateCODEZoneStock'];
 		$UpdateLABELZoneStock = $_POST['UpdateLABELZoneStock'];
 		$UpdateRESSOURCEIDZoneStock = $_POST['UpdateRESSOURCEIDZoneStock'];
 		$UpdateCOLORZoneStock = $_POST['UpdateCOLORZoneStock'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdZoneStock as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_STOCK_ZONE .'` SET CODE = \''. addslashes($UpdateCODEZoneStock[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELZoneStock[$i]) .'\',
 																RESSOURCE_ID = \''. $UpdateRESSOURCEIDZoneStock[$i] .'\',
@@ -329,7 +330,7 @@
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_STOCK_ZONE .'.Id,
 									'. TABLE_ERP_STOCK_ZONE .'.CODE,
@@ -340,7 +341,7 @@
 									FROM `'. TABLE_ERP_STOCK_ZONE .'`
 									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_STOCK_ZONE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
 									ORDER BY '.TABLE_ERP_RESSOURCE .'.id ');
-	
+
 	while ($donnees_ZoneStock = $req->fetch())
 	{
 		 $contenu4 = $contenu4 .'

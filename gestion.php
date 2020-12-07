@@ -4,37 +4,38 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	///////////////////////////////////
 	////  PARAMETRE DE L'ENTREPRISE  ////
 	//////////////////////////////////
-	
+
 	if(isset($_POST['CompanyName']) AND !empty($_POST['CompanyName'])){
 
 		$dossier = 'images/';
 		$fichier = basename($_FILES['fichier_LOGO']['name']);
-			
+
 		move_uploaded_file($_FILES['fichier_LOGO']['tmp_name'], $dossier . $fichier);
-		
+
 		$UpdateCompanyName = $_POST['CompanyName'];
 		$UpdateCompanyAddress = $_POST['CompanyAddress'];
 		$UpdateCompanyCity = $_POST['CompanyCity'];
@@ -54,16 +55,16 @@
 		$UpdateCompanyTAUXTVA = $_POST['CompanyTAUXTVA'];
 		$UpdateCompanyCAPITAL = $_POST['CompanyCAPITAL'];
 		$UpdateCompanyRCS = $_POST['CompanyRCS'];
-		
+
 		If(empty($fichier)){
 			$AddSQL = '';
 		}
 		else{
 			$AddSQL = 'LOGO = \''. addslashes($UpdateCompanyLogo) .'\',';
 		}
-	
 
-				
+
+
 		$bdd->exec('UPDATE `'. TABLE_ERP_COMPANY .'` SET  NAME = \''. addslashes($UpdateCompanyName) .'\',
 																ADDRESS = \''. addslashes($UpdateCompanyAddress) .'\',
 																CITY = \''. addslashes($UpdateCompanyCity) .'\',
@@ -84,7 +85,7 @@
 																CAPITAL = \''. addslashes($UpdateCompanyCAPITAL) .'\',
 																RCS = \''. addslashes($UpdateCompanyRCS) .'\'
 																WHERE Id=1');
-																
+
 		$req = $bdd -> query('SELECT NAME,
 							ADDRESS,
 							CITY,
@@ -105,7 +106,7 @@
 							CAPITAL,
 							RCS
 							FROM '. TABLE_ERP_COMPANY .'');
-							
+
 		$donnees = $req->fetch();
 
 		$CompanyName = $donnees['NAME'];
@@ -128,7 +129,7 @@
 		$CompanyCAPITAL = $donnees['CAPITAL'];
 		$CompanyRCS = $donnees['RCS'];
 	}
-	
+
 	$contenu1 = '
 				<tr>
 					<td>Nom de la Société</td>
@@ -172,7 +173,7 @@
 					</td>
 					<td >
 						<input type="text" name="CompanyMail" value="'. $CompanyMail .'" >
-					</td>	
+					</td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -192,10 +193,10 @@
 					</td>
 					<td >
 						<input type="text" name="CompanyFbSite" value="'. $CompanyFbSite .'" size="10">
-					</td>	
+					</td>
 					<td >
 						<input type="text" name="CompanyTwitter" value="'. $CompanyTwitter .'" size="10">
-					</td>	
+					</td>
 					<td >
 						<input type="text" name="CompanyLkd" value="'. $CompanyLkd .'" size="10">
 					</td>
@@ -216,10 +217,10 @@
 					</td>
 					<td >
 						<input type="text" name="CompanyAPE" value="'. $CompanyAPE .'" size="10">
-					</td>	
+					</td>
 					<td >
 						<input type="text" name="CompanyTVAINTRA" value="'. $CompanyTVAINTRA .'" >
-					</td>	
+					</td>
 					<td >
 						<input type="text" name="CompanyTAUXTVA" value="'. $CompanyTAUXTVA .'" size="10">
 					</td>
@@ -240,42 +241,42 @@
 					<td colspan=6"><img src="'. $CompanyLogo .'" title="LOGO entreprise" alt="Logo" /></td>
 				</tr>
 				';
-				
+
 	////////////////////////
 	//// SECTOR ACTIVITY////
 	///////////////////////
-	
+
 	if(isset($_POST['AddCODESector']) AND !empty($_POST['AddCODESector'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ACTIVITY_SECTOR ." VALUE ('0',
 																		'". addslashes($_POST['AddCODESector']) ."',
 																		'". addslashes($_POST['AddLABELSector']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
-		
+
 		$UpdateIdSector = $_POST['id_sector'];
 		$UpdateCODESector = $_POST['UpdateCODESector'];
 		$UpdateLABELSector = $_POST['UpdateLABELSector'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdSector as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_ACTIVITY_SECTOR .'` SET  CODE = \''. addslashes($UpdateCODESector[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSector[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_ACTIVITY_SECTOR .'.Id,
 									'. TABLE_ERP_ACTIVITY_SECTOR .'.CODE,
 									'. TABLE_ERP_ACTIVITY_SECTOR .'.LABEL
 									FROM `'. TABLE_ERP_ACTIVITY_SECTOR .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_sector = $req->fetch())
 	{
 		 $contenu2 = $contenu2 .'
@@ -286,39 +287,39 @@
 				</tr>	';
 		$i++;
 	}
-	
+
 	////////////////////////
 	//// NUM DOCUMENTS ////
 	///////////////////////
-	
-								
-	
+
+
+
 	if(isset($_POST['AddDOCNum']) AND !empty($_POST['AddDOCNum'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_NUM_DOC ." VALUE ('0',
 																		'". addslashes($_POST['AddDOCNum']) ."',
 																		'". addslashes($_POST['AddModeleNum']) ."',
 																		'". addslashes($_POST['AddDigitNum']) ."',
 																		'0')");
-															
+
 	}
-	
+
 	if(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
-		
+
 		$UpdateIdNumDoc = $_POST['id_NumDoc'];
 		$UpdateDOCNum = $_POST['UpdateDOCNum'];
 		$UpddateModeleNum = $_POST['UpddateModeleNum'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdNumDoc as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  DOC_TYPE = \''. addslashes($UpdateDOCNum[$i]) .'\',
 																MODEL = \''. addslashes($UpddateModeleNum[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_NUM_DOC .'.Id,
 									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
@@ -327,12 +328,12 @@
 									'. TABLE_ERP_NUM_DOC .'.COMPTEUR
 									FROM `'. TABLE_ERP_NUM_DOC .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_Num_doc = $req->fetch())
 	{
-		
+
 		$Exemple = NumDoc($donnees_Num_doc['MODEL'],$donnees_Num_doc['COMPTEUR'], $donnees_Num_doc['DIGIT']);
-		
+
 		 $contenu4 = $contenu4 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_NumDoc[]" id="id_NumDoc" value="'. $donnees_Num_doc['Id'] .'"></td>
@@ -359,34 +360,34 @@
 				</tr>';
 		$i++;
 	}
-	
+
 	////////////////////////
 	//// EMAIL ////
 	///////////////////////
-	
-	
+
+
 	if(isset($_POST['AddCODEMail']) AND !empty($_POST['AddCODEMail'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_EMAIL ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEMail']) ."',
 																		'". addslashes($_POST['AddLABELMAIL']) ."',
 																		'". addslashes($_POST['AddOBJETMail']) ."',
 																		'". addslashes($_POST['AddTEXTMAIL']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['UpdateIdMail']) AND !empty($_POST['UpdateIdMail'])){
-		
+
 		$UpdateIdMail = $_POST['UpdateIdMail'];
 		$UpddateObjetMail = $_POST['UpddateObjetMail'];
 		$UpddateTextMail = $_POST['UpddateTextMail'];
-		
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_EMAIL .'` SET  OBJET = \''. addslashes($UpddateObjetMail) .'\',
 																TEXT = \''. addslashes($UpddateTextMail) .'\'
 																WHERE id = '. $UpdateIdMail.'');
-		
+
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMAIL .'.Id,
 									'. TABLE_ERP_EMAIL .'.CODE,
@@ -395,10 +396,10 @@
 									'. TABLE_ERP_EMAIL .'.TEXT
 									FROM `'. TABLE_ERP_EMAIL .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_Mail = $req->fetch())
 	{
-		
+
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td></td>
@@ -409,9 +410,9 @@
 				</tr>';
 		$i++;
 	}
-	
+
 	if(isset($_GET['mail']) AND !empty($_GET['mail'])){
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_EMAIL .'.Id,
 									'. TABLE_ERP_EMAIL .'.CODE,
 									'. TABLE_ERP_EMAIL .'.LABEL,
@@ -420,7 +421,7 @@
 									FROM `'. TABLE_ERP_EMAIL .'`
 									WHERE id = '. addslashes($_GET['mail']).'');
 		$donnees_Mail = $req->fetch();
-		
+
 		 $contenu3 = $contenu3 .'
 					<tr>
 						<td><input type="hidden" name="UpdateIdMail" value="'. $donnees_Mail['Id'] .'">Objet :</td>
@@ -445,36 +446,36 @@
 							</p>
 						</td>
 					</tr>';
-		
-		
+
+
 	}
-	
+
 	////////////////////////
 	//// TIMELINE ////
 	///////////////////////
-	
-	
+
+
 	if(isset($_POST['AddTEXTTIMELINE']) AND !empty($_POST['AddTEXTTIMELINE'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_INFO_GENERAL ." VALUE ('0',
 																		'". addslashes($_POST['AddEtatTIMELINE']) ."',
 																		'". time() ."',
 																		'". addslashes($_POST['AddTEXTTIMELINE']) ."')");
-															
+
 	}
-	
+
 	if(isset($_POST['UpdateIdTimeLine']) AND !empty($_POST['UpdateIdTimeLine'])){
-		
+
 		$UpdateIdTimeLine = $_POST['UpdateIdTimeLine'];
 		$UpddateEtatTimeLine = $_POST['UpddateEtatTimeLine'];
 		$UpddateTextTimeLine = $_POST['UpddateTextTimeLine'];
-		
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_INFO_GENERAL .'` SET  ETAT = \''. addslashes($UpddateEtatTimeLine) .'\',
 																TEXT = \''. addslashes($UpddateTextTimeLine) .'\'
 																WHERE id = '. $UpdateIdTimeLine.'');
-		
+
 	}
-	
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_INFO_GENERAL .'.Id,
 									'. TABLE_ERP_INFO_GENERAL .'.TIMESTAMP,
@@ -482,13 +483,13 @@
 									'. TABLE_ERP_INFO_GENERAL .'.TEXT
 									FROM `'. TABLE_ERP_INFO_GENERAL .'`
 									ORDER BY Id');
-									
+
 	while ($donnees_TimeLine = $req->fetch())
 	{
 		if($donnees_TimeLine['ETAT'] == 2){$EtatTimeLine = "En édition";}
 		if($donnees_TimeLine['ETAT'] == 1){$EtatTimeLine = "Afficher";}
 		if($donnees_TimeLine['ETAT'] == 0){$EtatTimeLine = "Non publiée";}
-			
+
 		 $contenu5 = $contenu5 .'
 				<tr>
 					<td></td>
@@ -498,16 +499,16 @@
 				</tr>';
 		$i++;
 	}
-	
+
 	if(isset($_GET['timeline']) AND !empty($_GET['timeline'])){
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_INFO_GENERAL .'.Id,
 									'. TABLE_ERP_INFO_GENERAL .'.ETAT,
 									'. TABLE_ERP_INFO_GENERAL .'.TEXT
 									FROM `'. TABLE_ERP_INFO_GENERAL .'`
 									WHERE id = '. addslashes($_GET['timeline']).'');
 		$donnees_TimeLine = $req->fetch();
-		
+
 		 $contenu5 = $contenu5 .'
 					<tr>
 						<td><input type="hidden" name="UpdateIdTimeLine" value="'. $donnees_TimeLine['Id'] .'">Etat :</td>
@@ -528,7 +529,7 @@
 						</td>
 					</tr>';
 	}
-	
+
 	if(isset($_GET['mail']) AND !empty($_GET['mail'])){
 		$ParDefautDiv3 = 'id="defaultOpen"';
 	}
@@ -571,7 +572,7 @@
 								  <br/>
 							</th>
 							<th>
-							
+
 							</th>
 						</tr>
 					</thead>

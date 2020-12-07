@@ -4,15 +4,15 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
@@ -20,13 +20,13 @@
 	}
 
 	if(isset($_POST['ProfilSpeudo']) AND !empty($_POST['ProfilName'])){
-		
+
 		$dossier = 'images/Profils/';
 		$fichier = basename($_FILES['PhotoProfil']['name']);
-			
+
 		move_uploaded_file($_FILES['PhotoProfil']['tmp_name'], $dossier . $fichier);
-		
-		
+
+
 		$UpdateProfilName = $_POST['ProfilName'];
 		$UpdateProfilSurName = $_POST['ProfilSurName'];
 		$UpdateProfilSpeudo = $_POST['ProfilSpeudo'];
@@ -37,14 +37,14 @@
 		$UpdateProfilInternalNumber = $_POST['ProfilInternalNumber'];
 		$UpdateProfilPersonnalNumber = $_POST['ProfilPersonnalNumber'];
 		$UpdatePhotoProfil = $dossier.$fichier;
-	
+
 		If(empty($fichier)){
 			$AddSQL = '';
 		}
 		else{
 			$AddSQL = 'IMAGE_PROFIL = \''. addslashes($UpdatePhotoProfil) .'\',';
 		}
-				
+
 		$bdd->exec('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  NOM = \''. addslashes($UpdateProfilName) .'\',
 																PRENOM = \''. addslashes($UpdateProfilSurName) .'\',
 																DATE_NAISSANCE = \''. addslashes($UpdateProfilDate) .'\',
@@ -55,7 +55,7 @@
 																NAME = \''. addslashes($UpdateProfilSpeudo) .'\',
 																PASSWORD = \''. addslashes($UpdateProfilMDP) .'\'
 																WHERE IdUser=\''. $_SESSION['id'] .'\'');
-																
+
 	}
 
 	$contenu ='
@@ -64,12 +64,12 @@
 			<thead>
 				<tr>
 					<th colspan="2">
-						 Modification du profil 
+						 Modification du profil
 					</th>
 				</tr>
 			</thead>
 			<tbody>';
-	
+
 	$req = $bdd -> query('SELECT idUSER,
 								NOM,
 								PRENOM,
@@ -84,9 +84,9 @@
 								PASSWORD,
 								FONCTION,
 								RIGHT_NAME
-								
+
 							FROM `'. TABLE_ERP_EMPLOYEES .'` LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id` WHERE IdUser=\''. $_SESSION['id'] .'\'');
-							
+
 	while ($donnees_membre = $req->fetch())
 	{
 		$contenu .='
@@ -105,7 +105,7 @@
 					<td>
 						<input type="text" name="ProfilSurName" value="'. $donnees_membre['PRENOM'] .'" >
 					</td>
-				</tr>	
+				</tr>
 				<tr>
 					<td>
 						Date de naissance :
@@ -181,12 +181,12 @@
 					</td>
 				</tr>';
 	}
-	
+
 	$contenu .='
 				</tbody>
 			</table>
 		</form>';
-	
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -215,7 +215,7 @@ confirm_password.onkeyup = validatePassword;
 </script>
 </head>
 <body>
-    
+
 <?php
 
 		//include interface
@@ -225,7 +225,7 @@ confirm_password.onkeyup = validatePassword;
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Modification du profil</button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" id="defaultOpen">Page d'acceuil</button>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/connexion.php?action=deconnexion';">Déconnexion</button>
-		
+
 	</div>
 	<div id="div1" class="tabcontent" >
 <?php

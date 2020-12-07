@@ -4,23 +4,23 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
@@ -29,35 +29,35 @@
 	//////////////////////////////////
 
 	$titleOnglet1 = "Ajouter une société";
-	
+
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
 	{
 
 		if(isset($_POST['CODESte'])){
-			
+
 			$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
 			$data = $req->fetch();
 			$req->closeCursor();
 			$nb = $data['nb'];
-			
+
 			if($nb=1){
-				
+
 				$titleOnglet1 = "Mettre à jours";
-				
+
 				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
-					
+
 				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], $dossier . $fichier);
-				
+
 				$InsertImage = $dossier.$fichier;
-		
+
 				If(empty($fichier)){
 					$AddSQL = '';
 				}
 				else{
 					$AddSQL = 'LOGO = \''. addslashes($InsertImage) .'\',';
 				}
-				
+
 				$req = $bdd->exec("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODESte']) ."',
 																				NAME='". addslashes($_POST['NameSte']) ."',
 																				WEBSITE='". addslashes($_POST['WebSiteSte']) ."',
@@ -84,20 +84,20 @@
 																				COMPTE_AUX_FOUR='". addslashes($_POST['CompteAuxFourSte']) ."',
 																				CONTROLE_FOUR='". addslashes($_POST['ControlFour']) ."'
 																			WHERE Id='". addslashes($_POST['IDSte'])."'");
-																			
+
 				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
 			}
 			else{
-				
+
 				$titleOnglet1 = "Mettre à jours";
-			
+
 				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
-					
+
 				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], $dossier . $fichier);
-				
+
 				$InsertImage = $dossier.$fichier;
-				
+
 				$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
 																				'". addslashes($_POST['CODESte']) ."',
 																				'". addslashes($_POST['NameSte']) ."',
@@ -126,37 +126,37 @@
 																				'". addslashes($_POST['ControlFour']) ."',
 																				NOW(),
 																				'')");
-																				
+
 				$req->closeCursor();
-			
+
 				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY id DESC LIMIT 0, 1");
 			}
 		}
 		else{
 			$Name = preg_replace('#-+#', ' ', addslashes($_GET['id']));
-			
+
 			$titleOnglet1 = "Mettre à jours";
-			
+
 			$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE NAME = '". $Name ."'");
 		}
-		
+
 		$DonneesSte = $req->fetch();
 		$req->closeCursor();
-		
+
 		$SteId = $DonneesSte['id'];
 		$SteCODE = $DonneesSte['CODE'];
 		$SteNAME = $DonneesSte['NAME'];
-		
+
 		$SteWEBSITE = $DonneesSte['WEBSITE'];
 		$SteFBSITE = $DonneesSte['FBSITE'];
 		$SteTWITTERSITE = $DonneesSte['TWITTERSITE'];
 		$SteLKDSITE = $DonneesSte['LKDSITE'];
-		
+
 		$SteSIREN = $DonneesSte['SIREN'];
 		$SteAPE = $DonneesSte['APE'];
 		$SteTVA_INTRA = $DonneesSte['TVA_INTRA'];
 		$SteTVA_ID = $DonneesSte['TVA_ID'];
-		
+
 		$SteLOGO = $DonneesSte['LOGO'];
 		$SteSTATU_CLIENT = $DonneesSte['STATU_CLIENT'];
 		$SteCOND_REG_CLIENT_ID = $DonneesSte['COND_REG_CLIENT_ID'];
@@ -166,7 +166,7 @@
 		$SteRESP_TECH_ID = $DonneesSte['RESP_TECH_ID'];
 		$SteCOMPTE_GEN_CLIENT = $DonneesSte['COMPTE_GEN_CLIENT'];
 		$SteCOMPTE_AUX_CLIENT = $DonneesSte['COMPTE_AUX_CLIENT'];
-		
+
 		$SteSTATU_FOUR = $DonneesSte['STATU_FOUR'];
 		$SteCOND_REG_FOUR_ID = $DonneesSte['COND_REG_FOUR_ID'];
 		$SteMODE_REG_FOUR_ID = $DonneesSte['MODE_REG_FOUR_ID'];
@@ -176,14 +176,14 @@
 		$SteDATE_CREA = $DonneesSte['DATE_CREA'];
 		$SteCOMMENT = $DonneesSte['COMMENT'];
 	}
-	
+
 	$req = $bdd -> query('SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .'');
 	while ($DonneesTVA = $req->fetch())
 	{
 		$TVAListe .='<option value="'. $DonneesTVA['Id'] .'"  '. selected($SteTVA_ID, $DonneesTVA['Id']) .' $SteTVA_INTRA>'. $DonneesTVA['TAUX'] .'% - '. $DonneesTVA['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
-	
+
 	$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
 	while ($DonneesConditionReg = $req->fetch())
 	{
@@ -191,7 +191,7 @@
 		$CondiListe2 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($SteCOND_REG_FOUR_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
-	
+
 	$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
 	while ($DonneesModeReg = $req->fetch())
 	{
@@ -199,12 +199,12 @@
 		$RegListe2 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($SteMODE_REG_FOUR_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
-	
+
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
 	while ($donnees_membre = $req->fetch())
 	{
@@ -212,20 +212,20 @@
 		 $EmployeeListe2 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($SteRESP_TECH_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 	}
 	$req->closeCursor();
-	
+
 	$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME");
 	while ($donnees_ste = $req->fetch())
 	{
 		$ListeSte .= '<option  value="'. $donnees_ste['NAME'] .'" >';
 	}
 	$req->closeCursor();
-	
+
 	//////////////////
 	////  SITE   ////
 	//////////////////
-	
+
 	if(isset($_POST['AddLABELSite']) AND !empty($_POST['AddLABELSite'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ADRESSE ." VALUE ('0',
 																		'". addslashes($_POST['AddIdSite']) ."',
 																		'". addslashes($_POST['AddORDRESite']) ."',
@@ -239,9 +239,9 @@
 																		'". addslashes($_POST['AddLIVSite']) ."',
 																		'". addslashes($_POST['AddFacSite'])  ."')");
 	}
-	
+
 	if(isset($_POST['UpdateIdSite']) AND !empty($_POST['UpdateIdSite'])){
-		
+
 		$UpdateIdSite = $_POST['UpdateIdSite'];
 		$UpdateORDRESite = $_POST['UpdateORDRESite'];
 		$UpdateLABELSite = $_POST['UpdateLABELSite'];
@@ -253,10 +253,10 @@
 		$UpdateMAILSite = $_POST['UpdateMAILSite'];
 		$UpdateLIVSite = $_POST['UpdateLIVSite'];
 		$UpdateFacSite = $_POST['UpdateFacSite'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdSite as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_ADRESSE .'` SET  ORDRE = \''. addslashes($UpdateORDRESite[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSite[$i]) .'\',
 																ADRESSE = \''. addslashes($UpdateADRESSESite[$i]) .'\',
@@ -272,9 +272,9 @@
 		}
 		$req->closeCursor();
 	}
-	
-	
-	
+
+
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_ADRESSE .'.Id,
 									'. TABLE_ERP_ADRESSE .'.ID_COMPANY,
@@ -289,9 +289,9 @@
 									'. TABLE_ERP_ADRESSE .'.ADRESS_LIV,
 									'. TABLE_ERP_ADRESSE .'.ADRESS_FAC
 									FROM `'. TABLE_ERP_ADRESSE .'`
-									WHERE ID_COMPANY=\''. $SteId .'\' 
+									WHERE ID_COMPANY=\''. $SteId .'\'
 									ORDER BY ORDRE');
-									
+
 	while ($donnees_Site = $req->fetch())
 	{
 		 $contenu2 = $contenu2 .'
@@ -318,18 +318,18 @@
 						</select>
 					</td>
 				</tr>';
-				
+
 				$AdresseListe .='<option value="'. $donnees_Site['Id'] .'" >'. $donnees_Site['LABEL'] .'</option>';
 		$i++;
 	}
 	$req->closeCursor();
-	
+
 	//////////////////
 	////  CONTACT   ////
 	//////////////////
-	
+
 	if(isset($_POST['AddPrenomContact']) AND !empty($_POST['AddPrenomContact'])){
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CONTACT ." VALUE ('0',
 																		'". addslashes($_POST['AddIdContact']) ."',
 																		'". addslashes($_POST['AddORDREContact']) ."',
@@ -342,9 +342,9 @@
 																		'". addslashes($_POST['AddMobileContact']) ."',
 																		'". addslashes($_POST['AddMailContact']) ."')");
 	}
-	
+
 	if(isset($_POST['UpdateIdContact']) AND !empty($_POST['UpdateIdContact'])){
-		
+
 		$UpdateIdContact = $_POST['UpdateIdContact'];
 		$UpdateORDREContact = $_POST['UpdateORDREContact'];
 		$UpdateCiviContact = $_POST['UpdateCiviContact'];
@@ -355,10 +355,10 @@
 		$UpdateNumberContact = $_POST['UpdateNumberContact'];
 		$UpdateMobileContact = $_POST['UpdateMobileContact'];
 		$UpdateMailContact = $_POST['UpdateMailContact'];
-		
+
 		$i = 0;
 		foreach ($UpdateIdContact as $id_generation) {
-			
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_CONTACT .'` SET  ORDRE = \''. addslashes($UpdateORDREContact[$i]) .'\',
 																CIVILITE = \''. addslashes($UpdateCiviContact[$i]) .'\',
 																PRENOM = \''. addslashes($UpdatePrenomContact[$i]) .'\',
@@ -372,9 +372,9 @@
 			$i++;
 		}
 	}
-	
-	
-	
+
+
+
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_CONTACT .'.Id,
 									'. TABLE_ERP_CONTACT .'.ID_COMPANY,
@@ -390,9 +390,9 @@
 									'. TABLE_ERP_ADRESSE .'.LABEL
 									FROM `'. TABLE_ERP_CONTACT .'`
 										LEFT JOIN `'. TABLE_ERP_ADRESSE .'` ON `'. TABLE_ERP_CONTACT .'`.`ADRESSE_ID` = `'. TABLE_ERP_ADRESSE .'`.`id`
-									WHERE '. TABLE_ERP_CONTACT .'.ID_COMPANY=\''. $SteId .'\' 
+									WHERE '. TABLE_ERP_CONTACT .'.ID_COMPANY=\''. $SteId .'\'
 									ORDER BY ORDRE');
-									
+
 	while ($donnees_Contact = $req->fetch())
 	{
 		 $contenu3 = $contenu3 .'
@@ -422,7 +422,7 @@
 		</tr>';
 		$i++;
 	}
-	
+
 	?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -438,7 +438,7 @@
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
-	
+
 								if(!isset($_GET['id']) or empty($_GET['id']))
 								{
 									$VerrouInput = ' disabled="disabled"  Value="-" ';
@@ -465,7 +465,7 @@
 	}
 ?>
 		<div class="DataListDroite">
-			<form method="get" name="client" action="<?php echo $actionForm; ?>">  
+			<form method="get" name="client" action="<?php echo $actionForm; ?>">
 				Client : <input list="client" name="id" id="id" required>
 				<datalist id="client">
 					<?php echo $ListeSte; ?>
@@ -541,10 +541,10 @@
 							</td>
 							<td>
 								<input type="text" name="FbSiteSte" value="<?php echo  $SteFBSITE;?>" size="20">
-							</td>	
+							</td>
 							<td >
 								<input type="text" name="TwitterSte" value="<?php echo  $SteTWITTERSITE;?>" size="20">
-							</td>	
+							</td>
 							<td >
 								<input type="text" name="LkdSte" value="<?php echo  $SteLKDSITE;?>" size="20">
 							</td>
@@ -567,12 +567,12 @@
 							</td>
 							<td >
 								<input type="text" name="APESte" value="<?php echo  $SteAPE;?>" size="10">
-							</td>	
+							</td>
 							<td >
 								<input type="text" name="TVAINTRASte" value="<?php echo  $SteTVA_INTRA;?>" size="10">
-							</td>	
+							</td>
 							<td >
-								
+
 								<select name="TAUXTVASte">
 									<?php echo $TVAListe ?>
 								</select>
@@ -638,12 +638,12 @@
 							</td>
 							<td >
 								<input type="number" name="RemiseSte" value="<?php echo  $SteREMISE;?>" size="10">
-							</td>	
+							</td>
 							<td colspan="2">
 								<select name="RepsComSte">
 									<?php echo $EmployeeListe1 ?>
 								</select>
-							</td>	
+							</td>
 							<td colspan="2">
 								<select name="RespTechSte">
 									<?php echo $EmployeeListe2 ?>
@@ -665,7 +665,7 @@
 							</td>
 							<td >
 								<input type="number" name="CompteAuxSte" value="<?php echo  $SteCOMPTE_AUX_CLIENT;?>" >
-							</td>	
+							</td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -715,13 +715,13 @@
 								<select name="RegFourSte">
 									<?php echo $RegListe2 ?>
 								</select>
-							</td>	
+							</td>
 							<td >
 								<input type="number" name="CompteGeFourSte" value="<?php echo  $SteCOMPTE_GEN_FOUR;?>" size="10">
 							</td>
 							<td >
 								<input type="number" name="CompteAuxFourSte" value="<?php echo  $SteCOMPTE_AUX_FOUR;?>" size="10">
-							</td>	
+							</td>
 							<td colspan="2">
 								<select name="ControlFour">
 									<option value="0" <?php  echo selected($SteCONTROLE_FOUR, 0) ?> >Pas de contrôle</option>
