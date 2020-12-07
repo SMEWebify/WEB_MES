@@ -16,42 +16,42 @@ git clone git@gitlab.com:billy_boy/ERP.git
 
 -----------------
 
-#Structure
+#Structure Project
 
-* ss  
-⋅⋅* component.css
-⋅⋅* content.css
-⋅⋅* forms.css
-⋅⋅* print.css
-⋅⋅* PrintDocument.css
-⋅⋅* ScreenDocument.css
-⋅⋅* tableaux.css
-⋅⋅* ui.css
+* css  
+  * component.css
+  * content.css  *content page style*
+  * forms.css   *form style*
+  * print.css
+  * PrintDocument.css
+  * ScreenDocument.css
+  * tableaux.css  *table style*
+  * ui.css  *user interface*
 * fonts  
 * images  
 * include  
-*
-*
-*
-*
-*
-*
-* admqualite.php  
+  * include_connection_sql.php
+  * include_fonction.php
+  * include_header.php
+  * include_interface.php
+  * include_recup_config.php
+  * verification_session.php
+* admqualite.php  *Admin for quality*
 * article.php  
-* calendrier.php  
-* clientfourni.php  
-* commandes.php  
-* compta.php  
-* connexion.php  
-* devis.php  
-* document.php  
-* etudes.php  
-* gestion.php  
-* index.php  
-* info.php  
-* methodes.php   
-* planning.php  
-* profil.php  
-* qualite.php  
-* soustraitance.php   
-* users.php  
+* calendrier.php    *Calendar page*
+* clientfourni.php   *Admin for customer/provider*
+* commandes.php          *Order page*
+* compta.php     *Admin for accounting*
+* connexion.php         *page connexion*
+* devis.php        *Quotation page*
+* document.php         *Generate document*
+* etudes.php        *Admin for study*
+* gestion.php       *Admin for company*
+* index.php         *First page*
+* info.php       *Empty*
+* methodes.php        *Admin for methods*
+* planning.php        *Empty*
+* profil.php       *Admin for profil user*
+* qualite.php        *Empty*
+* soustraitance.php         *Empty*
+* users.php        *Admin for employees user*
