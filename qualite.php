@@ -4,23 +4,24 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_6'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
@@ -45,7 +46,7 @@
 	require_once 'include/include_interface.php';
 
 
-	
+
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" >Fiche de non conformité</button>

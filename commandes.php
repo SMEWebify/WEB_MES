@@ -4,54 +4,55 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
 
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	$contenu = '';
 
-	
+
 	///////////////////////////////
 	//// COMMMENT ////
 	///////////////////////////////
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	COMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// GENERAL UPDATE ////
 	///////////////////////////////
 	if(isset($_POST['RepsComcommande']) AND !empty($_POST['RepsComcommande'])){
 		$PostRepsComcommande= $_POST['RepsComcommande'];
 		$PostRespTechcommande = $_POST['RespTechcommande'];
-		
+
 		if($_POST['RepsComcommande'] == 'null'){ $PostRepsComcommande = 0; }
 		if($_POST['RespTechcommande'] == 'null'){ $PostRespTechcommande = 0; }
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	RESP_COM_ID='". addslashes($PostRepsComcommande) ."',
 																RESP_TECH_ID='". addslashes($PostRespTechcommande) ."'
 																		WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
-																		
+
 	}
-	
+
 	///////////////////////////////
 	//// COMMERCIAL UPDATE ////
 	///////////////////////////////
@@ -60,14 +61,14 @@
 		$PostModeRegcommande = $_POST['ModeRegcommande'];
 		$PostEcheanciercommande = $_POST['Echeanciercommande'];
 		$PostModeLivraisoncommande = $_POST['ModeLivraisoncommande'];
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	COND_REG_CLIENT_ID='". addslashes($PostCondiRegcommande) ."',
 																MODE_REG_CLIENT_ID='". addslashes($PostModeRegcommande) ."',
 																ECHEANCIER_ID='". addslashes($PostEcheanciercommande) ."',
 																TRANSPORT_ID='". addslashes($PostModeLivraisoncommande) ."'
 															WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// CLIENT INFO UPDATE ////
 	///////////////////////////////
@@ -75,51 +76,51 @@
 		$PostContactcommande= $_POST['Contactcommande'];
 		$PostAdresseLivraisoncommande = $_POST['AdresseLivraisoncommande'];
 		$PostAdresseFacturationcommande = $_POST['AdresseFacturationcommande'];
-		
+
 		if($_POST['Contactcommande'] == 'null'){ $PostContactcommande = 0; }
 		if($_POST['AdresseLivraisoncommande'] == 'null'){ $PostAdresseLivraisoncommande = 0; }
 		if($_POST['AdresseFacturationcommande'] == 'null'){ $PostAdresseFacturationcommande = 0; }
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	CONTACT_ID='". addslashes($PostContactcommande) ."',
 																ADRESSE_ID='". addslashes($PostAdresseLivraisoncommande) ."',
 																FACTURATION_ID='". addslashes($PostAdresseFacturationcommande) ."'
 															WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// DELETE LIGNE ////
 	///////////////////////////////
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-		
+
 		$req = $bdd->exec("DELETE FROM ". TABLE_ERP_COMMANDE_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
 	}
-	
+
 	///////////////////////////////
 	//// ACCEUIL commande  ////
 	///////////////////////////////
 	if(isset($_POST['Etatcommande']) AND !empty($_POST['Etatcommande'])){
-		
-		
+
+
 		$PostcommandeLABEL= $_POST['commandeLABEL'];
 		$PostcommandeLABELIndice = $_POST['commandeLABELIndice'];
 		$PostcommandeReference = $_POST['commandeReference'];
 		$PostcommandeEtat = $_POST['Etatcommande'];
-		
+
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	LABEL='". addslashes($PostcommandeLABEL) ."',
 																LABEL_INDICE='". addslashes($PostcommandeLABELIndice) ."',
 																REFERENCE='". addslashes($PostcommandeReference) ."'
 																ETAT='". addslashes($PostcommandeEtat) ."'
 															WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
-															
+
 		if(isset($_POST['commandeMajLigne']) AND !empty($_POST['commandeMajLigne'])){
-			
+
 			$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE_LIGNE ." SET 	ETAT='". addslashes($PostcommandeEtat) ."'
 															WHERE 	commande_ID='". addslashes($_POST['Idcommande'])."'");
 		}
 	}
-	
+
 	if(isset($_POST['Addcommande']) And !empty($_POST['Addcommande'])){
-		
+
 		$req = $bdd -> query('SELECT '. TABLE_ERP_NUM_DOC .'.Id,
 									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
 									'. TABLE_ERP_NUM_DOC .'.MODEL,
@@ -128,9 +129,9 @@
 									FROM `'. TABLE_ERP_NUM_DOC .'`
 									WHERE DOC_TYPE=4');
 		$donnees_Num_doc = $req->fetch();
-		
+
 		$CODE = NumDoc($donnees_Num_doc['MODEL'],$donnees_Num_doc['COMPTEUR'], $donnees_Num_doc['DIGIT']);
-		
+
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_COMMANDE ." VALUE ('0',
 																				'". $CODE ."',
 																				'1',
@@ -151,20 +152,20 @@
 																				'0',
 																				'0',
 																				'')");
-																				
+
 		$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (4)');
-			
+
 		$req = $bdd->query("SELECT CODE FROM ". TABLE_ERP_COMMANDE ." ORDER BY id DESC LIMIT 0, 1");
 		$Donneescommande = $req->fetch();
 		$req->closeCursor();
 		$CODEcommandeAjout = $Donneescommande['CODE'];
-		
+
 	}
-	
+
 	$req = $bdd->query('SELECT '. TABLE_ERP_COMMANDE .'.CODE,
 								'. TABLE_ERP_COMMANDE .'.LABEL,
 								'. TABLE_ERP_CLIENT_FOUR .'.NAME
-								FROM '. TABLE_ERP_COMMANDE .' 
+								FROM '. TABLE_ERP_COMMANDE .'
 									LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_COMMANDE .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
 								ORDER BY '. TABLE_ERP_COMMANDE .'.id DESC');
 	while ($donnees_commande = $req->fetch())
@@ -172,22 +173,22 @@
 		$ListeCommande .= '<option  value="'. $donnees_commande['CODE'] .'" >';
 		$ListeCommandePrincipale  .= '<li><a href="commandes.php?id='. $donnees_commande['CODE'] .'">'. $donnees_commande['CODE'] .' - '. $donnees_commande['NAME'] .' </a></li>';
 	}
-	
 
-	
+
+
 	if(isset($_GET['id']) And !empty($_GET['id']) Or isset($_POST['Addcommande']) And !empty($_POST['Addcommande'])){
-		
-		
+
+
 		if(isset($_GET['id'])){$CODEcommande = addslashes($_GET['id']);}
 		if(isset($_POST['Addcommande']) And !empty($_POST['Addcommande'])){$CODEcommande = $CODEcommandeAjout;}
-			
+
 		$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_COMMANDE ." WHERE CODE = '". $CODEcommande."'");
 		$data = $req->fetch();
 		$req->closeCursor();
 		$nb = $data['nb'];
-			
+
 		if($nb=1){
-			
+
 				$req = $bdd -> query('SELECT '. TABLE_ERP_COMMANDE .'.Id,
 									'. TABLE_ERP_COMMANDE .'.CODE,
 									'. TABLE_ERP_COMMANDE .'.INDICE,
@@ -217,9 +218,9 @@
 									WHERE '. TABLE_ERP_COMMANDE .'.CODE = \''. $CODEcommande.'\' ');
 			$Donneescommande = $req->fetch();
 			$req->closeCursor();
-			
+
 			$titleOnglet1 = "Mettre à jours";
-			
+
 			$IDcommandeSQL = $Donneescommande['Id'];
 			$Commentairecommande = $Donneescommande['COMENT'];
 			$commandeCLIENT_ID = $Donneescommande['CLIENT_ID'];
@@ -235,61 +236,61 @@
 			$commandeMODE_REG_ID = $Donneescommande['MODE_REG_CLIENT_ID'];
 			$commandeEcheancier_ID = $Donneescommande['ECHEANCIER_ID'];
 			$commandeTransport_ID = $Donneescommande['TRANSPORT_ID'];
-			
+
 			$commandeCODE = $Donneescommande['CODE'];
 			$commandeINDICE = $Donneescommande['INDICE'];
 			$commandeLABEL = $Donneescommande['LABEL'];
 			$commandeLABEL_INDICE = $Donneescommande['LABEL_INDICE'];
-			
+
 			$commandeDATE = $Donneescommande['DATE'];
 			$commandeETAT = $Donneescommande['ETAT'];
 			$commandeREFERENCE = $Donneescommande['REFERENCE'];
-			
+
 			$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'` 
+									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-									
+
 			 $EmployeeListe1 .=  '<option value="null" '. selected($commandeRESP_COM_ID, 0) .'>Aucun</option>';
 			 $EmployeeListe2 .=  '<option value="null" '. selected($commandeRESP_TECH_ID, 0) .'>Aucun</option>';
-			
+
 			while ($donnees_membre = $req->fetch())
 			{
 				 $EmployeeListe1 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($commandeRESP_COM_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 				 $EmployeeListe2 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($commandeRESP_TECH_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
 			while ($DonneesModeReg = $req->fetch())
 			{
 				$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($commandeCONDI_REG_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
 			while ($DonneesConditionReg = $req->fetch())
 			{
 				$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($commandeMODE_REG_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_ECHEANCIER_TYPE .'');
 			while ($DonneesEcheancier = $req->fetch())
 			{
 				$EcheancierListe1 .='<option value="'. $DonneesEcheancier['Id'] .'" '. selected($commandeEcheancier_ID, $DonneesEcheancier['Id']) .'>'. $DonneesEcheancier['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_TRANSPORT .'');
 			while ($DonneesTransport = $req->fetch())
 			{
 				$TransportListe1 .='<option value="'. $DonneesTransport['Id'] .'" '. selected($commandeTransport_ID, $DonneesTransport['Id']) .'>'. $DonneesTransport['LABEL'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$ContactcommandeListe1 =  '<option value="null" '. selected($commandeCONTACT_ID, 0) .'>Aucun</option>';
 			$req = $bdd -> query('SELECT Id, PRENOM, NOM FROM '. TABLE_ERP_CONTACT .' WHERE ID_COMPANY=\''. $commandeCLIENT_ID.'\'');
 			while ($DonneesContact = $req->fetch())
@@ -297,7 +298,7 @@
 				$ContactcommandeListe1 .='<option value="'. $DonneesContact['Id'] .'" '. selected($commandeCONTACT_ID, $DonneesContact['Id']) .'>'. $DonneesContact['PRENOM'] .' '. $DonneesContact['NOM'] .'</option>';
 			}
 			$req->closeCursor();
-			
+
 			$AdresseLivraisonListe1 =  '<option value="null" '. selected($commandeADRESSE_ID, 0) .'>Aucune</option>';
 			$req = $bdd -> query('SELECT id, LABEL, ADRESSE, CITY FROM '. TABLE_ERP_ADRESSE .' WHERE ID_COMPANY=\''. $commandeCLIENT_ID.'\' AND ADRESS_LIV=\'1\'');
 			while ($DonneesAdresse = $req->fetch())
@@ -305,7 +306,7 @@
 				$AdresseLivraisonListe1 .='<option value="'. $DonneesAdresse['id'] .'" '. selected($commandeADRESSE_ID, $DonneesAdresse['id']) .'>'. $DonneesAdresse['LABEL'] .' - '. $DonneesAdresse['ADRESSE'] .' - '. $DonneesAdresse['CITY'] .' </option>';
 			}
 			$req->closeCursor();
-			
+
 			$AdresseFacturationListe1 =  '<option value="null" '. selected($commandeFACTURATION_ID, 0) .'>Aucune</option>';
 			$req = $bdd -> query('SELECT id, LABEL, ADRESSE, CITY FROM '. TABLE_ERP_ADRESSE .' WHERE ID_COMPANY=\''. $commandeCLIENT_ID.'\' AND ADRESS_FAC=\'1\' ');
 			while ($DonneesAdresse = $req->fetch())
@@ -313,8 +314,8 @@
 				$AdresseFacturationListe1 .='<option value="'. $DonneesAdresse['id'] .'" '. selected($commandeFACTURATION_ID, $DonneesAdresse['id']) .'>'. $DonneesAdresse['LABEL'] .' - '. $DonneesAdresse['ADRESSE'] .' - '. $DonneesAdresse['CITY'] .' </option>';
 			}
 			$req->closeCursor();
-			
-			$commandeAcceuil = 
+
+			$commandeAcceuil =
 				'<table class="content-table">
 					<thead>
 						<tr>
@@ -331,7 +332,7 @@
 								Code et libellé de la commande:
 							</td>
 							<td>
-								'. $commandeCODE .' 
+								'. $commandeCODE .'
 							</td>
 							<td>
 								<input type="text" name="commandeLABEL" value="'. $commandeLABEL .'" placeholder="Libellé de la commande">
@@ -342,7 +343,7 @@
 								Indice et libellé de version  :
 							</td>
 							<td>
-								'. $commandeINDICE .' 
+								'. $commandeINDICE .'
 							</td>
 							<td>
 								<input type="text" name="commandeLABELIndice" value="'. $commandeLABEL_INDICE .'" placeholder="Libellé de la version">
@@ -368,7 +369,7 @@
 						</tr>
 						<tr>
 							<td>
-								Etat de la commande : 
+								Etat de la commande :
 							</td>
 							<td>
 								<select name="Etatcommande">
@@ -391,7 +392,7 @@
 						</tr>
 					</tbody>
 				</table>';
-				
+
 			$commandeGeneral = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -438,7 +439,7 @@
 					</tr>
 				</tbody>
 			</table>';
-			
+
 		$commandeInfoClient = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -487,8 +488,8 @@
 					</tr>
 				</tbody>
 			</table>';
-				
-				
+
+
 		$commandeInfoCommercial = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -547,7 +548,7 @@
 					</tr>
 				</tbody>
 			</table>';
-				
+
 			$commandeCommentaire = '
 			<table class="content-table" style="width: 50%;">
 				<thead>
@@ -571,17 +572,17 @@
 					</tr>
 				</tbody>
 			</table>';
-			
+
 						///////////////////////////////
 						////DEBUT GESTION DES LIGNE DE commande  ////
 						///////////////////////////////
-						
+
 									///////////////////////////////
 									//// AJOUT DE LIGNE  ////
 									///////////////////////////////
-						
+
 						if(isset($_POST['AddORDRELignecommande']) AND !empty($_POST['AddORDRELignecommande'])){
-							
+
 							$AddORDRELignecommande = $_POST['AddORDRELignecommande'];
 							$AddARTICLELignecommande = $_POST['AddARTICLELignecommande'];
 							$AddLABELLignecommande = $_POST['AddLABELLignecommande'];
@@ -591,10 +592,10 @@
 							$AddRemiseLignecommande = $_POST['AddRemiseLignecommande'];
 							$AddTVALignecommande = $_POST['AddTVALignecommande'];
 							$AddDELAISignecommande = $_POST['AddDELAISignecommande'];
-							
+
 							$i = 0;
 							foreach ($AddORDRELignecommande as $id_generation) {
-								
+
 								$req = $bdd->exec("INSERT INTO ". TABLE_ERP_COMMANDE_LIGNE ." VALUE ('0',
 																									'". $IDcommandeSQL ."',
 																									'". addslashes($AddORDRELignecommande[$i]) ."',
@@ -610,9 +611,9 @@
 								$i++;
 							}
 						}
-						
+
 						if(isset($_POST['UpdateIdLignecommande']) AND !empty($_POST['UpdateIdLignecommande'])){
-							
+
 							$UpdateIdLignecommande = $_POST['UpdateIdLignecommande'];
 							$UpdateORDRELignecommande = $_POST['UpdateORDRELignecommande'];
 							$UpdateIDArticleLignecommande = $_POST['UpdateIDArticleLignecommande'];
@@ -624,11 +625,11 @@
 							$UpdateDELAISLignecommande = $_POST['UpdateDELAISLignecommande'];
 							$UpdateTVALignecommande = $_POST['UpdateTVALignecommande'];
 							$UpdateETATLignecommande = $_POST['UpdateETATLignecommande'];
-							
-							
+
+
 							$i = 0;
 							foreach ($UpdateIdLignecommande as $id_generation) {
-								
+
 								$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE_LIGNE ." SET 	ORDRE='". addslashes($UpdateORDRELignecommande[$i]) ."',
 																						ARTICLE_CODE='". addslashes($UpdateIDArticleLignecommande[$i]) ."',
 																						LABEL='". addslashes($UpdateLABELLignecommande[$i]) ."',
@@ -643,18 +644,18 @@
 								$i++;
 							}
 						}
-						
+
 									///////////////////////////////
 									//// LISTE DES LIGNES  ////
 									///////////////////////////////
-									
+
 						$UnitListe ='<option value="0">Aucune</option>';
 						$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_UNIT .'');
 						while ($DonneesUnit = $req->fetch()){
 							$UnitListe .='<option value="'. $DonneesUnit['Id'] .'" '. selected($ArticleUNIT_ID, $DonneesUnit['Id']) .'>'. $DonneesUnit['LABEL'] .'</option>';
 						}
 						$req->closeCursor();
-						
+
 						$ListeArticleJava  ='"';
 						$req = $bdd->query("SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL");
 						while ($donnees_Article = $req->fetch())
@@ -664,15 +665,15 @@
 						}
 						$ListeArticleJava  .='"';
 						$req->closeCursor();
-					
+
 						$req = $bdd -> query('SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .' ORDER BY TAUX DESC');
 						while ($DonneesTVA = $req->fetch())
 						{
 							$TVAListe .='<option value="'. $DonneesTVA['Id'] .'">'. $DonneesTVA['TAUX'] .'%</option>';
 						}
 						$req->closeCursor();
-						
-						$req = $bdd -> query('SELECT  '. TABLE_ERP_COMMANDE_LIGNE .'.Id, 
+
+						$req = $bdd -> query('SELECT  '. TABLE_ERP_COMMANDE_LIGNE .'.Id,
 														'. TABLE_ERP_COMMANDE_LIGNE .'.ORDRE,
 														'. TABLE_ERP_COMMANDE_LIGNE .'.ARTICLE_CODE,
 														'. TABLE_ERP_COMMANDE_LIGNE .'.LABEL,
@@ -690,19 +691,19 @@
 														FROM '. TABLE_ERP_COMMANDE_LIGNE .'
 															LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
 															LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-															WHERE '. TABLE_ERP_COMMANDE_LIGNE .'.COMMANDE_ID = \''. $IDcommandeSQL.'\' 
+															WHERE '. TABLE_ERP_COMMANDE_LIGNE .'.COMMANDE_ID = \''. $IDcommandeSQL.'\'
 														ORDER BY '. TABLE_ERP_COMMANDE_LIGNE .'.ORDRE ');
 						$tableauTVA = array();
-						
+
 						while ($DonneesListeLigneDucommande = $req->fetch()){
-							
-							$TotalLigneHTEnCours = ($DonneesListeLigneDucommande['QT']*$DonneesListeLigneDucommande['PRIX_U'])-($DonneesListeLigneDucommande['QT']*$DonneesListeLigneDucommande['PRIX_U'])*($DonneesListeLigneDucommande['REMISE']/100); 
+
+							$TotalLigneHTEnCours = ($DonneesListeLigneDucommande['QT']*$DonneesListeLigneDucommande['PRIX_U'])-($DonneesListeLigneDucommande['QT']*$DonneesListeLigneDucommande['PRIX_U'])*($DonneesListeLigneDucommande['REMISE']/100);
 							$TotalLigneTVAEnCours =  $TotalLigneHTEnCours*($DonneesListeLigneDucommande['TAUX']/100) ;
 							$TotalLigneTTCEnCours = $TotalLigneTVAEnCours+$TotalLigneHTEnCours;
-							
+
 							$TotalLignecommandeHT += $TotalLigneHTEnCours;
 							$TotalLignecommandeTTC += $TotalLigneTVAEnCours+$TotalLigneHTEnCours;
-							
+
 							if(array_key_exists($DonneesListeLigneDucommande['TVA_ID'], $tableauTVA)){
 								$tableauTVA[$DonneesListeLigneDucommande['TVA_ID']][0] += $TotalLigneHTEnCours;
 								$tableauTVA[$DonneesListeLigneDucommande['TVA_ID']][2] += $TotalLigneTVAEnCours;
@@ -711,8 +712,8 @@
 							else{
 								$tableauTVA[$DonneesListeLigneDucommande['TVA_ID']] = array($TotalLigneHTEnCours, $DonneesListeLigneDucommande['TAUX'], $TotalLigneTVAEnCours, $TotalLigneTTCEnCours);
 							}
-							
-							
+
+
 							$DetailLigneDucommande .='
 							<tr>
 								<td><input type="hidden" name="UpdateIdLignecommande[]" id="UpdateIdLignecommande" value="'. $DonneesListeLigneDucommande['Id'] .'"><a href="commandes.php?id='. $_GET['id'] .'&amp;delete='. $DonneesListeLigneDucommande['Id'] .'" title="Supprimer la ligne">x</a></td>
@@ -753,17 +754,17 @@
 									</select>
 								</td>
 							</tr>';
-							
+
 						}
 					$req->closeCursor();
-									
+
 						///////////////////////////////
 						//// FIN GESTION DES LIGNE DE commande   ////
 						///////////////////////////////
-				
+
 				asort($tableauTVA);
 				 foreach($tableauTVA as $key => $value){
-					
+
 					$DetailLigneTVA .='
 						<tr>
 							<th></th>
@@ -871,17 +872,17 @@
 					</tr>
 				</tbody>
 			</table>';
-			
+
 		}
-	
-				
+
+
 			$req = $bdd->query("SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME");
 			while ($donnees_ste = $req->fetch())
 			{
 				$ListeSte .= '<option  value="'. $donnees_ste['id'] .'" >'. $donnees_ste['NAME'] .'</option>';
 			}
-	
-			$Acceuil = 
+
+			$Acceuil =
 				'<div class="column">
 					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher une commande">
 					<ul id="myUL">
@@ -916,7 +917,7 @@
 								<th colspan="5">
 									  <br/>
 								</th>
-								
+
 							</tr>
 						</thead>
 						<tbody>
@@ -943,14 +944,14 @@
 			</div>
 			<div class="column">
 			</div>';
-			
+
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
 		$actionForm = 'commande.php?id='. $_GET['id'] .'';
-		
+
 	}
 	elseif(isset($_GET['id']) AND !empty($_GET['id'])){
 		$ParDefautDiv1 = '';
@@ -958,7 +959,7 @@
 		$ParDefautDiv3 = '';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
 		$actionForm = 'commande.php?id='. $_GET['id'] .'';
-		
+
 	}
 	else{
 		$ParDefautDiv3 = '';
@@ -991,9 +992,9 @@ $(document).ready(function() {
 		var AddRemiseLignecommande = $("#AddRemiseLignecommande").val();
 		var AddTVALignecommande = $("#AddTVALignecommande").val();
 		var AddDELAISignecommande = $("#AddDELAISignecommande").val();
-		
+
 		var TotalPrix = (AddQTLignecommande*AddPrixLignecommande)-(AddQTLignecommande*AddPrixLignecommande)*(AddRemiseLignecommande/100);
-		
+
 		var ligne = "<tr>";
 		var ligne = ligne + "<td><input type=\"checkbox\" name=\"select\"></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddORDRELignecommande[]\" value=\""+ AddORDRELignecommande +"\" id=\"number\" required=\"required\"></td>";
@@ -1023,12 +1024,12 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-    
+
 <?php
 
 	//include interface
 	require_once 'include/include_interface.php';
-	
+
 
 
 ?>
@@ -1051,7 +1052,7 @@ $(document).ready(function() {
 	}
 ?>
 		<div class="DataListDroite">
-			<form method="get" name="commande" action="<?php echo $actionForm; ?>">  
+			<form method="get" name="commande" action="<?php echo $actionForm; ?>">
 				Commande : <input list="commande" name="id" id="id" required>
 				<datalist id="commande">
 					<?php echo $ListeCommande; ?>
@@ -1062,7 +1063,7 @@ $(document).ready(function() {
 	</div>
 	<div id="div1" class="tabcontent">
 			<?php echo $Acceuil; ?>
-	</div>	
+	</div>
 	<div id="div2" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $commandeAcceuil; ?>
@@ -1077,21 +1078,21 @@ $(document).ready(function() {
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $commandeGeneral; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div5" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $commandeInfoClient; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div6" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $commandeInfoCommercial; ?>
 		</form>
-	</div>	
+	</div>
 	<div id="div7" class="tabcontent">
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<?php echo $commandeCommentaire; ?>
 		</form>
-	</div>	
+	</div>
 </body>
 </html>

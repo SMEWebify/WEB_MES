@@ -4,15 +4,15 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
@@ -20,8 +20,8 @@
 	}
 
 	$contenu = "";
-	
-	
+
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -37,9 +37,9 @@
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
-	
+
 	Echo $contenu;
-	
+
 ?>
 
 

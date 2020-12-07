@@ -4,46 +4,47 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
+	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
+	// include for functions
 	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
 
+	//session verification user
 	if(isset($_SESSION['mdp'])){
-		//verification  de la session
 		require_once 'include/verifications_session.php';
 	}
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-	
+
+	//Check if the user is authorized to view the page
 	if($_SESSION['page_2'] != '1'){
-		
+
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-	
+
 	if(isset($_POST['planning']) AND $_POST['planning'] == "export_exel"){
-	
+
 		Include("include/exportexel.php");
 	}
 	elseif(isset($_POST['planning']) AND $_POST['planning'] == "etiquette_petite" OR isset($_POST['planning']) AND $_POST['planning'] == "etiquette_grande"){
-		
+
 		Include("etiquette.php");
 	}
 	elseif(isset($_POST['planning']) AND $_POST['planning'] == "OF"){
-		
+
 		Include("OF.php");
 	}
 	elseif(isset($_GET['export']) AND isset($_GET['sem']) AND !empty($_GET['sem']) AND isset($_GET['annee']) AND !empty($_GET['annee'])){
-		
+
 		Include("export_sem.php");
 	}
-	
+
 
 	$SelectZone_CLIENT = '<option value=""></option>';
-	
+
 	// LISTING DES CLIENT
 	$reponse = $bdd -> query('SELECT DISTINCT CLIENT FROM `'. TABLE_ERP_PLANNING .'` WHERE  `'. TABLE_ERP_PLANNING .'`.sup!=1 ORDER BY CLIENT ');
 	while ($donneesSelectZone = $reponse->fetch())
@@ -51,7 +52,7 @@
 		$SelectZone_CLIENT = $SelectZone_CLIENT .'
 														<option value="'. $donneesSelectZone['CLIENT'] .'">'. $donneesSelectZone['CLIENT'] .'</option>';
 	}
-	
+
 	// LISTING DES COMMANDE
 	$SelectZone_COMMANDE = '<option value=""></option>';
 	$reponse = $bdd -> query('SELECT DISTINCT COMMANDE FROM `'. TABLE_ERP_PLANNING .'` WHERE `'. TABLE_ERP_PLANNING .'`.sup!=1 ORDER BY COMMANDE ');
@@ -60,11 +61,11 @@
 		$SelectZone_COMMANDE = $SelectZone_COMMANDE .'
 														<option value="'. $donneesSelectZone['COMMANDE'] .'">'. $donneesSelectZone['COMMANDE'] .'</option>';
 	}
-	
+
 	if(isset($_GET['sem'])){
 		$sem = intval($_GET['sem']);
 	}
-	
+
 	$contenu = '
 		<form  method="get" action="planning.php" class="content-form">
 			<table class="content-table">
@@ -114,55 +115,55 @@
 
 
 	if(isset($_GET['sem']) OR isset($_GET['ref_CO']) OR isset($_GET['ref_CO_CLI']) OR isset($_GET['CLIENT'])){
-		
+
 		Include("include/generation_planing.php");
 	}
 	elseif(isset($_POST['planning']) AND $_POST['planning'] == "modifier_cmd"){
-		
+
 		Include("include/modification_planing.php");
 
 	}
 	elseif(isset($_POST['id_modif_ligne']) AND !empty($_POST['id_modif_ligne'])){
-		
+
 		$id_modif = $_POST['id_modif_ligne'];						$id_recurrent = $_POST['ID_PLAN'];						$num_cmd = $_POST['num_cmd']; 													$cmd_client = $_POST['cmd_client'];
 		$CLIENT_NOM = $_POST['CLIENT_NOM_MODIF'];					$plan = $_POST['plan'];									$designation = $_POST['designation'];
 		$QT = $_POST['QT'];											$prix_u = $_POST['prix_u'];
 		$matiere = $_POST['matiere'];								$epaisseur = $_POST['epaisseur'];						$date_client_array = $_POST['date_client'];
 		$date_confirm_array = $_POST['date_confirm'];				$etude = $_POST['etude'];								$stock = $_POST['stock'];
-			
-		$heure_laser = $_POST['heure_laser'];						$sem_laser = $_POST['sem_laser'];						$heure_produite_laser = $_POST['heure_produite_laser'];							$QT_PRODUIT_L = $_POST['QT_PRODUIT_L'];				
-			
-		$EBAVURAGE = $_POST['EBAVURAGE'];							$ORBITALE = $_POST['ORBITALE'];							$EBAV_CHAMPS = $_POST['EBAV_CHAMPS'];											$SUP_MICRO_ATTACHE = $_POST['SUP_MICRO_ATTACHE'];					$TRIBOFINITION = $_POST['TRIBOFINITION'];		$SEM_EBAV = $_POST['sem_ebav'];							$heure_produite_ebav = $_POST['heure_produite_ebav'];							$QT_PRODUIT_EBAV = $_POST['QT_PRODUIT_EBAV'];			
-				
+
+		$heure_laser = $_POST['heure_laser'];						$sem_laser = $_POST['sem_laser'];						$heure_produite_laser = $_POST['heure_produite_laser'];							$QT_PRODUIT_L = $_POST['QT_PRODUIT_L'];
+
+		$EBAVURAGE = $_POST['EBAVURAGE'];							$ORBITALE = $_POST['ORBITALE'];							$EBAV_CHAMPS = $_POST['EBAV_CHAMPS'];											$SUP_MICRO_ATTACHE = $_POST['SUP_MICRO_ATTACHE'];					$TRIBOFINITION = $_POST['TRIBOFINITION'];		$SEM_EBAV = $_POST['sem_ebav'];							$heure_produite_ebav = $_POST['heure_produite_ebav'];							$QT_PRODUIT_EBAV = $_POST['QT_PRODUIT_EBAV'];
+
 		$PARACHEVEMENT = $_POST['PARACHEVEMENT'];					$PERCAGE = $_POST['PERCAGE'];							$TARAUDAGE = $_POST['TARAUDAGE'];												$FRAISURAGE = $_POST['FRAISURAGE'];									$INSERT_P = $_POST['INSERT_P'];					$sem_PARACHEVEMENT = $_POST['sem_PARACHEVEMENT'];		$heure_produite_PARACHEVEMENT = $_POST['heure_produite_PARACHEVEMENT'];			$QT_PRODUIT_PARA = $_POST['QT_PRODUIT_PARA'];
-				
-		$PLIAGE = $_POST['PLIAGE'];									$nbr_op = $_POST['nbr_op'];								$SEM_PROD_PLI = $_POST['SEM_PROD_PLI'];											$TPS_PRODUIT_PLI = $_POST['TPS_PRODUIT_PLI'];						$QT_PRODUIT_PLI	 = $_POST['QT_PRODUIT_PLI'];		
-			
+
+		$PLIAGE = $_POST['PLIAGE'];									$nbr_op = $_POST['nbr_op'];								$SEM_PROD_PLI = $_POST['SEM_PROD_PLI'];											$TPS_PRODUIT_PLI = $_POST['TPS_PRODUIT_PLI'];						$QT_PRODUIT_PLI	 = $_POST['QT_PRODUIT_PLI'];
+
 		$SOUDURE_MIG = $_POST['SOUDURE_MIG'];						$SEM_PROD_MIG = $_POST['SEM_PROD_MIG'];					$TPS_PRODUIT_MIG = $_POST['TPS_PRODUIT_MIG'];									$QT_PRODUIT_MIG = $_POST['QT_PRODUIT_MIG'];
 		$SOUDURE_TIG = $_POST['SOUDURE_TIG'];						$SEM_PROD_TIG = $_POST['SEM_PROD_TIG'];					$TPS_PRODUIT_TIG = $_POST['TPS_PRODUIT_TIG'];									$QT_PRODUIT_TIG = $_POST['QT_PRODUIT_TIG'];
-			
+
 		$mise_a_dispo = $_POST['mise_a_dispo'];						$QT_EXPEDIER = $_POST['QT_EXPEDIER'];					$TRANSPORTEUR = $_POST['TRANSPORTEUR'];											$commentaire = $_POST['commentaire'];								$poids = $_POST['poids']; 						$DEVIS = $_POST['DEVIS'];
-			
+
 		$contenu = $contenu. '
 							<p class="message">';
-		
+
 		$i = 0;
 		foreach ($id_modif as $id_generation) {
-				
+
 				$date_client = join('-',array_reverse(explode('/',$date_client_array[$i])));
 				$date_confirm = join('-',array_reverse(explode('/',$date_confirm_array[$i])));
-				
-				//addslashes() 
+
+				//addslashes()
 				//stripslashes
-				
+
 				if(empty($id_recurrent[$i])){
 					$id_rec ='';
 				}
 				else{
 					$id_rec = 'id_RECURENT = \''. $id_recurrent[$i] .'\',';
 				}
-				
-				
+
+
 				$bdd->exec('UPDATE `'. TABLE_ERP_PLANNING .'` SET '. $id_rec .'  COMMANDE = \''. $num_cmd[$i] .'\', CO_CLIENT = \''. addslashes($cmd_client[$i]) .'\', CLIENT = \''. addslashes($CLIENT_NOM[$i]) .'\',
 												PLAN = \''. addslashes($plan[$i]) .'\', DESIGNATION = \''. addslashes($designation[$i]) .'\', QT = \''. round($QT[$i]) .'\',
 												PRIX_U = \''. Remplace_virgule($prix_u[$i]) .'\', MATIERE = \''. $matiere[$i] .'\',
@@ -174,41 +175,41 @@
 												PLIAGE = \''. Remplace_virgule($PLIAGE[$i]) .'\', NBR_OP = \''. round($nbr_op[$i]) .'\', SEM_PROD_PLI = \''. round($SEM_PROD_PLI[$i]) .'\', TPS_PRODUIT_PLI = \''. Remplace_virgule($TPS_PRODUIT_PLI[$i]) .'\', QT_PRODUIT_PLI = \''. round($QT_PRODUIT_PLI[$i]) .'\',
 												SOUDURE_MIG = \''. Remplace_virgule($SOUDURE_MIG[$i]) .'\', SEM_PROD_MIG = \''. round($SEM_PROD_MIG[$i]) .'\', TPS_PRODUIT_MIG = \''. Remplace_virgule($TPS_PRODUIT_MIG[$i]) .'\', QT_PRODUIT_MIG = \''. round($QT_PRODUIT_MIG[$i]) .'\',
 												SOUDURE_TIG = \''. Remplace_virgule($SOUDURE_TIG[$i]) .'\', SEM_PROD_TIG = \''. round($SEM_PROD_TIG[$i]) .'\', TPS_PRODUIT_TIG = \''. Remplace_virgule($TPS_PRODUIT_TIG[$i]) .'\', QT_PRODUIT_TIG = \''. round($QT_PRODUIT_TIG[$i]) .'\',
-												QT_EXPEDIER = \''. round($QT_EXPEDIER[$i]) .'\', 
+												QT_EXPEDIER = \''. round($QT_EXPEDIER[$i]) .'\',
 												TRANSPORTEUR = \''. $TRANSPORTEUR[$i] .'\',
-												COMMENTAIRES = \''. addslashes($commentaire[$i]) .'\', 
+												COMMENTAIRES = \''. addslashes($commentaire[$i]) .'\',
 												POIDS = \''. Remplace_virgule($poids[$i]) .'\',
 												DEVIS = \''. addslashes($DEVIS[$i]) .'\'
 				WHERE id IN ('. $id_generation . ')');
-			
+
 				$contenu = $contenu. '
 									'. $i .' - La commande <a href="planning.php?ref_CO='. $num_cmd[$i] .'">'. $num_cmd[$i] .'</a>, référence :  '. $plan[$i] .' à bien été modifiée <br/>';
 			$i++;
 		}
-				
+
 		$contenu = $contenu. '</p>';
-		
+
 	}
 	elseif(isset($_POST['planning']) AND $_POST['planning'] == "annuler_cmd"){
-		
+
 		Include("include/annuler_planing.php");
 	}
 	elseif(isset($_POST['id_anul_ligne']) AND !empty($_POST['id_anul_ligne'])){
-		
+
 		$selected_checkbox = implode(",",$_POST['id_anul_ligne']);
-		
+
 		$bdd->exec('UPDATE `'. TABLE_ERP_PLANNING .'` SET sup = 2 WHERE id IN ('. $selected_checkbox . ')');
-			
-			
+
+
 		$contenu = $contenu. '
 							<p class="message">
 								Les lignes on été annulées
 							</p>';
 	}
 	elseif(isset($_POST['planning']) AND $_POST['planning'] == "supprimer_cmd"){
-		
+
 		$DateDuJour = date('Y-m-d');
-		
+
 		$SommeQt = 0;
 		$SommePrix =0;
 		$SommeHeure_laser = 0;
@@ -224,10 +225,10 @@
 		$SommeHeure_TIG = 0;
 		$SommeHeureProduite_TIG = 0;
 		$SommePoids = 0;
-		
+
 		$BddSemProd = "";
 
-			
+
 		$contenu = $contenu .'
 					<form  method="post" action="planning.php" id="formulaire_sem">
 						<p style="color : White; text-align: center;">
@@ -237,7 +238,7 @@
 						</p>
 						<table id="tableau_plannig">
 							<thead>
-								<tr> 
+								<tr>
 									<th>'. EN_TETE_TABLEAU_COL_01 .'</th>
 									<th>'. EN_TETE_TABLEAU_COL_02 .'</th>
 									<th>'. EN_TETE_TABLEAU_COL_03 .'</th>
@@ -254,13 +255,13 @@
 								</tr>
 							</thead>
 						<tbody>';
-						
+
 		$selected_checkbox = implode(",",$_POST['id_ligne']);
-		
+
 		$res = $bdd->query('select count(*) as nb  FROM `'. TABLE_ERP_PLANNING .'` WHERE id IN ('. $selected_checkbox . ') AND sup!=1');
 		$data = $res->fetch();
 		$nb = $data['nb'];
-			
+
 		if($nb == 0){
 				$contenu = '
 							<p class="message">
@@ -268,20 +269,20 @@
 									Aucune commande à afficher<br/>
 								<br/>
 								<input type="button" value="Retour" onClick="window.history.back()">
-							
+
 							</p>';
 		}
 		else{
-			
+
 			$req = $bdd->prepare('SELECT * FROM `'. TABLE_ERP_PLANNING .'` WHERE id IN ('. $selected_checkbox . ') AND sup!=1');
 			$req->execute(array($selected_checkbox));
 			while($donnees = $req->fetch())
 			{
 				$date_client = join('/',array_reverse(explode('-',$donnees['DATE_CLIENT'])));
 				If($date_client == "00/00/0000") $date_client = "";
-				
+
 				$date_MI = join('/',array_reverse(explode('-',$donnees['DATE_CONFIRM'])));
-					
+
 				if($donnees['QT_EXPEDIER'] >= $donnees['QT_EXPEDIER']){
 					$classStatuLivraison ='class="livrer"';
 				}
@@ -294,25 +295,25 @@
 				else{
 					$classStatuLivraison ='';
 				}
-					
+
 				$contenu = $contenu.'
-				<tr> 
-					<td class="commande"><input type="hidden" name="id_sup_ligne[]" value="'. $donnees['id'] .'"> '. $donnees['COMMANDE'] .'</td> 
-					<td class="co-client">'. $donnees['CO_CLIENT'] .'</td> 
-					<td class="CLIENT"><p class="CELLULE_CLIENT">'. $donnees['CLIENT'] .'</p></td> 
-					<td class="PLAN"><p class="CELLULE_PLAN">'. $donnees['PLAN'] .'</p></td> 
-					<td class="DESIGNATION"><p class="CELLULE_DESIGNATION">'. $donnees['DESIGNATION'] .'</p></td> 
-					<td class="QT"><p class="EN_GRAS">'. $donnees['QT'] .'</p></td> 
-					<td class="prix_u">'. $donnees['PRIX_U'] .'</td> 
-					<td class="prix_total">'. $donnees['PRIX_U']*$donnees['QT'] .'</td> 
-					<td class="MATIERE"><p class="CELLULE_MATIERE">'. $donnees['MATIERE'] .'</p></td> 
-					<td class="EPAISSEUR"><p class="CELLULE_EPAISSEUR">'. $donnees['EPAISSEUR'] .'</p></td> 
+				<tr>
+					<td class="commande"><input type="hidden" name="id_sup_ligne[]" value="'. $donnees['id'] .'"> '. $donnees['COMMANDE'] .'</td>
+					<td class="co-client">'. $donnees['CO_CLIENT'] .'</td>
+					<td class="CLIENT"><p class="CELLULE_CLIENT">'. $donnees['CLIENT'] .'</p></td>
+					<td class="PLAN"><p class="CELLULE_PLAN">'. $donnees['PLAN'] .'</p></td>
+					<td class="DESIGNATION"><p class="CELLULE_DESIGNATION">'. $donnees['DESIGNATION'] .'</p></td>
+					<td class="QT"><p class="EN_GRAS">'. $donnees['QT'] .'</p></td>
+					<td class="prix_u">'. $donnees['PRIX_U'] .'</td>
+					<td class="prix_total">'. $donnees['PRIX_U']*$donnees['QT'] .'</td>
+					<td class="MATIERE"><p class="CELLULE_MATIERE">'. $donnees['MATIERE'] .'</p></td>
+					<td class="EPAISSEUR"><p class="CELLULE_EPAISSEUR">'. $donnees['EPAISSEUR'] .'</p></td>
 					<td class="Tableau_blanc">'. $date_client .'</td>
 					<td '. $classStatuLivraison .'>'. $date_MI .'</td>';
-					
+
 				$SommeQt = $SommeQt + $donnees['QT'];
 				$SommePrix = $SommePrix + $donnees['PRIX_U']*$donnees['QT'];
-				
+
 				$SommeHeure_laser = $SommeHeure_laser + $donnees['TRUMPH_1'];
 				$SommeHeureProduite_laser = $SommeHeureProduite_laser + $donnees['TPS_PRODUIT_L'];
 				$SommeHeure_pliage = $SommeHeure_pliage + $donnees['PLIAGE'];
@@ -327,14 +328,14 @@
 				$SommeHeureProduite_TIG = $SommeHeureProduite_TIG + $donnees['TPS_PRODUIT_TIG'];
 				$SommePoids = $SommePoids + $donnees['POIDS'];
 			}
-			
+
 			$req->closeCursor();
-		
-			$contenu = $contenu. 
+
+			$contenu = $contenu.
 				'
 					</tbody>
 					<tfoot>
-						<tr> 
+						<tr>
 							<th> TOTAL </th>
 							<th></th>
 							<th></th>
@@ -354,48 +355,48 @@
 					<br/>
 					<input type="button" value="Retour" onClick="window.history.back()"><input type="submit" value="Supprimer les lignes" />
 				</p>
-			</form>';	
+			</form>';
 		}
 	}
-	elseif(isset($_POST['planning']) AND $_POST['planning'] == "ajout_SST"){ 
-	
+	elseif(isset($_POST['planning']) AND $_POST['planning'] == "ajout_SST"){
+
 		Include("include/ajout_SST.php");
-		
+
 	}
 	elseif(isset($_POST['id_sup_ligne']) AND !empty($_POST['id_sup_ligne'])){
-		
+
 		$selected_checkbox = implode(",",$_POST['id_sup_ligne']);
-		
+
 		$bdd->exec('UPDATE `'. TABLE_ERP_PLANNING .'` SET sup = 1 WHERE id IN ('. $selected_checkbox . ')');
-			
-			
+
+
 		$contenu = $contenu. '
 							<p class="message">
 								Les lignes on été supprimées
 							</p>';
 	}
 	elseif(isset($_POST['planning']) AND ($_POST['planning'] == "decla_laser" OR $_POST['planning'] == "decla_ebav" OR $_POST['planning'] == "decla_para" OR $_POST['planning'] == "decla_pli" OR $_POST['planning'] == "decla_soudure_mig"  OR $_POST['planning'] == "decla_soudure_tig" OR $_POST['planning'] == "decla_expe")){
-		
+
 		Include("include/declaration.php");
-		
+
 	}
 	elseif(isset($_POST['id_decla_ligne']) AND !empty($_POST['id_decla_ligne'])){
-		
+
 		$complementRequete = '';
 
-		$id_modif = $_POST['id_decla_ligne'];					
+		$id_modif = $_POST['id_decla_ligne'];
 
 		if(isset($_POST['TRUMPH_1'])){
-			$heure_produite_laser = $_POST['TPS_PRODUIT'];						$QT_PRODUIT_L = $_POST['QT_PRODUITE'];				
+			$heure_produite_laser = $_POST['TPS_PRODUIT'];						$QT_PRODUIT_L = $_POST['QT_PRODUITE'];
 		}
 		if(isset($_POST['EBAVURAGE'])){
-			$heure_produite_ebav = $_POST['TPS_PRODUIT'];						$QT_PRODUIT_EBAV = $_POST['QT_PRODUITE'];			
+			$heure_produite_ebav = $_POST['TPS_PRODUIT'];						$QT_PRODUIT_EBAV = $_POST['QT_PRODUITE'];
 		}
 		if(isset($_POST['PARACHEVEMENT'])){
 			$heure_produite_PARACHEVEMENT = $_POST['TPS_PRODUIT'];				$QT_PRODUIT_PARA = $_POST['QT_PRODUITE'];
 		}
 		if(isset($_POST['PLIAGE'])){
-			$TPS_PRODUIT_PLI = $_POST['TPS_PRODUIT'];							$QT_PRODUIT_PLI	 = $_POST['QT_PRODUITE'];		
+			$TPS_PRODUIT_PLI = $_POST['TPS_PRODUIT'];							$QT_PRODUIT_PLI	 = $_POST['QT_PRODUITE'];
 		}
 		if(isset($_POST['SOUDURE_MIG'])){
 			$TPS_PRODUIT_MIG = $_POST['TPS_PRODUIT'];							$QT_PRODUIT_MIG = $_POST['QT_PRODUITE'];
@@ -406,17 +407,17 @@
 		if(isset($_POST['QT_EXPEDIER'])){
 			$QT_EXPEDIER = $_POST['QT_PRODUITE'];
 		}
-		
 
-		$commentaire = $_POST['commentaire'];				
+
+		$commentaire = $_POST['commentaire'];
 		$poids = $_POST['poids'];
-		
+
 		$contenu = $contenu. '
 						<p class="message">';
-		
+
 		$i = 0;
 		foreach ($id_modif as $id_generation) {
-		
+
 			if(isset($_POST['TRUMPH_1'])){
 				$complementRequete = ' TPS_PRODUIT_L = \''. Remplace_virgule($heure_produite_laser[$i]) .'\', QT_PRODUIT_L = \''.round($QT_PRODUIT_L[$i]) .'\',';
 			}
@@ -438,53 +439,53 @@
 			if(isset($_POST['QT_EXPEDIER'])){
 				$complementRequete = 'QT_EXPEDIER = \''. round($QT_EXPEDIER[$i]) .'\', ';
 			}
-				
+
 			$bdd->exec('UPDATE `'. TABLE_ERP_PLANNING .'`
 								SET  '. $complementRequete .'
 									COMMENTAIRES = \''. addslashes($commentaire[$i]) .'\'
 								WHERE id IN ('. $id_generation . ')');
-		
+
 			$contenu = $contenu .' '. $i .' Ligne(s) de la commande <a href="planning.php?ref_CO='.  $_POST['COMMANDE'] .'">'.  $_POST['COMMANDE'] .'</a> modifiée(s)<br/>';
 			$i++;
 		}
-								
+
 		$contenu = $contenu. '</p>';
-		
+
 	}
 	elseif(isset($_POST['id_ajout_SST_ligne']) AND !empty($_POST['id_ajout_SST_ligne'])){
-		
-		$id_ajout_SST_ligne = $_POST['id_ajout_SST_ligne'];						
-		$FOURNISSEUR = $_POST['FOURNISSEUR'];	
-		$CMD_ACHAT = $_POST['CMD_ACHAT'];			
-		$DATE_RELANCE = $_POST['DATE_RELANCE']; 		
+
+		$id_ajout_SST_ligne = $_POST['id_ajout_SST_ligne'];
+		$FOURNISSEUR = $_POST['FOURNISSEUR'];
+		$CMD_ACHAT = $_POST['CMD_ACHAT'];
+		$DATE_RELANCE = $_POST['DATE_RELANCE'];
 		$DATE_RECEPTION = $_POST['DATE_RECEPTION'];
 		$PRIX = $_POST['PRIX'];
 		$NUM_OFFRE = $_POST['NUM_OFFRE'];
 		$ORDRE = $_POST['ORDRE'];
 		$COMMANDE = $_POST['COMMANDE'];
-		
+
 		$contenu = $contenu. '
 							<p class="message">';
-		
+
 		$i = 0;
 		foreach ($id_ajout_SST_ligne as $id_generation) {
-				
+
 				$DATE_RELANCE_ajouter = join('-',array_reverse(explode('/',$DATE_RELANCE[$i])));
 				$DATE_RECEPTION_ajouter  = join('-',array_reverse(explode('/',$DATE_RECEPTION[$i])));
-				
-				//addslashes() 
+
+				//addslashes()
 				//stripslashes
-				
+
 				$req = $bdd->exec("INSERT INTO `". TABLE_ERP_SOUS_TRAITANCE ."` VALUE ('' ,'". $id_generation ."', CURDATE(),'". $DATE_RELANCE_ajouter  ."' , '0', '". $DATE_RECEPTION_ajouter  ."' ,'0','". addslashes($FOURNISSEUR[$i]) ."','". $CMD_ACHAT[$i] ."','". $PRIX[$i] ."','". addslashes($NUM_OFFRE[$i]) ."','". $ORDRE[$i] ."' ) ");
 
-			
+
 				$contenu = $contenu. '
 									'. $i .' - La Sous-traitance pour  la commande <a href="planning.php?ref_CO='. $COMMANDE[$i] .'">'. $COMMANDE[$i] .'</a>, Fournisseur :  '. $FOURNISSEUR[$i] .' à bien été ajoutée <br/>';
 			$i++;
 		}
-				
+
 		$contenu = $contenu. '</p>';
-		
+
 	}
 
 
@@ -499,14 +500,14 @@
 ?>
 </head>
 <body>
-    
+
 <?php
 
 	//include interface
 	require_once 'include/include_interface.php';
-	
+
 	Echo $contenu;
-	
+
 ?>
 
 </section>
