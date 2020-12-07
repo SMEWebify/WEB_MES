@@ -18,44 +18,40 @@ git clone git@gitlab.com:billy_boy/ERP.git
 
 #Structure
 
-css  
+*css  
+  *component.css
+  *content.css
+  *forms.css
+  *print.css
+  *PrintDocument.css
+  *ScreenDocument.css
+  *tableaux.css
+  *ui.css
+*fonts  
+*images  
+*include  
 *
 *
 *
 *
 *
 *
-fonts  
-images  
-include  
-*
-*
-*
-*
-*
-*
-OF.php  
-admqualite.php  
-article.php  
-calendrier.php  
-clientfourni.php  
-commandes.php  
-compta.php  
-connexion.php  
-devis.php  
-document.php  
-etudes.php  
-gestion.php  
-heure.php  
-index.php  
-info.php  
-insertion.php  
-methodes.php  
-objectif.php  
-pdf.php  
-planning.php  
-profil.php  
-qualite.php  
-soustraitance.php  
-temps.php  
-users.php  
+*admqualite.php  
+*article.php  
+*calendrier.php  
+*clientfourni.php  
+*commandes.php  
+*compta.php  
+*connexion.php  
+*devis.php  
+*document.php  
+*etudes.php  
+*gestion.php  
+*index.php  
+*info.php  
+*methodes.php   
+*planning.php  
+*profil.php  
+*qualite.php  
+*soustraitance.php   
+*users.php  
