@@ -4,12 +4,12 @@
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/main/MES_VIEW_DEMO.PNG)
 
 #Pour configuration
-* erp.sql pour importer base de données ERP
-* connexion à la BDD SQL dans fichier include_connection_sql
+* erp.sql pour importer base de données ERP  
+* connexion à la BDD SQL dans fichier include_connection_sql  
 
 #Projet
-*Actuellement gros du projet en procédurale
-*refonte d'un projet spécifique à une entreprise pour le rendre multie entreprise
+*Actuellement gros du projet en procédurale  
+*refonte d'un projet spécifique à une entreprise pour le rendre multie entreprise  
 
 # récuération initiale du code source distant (activer le clé ssh)
 git clone git@gitlab.com:billy_boy/ERP.git
