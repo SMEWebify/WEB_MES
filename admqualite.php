@@ -25,9 +25,10 @@
 	}
 
 	///////////////////////////
-	//// APPAREIL DE MESURE ///
+	////MEASURING DEVICE SECTION ///
 	//////////////////////////
 
+	//Create New device
 	if(isset($_POST['AddCODEAppareil']) AND !empty($_POST['AddCODEAppareil'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_APP_MESURE ." VALUE ('0',
@@ -40,6 +41,7 @@
 
 	}
 
+//Update Devices
 	if(isset($_POST['id_Appareil']) AND !empty($_POST['id_Appareil'])){
 
 		$UpdateIdAppareil = $_POST['id_Appareil'];
@@ -64,6 +66,7 @@
 		}
 	}
 
+	// GET Employees liste for form select
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
@@ -84,6 +87,7 @@
 	}
 
 
+	// Generable Table for device list
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_APP_MESURE .'.Id,
 									'. TABLE_ERP_QL_APP_MESURE .'.CODE,
@@ -127,9 +131,10 @@
 	}
 
 	////////////////////////
-	//// DEFAUTS         ///
+	//// FLAW SECTION    ///
 	///////////////////////
 
+	// Create new type flaw
 	if(isset($_POST['AddCODEDefaut']) AND !empty($_POST['AddCODEDefaut'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEFAUT ." VALUE ('0',
@@ -138,6 +143,7 @@
 
 	}
 
+	//Update Flaw list
 	if(isset($_POST['id_Defaut']) AND !empty($_POST['id_Defaut'])){
 
 		$UpdateIdDefaut = $_POST['id_Defaut'];
@@ -154,6 +160,7 @@
 		}
 	}
 
+	 // generate table for flaw list
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_DEFAUT .'.Id,
 									'. TABLE_ERP_DEFAUT .'.CODE,
@@ -172,10 +179,11 @@
 		$i++;
 	}
 
-	///////////////
-	//// CAUSES ////
-	///////////////
+	///////////////////////
+	//// Origin  of flaw ////
+	//////////////////////
 
+	//Create new origin
 	if(isset($_POST['AddCODECauses']) AND !empty($_POST['AddCODECauses'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CAUSES ." VALUE ('0',
@@ -184,6 +192,7 @@
 
 	}
 
+	//Update Origin List
 	if(isset($_POST['id_Causes']) AND !empty($_POST['id_Causes'])){
 
 		$UpdateIdCauses = $_POST['id_Causes'];
@@ -200,6 +209,7 @@
 		}
 	}
 
+	//generate origine of flaw list
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_CAUSES .'.Id,
 									'. TABLE_ERP_QL_CAUSES .'.CODE,
@@ -218,11 +228,11 @@
 		$i++;
 	}
 
-	////////////////////////
-	////  Corresction  ////
-	///////////////////////
+	////////////////////////////////
+	////  Correction  section ////
+	///////////////////////////////
 
-
+	// Create new correction line
 	if(isset($_POST['AddCODECorrection']) AND !empty($_POST['AddCODECorrection'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CORRECTIONS ." VALUE ('0',
@@ -230,6 +240,7 @@
 																		'". addslashes($_POST['AddLABELCorrection'])  ."')");
 	}
 
+	//Uodate correction list
 	if(isset($_POST['id_Correction']) AND !empty($_POST['id_Correction'])){
 
 		$UpdateIdCorrection = $_POST['id_Correction'];
@@ -246,6 +257,7 @@
 		}
 	}
 
+	// Generate list of correction
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_CORRECTIONS .'.Id,
 									'. TABLE_ERP_QL_CORRECTIONS .'.CODE,
@@ -269,14 +281,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
-	//include interface
+	//include header
 	require_once 'include/include_header.php';
 
 ?>
 </head>
 <body>
 <?php
-	//include interface
+	//include ui
 	require_once 'include/include_interface.php';
 
 ?>

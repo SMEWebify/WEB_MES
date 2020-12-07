@@ -1087,7 +1087,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
-	//include interface
+	//include header
 	require_once 'include/include_header.php';
 
 ?>
@@ -1209,9 +1209,6 @@ $(document).ready(function() {
 
 	//include interface
 	require_once 'include/include_interface.php';
-
-
-
 ?>
 
 	<div class="tab">
