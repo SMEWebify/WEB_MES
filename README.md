@@ -20,13 +20,13 @@ git clone git@gitlab.com:billy_boy/ERP.git
 
 * css  
   * component.css
-  * content.css  *content page style*
-  * forms.css   *form style*
+  * content.css  __content page style__
+  * forms.css   __form style__
   * print.css
   * PrintDocument.css
   * ScreenDocument.css
-  * tableaux.css  *table style*
-  * ui.css  *user interface*
+  * tableaux.css  __table style__
+  * ui.css  __user interface__
 * fonts  
 * images  
 * include  
@@ -36,22 +36,22 @@ git clone git@gitlab.com:billy_boy/ERP.git
   * include_interface.php
   * include_recup_config.php
   * verification_session.php
-* admqualite.php  *Admin for quality*
+* admqualite.php  __Admin for quality__
 * article.php  
-* calendrier.php    *Calendar page*
-* clientfourni.php   *Admin for customer/provider*
-* commandes.php          *Order page*
-* compta.php     *Admin for accounting*
-* connexion.php         *page connexion*
-* devis.php        *Quotation page*
-* document.php         *Generate document*
-* etudes.php        *Admin for study*
-* gestion.php       *Admin for company*
-* index.php         *First page*
-* info.php       *Empty*
-* methodes.php        *Admin for methods*
-* planning.php        *Empty*
-* profil.php       *Admin for profil user*
-* qualite.php        *Empty*
-* soustraitance.php         *Empty*
-* users.php        *Admin for employees user*
+* calendrier.php    __Calendar page__
+* clientfourni.php   __Admin for customer/provider__
+* commandes.php          __Order page__
+* compta.php     __Admin for accounting__
+* connexion.php         __page connexion__
+* devis.php        __Quotation page__
+* document.php         __Generate document__
+* etudes.php        __Admin for study__
+* gestion.php       __Admin for company__
+* index.php         __First page__
+* info.php       __Empty__
+* methodes.php        __Admin for methods__
+* planning.php        __Empty__
+* profil.php       __Admin for profil user__
+* qualite.php        __Empty__
+* soustraitance.php         __Empty__
+* users.php        __Admin for employees user__
