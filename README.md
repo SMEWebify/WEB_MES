@@ -40,7 +40,7 @@ git clone git@gitlab.com:billy_boy/ERP.git
 * article.php  
 * calendrier.php    __Calendar page__
 * clientfourni.php   __Admin for customer/provider__
-* commandes.php          __Order page__
+* order.php          __Order page__
 * compta.php     __Admin for accounting__
 * connexion.php         __page connexion__
 * devis.php        __Quotation page__

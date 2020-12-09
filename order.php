@@ -29,7 +29,7 @@
 
 
 	///////////////////////////////
-	//// COMMMENT ////
+	//// COMMMENT ORDER UPDATE ////
 	///////////////////////////////
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
 
@@ -38,7 +38,7 @@
 	}
 
 	///////////////////////////////
-	//// GENERAL UPDATE ////
+	//// GENERAL ORDER UPDATE ////
 	///////////////////////////////
 	if(isset($_POST['RepsComcommande']) AND !empty($_POST['RepsComcommande'])){
 		$PostRepsComcommande= $_POST['RepsComcommande'];
@@ -54,7 +54,7 @@
 	}
 
 	///////////////////////////////
-	//// COMMERCIAL UPDATE ////
+	//// COMMERCIAL INFO ORDER UPDATE ////
 	///////////////////////////////
 	if(isset($_POST['CondiRegcommande']) AND !empty($_POST['CondiRegcommande'])){
 		$PostCondiRegcommande= $_POST['CondiRegcommande'];
@@ -119,8 +119,10 @@
 		}
 	}
 
+	//If add new commande
 	if(isset($_POST['Addcommande']) And !empty($_POST['Addcommande'])){
 
+		//Select NUM MODEL
 		$req = $bdd -> query('SELECT '. TABLE_ERP_NUM_DOC .'.Id,
 									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
 									'. TABLE_ERP_NUM_DOC .'.MODEL,
@@ -130,8 +132,10 @@
 									WHERE DOC_TYPE=4');
 		$donnees_Num_doc = $req->fetch();
 
+		//convert string
 		$CODE = NumDoc($donnees_Num_doc['MODEL'],$donnees_Num_doc['COMPTEUR'], $donnees_Num_doc['DIGIT']);
 
+		//insert in db
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_COMMANDE ." VALUE ('0',
 																				'". $CODE ."',
 																				'1',
@@ -153,8 +157,10 @@
 																				'0',
 																				'')");
 
+		//update increment number
 		$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (4)');
 
+		//select last code add in db
 		$req = $bdd->query("SELECT CODE FROM ". TABLE_ERP_COMMANDE ." ORDER BY id DESC LIMIT 0, 1");
 		$Donneescommande = $req->fetch();
 		$req->closeCursor();
@@ -646,7 +652,7 @@
 						}
 
 									///////////////////////////////
-									//// LISTE DES LIGNES  ////
+									//// LISTE of  LIGNES  ////
 									///////////////////////////////
 
 						$UnitListe ='<option value="0">Aucune</option>';
@@ -950,7 +956,7 @@
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
-		$actionForm = 'commande.php?id='. $_GET['id'] .'';
+		$actionForm = 'order.php?id='. $_GET['id'] .'';
 
 	}
 	elseif(isset($_GET['id']) AND !empty($_GET['id'])){
@@ -958,7 +964,7 @@
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
-		$actionForm = 'commande.php?id='. $_GET['id'] .'';
+		$actionForm = 'order.php?id='. $_GET['id'] .'';
 
 	}
 	else{
@@ -967,7 +973,7 @@
 		$ParDefautDiv1 = 'id="defaultOpen"';
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
 		$ImputButton = ' Aucune commande chargée';
-		$actionForm = 'commande.php';
+		$actionForm = 'order.php';
 	}
 ?>
 
@@ -983,8 +989,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $(".add").click(function() {
-        var AddORDRELignecommande = $("#AddORDRELignecommande").val();
-        var AddARTICLELignecommande = $("#AddARTICLELignecommande").val();
+    var AddORDRELignecommande = $("#AddORDRELignecommande").val();
+    var AddARTICLELignecommande = $("#AddARTICLELignecommande").val();
 		var AddLABELLignecommande = $("#AddLABELLignecommande").val();
 		var AddQTLignecommande = $("#AddQTLignecommande").val();
 		var AddUNITLignecommande = $("#AddUNITLignecommande").val();
@@ -1024,14 +1030,9 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-
 <?php
-
 	//include interface
 	require_once 'include/include_interface.php';
-
-
-
 ?>
 
 	<div class="tab">
