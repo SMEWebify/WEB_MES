@@ -24,17 +24,13 @@
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
-
 	$req = $bdd->query("SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL");
-	while ($donnees_Article = $req->fetch())
-	{
+	while ($donnees_Article = $req->fetch()){
 		$ListeArticle  .= '<li><a href="article.php?id='. $donnees_Article['id'] .'">'. $donnees_Article['CODE'] .' - '. $donnees_Article['LABEL'] .' </a></li>';
 	}
 
 	if(isset($_GET['id'])){
-
-	//PREMIERE BOUCLE ARTICLE RAND 1
-
+// FIRST RANK 1 PART LOOP
 		$reqDetailArticle = $bdd->query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -75,6 +71,7 @@
 						<li><span >'. $donnees_DetailArticle['CODE'] .' - '. $donnees_DetailArticle['LABEL'] .'</span>
 							<ul >';
 
+		// FIRST RANK 1 PART TECHNICAL RANGE
 				$reqDecoupTech = $bdd -> query('SELECT '. TABLE_ERP_DEC_TECH .'.Id,
 												'. TABLE_ERP_DEC_TECH .'.ORDRE,
 												'. TABLE_ERP_DEC_TECH .'.PRESTA_ID,
@@ -87,8 +84,7 @@
 												WHERE '. TABLE_ERP_DEC_TECH .'.ARTICLE_ID = \''. $donnees_DetailArticle['ID'] .'\'
 													ORDER BY '. TABLE_ERP_DEC_TECH .'.ORDRE');
 
-				while ($donnees_DecoupTech = $reqDecoupTech->fetch())
-				{
+				while ($donnees_DecoupTech = $reqDecoupTech->fetch()){
 					$TpsTotal = $donnees_DecoupTech['TPS_PREP'] + $donnees_DecoupTech['TPS_PRO'];
 					$DetailArticle  .= ' <li>'. $TpsTotal .' hrs - '. $donnees_DecoupTech['PRESTA_LABEL'] .' </li>';
 				}
@@ -110,13 +106,11 @@
 												WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = \''. $donnees_DetailArticle['ID'] .'\'
 													ORDER BY '. TABLE_ERP_NOMENCLATURE .'.ORDRE');
 
-				while ($donnees_Nomencl = $reqNomencl->fetch())
-				{
+				while ($donnees_Nomencl = $reqNomencl->fetch()){
 					$DetailArticle  .= ' <li> '. $donnees_Nomencl['QT'] .' '. $donnees_Nomencl['UNIT_LABEL'] .' - '. $donnees_Nomencl['ARTICLE_LABEL'] .'</li>';
 				}
 
 	//DEUSIEME BOUCLE ARTICLE RAND 2
-
 				$reqSSEns = $bdd -> query('SELECT '. TABLE_ERP_SOUS_ENSEMBLE .'.ID,
 										'. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID,
 										'. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE,
@@ -128,8 +122,7 @@
 										WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = \''. $donnees_DetailArticle['ID'] .'\'
 											ORDER BY '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE');
 
-				while ($donnees_SousEns = $reqSSEns->fetch())
-				{
+				while ($donnees_SousEns = $reqSSEns->fetch()){
 					$DetailArticle  .= '
 					<li><span><a href="article.php?id='. $donnees_SousEns['ARTICLE_ID'] .'">'. $donnees_SousEns['LABEL_ARTICLE'] .' </a></span>
 						<ul >';
@@ -146,8 +139,7 @@
 												WHERE '. TABLE_ERP_DEC_TECH .'.ARTICLE_ID = \''. $donnees_SousEns['ARTICLE_ID'] .'\'
 													ORDER BY '. TABLE_ERP_DEC_TECH .'.ORDRE');
 
-											while ($donnees_DecoupTech = $reqDecoupTech->fetch())
-											{
+											while ($donnees_DecoupTech = $reqDecoupTech->fetch()){
 												$TpsTotal = $donnees_DecoupTech['TPS_PREP'] + $donnees_DecoupTech['TPS_PRO'];
 												$DetailArticle  .= ' <li>'. $TpsTotal .' hrs - '. $donnees_DecoupTech['PRESTA_LABEL'] .' </li>';
 											}
@@ -169,8 +161,7 @@
 																			WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = \''. $donnees_SousEns['ARTICLE_ID'] .'\'
 																				ORDER BY '. TABLE_ERP_NOMENCLATURE .'.ORDRE');
 
-											while ($donnees_Nomencl = $reqNomencl->fetch())
-											{
+											while ($donnees_Nomencl = $reqNomencl->fetch()){
 												$DetailArticle  .= ' <li> '. $donnees_Nomencl['QT'] .' '. $donnees_Nomencl['UNIT_LABEL'] .' - '. $donnees_Nomencl['ARTICLE_LABEL'] .'</li>';
 
 											}
@@ -202,41 +193,9 @@
 <?php
 	//include header
 	require_once 'include/include_header.php';
-
 ?>
-</head>
-<body>
-<?php
-
-	//include interface
-	require_once 'include/include_interface.php';
-
-
-?>
-
-
-<div class="tab">
-	<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Article </button>
-</div>
-<div id="div1" class="tabcontent" >
-	<div class="column">
-		<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un article">
-		<ul id="myUL">
-	<?php
-
-		Echo $ListeArticle;
-
-	?>
-		</ul>
-	</div>
-
-	<?php
-
-		Echo $DetailArticle;
-
-	?>
-
 <script>
+//script from w3school
 function myFunction() {
   // Declare variables
   var input, filter, ul, li, a, i, txtValue;
@@ -256,7 +215,27 @@ function myFunction() {
   }
 }
 </script>
+</head>
+<body>
+<?php
+	//include ui
+	require_once 'include/include_interface.php';
+?>
+<div class="tab">
+	<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Article </button>
 </div>
-
+<div id="div1" class="tabcontent" >
+	<div class="column">
+		<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un article">
+		<ul id="myUL">
+<?php
+		Echo $ListeArticle;
+?>
+		</ul>
+	</div>
+<?php
+		Echo $DetailArticle;
+?>
+</div>
 </body>
 </html>

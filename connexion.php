@@ -11,39 +11,38 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 
-
+	//if isset post variable name and password
 	if(isset($_POST['nom'])	AND	isset($_POST['mdp'])){
 
+		//protect sql requete
 		$nom	=	addslashes($_POST['nom']);
 		$mdp	=	addslashes($_POST['mdp']);
 
-		if(!empty($nom)	or	strlen($mdp)	>	4)
-		{
-			if(!empty($mdp))
-			{
+		//check if not empty post variable
+		if(!empty($nom)	or	strlen($mdp)	>	4)	{
+			if(!empty($mdp)){
 				$res	=	$bdd->query('SELECT	count(*)	as	nb	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
 				$data	=	$res->fetch();
 				$nb	=	$data['nb'];
 
-				if($nb	==1	)
-				{
+				//check if user exist
+				if($nb	==1	){
 					$reponse	=	$bdd	->	query('SELECT	statu	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
 					$verification_statut	=	$reponse->fetch();
 
-					if($verification_statut['statu']	!=	'1')
-					{
+						//check if user in not ban
+					if($verification_statut['statu']	!=	'1'){
 						stop('Votre	compte	a	été	suspendu.',	2,	'connexion.php');
 					}
-					else
-					{
-
-						if($bdd->exec("UPDATE	".	TABLE_ERP_EMPLOYEES	."	SET	connexion='".		time()	."'	WHERE	NAME='".	$nom	."'	AND	PASSWORD='".	$mdp	."'"))
-						{
+					else{
+						//update time of connexion timestamps
+						if($bdd->exec("UPDATE	".	TABLE_ERP_EMPLOYEES	."	SET	connexion='".		time()	."'	WHERE	NAME='".	$nom	."'	AND	PASSWORD='".	$mdp	."'"))	{
+							//initiat session variable
 							$_SESSION['nom']	=	$nom;
 							$_SESSION['mdp']	=	$mdp;
 
-							echo	'
-							<!DOCTYPE	html	PUBLIC	"-//W3C//DTD	XHTML	1.0	Strict//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+							//display good connect and exit page
+							echo	'	<!DOCTYPE	html	PUBLIC	"-//W3C//DTD	XHTML	1.0	Strict//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 							<html	xmlns="http://www.w3.org/1999/xhtml"	xml:lang="fr"	>
 							<head>
 								<title>'. $CompanyName .'</title>
@@ -76,28 +75,21 @@
 							</html>	';
 							exit;
 
-
-							stop('Vous	êtes	bien	connecté(e).',	3,	'index.php');
-
 						}
-						else
-						{
+						else{
 							stop('Erreur,	impossible	de	modifier	l\'enregistrement.',	300,	'connexion.php');
 						}
 					}
 				}
-				else
-				{
+				else{
 					stop('Votre	mot	de	passe	ne	correspond	pas	avec	l\'identifiant.',	500,	'connexion.php');
 				}
 			}
-			else
-			{
+			else	{
 				stop('Votre	mot	de	passe	est	invalide.',	102,	'connexion.php');
 			}
 		}
-		else
-		{
+		else	{
 			stop('Votre	identifiant	est	invalide.',	101,	'connexion.php');
 		}
 	}
@@ -115,16 +107,13 @@
 
 		stop('Vous	avez	été	déconnecté	de	force.',	5,	'connexion.php');
 	}
-
 ?>
-
 <!DOCTYPE	html	PUBLIC	"-//W3C//DTD	XHTML	1.0	Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html	xmlns="http://www.w3.org/1999/xhtml"	xml:lang="fr"	>
 <head>
 <?php
 	//include header
 	require_once 'include/include_header.php';
-
 ?>
 <script>
 function myFunction() {

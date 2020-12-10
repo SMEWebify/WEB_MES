@@ -24,40 +24,32 @@
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
-	if(isset($_GET['mois']) & isset($_GET['annee']))
-	{
+	if(isset($_GET['mois']) & isset($_GET['annee'])){
 		$mois = intval($_GET['mois']);
 		$annee = intval($_GET['annee']);
 	}
 
 	setlocale(LC_ALL, 'fr_FR.utf-8', 'fr_FR','fr','fr','fra','fr_FR@euro');
 
-	if((empty($_GET["mois"]) || !ctype_digit($_GET["mois"]) || $_GET["mois"]<=0 || $_GET["mois"]>12) && !isset($mois))
-	{
+	if((empty($_GET["mois"]) || !ctype_digit($_GET["mois"]) || $_GET["mois"]<=0 || $_GET["mois"]>12) && !isset($mois))	{
 		$mois=date('m') ;
 	}
-	elseif(!empty($_GET["mois"]) && ctype_digit($_GET["mois"]) && $_GET["mois"]>0 && $_GET["mois"]<=12 && !isset($mois))
-	{
-		if(strlen($_GET["mois"])==1)
-		{
+	elseif(!empty($_GET["mois"]) && ctype_digit($_GET["mois"]) && $_GET["mois"]>0 && $_GET["mois"]<=12 && !isset($mois))	{
+		if(strlen($_GET["mois"])==1)	{
 			$mois='0'.$_GET["mois"] ;
 		}
-		else
-		{
+		else{
 			$mois=$_GET["mois"] ;
 		}
 	}
-	elseif(isset($mois) && strlen($mois)==1)
-	{
+	elseif(isset($mois) && strlen($mois)==1)	{
 		$mois='0'.$mois ;
 	}
 
-	if((empty($_GET["annee"]) || !ctype_digit($_GET["annee"])) && !isset($annee))
-	{
+	if((empty($_GET["annee"]) || !ctype_digit($_GET["annee"])) && !isset($annee)){
 		$annee=date('Y') ;
 	}
-	elseif(!isset($annee))
-	{
+	elseif(!isset($annee))	{
 		$annee=$_GET["annee"] ;
 	}
 
@@ -68,21 +60,17 @@
 	$correspondancejourfr=array(1 => 'lu', 2 => 'ma', 3 => 'me', 4 => 'je', 5 => 've', 6 => 'sa', 7 => 'di') ;
 	$correspondancejouren=array(1 => 'mo', 2 => 'tu', 3 => 'we', 4 => 'th', 5 => 'fr', 6 => 'sa', 7 => 'su') ;
 
-	if($mois!=01)
-	{
+	if($mois!=01)	{
 		$contenu .='<a href="calendrier.php?mois='.($mois-1).'&amp;annee='.$annee.'">«</a> ';
 	}
-	else
-	{
+	else	{
 		$contenu .='<a href="calendrier.php?mois=12&amp;annee='.($annee-1).'">«</a> ';
 	}
 
-	if(setlocale(LC_ALL, 'fr_FR.utf-8', 'fr_FR','fr','fr','fra','fr_FR@euro'))
-	{
+	if(setlocale(LC_ALL, 'fr_FR.utf-8', 'fr_FR','fr','fr','fra','fr_FR@euro'))	{
 		$contenu .= ucfirst(strftime('%B', $timestampreference)).' '.$annee ;
 	}
-	else
-	{
+	else{
 		$correspondancesmois=array('january' => 'Janvier',
 										'february' => 'Février',
 										'march' => 'Mars',
@@ -99,14 +87,12 @@
 		$contenu .= $correspondancesmois[strftime('%B', $timestampreference)].' '.$annee ;
 	}
 
-	if($mois!=12)
-	{
+	if($mois!=12)	{
 								$contenu .='<a href="calendrier.php?mois='.($mois+1).'&amp;annee='.$annee.'">»</a>
 									<br/>
 									<br/>';
 	}
-	else
-	{
+	else{
 								$contenu .='<a href="calendrier.php?mois=01&amp;annee='.($annee+1).'">»</a>
 									<br/>
 									<br/>';
@@ -138,8 +124,7 @@
 	$heuresfin=array() ;
 	$nombreresultat=0 ;
 
-	while($donnees=$req->fetch())
-	{
+	while($donnees=$req->fetch()){
 		$debut=explode(' ', $donnees['debut']) ;
 
 		if(!empty($donnees['fin'])){
@@ -158,8 +143,7 @@
 		$nombreresultat++ ;
 	}
 
-	while($iterations<35)
-	{
+	while($iterations<35)	{
 		$iterations++ ;
 		$valeur=$iterations-7*floor($iterations/7.1) ;
 
@@ -167,17 +151,14 @@
 			$jour='0'.$jour ;
 		}
 
-		if((substr(strftime('%A', $timestampreference), 0, 2)==$correspondancejourfr[$valeur] || strtolower(substr(strftime('%A', $timestampreference), 0, 2))==$correspondancejouren[$valeur])&& $jour<=$nombrejours)
-		{
+		if((substr(strftime('%A', $timestampreference), 0, 2)==$correspondancejourfr[$valeur] || strtolower(substr(strftime('%A', $timestampreference), 0, 2))==$correspondancejouren[$valeur])&& $jour<=$nombrejours){
 								$contenu .="\n\t\t\t\t\t\t\t\t";
 								$contenu .='<td' ;
 
-								if($timestampreference==mktime(0, 0, 0))
-								{
+								if($timestampreference==mktime(0, 0, 0)){
 									$contenu .='class="today" ';
 								}
-								if(in_array($annee.'-'.$mois.'-'.$jour, $datesdebut) || in_array($annee.'-'.$mois.'-'.$jour, $datesfin))
-								{
+								if(in_array($annee.'-'.$mois.'-'.$jour, $datesdebut) || in_array($annee.'-'.$mois.'-'.$jour, $datesfin)){
 									$cles=array_keys($datesdebut, $annee.'-'.$mois.'-'.$jour) ;
 									$cles+=array_keys($datesfin, $annee.'-'.$mois.'-'.$jour) ;
 								}
@@ -186,23 +167,18 @@
 									<span class="jour">'.$jour.'</span>
 									<div class="eventslist">';
 
-								if(in_array($annee.'-'.$mois.'-'.$jour, $datesdebut) || in_array($annee.'-'.$mois.'-'.$jour, $datesfin))
-								{
+								if(in_array($annee.'-'.$mois.'-'.$jour, $datesdebut) || in_array($annee.'-'.$mois.'-'.$jour, $datesfin)){
 									$contenu .="\n\t\t\t\t\t\t\t\t\t\t";
 									$contenu .='<div class="evenement">' ;
-									foreach($cles as $cle)
-									{
+									foreach($cles as $cle){
 										$contenu .="\n\t\t\t\t\t\t\t\t\t\t\t";
-										if(array_key_exists($cle, $datesfin) && $datesfin[$cle]==$datesdebut[$cle])
-										{
+										if(array_key_exists($cle, $datesfin) && $datesfin[$cle]==$datesdebut[$cle]){
 											$contenu .='<h6>'.$titres[$cle].'</h6>' ;
 										}
-										elseif(array_key_exists($cle, $datesfin) && $datesfin[$cle]==$annee.'-'.$mois.'-'.$jour)
-										{
+										elseif(array_key_exists($cle, $datesfin) && $datesfin[$cle]==$annee.'-'.$mois.'-'.$jour){
 											$contenu .='<h6>Fin de : '.$titres[$cle].'</h6>' ;
 										}
-										else
-										{
+										else{
 											$contenu .='<h6>'.$titres[$cle].'</h6>' ;
 										}
 									}
@@ -215,23 +191,20 @@
 			$jour++ ;
 			$timestampreference+=24*60*60 ;
 		}
-		else
-		{
+		else{
 					$contenu .="\n\t\t\t\t\t\t\t\t";
 					$contenu .='<td>
 									<div class="jour_vide"></div>
 								</td>' ;
 		}
 
-		if(($iterations%7)==0 && $jour!=$nombrejours && $iterations!=35)
-		{
+		if(($iterations%7)==0 && $jour!=$nombrejours && $iterations!=35){
 			$contenu .="\n\t\t\t\t\t\t\t";
 			$contenu .='</tr>
 							<tr>' ;
 		}
 
-		if($iterations==35 && $jour<=$nombrejours)
-		{
+		if($iterations==35 && $jour<=$nombrejours){
 			$contenu .="\n\t\t\t\t\t\t\t";
 			$contenu .='<tr>
 							<tr>' ;
@@ -246,31 +219,26 @@
 <?php
 	//include header
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
-	//include interface
+	//include ui
 	require_once 'include/include_interface.php';
-
 ?>
 <section>
-<div id="grand_calendrier">
+			<div id="grand_calendrier">
 					<table class="content-table-decal">
 						<thead>
 							<tr>
 								<th colspan="7">
 <?php
-
 	echo $contenu;
-
 ?>
 								</tr>
 						</tbody>
 					</table>
-</div>
+				</div>
 </section>
-
 </body>
 </html>

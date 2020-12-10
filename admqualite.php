@@ -73,19 +73,16 @@
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
 									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-	while ($donnees_membre = $req->fetch())
-	{
+	while ($donnees_membre = $req->fetch()){
 		 $EmployeeListe .=  '<option value="'. $donnees_membre['idUSER'] .'">'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 
 	}
 
 	$RessourcesListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
-	while ($DonneesRessource = $req->fetch())
-	{
+	while ($DonneesRessource = $req->fetch()){
 		$RessourcesListe .='<option value="'. $DonneesRessource['Id'] .'">'. $DonneesRessource['LABEL'] .'</option>';
 	}
-
 
 	// Generable Table for device list
 	$i = 1;
@@ -104,8 +101,7 @@
 									LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`USER_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser`
 									ORDER BY Id');
 
-	while ($donnees_Appareil = $req->fetch())
-	{
+	while ($donnees_Appareil = $req->fetch())	{
 		 $contenu1 = $contenu1 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_Appareil[]" id="id_Appareil" value="'. $donnees_Appareil['Id'] .'"></td>
@@ -168,8 +164,7 @@
 									FROM `'. TABLE_ERP_DEFAUT .'`
 									ORDER BY Id');
 
-	while ($donnees_defaut = $req->fetch())
-	{
+	while ($donnees_defaut = $req->fetch())	{
 		 $contenu2 = $contenu2 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_Defaut[]" id="id_Defaut" value="'. $donnees_defaut['Id'] .'"></td>
@@ -217,8 +212,7 @@
 									FROM `'. TABLE_ERP_QL_CAUSES .'`
 									ORDER BY Id');
 
-	while ($donnees_Causes = $req->fetch())
-	{
+	while ($donnees_Causes = $req->fetch()){
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_Causes[]" id="id_sector" value="'. $donnees_Causes['Id'] .'"></td>
@@ -265,8 +259,7 @@
 									FROM `'. TABLE_ERP_QL_CORRECTIONS .'`
 									ORDER BY Id');
 
-	while ($donnees_correction = $req->fetch())
-	{
+	while ($donnees_correction = $req->fetch())	{
 		 $contenu4 = $contenu4 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_Correction[]" id="id_Correction" value="'. $donnees_correction['Id'] .'"></td>
@@ -276,7 +269,6 @@
 		$i++;
 	}
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
@@ -290,7 +282,6 @@
 <?php
 	//include ui
 	require_once 'include/include_interface.php';
-
 ?>
 
 	<div class="tab">
@@ -357,10 +348,9 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu2;
-							?>
+?>
 						<tr>
 							<td>Ajout</td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODEDefaut"></td>
@@ -388,10 +378,9 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu3;
-							?>
+?>
 						<tr>
 							<td>Ajout</td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODECauses"></td>
@@ -419,10 +408,9 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu4;
-							?>
+?>
 						<tr>
 							<td>Ajout</td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODECorrection"></td>

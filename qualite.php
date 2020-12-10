@@ -21,35 +21,24 @@
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_6'] != '1'){
-
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
-
-	$contenu = '';
-
-
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
 	//include interface
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
-
-	//include interface
+	//include ui
 	require_once 'include/include_interface.php';
-
-
-
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" >Fiche de non conformité</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')">Fiche de non conformité</button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')">Actions</button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')">Dérogations</button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')">Appareils de mesure </button>

@@ -547,14 +547,12 @@
 <?php
 	//include interface
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
-
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?php echo $ParDefautDiv1; ?>>Gestion de la société</button>
@@ -577,10 +575,9 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu1;
-							?>
+?>
 						<tr>
 							<td colspan="6" >
 								<br/>
@@ -603,9 +600,9 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
+<?php
 								Echo $contenu2;
-							?>
+?>
 						<tr>
 							<td>Ajout</td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODESector"></td>
@@ -635,10 +632,9 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu3;
-							?>
+?>
 						<tr>
 							<td>Ajout</td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODEMail" ></td>

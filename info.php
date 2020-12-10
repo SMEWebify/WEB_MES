@@ -18,30 +18,19 @@
 	else{
 		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
 	}
-
-	$contenu = "";
-
-
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
 	//include interface
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
-	//include interface
+	//include ui
 	require_once 'include/include_interface.php';
-
-	Echo $contenu;
-
 ?>
-
-
 </body>
 </html>

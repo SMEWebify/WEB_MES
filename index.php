@@ -21,7 +21,6 @@
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){
-
 		stop('L\'accès vous est interdit.', 161, 'connexion.php');
 	}
 
@@ -76,93 +75,33 @@
 						  </div>';
 		$i++;
 	}
-
-	$contenu = '
-					<div id="info_millieu">
-						<table class="content-table">
-							<thead>
-								<tr>
-									<td colspan="2"  >
-										Reception Sous-Traitance
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								'. $SST .'
-							</tbody>
-						</table>
-						<table class="content-table">
-							<tr>
-								<td colspan="2"  >
-									Retard  ('. $i_retard_cmd .')
-									<a href="pdf.php?operation=retard" onclick="window.open(this.href); return false;" >Impression</a>
-								</td>
-							</tr>
-
-							'. $retard_cmd .'
-
-							<tr>
-								<td colspan="2"  >
-									Commande au départ Aurjoud\'hui
-									<a href="pdf.php?operation=expedition" onclick="window.open(this.href); return false;" >Impression</a>
-								</td>
-							</tr>
-
-							'. $départ_cmd .'
-
-							<tr>
-								<td colspan="2" >
-									Commande au départ demain
-								</td>
-							</tr>
-
-							'. $départ_48_cmd .'
-							<tr>
-								<td colspan="2" >
-									Commande à confirmer ('. $i_cmd_a_confirmer .')
-								</td>
-							</tr>
-
-							'. $cmd_a_confirmer .'
-
-						</table>
-					</div>';
-	?>
-
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
 	//include interface
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
-
-	//include interface
+	//include ui
 	require_once 'include/include_interface.php';
 ?>
-
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Infos</button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')">Statu commandes</button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')">Contact</button>
 	</div>
 	<div id="div1" class="tabcontent" >
+			<div class="timeline">
 <?php
-
-	Echo '<div class="timeline">
-			'. $info_secteur .'
-			</div>';
+			Echo $info_secteur;
 ?>
+		</div>
 	</div>
 	<div id="div2" class="tabcontent" >
-<?php
-
-
-?>
 	</div>
 	<div id="div3" class="tabcontent" >
 		<div class="row">

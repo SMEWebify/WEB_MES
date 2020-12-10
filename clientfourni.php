@@ -30,27 +30,29 @@
 
 	$titleOnglet1 = "Ajouter une société";
 
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
-	{
+	//if post CODE or isset get Id for display company
+	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 
+		//if isset new CODE company
 		if(isset($_POST['CODESte'])){
 
+			// check if exist
 			$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
 			$data = $req->fetch();
 			$req->closeCursor();
 			$nb = $data['nb'];
 
+			// if existe
 			if($nb=1){
 
+				//change title tag
 				$titleOnglet1 = "Mettre à jours";
 
+				//up picture of company and add sql or not
 				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
-
 				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], $dossier . $fichier);
-
 				$InsertImage = $dossier.$fichier;
-
 				If(empty($fichier)){
 					$AddSQL = '';
 				}
@@ -58,6 +60,7 @@
 					$AddSQL = 'LOGO = \''. addslashes($InsertImage) .'\',';
 				}
 
+				//update database with post
 				$req = $bdd->exec("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODESte']) ."',
 																				NAME='". addslashes($_POST['NameSte']) ."',
 																				WEBSITE='". addslashes($_POST['WebSiteSte']) ."',
@@ -84,20 +87,20 @@
 																				COMPTE_AUX_FOUR='". addslashes($_POST['CompteAuxFourSte']) ."',
 																				CONTROLE_FOUR='". addslashes($_POST['ControlFour']) ."'
 																			WHERE Id='". addslashes($_POST['IDSte'])."'");
-
+				//select new values for display
 				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
 			}
 			else{
+				//if not existe, we create new company or provider
 
 				$titleOnglet1 = "Mettre à jours";
 
 				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
-
 				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], $dossier . $fichier);
-
 				$InsertImage = $dossier.$fichier;
 
+				//add to sql db
 				$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
 																				'". addslashes($_POST['CODESte']) ."',
 																				'". addslashes($_POST['NameSte']) ."',
@@ -129,12 +132,14 @@
 
 				$req->closeCursor();
 
+				//we can now selectt new value from new add
 				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY id DESC LIMIT 0, 1");
 			}
 		}
 		else{
-			$Name = preg_replace('#-+#', ' ', addslashes($_GET['id']));
 
+			//if is get we select form db value
+			$Name = preg_replace('#-+#', ' ', addslashes($_GET['id']));
 			$titleOnglet1 = "Mettre à jours";
 
 			$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE NAME = '". $Name ."'");
@@ -143,6 +148,7 @@
 		$DonneesSte = $req->fetch();
 		$req->closeCursor();
 
+		// stock value in variable for dislpay on form
 		$SteId = $DonneesSte['id'];
 		$SteCODE = $DonneesSte['CODE'];
 		$SteNAME = $DonneesSte['NAME'];
@@ -177,53 +183,54 @@
 		$SteCOMMENT = $DonneesSte['COMMENT'];
 	}
 
+	// Create liste for TVA choise
 	$req = $bdd -> query('SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .'');
-	while ($DonneesTVA = $req->fetch())
-	{
+	while ($DonneesTVA = $req->fetch()){
 		$TVAListe .='<option value="'. $DonneesTVA['Id'] .'"  '. selected($SteTVA_ID, $DonneesTVA['Id']) .' $SteTVA_INTRA>'. $DonneesTVA['TAUX'] .'% - '. $DonneesTVA['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
 
+	// Create liste for payment regulation choise
 	$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
-	while ($DonneesConditionReg = $req->fetch())
-	{
+	while ($DonneesConditionReg = $req->fetch()){
 		$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($SteMODE_REG_CLIENT_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
 		$CondiListe2 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($SteCOND_REG_FOUR_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
 
+	// Create liste for payment mode choise
 	$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
-	while ($DonneesModeReg = $req->fetch())
-	{
+	while ($DonneesModeReg = $req->fetch())	{
 		$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($SteCOND_REG_CLIENT_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
 		$RegListe2 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($SteMODE_REG_FOUR_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
 	}
 	$req->closeCursor();
 
+	// Create liste for person in charge choise
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
 									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-	while ($donnees_membre = $req->fetch())
-	{
+	while ($donnees_membre = $req->fetch())	{
 		 $EmployeeListe1 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($SteRESP_COM_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 		 $EmployeeListe2 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($SteRESP_TECH_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 	}
 	$req->closeCursor();
 
+	// Create liste datalist find company
 	$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME");
-	while ($donnees_ste = $req->fetch())
-	{
+	while ($donnees_ste = $req->fetch()){
 		$ListeSte .= '<option  value="'. $donnees_ste['NAME'] .'" >';
 	}
 	$req->closeCursor();
 
-	//////////////////
-	////  SITE   ////
-	//////////////////
+	/////////////////////////////
+	////  Company SITE section  ////
+	/////////////////////////////
 
+	// if creat new site we add in db
 	if(isset($_POST['AddLABELSite']) AND !empty($_POST['AddLABELSite'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ADRESSE ." VALUE ('0',
@@ -240,6 +247,7 @@
 																		'". addslashes($_POST['AddFacSite'])  ."')");
 	}
 
+	// update data site
 	if(isset($_POST['UpdateIdSite']) AND !empty($_POST['UpdateIdSite'])){
 
 		$UpdateIdSite = $_POST['UpdateIdSite'];
@@ -273,8 +281,7 @@
 		$req->closeCursor();
 	}
 
-
-
+//display all site on form ligne
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_ADRESSE .'.Id,
 									'. TABLE_ERP_ADRESSE .'.ID_COMPANY,
@@ -292,8 +299,7 @@
 									WHERE ID_COMPANY=\''. $SteId .'\'
 									ORDER BY ORDRE');
 
-	while ($donnees_Site = $req->fetch())
-	{
+	while ($donnees_Site = $req->fetch())	{
 		 $contenu2 = $contenu2 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="'. $donnees_Site['Id'] .'"></td>
@@ -325,9 +331,10 @@
 	$req->closeCursor();
 
 	//////////////////
-	////  CONTACT   ////
+	////  CONTACT Section  ////
 	//////////////////
 
+	//add new contact in db
 	if(isset($_POST['AddPrenomContact']) AND !empty($_POST['AddPrenomContact'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CONTACT ." VALUE ('0',
@@ -343,6 +350,7 @@
 																		'". addslashes($_POST['AddMailContact']) ."')");
 	}
 
+//update all contact
 	if(isset($_POST['UpdateIdContact']) AND !empty($_POST['UpdateIdContact'])){
 
 		$UpdateIdContact = $_POST['UpdateIdContact'];
@@ -373,8 +381,7 @@
 		}
 	}
 
-
-
+// display all contact of comppany in form line
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_CONTACT .'.Id,
 									'. TABLE_ERP_CONTACT .'.ID_COMPANY,
@@ -393,8 +400,7 @@
 									WHERE '. TABLE_ERP_CONTACT .'.ID_COMPANY=\''. $SteId .'\'
 									ORDER BY ORDRE');
 
-	while ($donnees_Contact = $req->fetch())
-	{
+	while ($donnees_Contact = $req->fetch()){
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="UpdateIdContact[]" id="UpdateIdContact" value="'. $donnees_Contact['Id'] .'"></td>
@@ -422,39 +428,41 @@
 		</tr>';
 		$i++;
 	}
-
-	?>
-
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
 	//include header
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
-	//include interface
+	//include ui
 	require_once 'include/include_interface.php';
 
-								if(!isset($_GET['id']) or empty($_GET['id']))
-								{
-									$VerrouInput = ' disabled="disabled"  Value="-" ';
-									$ImputButton = ' Aucun client chargé';
-									$actionForm = 'clientfourni.php';
-								}
-								else{
-									$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
-									$actionForm = 'clientfourni.php?id='. $SteNAME .'';
-								}
+	// we cant change codeId of DB, he can be used on other table
+	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODESte" value="'. $SteCODE .'">' .$SteCODE;}
+	else{ $DisplayCode ='<input type="text" name="CODESte" required="required">'; }
+
+//variable of page if load an company
+	if(!isset($_GET['id']) or empty($_GET['id'])){
+		$VerrouInput = ' disabled="disabled"  Value="-" ';
+		$ImputButton = ' Aucun client chargé';
+		$actionForm = 'clientfourni.php';
+
+	}
+	else{
+			$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
+			$actionForm = 'clientfourni.php?id='. $SteNAME .'';
+	}
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $titleOnglet1; ?></button>
 <?php
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
-	{
+	// not display this menu if we dont have customer load
+	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')">Sites</button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')">Contacts</button>
@@ -497,29 +505,11 @@
 						<tr>
 							<td >
 								<input type="hidden" name="IDSte" value="<?php echo $SteId; ?>" size="10">
-								<input type="text" name="CODESte" value="<?php echo $SteCODE;?>" size="10">
+								<?php echo $DisplayCode;?>
 							</td>
 							<td>
 								<input type="text" name="NameSte" value="<?php echo $SteNAME;?>" size="10">
 							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -582,14 +572,14 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td colspan=7">Logo</td>
+							<td colspan="7">Logo</td>
 						</tr>
 						<tr>
-							<td colspan=7" ><input type="file" name="fichier_LOGOSte" /></td>
+							<td colspan="7" ><input type="file" name="fichier_LOGOSte" /></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td colspan=5"><img src="<?php echo $SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
+							<td colspan="5"><img src="<?php echo $SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
 							<td></td>
 						</tr>
 					</tbody>
@@ -745,8 +735,7 @@
 			</form>
 		</div>
 <?php
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
-	{
+	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<div id="div2" class="tabcontent">
 			<form method="post" name="Section" action="<?php echo $actionForm; ?>" class="content-form" >
@@ -767,9 +756,7 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-								Echo $contenu2;
-							?>
+<?php 	Echo $contenu2; 	?>
 						<tr>
 							<td>Ajout<input type="hidden"  name="AddIdSite" value="<?php echo $SteId; ?>"></td>
 							<td><input type="number"  name="AddORDRESite" size="2" <?php echo $VerrouInput; ?> id="number"></td>
@@ -796,7 +783,7 @@
 						<tr>
 							<td colspan="11" >
 								<br/>
-								 <?php echo $ImputButton; ?><br/>
+<?php echo $ImputButton; ?><br/>
 								<br/>
 							</td>
 						</tr>
@@ -822,9 +809,7 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-								Echo $contenu3;
-							?>
+<?php	Echo $contenu3; ?>
 						<tr>
 							<td>Ajout<input type="hidden"  name="AddIdContact" value="<?php echo $SteId;; ?>"></td>
 							<td><input type="number"  name="AddORDREContact" size="2" <?php echo $VerrouInput; ?> id="number"></td>
@@ -840,7 +825,7 @@
 							<td><input type="text"  name="AddFonctionContact" size="7" <?php echo $VerrouInput; ?>></td>
 							<td>
 								<select name="AddAdresseContact">
-								<?php echo $AdresseListe; ?>
+<?php echo $AdresseListe; ?>
 								</select>
 							</td>
 							<td><input type="text"  name="AddNumberContact" size="7" <?php echo $VerrouInput; ?>></td>
@@ -850,7 +835,7 @@
 						<tr>
 							<td colspan="10" >
 								<br/>
-								 <?php echo $ImputButton; ?><br/>
+<?php echo $ImputButton; ?><br/>
 								<br/>
 							</td>
 						</tr>
