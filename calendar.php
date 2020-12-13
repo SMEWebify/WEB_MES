@@ -4,24 +4,23 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'profil', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_9'] != '1'){
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
 	if(isset($_GET['mois']) & isset($_GET['annee'])){
@@ -61,10 +60,10 @@
 	$correspondancejouren=array(1 => 'mo', 2 => 'tu', 3 => 'we', 4 => 'th', 5 => 'fr', 6 => 'sa', 7 => 'su') ;
 
 	if($mois!=01)	{
-		$contenu .='<a href="calendrier.php?mois='.($mois-1).'&amp;annee='.$annee.'">«</a> ';
+		$contenu .='<a href="calendar.php?mois='.($mois-1).'&amp;annee='.$annee.'">«</a> ';
 	}
 	else	{
-		$contenu .='<a href="calendrier.php?mois=12&amp;annee='.($annee-1).'">«</a> ';
+		$contenu .='<a href="calendar.php?mois=12&amp;annee='.($annee-1).'">«</a> ';
 	}
 
 	if(setlocale(LC_ALL, 'fr_FR.utf-8', 'fr_FR','fr','fr','fra','fr_FR@euro'))	{
@@ -88,12 +87,12 @@
 	}
 
 	if($mois!=12)	{
-								$contenu .='<a href="calendrier.php?mois='.($mois+1).'&amp;annee='.$annee.'">»</a>
+								$contenu .='<a href="calendar.php?mois='.($mois+1).'&amp;annee='.$annee.'">»</a>
 									<br/>
 									<br/>';
 	}
 	else{
-								$contenu .='<a href="calendrier.php?mois=01&amp;annee='.($annee+1).'">»</a>
+								$contenu .='<a href="calendar.php?mois=01&amp;annee='.($annee+1).'">»</a>
 									<br/>
 									<br/>';
 	}

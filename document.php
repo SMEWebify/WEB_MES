@@ -4,13 +4,20 @@
 
 	//phpinfo();
 
-	//include pour la connection à la base SQL 
-	require_once 'include/include_connection_sql.php';
-	//include pour les fonctions
-	require_once 'include/include_fonctions.php';
-	//include pour les constantes
+	// include for the constants
 	require_once 'include/include_recup_config.php';
-	
+	//include for the connection to the SQL database
+	require_once 'include/include_connection_sql.php';
+	// include for functions
+	require_once 'include/include_fonctions.php';
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'profil', $UserLanguage);
+
 	$req = $bdd -> query('SELECT NAME,
 							ADDRESS,
 							CITY,

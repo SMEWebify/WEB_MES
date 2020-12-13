@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+     <!-- admin UI -->
+     <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Méthodes</TiltePage>
+   <Title1>Service</Title1>
+   <Title2>Ressources</Title2>
+   <Title3>Section</Title3>
+   <Title4>Location in the workshop</Title4>
+   
+<!-- select -->
+   <SelectProductive>Productive</SelectProductive>
+   <SelectRawMat>Rax material</SelectRawMat>
+   <SelectRawMatSheet>Rax material (Sheet)</SelectRawMatSheet>
+   <SelectRawMatProfil>Rax material (Profil)</SelectRawMatProfil>
+   <SelectRawMatBlock>Rax material (block)</SelectRawMatBlock>
+   <SelectSupplies>Supplies</SelectSupplies>
+   <SelectSubcontracting>Sub-contracting</SelectSubcontracting>
+   <SelectCompoundItem>Compound item</SelectCompoundItem>
+
+<!-- general -->
+   <TableRessource>Ressources</TableRessource>
+   <TableResponsible>Responsible</TableResponsible>
+   <TableCapacity>Capacity</TableCapacity>
+   <TableSection>Section</TableSection>
+   <TableMasktime>Mask time</TableMasktime>
+   <TableHourlyRate>Hourly Rate</TableHourlyRate>
+   <TableMargin>Margin</TableMargin>
+   <TableColor>Color</TableColor>
+   <TableType>Type</TableType>
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Label</TableLabel>
+   <TableOrder>Order</TableOrder>
+   <TableService>Prestation</TableService>
+   <TablePicture>Picture :</TablePicture>
+   <Addtext>Add</Addtext>
+   <TableUpdateButton>Update</TableUpdateButton>
+   <Yes>Yes</Yes>
+   <No>No</No>
+</langue>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Manage time</TiltePage>
+   <Title1>Machine event</Title1>
+   <Title2>Improduc time</Title2>
+   <Title3>Absence type</Title3>
+   <Title4>Bank holiday</Title4>
+   <Title5>Hourly models</Title5>
+<!-- select -->
+   <SelectStop>Stoped</SelectStop>
+   <SelectSetting>Settingn</SelectSetting>
+   <SelectRun>Run</SelectRun>
+   <SelectOff>Off</SelectOff>
+   <!-- -->
+   <SelectWorked>Worked</SelectWorked>
+   <SelectOpenable>Oenable</SelectOpenable>
+   <SelectCalendar>Calendar</SelectCalendar>
+ <!-- table -->
+   <TableMasktime>Mask time</TableMasktime>
+   <TableColor>Color</TableColor>
+   <TableMachineStatu>machine statu</TableMachineStatu>
+   <TablenecessaryRessource>Necessary ressource</TablenecessaryRessource>
+   <TablePaid>Paid</TablePaid>
+   <TableDayType>Day type</TableDayType>
+   <TableDate>Date</TableDate>
+   <TableFixedDate>Fixed date</TableFixedDate>
+<!-- general -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Label</TableLabel>
+   <TableOrder>Order</TableOrder>
+   <TableService>Service</TableService>
+   <Addtext>Add</Addtext>
+   <TableUpdateButton>Update</TableUpdateButton>
+   <Yes>Yes</Yes>
+   <No>No</No>
+</langue>

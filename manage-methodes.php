@@ -4,34 +4,31 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'manage-methodes', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
+	//if add new service
 	if(isset($_POST['AddPosteCharge']) AND !empty($_POST['AddPosteCharge'])){
 
 		$dossier = 'images/Presta/';
 		$fichier = basename($_FILES['IMAGEPosteCharge']['name']);
-
 		move_uploaded_file($_FILES['IMAGEPosteCharge']['tmp_name'], $dossier . $fichier);
-
 		$IsertPrestaImage = $dossier.$fichier;
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_PRESTATION ." VALUE ('0',
@@ -47,8 +44,8 @@
 
 	}
 
+	//update service list 
 	if(isset($_POST['id_presta']) AND !empty($_POST['id_presta'])){
-
 		$UpdateIdPresta = $_POST['id_presta'];
 		$UpdateORDREpresta = $_POST['ORDREpresta'];
 		$UpdateCODEpresta = $_POST['CODEpresta'];
@@ -61,7 +58,6 @@
 
 		$i = 0;
 		foreach ($UpdateIdPresta as $id_generation) {
-
 			$bdd->exec('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  CODE = \''. addslashes($UpdateCODEpresta[$i]) .'\',
 																ORDRE = \''. $UpdateORDREpresta[$i] .'\',
 																LABEL = \''. addslashes($UpdateLABELpresta[$i]) .'\',
@@ -75,10 +71,8 @@
 		}
 	}
 
+	//add new section in db
 	if(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
-
-
-
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_SECTION ." VALUE ('0',
 																		'". $_POST['ORDRESection'] ."',
 																		'". addslashes($_POST['CODESection']) ."',
@@ -117,9 +111,7 @@
 
 		$dossier = 'images/Ressources/';
 		$fichier = basename($_FILES['IMAGERessource']['name']);
-
 		move_uploaded_file($_FILES['IMAGERessource']['tmp_name'], $dossier . $fichier);
-
 		$IsertPrestaImage = $dossier.$fichier;
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_RESSOURCE ." VALUE ('0',
@@ -131,7 +123,6 @@
 																		'". $_POST['CAPARessource'] ."',
 																		'". $_POST['SECTIONRessource'] ."',
 																		'". $_POST['COLORRessource'] ."')");
-
 	}
 
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
@@ -140,8 +131,7 @@
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
 									FROM `'. TABLE_ERP_EMPLOYEES .'`
 									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-	while ($donnees_membre = $req->fetch())
-	{
+	while ($donnees_membre = $req->fetch()){
 		 $EmployeeListe .=  '<option value="'. $donnees_membre['idUSER'] .'">'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
 
 	}
@@ -167,8 +157,7 @@
 
 
 
-	while ($donnees_presta = $req->fetch())
-	{
+	while ($donnees_presta = $req->fetch()){
 		 $contenu1 = $contenu1 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_presta[]" id="id_presta" value="'. $donnees_presta['Id'] .'"></td>
@@ -201,8 +190,7 @@
 	//------------------------------
 
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'');
-	while ($DonneesSection = $req->fetch())
-	{
+	while ($DonneesSection = $req->fetch()){
 		$SectionListe .='<option value="'. $DonneesSection['Id'] .'">'. $DonneesSection['LABEL'] .'</option>';
 	}
 
@@ -221,8 +209,7 @@
 									LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_RESSOURCE .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`
 									ORDER BY ORDRE');
 
-	while ($donnees_Ressources = $req->fetch())
-	{
+	while ($donnees_Ressources = $req->fetch()){
 		 $contenu2 = $contenu2 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_ressource[]" id="id_presta" value="'. $donnees_Ressources['Id'] .'"></td>
@@ -268,8 +255,7 @@
 								LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`idUSER` = `'. TABLE_ERP_SECTION .'`.`RESPONSABLE`
 								LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
 								ORDER BY '. TABLE_ERP_SECTION .'.ORDRE');
-	while ($donnees_section = $req->fetch())
-	{
+	while ($donnees_section = $req->fetch()){
 
 		 $contenu3 = $contenu3 .'
 				<tr>
@@ -295,22 +281,21 @@
 
 	$RessourcesListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
-	while ($DonneesRessource = $req->fetch())
-	{
+	while ($DonneesRessource = $req->fetch()){
 		$RessourcesListe .='<option value="'. $DonneesRessource['Id'] .'">'. $DonneesRessource['LABEL'] .'</option>';
 	}
 
+	//add new stock zone in dd
 	if(isset($_POST['AddCODEZoneStock']) AND !empty($_POST['AddCODEZoneStock'])){
-
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_STOCK_ZONE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEZoneStock']) ."',
 																		'". addslashes($_POST['AddLABELZoneStock']) ."',
 																		'". $_POST['AddRESSOURCEZoneStock'] ."',
 																		'". $_POST['AddCOLORZoneStock'] ."')");
-
 	}
 
+	//update list stock zone
 	if(isset($_POST['id_ZoneStock']) AND !empty($_POST['id_ZoneStock'])){
 
 		$UpdateIdZoneStock = $_POST['id_ZoneStock'];
@@ -331,6 +316,7 @@
 		}
 	}
 
+	//generate list of zone stock
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_STOCK_ZONE .'.Id,
 									'. TABLE_ERP_STOCK_ZONE .'.CODE,
@@ -342,8 +328,7 @@
 									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_STOCK_ZONE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
 									ORDER BY '.TABLE_ERP_RESSOURCE .'.id ');
 
-	while ($donnees_ZoneStock = $req->fetch())
-	{
+	while ($donnees_ZoneStock = $req->fetch()){
 		 $contenu4 = $contenu4 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_ZoneStock[]" id="id_ZoneStock" value="'. $donnees_ZoneStock['Id'] .'"></td>
@@ -367,58 +352,55 @@
 <?php
 	//include interface
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
-
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Prestations</button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')">Ressources</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')">Section</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Emplacement dans l'atelier</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-			<form method="post" name="PosteCharge" action="methodes.php" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="PosteCharge" action="manage-methodes.php" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>Index</th>
-							<th>CODE</th>
-							<th>Label</th>
-							<th>Type</th>
-							<th>Taux horraire</th>
-							<th>Marge</th>
-							<th>Couleur</th>
-							<th>Image</th>
+							<th><?php echo $langue->show_text('TableOrder'); ?></th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableType'); ?></th>
+							<th><?php echo $langue->show_text('TableHourlyRate'); ?></th>
+							<th><?php echo $langue->show_text('TableMargin'); ?></th>
+							<th><?php echo $langue->show_text('TableColor'); ?></th>
+							<th><?php echo $langue->show_text('TablePicture'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu1;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
 							<td><input type="number" name="ORDREPosteCharge" size="1" id="number"></td>
 							<td><input type="text"  name="CODEPosteCharge" size="10"></td>
 							<td><input type="text"  name="AddPosteCharge" ></td>
 							<td>
 								<select name="TYPEPosteCharge">
-									<option value="1">Productive</option>
-									<option value="2">Matière première</option>
-									<option value="3">Matière première (tôle)</option>
-									<option value="4">Matière première (profilé)</option>
-									<option value="5">Matière première (bloc)</option>
-									<option value="6">Fourniture</option>
-									<option value="7">Sous-traitance</option>
-									<option value="8">Article composés</option>
+									<option value="1"><?php echo $langue->show_text('SelectProductive'); ?></option>
+									<option value="2"><?php echo $langue->show_text('SelectRawMat'); ?></option>
+									<option value="3"><?php echo $langue->show_text('SelectRawMatSheet'); ?></option>
+									<option value="4"><?php echo $langue->show_text('SelectRawMatProfil'); ?></option>
+									<option value="5"><?php echo $langue->show_text('SelectRawMatBlock'); ?></option>
+									<option value="6"><?php echo $langue->show_text('SelectSupplies'); ?></option>
+									<option value="7"><?php echo $langue->show_text('SelectSubcontracting'); ?></option>
+									<option value="8"><?php echo $langue->show_text('SelectCompoundItem'); ?></option>
 								</select>
 							</td>
 							<td><input type="number"  name="TAUXPosteCharge" id="number"></td>
@@ -439,36 +421,35 @@
 			</form>
 		</div>
 	<div id="div2" class="tabcontent">
-			<form method="post" name="Ressources" action="methodes.php" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="Ressources" action="manage-methodes.php" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>index</th>
-							<th>Label</th>
-							<th>Temps masqué</th>
-							<th>Capacité</th>
-							<th>Section</th>
-							<th>Couleur</th>
-							<th>Image</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableOrder'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableMasktime'); ?></th>
+							<th><?php echo $langue->show_text('TableCapacity'); ?></th>
+							<th><?php echo $langue->show_text('TableSection'); ?></th>
+							<th><?php echo $langue->show_text('TableColor'); ?></th>
+							<th><?php echo $langue->show_text('TablePicture'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu2;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="CODERessource" size="1"></td>
 							<td><input type="number"  name="ORDRERessource" size="1" id="number"></td>
 							<td><input type="text"  name="AddRessource" size="10"></td>
 							<td>
 								<select name="MASKRessource">
-									<option value="0">Non</option>
-									<option value="1">Oui</option>
+									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td><input type="number"  name="CAPARessource" size="1" id="number"></td>
@@ -484,7 +465,7 @@
 						<tr>
 							<td colspan="10" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -493,26 +474,25 @@
 			</form>
 		</div>
 	<div id="div3" class="tabcontent">
-			<form method="post" name="Section" action="methodes.php" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="Section" action="manage-methodes.php" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>index</th>
-							<th>Label</th>
-							<th>Taux H</th>
-							<th>Responsable</th>
-							<th>Couleur</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableOrder'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableHourlyRate'); ?></th>
+							<th><?php echo $langue->show_text('TableResponsible'); ?></th>
+							<th><?php echo $langue->show_text('TableColor'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu3;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="CODESection" size="10"></td>
 							<td><input type="number"  name="ORDRESection" id="number"></td>
 							<td><input type="text"  name="AddSection" size="20"></td>
@@ -527,7 +507,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -536,24 +516,23 @@
 			</form>
 		</div>
 	<div id="div4" class="tabcontent">
-			<form method="post" name="Section" action="methodes.php" class="content-form" >
+			<form method="post" name="Section" action="manage-methodes.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Label</th>
-							<th>RESSOURCE</th>
-							<th>Couleur</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableRessource'); ?></th>
+							<th><?php echo $langue->show_text('TableColor'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu4;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEZoneStock"></td>
 							<td><input type="text"  name="AddLABELZoneStock" ></td>
 							<td>
@@ -566,7 +545,7 @@
 						<tr>
 							<td colspan="5" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>

@@ -16,10 +16,10 @@
 	require_once 'include/include_recup_config_company.php';
 	// load language class
 	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'profil', $UserLanguage);
-
+	$langue = new Langues('lang', 'purchase', $UserLanguage);
+	
 	//Check if the user is authorized to view the page
-	if($_SESSION['page_2'] != '1'){
+	if($_SESSION['page_3'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 ?>
@@ -33,7 +33,7 @@
 </head>
 <body>
 <?php
-	//include ui
+	//include interface
 	require_once 'include/include_interface.php';
 ?>
 </body>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Etude</TiltePage>
+   <Title1></Title1>
+   <Title2>Découpage technique</Title2>
+   <Title3>Nomenclature</Title3>
+   <Title4>Sous-ensembles</Title4>
+   <Title5>Achat</Title5>
+   <Title6>Vente</Title6>
+   <Title7>Imputations comptables</Title7>
+   <Title8>Commentaire</Title8>
+   <Title9>Unités</Title9>
+   <Title10>Sous-Famille</Title10>
+   <ListArticle>Article :</ListArticle>
+   
+<!-- select -->
+   <SelectMass>Masse</SelectMass>
+   <SelectLength>Longueur</SelectLength>
+   <SelectAera>Surface</SelectAera>
+   <SelectVolume>Volume</SelectVolume>
+   <SelectOther>Autre</SelectOther>
+   <!-- -->
+   <SelectProductive>Productive</SelectProductive>
+   <SelectRawMat>Matière première</SelectRawMat>
+   <SelectRawMatSheet>Matière première (tôle)</SelectRawMatSheet>
+   <SelectRawMatProfil>Matière première (profilé)</SelectRawMatProfil>
+   <SelectRawMatBlock>Matière première (bloc)</SelectRawMatBlock>
+   <SelectSupplies>Fourniture</SelectSupplies>
+   <SelectSubcontracting>Sous-traitance</SelectSubcontracting>
+   <SelectCompoundItem>Article composés</SelectCompoundItem>
+<!-- Table -->
+   <TableType>Type</TableType>
+   <TableComment>Commentaire</TableComment>
+   <TableImputationType>Imputation comptable</TableImputationType>
+   <TableTVAType>TVA</TableTVAType>
+   <TableArticle>Article</TableArticle>
+   <TableQty>Quantité</TableQty>
+   <TableUnit>Unité</TableUnit>
+   <TableUnitPrice>Prix U</TableUnitPrice>
+   <TablePurchaseUnit>Prix d'achat</TablePurchaseUnit>
+   <TableSalePrice>Prix de vente</TableSalePrice>
+   <TableProductCost>Coût de production</TableProductCost>
+   <TableSettingTime>Tps préaparation</TableSettingTime>
+   <TableProductTime>Tps de production</TableProductTime>
+   <Tableindex>Indice</Tableindex>
+   <TablePicture>Image :</TablePicture>
+   <TableWeight>Poids :</TableWeight>
+   <TableThickness>Epaisseur :</TableThickness>
+   <TableMaterial>Matière :</TableMaterial> 
+   <TableBuy>Acheté :</TableBuy> 
+   <TableSold>Vendu :</TableSold> 
+   <TableFamilly>Famille :</TableFamilly> 
+
+
+   <TableDimX>Dimension X</TableDimX>
+   <TableDimY>Dimension Y</TableDimY>
+   <TableDimZ>Dimension Z</TableDimZ>
+   <TableSurDimX>Sur dimension X</TableSurDimX>
+   <TableSurDimY>Sur dimension Y</TableSurDimY>
+   <TableSurDimZ>Sur dimension Z</TableSurDimZ>
+
+<!-- general -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Libelé</TableLabel>
+   <TableOrder>Ordre</TableOrder>
+   <TableService>Prestation</TableService>
+   
+   <Addtext>Ajout</Addtext>
+   <TableUpdateButton>Mettre à jours</TableUpdateButton>
+   <TableAddArticleButton>Ajouter un article</TableAddArticleButton>
+   <Yes>Oui</Yes>
+   <No>Non</No>
+</langue>

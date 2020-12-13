@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Comptabilité</TiltePage>
+   <Title1>Condition de réglement</Title1>
+   <Title2>Mode de réglement</Title2>
+   <Title3>TVA</Title3>
+   <Title4>Imputations comptables</Title4>
+   <Title5>Echéancier types</Title5>
+   <Title6>Transport</Title6>
+<!-- table 1 -->
+   <TableNumberOfMonth>Nombre de mois</TableNumberOfMonth>
+   <TableNumberOfDay>Nombre de jours</TableNumberOfDay>
+   <TableEndMonth>Fin de mois</TableEndMonth>
+<!-- table 2 -->
+   <TableAcountCODE>CODE comptagble</TableAcountCODE>
+<!-- table 3 -->
+   <TableRate>Taux</TableRate>
+<!-- table 4 -->
+   <TableAccountTVA>Compte TVA</TableAccountTVA>
+   <TableTVAType>TVA</TableTVAType>
+   <TableImputationType>Imputation comptable</TableImputationType>
+   <TableSelect1>Achat</TableSelect1>
+   <TableSelect2>Achat (stock)</TableSelect2>
+   <TableSelect3>Acompte</TableSelect3>
+   <TableSelect4>Acompte (avec TVA)</TableSelect4>
+   <TableSelect5>Autre</TableSelect5>
+   <TableSelect6>TVA</TableSelect6>
+<!-- table 6 -->
+   <TableAmountHT>Montant H.T. (%)</TableAmountHT>
+   <TableAmountTVA>Montant TVA (%)</TableAmountTVA>
+   <TableCondiList>Condition de réglement</TableCondiList>
+   <TableMethodList>Mode de réglement</TableMethodList>
+   <TableDayDelay>Délai (en jours)</TableDayDelay>
+<!-- general -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Libelé</TableLabel>
+   <Addtext>Ajout</Addtext>
+   <TableUpdateButton>Mettre à jours</TableUpdateButton>
+   <Yes>Oui</Yes>
+   <No>Non</No>
+</langue>

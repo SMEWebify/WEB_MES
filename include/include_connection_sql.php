@@ -1,15 +1,15 @@
 <?php
 try
 {
-	$bdd = new PDO('mysql:host=localhost;dbname=erp;charset=utf8', 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+	$bdd = new PDO('mysql:host='. SQL_HOST .';dbname='. DB_NAME .';charset=utf8', DB_USER , '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 }
 catch (PDOException  $e)
 {
-    echo'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	echo'
+						<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 							<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 							<head>
-								<title>'. $CompanyName .'</title>
-									
+								<title>Ops ...!</title>
 								<link rel="stylesheet" media="screen" type="text/css" title="deco" href="css/stylesheet.css" />
 								<link rel="stylesheet" media="print" type="text/css"  href="css/print.css" />
 								<link rel="stylesheet" media="screen" type="text/css" title="deco" href="css/tableaux.css" />
@@ -21,9 +21,9 @@ catch (PDOException  $e)
 								<div style="background-color: white; width:100%; padding-left:200px; padding-top:20px;>
 									<p "> 
 										Erreur de connexion à la base de données.<br/>
-					<br/>
-					Cela peut prendre quelques minutes à plusieures heures, veuillez nous excuser pour le dérangement occasionné.<br/>
-					Nous travaillons pour rétablir le site au plus vite.<br/>
+										<br/>
+										Cela peut prendre quelques minutes à plusieures heures, veuillez nous excuser pour le dérangement occasionné.<br/>
+										Nous travaillons pour rétablir le site au plus vite.<br/>
 										<br/>
 										<br/>
 									</p>
@@ -37,11 +37,7 @@ catch (PDOException  $e)
 									</p>
 								</div>
 							</body>
-							</html>	';	
-			
-			
-			
+						</html>	';			
 	exit;
 }
-
 ?>

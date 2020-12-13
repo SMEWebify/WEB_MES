@@ -4,29 +4,26 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'profil', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
-
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
 	$contenu = '';
-
 
 	///////////////////////////////
 	//// COMMMENT ORDER UPDATE ////
@@ -177,7 +174,7 @@
 	while ($donnees_commande = $req->fetch())
 	{
 		$ListeCommande .= '<option  value="'. $donnees_commande['CODE'] .'" >';
-		$ListeCommandePrincipale  .= '<li><a href="commandes.php?id='. $donnees_commande['CODE'] .'">'. $donnees_commande['CODE'] .' - '. $donnees_commande['NAME'] .' </a></li>';
+		$ListeCommandePrincipale  .= '<li><a href="order.php?id='. $donnees_commande['CODE'] .'">'. $donnees_commande['CODE'] .' - '. $donnees_commande['NAME'] .' </a></li>';
 	}
 
 
@@ -722,7 +719,7 @@
 
 							$DetailLigneDucommande .='
 							<tr>
-								<td><input type="hidden" name="UpdateIdLignecommande[]" id="UpdateIdLignecommande" value="'. $DonneesListeLigneDucommande['Id'] .'"><a href="commandes.php?id='. $_GET['id'] .'&amp;delete='. $DonneesListeLigneDucommande['Id'] .'" title="Supprimer la ligne">x</a></td>
+								<td><input type="hidden" name="UpdateIdLignecommande[]" id="UpdateIdLignecommande" value="'. $DonneesListeLigneDucommande['Id'] .'"><a href="order.php?id='. $_GET['id'] .'&amp;delete='. $DonneesListeLigneDucommande['Id'] .'" title="Supprimer la ligne">x</a></td>
 								<td><input type="number" name="UpdateORDRELignecommande[]" value="'. $DonneesListeLigneDucommande['ORDRE'] .'" id="number"></td>
 								<td>
 									<input list="Article" name="UpdateIDArticleLignecommande[]" id="UpdateIDArticleLignecommande" value="'. $DonneesListeLigneDucommande['ARTICLE_CODE'] .'">

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+     <!-- admin UI -->
+     <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+<!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Employes settings</TiltePage>
+    <Title1>Employes and users settings</Title1>
+    <Title2>Rights settings</Title2>
+ <!-- table1 -->
+    <TableNumber>N°</TableNumber>
+    <TableLastConnexion>Last log</TableLastConnexion>
+    <TableCODE>CODE</TableCODE>
+    <TableSeudo>Speudo</TableSeudo>
+    <TableRight>Right Use</TableRight>
+    <TableSection>Section</TableSection>
+ <!-- table2 -->
+   <TableRightName>Right</TableRightName>
+   <TableIndex>Index</TableIndex>
+   <TableQuoteStudy>Quote/Study</TableQuoteStudy>
+   <TableOrder>Order</TableOrder>
+   <TablePlanning>Planning</TablePlanning>
+   <TableCalendar>Calendar</TableCalendar>
+   <TablePurchase>Purchase</TablePurchase>
+   <TableArticle>Article</TableArticle>
+   <TableQuality>Quality</TableQuality>
+   <TableGeneralSetting>Settings</TableGeneralSetting>
+   <TableAcounting>Accouting</TableAcounting>
+    <Yes>Yes</Yes>
+    <No>No</No>
+ <!-- general -->
+    <Addtext>Add</Addtext>
+     <TableUpdateButton>Update</TableUpdateButton>
+</langue>

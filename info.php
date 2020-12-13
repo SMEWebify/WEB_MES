@@ -4,20 +4,20 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'info', $UserLanguage);
 
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >

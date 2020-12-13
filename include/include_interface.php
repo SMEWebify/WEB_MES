@@ -1,9 +1,9 @@
 		<div class="container">
 			<ul id="gn-menu" class="gn-menu-main">
-				<li><a  href="#" onclick="openNav()">&#9776; Menu</a></li>
-				<li><a class="codrops-icon codrops-icon-back" href="<?php $_SERVER['HTTP_REFERER'] ?>">Retour</a></li>
+				<li><a  href="#" onclick="openNav()">&#9776; <?php echo $langue->show_text('MenuLinkPage') ; ?></a></li>
+				<li><a class="codrops-icon codrops-icon-back" href="<?php $_SERVER['HTTP_REFERER'] ?>"><?php echo $langue->show_text('ReturnLinkPage') ; ?></a></li>
 				<?php if($_SESSION['page_1'] == '1') echo  '<li><a class="codrops-icon codrops-icon-home" href="index.php">'. $CompanyName .'</a></li>' ?>
-				<?php if(isset($_SESSION['mdp'])) echo '<li><a class="codrops-icon codrops-icon-profil" href="profil.php"><span>Profil</span></a></li>'; ?>
+				<?php if(isset($_SESSION['mdp'])) echo '<li><a class="codrops-icon codrops-icon-profil" href="profil.php"><span>'. $langue->show_text('ProfilLinkPage') .'</span></a></li>'; ?>
 			</ul>
 		</div>
 
@@ -12,59 +12,58 @@
 		  <div class="overlay-content">
 <?php
 
-		if($_SESSION['page_2'] == '1') echo '<a class="gn-icon gn-icon-table" href="devis.php" >Devis</a> ';
-		if($_SESSION['page_2'] == '1') echo '<a class="gn-icon gn-icon-table" href="order.php" >Commandes</a> ';
-		if($_SESSION['page_2'] == '1') echo '<a class="gn-icon gn-icon-table" href="planning.php" >Planning</a> ';
-		if($_SESSION['page_9'] == '1') echo '<a class="gn-icon gn-icon-calendar" href="calendrier.php">Calendrier </a>';
-		if($_SESSION['page_3'] == '1') echo '<a class="gn-icon gn-icon-achat" href="soustraitance.php" >Achats</a>';
-		if($_SESSION['page_5'] == '1') echo '<a class="gn-icon gn-icon-zoom-in" href="article.php" >Articles</a>';
-		if($_SESSION['page_6'] == '1') echo '<a class="gn-icon gn-icon-tags" href="qualite.php" >Qualité</a>';
-		if($_SESSION['mdp']) echo '<a class="gn-icon gn-icon-logout" href="connexion.php?action=deconnexion"> Déconnexion</a>';
+		if($_SESSION['page_2'] == '1') echo '<a class="gn-icon gn-icon-table" href="quote.php" >'. $langue->show_text('QuoteLinkPage') .'</a> ';
+		if($_SESSION['page_2'] == '1') echo '<a class="gn-icon gn-icon-table" href="order.php" >'. $langue->show_text('OrderLinkPage') .'</a> ';
+		if($_SESSION['page_2'] == '1') echo '<a class="gn-icon gn-icon-table" href="planning.php" >'. $langue->show_text('PlanningLinkPage') .'</a> ';
+		if($_SESSION['page_9'] == '1') echo '<a class="gn-icon gn-icon-calendar" href="calendar.php">'. $langue->show_text('CalendarLinkPage') .'</a>';
+		if($_SESSION['page_3'] == '1') echo '<a class="gn-icon gn-icon-achat" href="purchase.php" >'. $langue->show_text('PurchaseLinkPage') .'</a>';
+		if($_SESSION['page_5'] == '1') echo '<a class="gn-icon gn-icon-zoom-in" href="article.php" >'. $langue->show_text('ArticleLinkPage') .'</a>';
+		if($_SESSION['page_6'] == '1') echo '<a class="gn-icon gn-icon-tags" href="quality.php" >'. $langue->show_text('QualityLinkPage') .'</a>';
+		if($_SESSION['mdp']) echo '<a class="gn-icon gn-icon-logout" href="login.php?action=deconnexion">'. $langue->show_text('LogOutLinkPage') .'</a>';
 ?>
 		  </div>
 		</div>
 <script>
-function openNav() {
-  document.getElementById("myNav").style.width = "100%";
-}
+	function openNav() {
+	document.getElementById("myNav").style.width = "100%";
+	}
 
-function closeNav() {
-  document.getElementById("myNav").style.width = "0%";
-}
-
+	function closeNav() {
+	document.getElementById("myNav").style.width = "0%";
+	}
 </script>
 
 
 <?php
 	if($_SESSION['page_10'] == '1') echo '
 		<div class="DivButtonAdmin">
-			<button onclick="openDivMenu()">Réduire la gestion</button>
+			<button onclick="openDivMenu()">'. $langue->show_text('DisplaySettingAdmin') .'</button>
 		</div>
 		<div id="DivAdminListe" class="DivAdminListe">
 			<ul class="admin-menu">
 				<li>
-					<a class="" href="gestion.php">Paramètres généraux</a>
+					<a class="" href="manage-company.php">'. $langue->show_text('GeneralSettingLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="clientfourni.php">Client et Fournisseur</a>
+					<a class="" href="clientfourni.php">'. $langue->show_text('CustoProvidLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="temps.php">Gestion du temps</a>
+					<a class="" href="manage-time.php">'. $langue->show_text('SettingTimeLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="users.php">Employés et utilisateurs</a>
+					<a class="" href="manage-users.php">'. $langue->show_text('EmployeesLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="methodes.php">Méthodes</a>
+					<a class="" href="manage-methodes.php">'. $langue->show_text('MethodLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="etudes.php">Etudes</a>
+					<a class="" href="manage-study.php">'. $langue->show_text('StudyLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="admqualite.php">Qualité</a>
+					<a class="" href="manage-quality.php">'. $langue->show_text('QualitySettingLinkPage') .'</a>
 				</li>
 				<li>
-					<a class="" href="compta.php">Comptabilité</a>
+					<a class="" href="manage-accounting.php">'. $langue->show_text('AccountingLinkPage') .'</a>
 				</li>
 			</ul>
 		</div>';

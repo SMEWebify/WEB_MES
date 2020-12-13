@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+<!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page --> 
+	<TiltePage>Profil</TiltePage>
+    <Titre1>Profil Changes</Titre1>
+    <Titre2>Setting</Titre2>
+    <Titre3>Logout</Titre3>
+<!-- table content --> 
+    <TitreTable1>Profile modification</TitreTable1>
+    <TableNameUser>Name :</TableNameUser>
+    <TableSurNameUser>Surname :</TableSurNameUser>
+    <TableDateBornUser>Borne date :</TableDateBornUser>
+    <TableSpeudoUser>Speudo :</TableSpeudoUser>
+    <TablePasswordUser>Password :</TablePasswordUser>
+    <TableConfirmPasswordUser>Confirm password :</TableConfirmPasswordUser>
+    <TableMailUser>Mail :</TableMailUser>
+    <TableInternalNumberUser>Internal number :</TableInternalNumberUser>
+    <TablePersonnalNumberUser>Personnal number :</TablePersonnalNumberUser>
+    <TablePictureUser>Profil picture :</TablePictureUser>
+
+    <TitreTable2> Profile preferences</TitreTable2>
+    <TableLanguageUser>language  :</TableLanguageUser>
+
+    <TableUpdateButton>Udpdate</TableUpdateButton>
+
+    <french>French</french>
+    <english>English</english>
+</langue>

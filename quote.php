@@ -4,29 +4,24 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'profil', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
-
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
-
-	$contenu = '';
-
 
 	///////////////////////////////
 	//// COMMMENT ////
@@ -121,8 +116,10 @@
 		}
 	}
 
+	//If user create new quote
 	if(isset($_POST['AddDevis']) And !empty($_POST['AddDevis'])){
 
+		//we find num sequence for number quoting
 		$req = $bdd -> query('SELECT '. TABLE_ERP_NUM_DOC .'.Id,
 									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
 									'. TABLE_ERP_NUM_DOC .'.MODEL,
@@ -132,8 +129,10 @@
 									WHERE DOC_TYPE=8');
 		$donnees_Num_doc = $req->fetch();
 
+		//make num sequence
 		$CODE = NumDoc($donnees_Num_doc['MODEL'],$donnees_Num_doc['COMPTEUR'], $donnees_Num_doc['DIGIT']);
 
+		//insert in DB new quote
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEVIS ." VALUE ('0',
 																				'". $CODE ."',
 																				'1',
@@ -155,9 +154,10 @@
 																				'0',
 																				'0',
 																				'')");
-
+		//update increment in num sequence db
 		$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (8)');
 
+		//select last id add in db
 		$req = $bdd->query("SELECT CODE FROM ". TABLE_ERP_DEVIS ." ORDER BY id DESC LIMIT 0, 1");
 		$DonneesDevis = $req->fetch();
 		$req->closeCursor();
@@ -165,6 +165,7 @@
 
 	}
 
+	//make list quote for display an other quote
 	$req = $bdd->query('SELECT '. TABLE_ERP_DEVIS .'.CODE,
 								'. TABLE_ERP_DEVIS .'.LABEL,
 								'. TABLE_ERP_CLIENT_FOUR .'.NAME
@@ -174,24 +175,27 @@
 	while ($donnees_Devis = $req->fetch())
 	{
 		$ListeQuote .= '<option  value="'. $donnees_Devis['CODE'] .'" >';
-		$ListeQuotePrincipale  .= '<li><a href="devis.php?id='. $donnees_Devis['CODE'] .'">'. $donnees_Devis['CODE'] .' - '. $donnees_Devis['NAME'] .' </a></li>';
+		$ListeQuotePrincipale  .= '<li><a href="quote.php?id='. $donnees_Devis['CODE'] .'">'. $donnees_Devis['CODE'] .' - '. $donnees_Devis['NAME'] .' </a></li>';
 	}
 
 
-
+	//If user want display an quote we check id isset GET or POST
 	if(isset($_GET['id']) And !empty($_GET['id']) Or isset($_POST['AddDevis']) And !empty($_POST['AddDevis'])){
 
-
+		//Initialise CODE quote for SQL requête
 		if(isset($_GET['id'])){$CODEDevis = addslashes($_GET['id']);}
 		if(isset($_POST['AddDevis']) And !empty($_POST['AddDevis'])){$CODEDevis = $CODEDevisAjout;}
 
+		//we check if quote was in DB
 		$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_DEVIS ." WHERE CODE = '". $CODEDevis."'");
 		$data = $req->fetch();
 		$req->closeCursor();
 		$nb = $data['nb'];
 
+		//if ok
 		if($nb=1){
 
+				//Load data
 				$req = $bdd -> query('SELECT '. TABLE_ERP_DEVIS .'.Id,
 									'. TABLE_ERP_DEVIS .'.CODE,
 									'. TABLE_ERP_DEVIS .'.INDICE,
@@ -251,6 +255,7 @@
 			$DevisETAT = $DonneesDevis['ETAT'];
 			$DevisREFERENCE = $DonneesDevis['REFERENCE'];
 
+			//create liste employees
 			$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
@@ -268,6 +273,7 @@
 			}
 			$req->closeCursor();
 
+			//create list mode payment
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
 			while ($DonneesModeReg = $req->fetch())
 			{
@@ -275,6 +281,7 @@
 			}
 			$req->closeCursor();
 
+			//Create list condition payment
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
 			while ($DonneesConditionReg = $req->fetch())
 			{
@@ -282,6 +289,7 @@
 			}
 			$req->closeCursor();
 
+			//deadline payment list
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_ECHEANCIER_TYPE .'');
 			while ($DonneesEcheancier = $req->fetch())
 			{
@@ -289,6 +297,7 @@
 			}
 			$req->closeCursor();
 
+			//List transport
 			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_TRANSPORT .'');
 			while ($DonneesTransport = $req->fetch())
 			{
@@ -296,6 +305,7 @@
 			}
 			$req->closeCursor();
 
+			//Contact quote list from company
 			$ContactDevisListe1 =  '<option value="null" '. selected($DevisCONTACT_ID, 0) .'>Aucun</option>';
 			$req = $bdd -> query('SELECT Id, PRENOM, NOM FROM '. TABLE_ERP_CONTACT .' WHERE ID_COMPANY=\''. $DevisCLIENT_ID.'\'');
 			while ($DonneesContact = $req->fetch())
@@ -304,6 +314,7 @@
 			}
 			$req->closeCursor();
 
+			//delevery adress list
 			$AdresseLivraisonListe1 =  '<option value="null" '. selected($DevisADRESSE_ID, 0) .'>Aucune</option>';
 			$req = $bdd -> query('SELECT id, LABEL, ADRESSE, CITY FROM '. TABLE_ERP_ADRESSE .' WHERE ID_COMPANY=\''. $DevisCLIENT_ID.'\' AND ADRESS_LIV=\'1\'');
 			while ($DonneesAdresse = $req->fetch())
@@ -311,7 +322,8 @@
 				$AdresseLivraisonListe1 .='<option value="'. $DonneesAdresse['id'] .'" '. selected($DevisADRESSE_ID, $DonneesAdresse['id']) .'>'. $DonneesAdresse['LABEL'] .' - '. $DonneesAdresse['ADRESSE'] .' - '. $DonneesAdresse['CITY'] .' </option>';
 			}
 			$req->closeCursor();
-
+			
+			//Billing adress list
 			$AdresseFacturationListe1 =  '<option value="null" '. selected($DevisFACTURATION_ID, 0) .'>Aucune</option>';
 			$req = $bdd -> query('SELECT id, LABEL, ADRESSE, CITY FROM '. TABLE_ERP_ADRESSE .' WHERE ID_COMPANY=\''. $DevisCLIENT_ID.'\' AND ADRESS_FAC=\'1\' ');
 			while ($DonneesAdresse = $req->fetch())
@@ -320,6 +332,7 @@
 			}
 			$req->closeCursor();
 
+			//HTML section
 			$DevisAcceuil =
 				'<table class="content-table">
 					<thead>
@@ -587,9 +600,9 @@
 				</tbody>
 			</table>';
 
-						///////////////////////////////
-						////DEBUT GESTION DES LIGNE DE DEVIS  ////
-						///////////////////////////////
+			///////////////////////////////
+			////DEBUT GESTION DES LIGNE DE DEVIS  ////
+			///////////////////////////////
 
 									///////////////////////////////
 									//// AJOUT DE LIGNE  ////
@@ -729,7 +742,7 @@
 
 							$DetailLigneDuDevis .='
 							<tr>
-								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="'. $DonneesListeLigneDuDevis['Id'] .'"><a href="devis.php?id='. $_GET['id'] .'&amp;delete='. $DonneesListeLigneDuDevis['Id'] .'" title="Supprimer la ligne">x</a></td>
+								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="'. $DonneesListeLigneDuDevis['Id'] .'"><a href="quote.php?id='. $_GET['id'] .'&amp;delete='. $DonneesListeLigneDuDevis['Id'] .'" title="Supprimer la ligne">x</a></td>
 								<td><input type="number" name="UpdateORDRELigneDevis[]" value="'. $DonneesListeLigneDuDevis['ORDRE'] .'" id="number"></td>
 								<td>
 									<input list="Article" name="UpdateIDArticleLigneDevis[]" id="UpdateIDArticleLigneDevis" value="'. $DonneesListeLigneDuDevis['ARTICLE_CODE'] .'">
@@ -803,7 +816,7 @@
 										</tr>';
 							}
 
-						$DevisAssitCommande = '
+				$DevisAssitCommande = '
 							<div class="column">
 								<table class="content-table" >
 									<thead>
@@ -868,9 +881,9 @@
 
 						$req->closeCursor();
 
-						///////////////////////////////
-						//// FIN GESTION DES LIGNE DE DEVIS   ////
-						///////////////////////////////
+			///////////////////////////////
+			//// FIN GESTION DES LIGNE DE DEVIS   ////
+			///////////////////////////////
 
 				asort($tableauTVA);
 				 foreach($tableauTVA as $key => $value){
@@ -982,9 +995,7 @@
 					</tr>
 				</tbody>
 			</table>';
-
 		}
-
 
 			$req = $bdd->query("SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME");
 			while ($donnees_ste = $req->fetch())
@@ -993,32 +1004,32 @@
 			}
 
 			$Acceuil =
-				'<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un devis">
-					<ul id="myUL">
-						'. $ListeQuotePrincipale .'
-					</ul>
-				</div>
-				<script>
-				function myFunction() {
-				  // Declare variables
-				  var input, filter, ul, li, a, i, txtValue;
-				  input = document.getElementById(\'myInput\');
-				  filter = input.value.toUpperCase();
-				  ul = document.getElementById("myUL");
-				  li = ul.getElementsByTagName(\'li\');
+			'<div class="column">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un devis">
+				<ul id="myUL">
+					'. $ListeQuotePrincipale .'
+				</ul>
+			</div>
+			<script>
+					function myFunction() {
+					// Declare variables
+					var input, filter, ul, li, a, i, txtValue;
+					input = document.getElementById(\'myInput\');
+					filter = input.value.toUpperCase();
+					ul = document.getElementById("myUL");
+					li = ul.getElementsByTagName(\'li\');
 
-				  for (i = 0; i < li.length; i++) {
-					a = li[i].getElementsByTagName("a")[0];
-					txtValue = a.textContent || a.innerText;
-					if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					  li[i].style.display = "";
-					} else {
-					  li[i].style.display = "none";
+					for (i = 0; i < li.length; i++) {
+						a = li[i].getElementsByTagName("a")[0];
+						txtValue = a.textContent || a.innerText;
+						if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						li[i].style.display = "";
+						} else {
+						li[i].style.display = "none";
+						}
 					}
-				  }
-				}
-				</script>
+					}
+			</script>
 			<div class="column">
 				<form method="post" name="quote" action="'. $actionForm .'" class="content-form" enctype="multipart/form-data" >
 					<table class="content-table">
@@ -1057,12 +1068,13 @@
 				<div id="columnchart_values" style="width: 100%; height: 300px;"></div>
 			</div>';
 
+	//Adtape default display from isset type
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
-		$actionForm = 'devis.php?id='. $_GET['id'] .'';
+		$actionForm = 'quote.php?id='. $_GET['id'] .'';
 
 	}
 	elseif(isset($_GET['id']) AND !empty($_GET['id'])){
@@ -1070,7 +1082,7 @@
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
 		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
-		$actionForm = 'devis.php?id='. $_GET['id'] .'';
+		$actionForm = 'quote.php?id='. $_GET['id'] .'';
 
 	}
 	else{
@@ -1079,7 +1091,7 @@
 		$ParDefautDiv1 = 'id="defaultOpen"';
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
 		$ImputButton = ' Aucun devis chargé';
-		$actionForm = 'devis.php';
+		$actionForm = 'quote.php';
 	}
 ?>
 
@@ -1089,10 +1101,7 @@
 <?php
 	//include header
 	require_once 'include/include_header.php';
-
 ?>
-
-
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
  <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -1128,7 +1137,7 @@
         chart.draw(data, options);
       }
     </script>
-	 <script type="text/javascript">
+	<script type="text/javascript">
     google.charts.load("current", {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
@@ -1206,7 +1215,6 @@ $(document).ready(function() {
 <body>
 
 <?php
-
 	//include interface
 	require_once 'include/include_interface.php';
 ?>

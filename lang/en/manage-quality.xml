@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+     <!-- admin UI -->
+     <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Quality management</TiltePage>
+   <Title1>Measuring devices</Title1>
+   <Title2>Failing</Title2>
+   <Title3>Causes</Title3>
+   <Title4>Corrections</Title4>
+<!-- table 1 -->
+   <TableRessource>Ressources</TableRessource>
+   <TableUser>User</TableUser>
+   <TableImatNumber>Immat</TableImatNumber>
+   <TableEndDate>End Date</TableEndDate>
+<!-- general -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Label</TableLabel>
+   <Addtext>Add</Addtext>
+   <TableUpdateButton>Update</TableUpdateButton>
+</langue>

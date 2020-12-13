@@ -4,24 +4,23 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'manage-quality', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
 	///////////////////////////
@@ -78,6 +77,7 @@
 
 	}
 
+	//generate resources list
 	$RessourcesListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
 	while ($DonneesRessource = $req->fetch()){
@@ -101,7 +101,7 @@
 									LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`USER_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser`
 									ORDER BY Id');
 
-	while ($donnees_Appareil = $req->fetch())	{
+	while ($donnees_Appareil = $req->fetch()){
 		 $contenu1 = $contenu1 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_Appareil[]" id="id_Appareil" value="'. $donnees_Appareil['Id'] .'"></td>
@@ -275,7 +275,6 @@
 <?php
 	//include header
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
@@ -283,25 +282,24 @@
 	//include ui
 	require_once 'include/include_interface.php';
 ?>
-
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Appareils de mesure</button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')">Défauts</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')">Causes</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Corrections</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
 	</div>
-		<div id="div1" class="tabcontent" >
-			<form method="post" name="Section" action="admqualite.php" class="content-form" >
+	<div id="div1" class="tabcontent" >
+			<form method="post" name="Section" action="manage-quality.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>Ressource</th>
-							<th>Utilisateur</th>
-							<th>Immatriculation</th>
-							<th>Date de fin</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableRessource'); ?></th>
+							<th><?php echo $langue->show_text('TableUser'); ?></th>
+							<th><?php echo $langue->show_text('TableImatNumber'); ?></th>
+							<th><?php echo $langue->show_text('TableEndDate'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -310,9 +308,9 @@
 								Echo $contenu1;
 							?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEAppareil"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELAppareil"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text"  name="AddCODEAppareil"></td>
+							<td><input type="text"  name="AddLABELAppareil"></td>
 							<td>
 								<select name="AddRESSOURCEAppareil">
 									<?php echo $RessourcesListe ?>
@@ -323,28 +321,28 @@
 									<?php echo $EmployeeListe ?>
 								</select>
 							</td>
-							<td><input type="text" class="input-moyen-vide" name="AddIMMATAppareil"></td>
-							<td><input type="date" class="input-moyen-vide" name="AddDATEAppareil"></td>
+							<td><input type="text"  name="AddIMMATAppareil"></td>
+							<td><input type="date"  name="AddDATEAppareil"></td>
 						</tr>
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
-		</div>
-		<div id="div2" class="tabcontent" >
-			<form method="post" name="Section" action="admqualite.php" class="content-form" >
+	</div>
+	<div id="div2" class="tabcontent" >
+			<form method="post" name="Section" action="manage-quality.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -352,29 +350,29 @@
 								Echo $contenu2;
 ?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEDefaut"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELDefaut" ></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text"  name="AddCODEDefaut"></td>
+							<td><input type="text"  name="AddLABELDefaut" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
-		</div>
-		<div id="div3" class="tabcontent" >
-			<form method="post" name="Section" action="admqualite.php" class="content-form" >
+	</div>
+	<div id="div3" class="tabcontent" >
+			<form method="post" name="Section" action="manage-quality.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -382,29 +380,29 @@
 								Echo $contenu3;
 ?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODECauses"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELCauses" ></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text"  name="AddCODECauses"></td>
+							<td><input type="text"  name="AddLABELCauses" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
-		</div>
-		<div id="div4" class="tabcontent" >
-			<form method="post" name="Section" action="admqualite.php" class="content-form" >
+	</div>
+	<div id="div4" class="tabcontent" >
+			<form method="post" name="Section" action="manage-quality.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -412,20 +410,20 @@
 								Echo $contenu4;
 ?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODECorrection"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELCorrection" ></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text"  name="AddCODECorrection"></td>
+							<td><input type="text"  name="AddLABELCorrection" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
-		</div>
+	</div>
 </body>
 </html>

@@ -13,24 +13,26 @@
 
 	// chiffre aleatoire a 30 caractéres
 	function id_aleatoire($longeur){
+		$retour = '';
 		$elements = "123456789AZERTYUIOPMLKJHGFDSQWXCVBN";
 		srand(time());
 		if(empty($longeur)) $longeur = '30';
 		
 		for ($ligne=0;$ligne<$longeur;$ligne++)
 		{
-			@$retour.=substr($elements,(rand()%(strlen($elements))),1);
+			$retour.=substr($elements,(rand()%(strlen($elements))),1);
 		}
 		return $retour;
 	}
 	
 	// securité des messages
 	function secu_message(){
+		$retour = '';
 		$elements = "abcdefghijklmnopqrstuvwxyz123456789AZERTYUIOPMLKJHGFDSQWXCVBN";
 		srand(time());
 		for ($ligne=0;$ligne<10;$ligne++)
 		{
-			@$retour.=substr($elements,(rand()%(strlen($elements))),1);
+			$retour.=substr($elements,(rand()%(strlen($elements))),1);
 		}
 		return $retour;
 	}
@@ -474,7 +476,7 @@
 						<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 							<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 							<head>
-								<title>'. $CompanyName .'</title>
+								<title>General Error</title>
 								<link	rel="stylesheet"	media="screen"	type="text/css"	title="deco"	href="css/stylesheet.css"	/>
 								<link rel="stylesheet" media="screen" type="text/css" title="deco" href="css/content.css" 
 								<link	rel="stylesheet"	media="screen"	type="text/css"	title="deco"	href="css/tableaux.css"	/>

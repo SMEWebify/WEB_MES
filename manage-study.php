@@ -4,32 +4,30 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'manage-study', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
 	///////////////////////////////
 	//// COMMMENT ////
 	///////////////////////////////
+	//if update comment article
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_ARTICLE ." SET 	COMMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
 	}
@@ -38,30 +36,32 @@
 	////  ARTICLES  ////
 	////////////////////
 
-	$titleOnglet1 = "Ajouter un Aricle";
-	$actionForm = 'etudes.php';
+	$titleOnglet1 = $langue->show_text('TableAddArticleButton');
+	$actionForm = 'manage-study.php';
 
-	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
-		if(isset($_POST['CODEAtricle'])){
+	//if add or update Article
+	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+		
+		//if is a POST
+		if(isset($_POST['CODEArticle'])){
 
-
+			//Check if is existe
 			$req = $bdd->query("SELECT COUNT(ID) as nb FROM ". TABLE_ERP_ARTICLE ." WHERE id = '". addslashes($_POST['IDArticle'])."'");
 
 			$data = $req->fetch();
 			$req->closeCursor();
 			$nb = $data['nb'];
 
-
+			//if exist
 			if($nb>=1){
 
 
-				$titleOnglet1 = "Mettre à jours";
+				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
+				//if update image
 				$dossier = 'images/ArticlesImage/';
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
-
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-
 				$InsertImage = $dossier.$fichier;
 
 				If(empty($fichier)){
@@ -71,6 +71,7 @@
 					$AddSQL = ', IMAGE = \''. addslashes($InsertImage) .'\'';
 				}
 
+				//update article value
 				$req = $bdd->exec("UPDATE  ". TABLE_ERP_ARTICLE ." SET 	LABEL='". addslashes($_POST['LABELAtricle']) ."',
 																			IND='". addslashes($_POST['INDArticle']) ."',
 																			PRESTATION_ID='". addslashes($_POST['PRESTA_IDAtricle']) ."',
@@ -91,7 +92,8 @@
 																			SUR_Z='". addslashes($_POST['SURDIMZArticle']) ."'
 																			". $AddSQL ."
 																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
-
+				
+				//select new values													
 				$req = $bdd->query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -125,18 +127,19 @@
 			}
 			else{
 
-				$titleOnglet1 = "Mettre à jours";
+				//if is not exist, we add new entry
+
+				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 
 				$dossier = 'images/ArticlesImage/';
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
-
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-
 				$InsertImage = $dossier.$fichier;
 
+				//insert in db
 				$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ARTICLE ." VALUE ('0',
-																				'". addslashes($_POST['CODEAtricle']) ."',
+																				'". addslashes($_POST['CODEArticle']) ."',
 																				'". addslashes($_POST['LABELAtricle']) ."',
 																				'". addslashes($_POST['INDArticle']) ."',
 																				'". addslashes($_POST['PRESTA_IDAtricle']) ."',
@@ -158,7 +161,7 @@
 																				'',
 																				'". addslashes($InsertImage) ."')");
 
-
+				//select new values	
 				$req = $bdd->query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -193,10 +196,13 @@
 		}
 		else{
 
+			//if is get value article
+
 			$Name = preg_replace('#-+#',' ', addslashes($_GET['id']));
 
-			$titleOnglet1 = "Mettre à jours";
+			$titleOnglet1 =  $langue->show_text('TableUpdateButton');
 
+			//select  values	
 			$req = $bdd -> query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -230,6 +236,7 @@
 									WHERE '. TABLE_ERP_ARTICLE .'.LABEL = \''. $Name.'\'');
 		}
 
+		//Assign  values	
 		$DonneesArticle = $req->fetch();
 		$req->closeCursor();
 
@@ -260,9 +267,10 @@
 		$ArticleComment = $DonneesArticle['COMMENT'];
 		$ArticleImage = $DonneesArticle['IMAGE'];
 
-		$actionForm = 'etudes.php?id='. $ArticleLabel .'';
+		$actionForm = 'manage-study.php?id='. $ArticleLabel .'';
 	}
 
+	//create service list select
 	$PrestaListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'');
 	while ($DonneesPresta = $req->fetch()){
@@ -270,6 +278,7 @@
 	}
 	$req->closeCursor();
 
+	//create familly list select
 	$FamilleListe ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SOUS_FAMILLE .'');
 	while ($DonneesFamille = $req->fetch()){
@@ -277,6 +286,7 @@
 	}
 	$req->closeCursor();
 
+	//create unit list select
 	$UnitListe ='<option value="0">Aucune</option>';
 	$UnitListeInit  ='<option value="0">Aucune</option>';
 	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_UNIT .'');
@@ -286,17 +296,18 @@
 	}
 	$req->closeCursor();
 
-	if(!empty($ArticleCODE)){$DisplayCode = '<input type="hidden" name="CODEAtricle" value="'. $ArticleCODE .'">' .$ArticleCODE;}
-	else{ $DisplayCode ='<input type="text" name="CODEAtricle" required="required">'; }
+	if(!empty($ArticleCODE)){$DisplayCode = '<input type="hidden" name="CODEArticle" value="'. $ArticleCODE .'">' .$ArticleCODE;}
+	else{ $DisplayCode ='<input type="text" name="CODEArticle" required="required">'; }
 
+	//create html table article
 	$contenu1 = '
 				<tr>
-					<td>CODE</td>
-					<td>Label</td>
-					<td>Indice</td>
-					<td>Prestation</td>
-					<td>Famille</td>
-					<td>Type</td>
+					<td>'. $langue->show_text('TableCODE') .'</td>
+					<td>'. $langue->show_text('TableLabel') .'</td>
+					<td>'. $langue->show_text('Tableindex') .'</td>
+					<td>'. $langue->show_text('TableService') .'</td>
+					<td>'. $langue->show_text('TableFamilly') .'</td>
+					<td>'. $langue->show_text('TableType') .'</td>
 				</tr>
 				<tr>
 					<td >
@@ -321,30 +332,30 @@
 					</td>
 					<td>
 						<select name="">
-							<option value="1" '. selected($ArticleTYPEPresta, 1) .' >Productive</option>
-							<option value="2" '. selected($ArticleTYPEPresta, 2) .' >Matière première</option>
-							<option value="3" '. selected($ArticleTYPEPresta, 3) .' >Matière première (tôle)</option>
-							<option value="4" '. selected($ArticleTYPEPresta, 4) .' >Matière première (profilé)</option>
-							<option value="5" '. selected($ArticleTYPEPresta, 5) .' >Matière première (bloc)</option>
-							<option value="6" '. selected($ArticleTYPEPresta, 6) .' >Fourniture</option>
-							<option value="7" '. selected($ArticleTYPEPresta, 7) .' >Sous-traitance</option>
-							<option value="8" '. selected($ArticleTYPEPresta, 8) .' >Article composés</option>
+							<option value="1" '. selected($ArticleTYPEPresta, 1) .' >'. $langue->show_text('SelectProductive') .'</option>
+							<option value="2" '. selected($ArticleTYPEPresta, 2) .' >'. $langue->show_text('SelectRawMat') .'</option>
+							<option value="3" '. selected($ArticleTYPEPresta, 3) .' >'. $langue->show_text('SelectRawMatSheet') .'</option>
+							<option value="4" '. selected($ArticleTYPEPresta, 4) .' >'. $langue->show_text('SelectRawMatProfil') .'</option>
+							<option value="5" '. selected($ArticleTYPEPresta, 5) .' >'. $langue->show_text('SelectRawMatBlock') .'</option>
+							<option value="6" '. selected($ArticleTYPEPresta, 6) .' >'. $langue->show_text('SelectSupplies') .'</option>
+							<option value="7" '. selected($ArticleTYPEPresta, 7) .' >'. $langue->show_text('SelectSubcontracting') .'</option>
+							<option value="8" '. selected($ArticleTYPEPresta, 8) .' >'. $langue->show_text('SelectCompoundItem') .'</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
-					<td>Acheter</td>
-					<td>Prix acheté</td>
-					<td>Vendu</td>
-					<td>Prix vendue</td>
+					<td>'. $langue->show_text('TableBuy') .'</td>
+					<td>'. $langue->show_text('TablePurchaseUnit') .'</td>
+					<td>'. $langue->show_text('TableSold') .'</td>
+					<td>'. $langue->show_text('TableSalePrice') .'</td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
 					<td >
 						<select name="ACHETERArticle">
-							<option value="0" '. selected($ArticleAcheter, 0) .'>Non</option>
-							<option value="1" '. selected($ArticleAcheter, 1) .'>Oui</option>
+							<option value="0" '. selected($ArticleAcheter, 0) .'>'. $langue->show_text('No') .'</option>
+							<option value="1" '. selected($ArticleAcheter, 1) .'>'. $langue->show_text('Yes') .'</option>
 						</select>
 					</td>
 					<td >
@@ -352,8 +363,8 @@
 					</td>
 					<td >
 						<select name="VENDUArticle">
-							<option value="0" '. selected($ArticleVendu, 0) .'>Non</option>
-							<option value="1" '. selected($ArticleVendu, 1) .'>Oui</option>
+							<option value="0" '. selected($ArticleVendu, 0) .'>'. $langue->show_text('No') .'</option>
+							<option value="1" '. selected($ArticleVendu, 1) .'>'. $langue->show_text('Yes') .'</option>
 						</select>
 					</td>
 					</td>
@@ -364,10 +375,10 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>Unité</td>
-					<td>Matière</td>
-					<td>EP</td>
-					<td>Poids</td>
+					<td>'. $langue->show_text('TableUnit') .'</td>
+					<td>'. $langue->show_text('TableMaterial') .'</td>
+					<td>'. $langue->show_text('TableThickness') .'</td>
+					<td>'. $langue->show_text('TableWeight') .'</td>
 					<td></td>
 					<td></td>
 				</tr>
@@ -390,12 +401,12 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>Dimention X</td>
-					<td>Dimention Y</td>
-					<td>Dimention Z</td>
-					<td>Sur dimention X</td>
-					<td>Sur dimention Y</td>
-					<td>Sur dimention Z</td>
+					<td>'. $langue->show_text('TableDimX') .'</td>
+					<td>'. $langue->show_text('TableDimY') .'</td>
+					<td>'. $langue->show_text('TableDimZ') .'</td>
+					<td>'. $langue->show_text('TableSurDimX') .'</td>
+					<td>'. $langue->show_text('TableSurDimY') .'</td>
+					<td>'. $langue->show_text('TableSurDimZ') .'</td>
 				</tr>
 				<tr>
 					<td >
@@ -418,7 +429,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan=6">Image</td>
+					<td colspan=6">'. $langue->show_text('TablePicture') .'</td>
 				</tr>
 				<tr>
 					<td colspan=6" ><input type="file" name="FichierImageArticle" /></td>
@@ -428,9 +439,9 @@
 				</tr>
 				';
 
+	//create data list article
 	$req = $bdd->query("SELECT * FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL");
-	while ($donnees_Article = $req->fetch())
-	{
+	while ($donnees_Article = $req->fetch()){
 		$ListeArticle .= '<option  value="'. $donnees_Article['LABEL'] .'" >';
 		$FormListeArticle .= '<option value="'. $donnees_Article['id'] .'" >'. $donnees_Article['LABEL'] .'</option>';
 	}
@@ -438,9 +449,10 @@
 	$req->closeCursor();
 
 	///////////////////////////////
-	//// DECOUPAGE TECHNIQUE ////
+	//// TECHNICAL CUT  ////
 	///////////////////////////////
 
+	//if add new technical cut
 	if(isset($_POST['AddORDREDecoupTech']) AND !empty($_POST['AddORDREDecoupTech'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEC_TECH ." VALUE ('0',
@@ -455,6 +467,7 @@
 
 	}
 
+	//if update technical cut list
 	if(isset($_POST['id_DecoupTech']) AND !empty($_POST['id_DecoupTech'])){
 
 		$UpdateIdDecoupTech = $_POST['id_DecoupTech'];
@@ -481,7 +494,7 @@
 		}
 	}
 
-	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		$iDecoupTech = 0;
 		$TtTpsPrepa = 0;
 		$TtTpsProd = 0;
@@ -506,8 +519,7 @@
 
 			$PrestaListe ='<option value="0">Aucune</option>';
 			$Subreq = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'');
-			while ($DonneesPresta = $Subreq->fetch())
-			{
+			while ($DonneesPresta = $Subreq->fetch()){
 				$PrestaListe .='<option value="'. $DonneesPresta['Id'] .'" '. selected($DonneesPresta['Id'], $donnees_DecoupTech['PRESTA_ID']) .' >'. $DonneesPresta['LABEL'] .'</option>';
 			}
 
@@ -602,7 +614,7 @@
 
 	}
 
-	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		$iNomencl = 0;
 
 		$req = $bdd -> query('SELECT '. TABLE_ERP_NOMENCLATURE .'.Id,
@@ -622,10 +634,8 @@
 										WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_NOMENCLATURE .'.ORDRE');
 
-		while ($donnees_Nomencl = $req->fetch())
-		{
+		while ($donnees_Nomencl = $req->fetch()){
 			 $Nomenclature .= '
-
 					<tr>
 						<td></td>
 						<td>
@@ -691,7 +701,7 @@
 		}
 	}
 
-	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 		$iSousEns = 0;
 
 		$req = $bdd -> query('SELECT '. TABLE_ERP_SOUS_ENSEMBLE .'.Id,
@@ -705,8 +715,7 @@
 										WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE');
 
-		while ($donnees_SousEns = $req->fetch())
-		{
+		while ($donnees_SousEns = $req->fetch()){
 			 $SousEnsemble .= '
 					<tr>
 						<td><input type="hidden" name="UpdateIdSousEns[]" id="UpdateIdSousEns" value="'. $donnees_SousEns['Id'] .'"></td>
@@ -718,7 +727,7 @@
 							</select>
 						</td>
 						<td><input type="number"  name="UpdateQTSousEns[]" value="'. $donnees_SousEns['QT'] .'" step=".001"></td>
-						<td><a href="etudes.php?id='. $donnees_SousEns['LABEL_ARTICLE'] .'">--></a></td>
+						<td><a href="manage-study.php?id='. $donnees_SousEns['LABEL_ARTICLE'] .'">--></a></td>
 					</tr>';
 
 			$iSousEns++;
@@ -741,8 +750,7 @@
 									FROM `'. TABLE_ERP_IMPUT_COMPTA .'`
 									ORDER BY Id');
 
-	while ($donnees_IMPUT = $req->fetch())
-	{
+	while ($donnees_IMPUT = $req->fetch()){
 		$ListeImput .='<option value="'. $donnees_IMPUT['Id'] .'">'. $donnees_IMPUT['CODE'] .' - '. $donnees_IMPUT['LABEL'] .'</option>';
 	}
 
@@ -786,8 +794,7 @@
 										WHERE '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.ARTICLE_ID = '. $ArticleId .'
 											ORDER BY '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.ORDRE');
 
-		while ($donnees_Imput = $req->fetch())
-		{
+		while ($donnees_Imput = $req->fetch()){
 			if($donnees_Imput['TYPE_IMPUTATION'] == 1) $TypeImputation = "Achat";
 			if($donnees_Imput['TYPE_IMPUTATION'] == 2) $TypeImputation = "Achat (stock)";
 			if($donnees_Imput['TYPE_IMPUTATION'] == 3) $TypeImputation = "Acompte";
@@ -823,7 +830,6 @@
 	///////////////
 
 	if(isset($_POST['AddCODEUnit']) AND !empty($_POST['AddCODEUnit'])){
-
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_UNIT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEUnit']) ."',
 																		'". addslashes($_POST['AddLABELUnit']) ."',
@@ -865,11 +871,11 @@
 					<td><input type="text" name="UpdateLABELUnit[]" value="'. $donnees_unit['LABEL'] .'" ></td>
 					<td>
 						<select name="UpdateTYPEUnit[]">
-							<option value="1" '. selected($donnees_unit['TYPE'], 1) .'>Masse</option>
-							<option value="2" '. selected($donnees_unit['TYPE'], 2) .'>Longueur</option>
-							<option value="3" '. selected($donnees_unit['TYPE'], 3) .'>Surface</option>
-							<option value="4" '. selected($donnees_unit['TYPE'], 4) .'>Volume</option>
-							<option value="5" '. selected($donnees_unit['TYPE'], 5) .'>Autre</option>
+							<option value="1" '. selected($donnees_unit['TYPE'], 1) .'>'. $langue->show_text('SelectMass') .'</option>
+							<option value="2" '. selected($donnees_unit['TYPE'], 2) .'>'. $langue->show_text('SelectLength') .'</option>
+							<option value="3" '. selected($donnees_unit['TYPE'], 3) .'>'. $langue->show_text('SelectAera') .'</option>
+							<option value="4" '. selected($donnees_unit['TYPE'], 4) .'>'. $langue->show_text('SelectVolume') .'</option>
+							<option value="5" '. selected($donnees_unit['TYPE'], 5) .'>'. $langue->show_text('SelectOther') .'</option>
 						</select>
 					</td>
 				</tr>';
@@ -893,7 +899,6 @@
 	}
 
 	if(isset($_POST['AddCODESousFamille']) AND !empty($_POST['AddCODESousFamille'])){
-
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_SOUS_FAMILLE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODESousFamille']) ."',
 																		'". addslashes($_POST['AddLABELSousFamille']) ."',
@@ -901,7 +906,6 @@
 	}
 
 	if(isset($_POST['id_sous_famille']) AND !empty($_POST['id_sous_famille'])){
-
 		$UpdateIdSousFamille = $_POST['id_sous_famille'];
 		$UpdateCODESousFamille = $_POST['UpdateCODESousFamille'];
 		$UpdateLABELSousFamille = $_POST['UpdateLABELSousFamille'];
@@ -945,42 +949,39 @@
 		$i++;
 	}
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
 <?php
 	//include interface
 	require_once 'include/include_header.php';
-
 ?>
 </head>
 <body>
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
-
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $titleOnglet1; ?></button>
 <?php
-	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" >Découpage technique <?php echo $iDecoupTech; ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')">Nomenclature  <?php echo $iNomencl; ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Sous-ensembles  <?php echo $iSousEns; ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')">Achat </button>
-		<button class="tablinks" onclick="openDiv(event, 'div6')">Vente </button>
-		<button class="tablinks" onclick="openDiv(event, 'div7')">Imputations comptables </button>
-		<button class="tablinks" onclick="openDiv(event, 'div8')">Commentaire </button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?> <?php echo $iDecoupTech; ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?> <?php echo $iNomencl; ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?> <?php echo $iSousEns; ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"><?php echo $langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')"><?php echo $langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div7')"><?php echo $langue->show_text('Title7'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div8')"><?php echo $langue->show_text('Title8'); ?></button>
 <?php
 	}
-	?>
-		<button class="tablinks" onclick="openDiv(event, 'div9')" >Unités</button>
-		<button class="tablinks" onclick="openDiv(event, 'div10')">Sous-Famille</button>
+?>
+		<button class="tablinks" onclick="openDiv(event, 'div9')" ><?php echo $langue->show_text('Title9'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div10')"><?php echo $langue->show_text('Title10'); ?></button>
 		<div class="DataListDroite">
 			<form method="get" name="article" action="<?php echo $actionForm; ?>">
-				Liste Article : <input list="article" name="id" id="id" placeholder="Ex: Platine" >
+				<?php echo $langue->show_text('ListArticle'); ?> <input list="article" name="id" id="id" placeholder="Ex: Platine" >
 				<datalist id="article">
 					<?php echo $ListeArticle; ?>
 				</datalist>
@@ -989,27 +990,23 @@
 		</div>
 	</div>
 	<div id="div1" class="tabcontent" >
-		<form method="post" name="Company" action="etudes.php" class="content-form" enctype="multipart/form-data" >
+		<form method="post" name="Company" action="manage-study.php" class="content-form" enctype="multipart/form-data" >
 				<table class="content-table">
 					<thead>
 						<tr>
-							<th colspan="5">
+							<th colspan="6">
 								  <br/>
-							</th>
-							<th>
-
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 <?php
-
 								Echo $contenu1;
 ?>
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -1018,7 +1015,7 @@
 			</form>
 	</div>
 <?php
-	if(isset($_POST['CODEAtricle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEAtricle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id']))
+	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id']))
 	{
 ?>
 	<div id="div2" class="tabcontent" >
@@ -1027,38 +1024,37 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>ORDRE</th>
-							<th>Prestation</th>
-							<th>Libellé</th>
-							<th>Tps préaparation</th>
-							<th>Tps de production</th>
-							<th>Coût de production</th>
-							<th>Prix de vente</th>
+							<th><?php echo $langue->show_text('TableOrder'); ?></th>
+							<th><?php echo $langue->show_text('TableService'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableSettingTime'); ?></th>
+							<th><?php echo $langue->show_text('TableProductTime'); ?></th>
+							<th><?php echo $langue->show_text('TableProductCost'); ?></th>
+							<th><?php echo $langue->show_text('TableSalePrice'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $DecoupageTechnique;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
 							<td><input type="number" name="AddORDREDecoupTech" ></td>
 							<td>
 								<select name="AddPRESTADecoupTech">
 									<?php echo $PrestaListe; ?>
 								</select>
 							</td>
-							<td><input type="text"  name="AddLABELDecoupTech" required="required"></td>
-							<td><input type="number"  name="AddTPSPREPDecoupTech" step=".001" required="required"></td>
-							<td><input type="number"  name="AddTPSPRODDecoupTech" step=".001" required="required"></td>
-							<td><input type="number"  name="AddCOUTDecoupTech" step=".001" required="required"></td>
-							<td><input type="number"  name="AddPRIXDecoupTech" step=".001" required="required"></td>
+							<td><input type="text"  name="AddLABELDecoupTech" ></td>
+							<td><input type="number"  name="AddTPSPREPDecoupTech" step=".001" ></td>
+							<td><input type="number"  name="AddTPSPRODDecoupTech" step=".001" ></td>
+							<td><input type="number"  name="AddCOUTDecoupTech" step=".001" ></td>
+							<td><input type="number"  name="AddPRIXDecoupTech" step=".001" ></td>
 						</tr>
 						<tr>
 							<td colspan="8" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -1072,42 +1068,41 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>ORDRE</th>
-							<th>Article</th>
-							<th>Libellé</th>
-							<th>Qté</th>
-							<th>Unité</th>
-							<th>Prix U</th>
-							<th>Prix achat</th>
+							<th><?php echo $langue->show_text('TableOrder'); ?></th>
+							<th><?php echo $langue->show_text('TableArticle'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableQty'); ?></th>
+							<th><?php echo $langue->show_text('TableUnit'); ?></th>
+							<th><?php echo $langue->show_text('TableUnitPrice'); ?></th>
+							<th><?php echo $langue->show_text('TablePurchaseUnit'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $Nomenclature;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="number" name="AddORDRENomencl" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="number" name="AddORDRENomencl" ></td>
 							<td>
 								<select name="AddARTICLENomencl">
 									<?php echo $FormListeArticle; ?>
 								</select>
 							</td>
-							<td><input type="text"  name="AddLABELNomencl" required="required"></td>
-							<td><input type="number"  name="AddQTNomencl" step=".001" required="required"></td>
+							<td><input type="text"  name="AddLABELNomencl" ></td>
+							<td><input type="number"  name="AddQTNomencl" step=".001" ></td>
 							<td>
 								<select name="AddTUNITNomencl">
 									<?php echo $UnitListe; ?>
 								</select>
 							</td>
-							<td><input type="number"  name="AddPRIXUNomencl" step=".001" required="required"></td>
-							<td><input type="number"  name="AddPRIXACHATNomencl" step=".001" required="required"></td>
+							<td><input type="number"  name="AddPRIXUNomencl" step=".001" ></td>
+							<td><input type="number"  name="AddPRIXACHATNomencl" step=".001" ></td>
 						</tr>
 						<tr>
 							<td colspan="8" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -1121,19 +1116,18 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>ORDRE</th>
-							<th>Article</th>
-							<th>Qté</th>
+							<th><?php echo $langue->show_text('TableOrder'); ?></th>
+							<th><?php echo $langue->show_text('TableArticle'); ?></th>
+							<th><?php echo $langue->show_text('TableQty'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $SousEnsemble;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
 							<td><input type="number" name="AddORDRESousEns" ></td>
 							<td>
 								<select name="AddARTICLESousEns">
@@ -1146,7 +1140,7 @@
 						<tr>
 							<td colspan="5" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -1164,19 +1158,18 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th>Ordre</th>
-						<th>Imputation comptable</th>
-						<th>T.V.A.</th>
+						<th><?php echo $langue->show_text('TableOrder'); ?></th>
+						<th><?php echo $langue->show_text('TableImputationType'); ?></th>
+						<th><?php echo $langue->show_text('TableTVAType'); ?></th>
 						<th></th>
 					</tr>
 				</thead>
-							<?php
-
+<?php
 								Echo $donnees_ImputCompta;
-							?>
+?>
 					<tr>
 						<td>
-							Ajout
+							<?php echo $langue->show_text('Addtext'); ?>
 							<input type="hidden" name="IDArticle" value="<?php echo $ArticleId ?>">
 						</td>
 						<td><input type="number" name="AddORDREImputation" ></td>
@@ -1190,20 +1183,19 @@
 					</tr>
 					<tr>
 						<td colspan="5" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" />
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</form>
-
 	</div>
 	<div id="div8" class="tabcontent" >
 		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
 			<table class="content-table" style="width: 50%;">
 				<thead>
 					<tr>
-						<th>Commentaire</th>
+						<th><?php echo $langue->show_text('TableComment'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1215,7 +1207,7 @@
 					</tr>
 					<tr>
 						<td>
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" />
 						</td>
 					</tr>
 				</tbody>
@@ -1224,41 +1216,40 @@
 	</div>
 <?php
 	}
-	?>
+?>
 	<div id="div9" class="tabcontent" >
-			<form method="post" name="Section" action="etudes.php" class="content-form" >
+			<form method="post" name="Section" action="manage-study.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>Type</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableType'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu2;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEUnit" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELUnit" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODEUnit" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELUnit" ></td>
 							<td>
 								<select name="AddTYPEUnit">
-									<option value="1">Masse</option>
-									<option value="2">Longueur</option>
-									<option value="3">Surface</option>
-									<option value="4">Volume</option>
-									<option value="5">Autre</option>
+									<option value="1"><?php echo $langue->show_text('SelectMass'); ?></option>
+									<option value="2"><?php echo $langue->show_text('SelectLength'); ?></option>
+									<option value="3"><?php echo $langue->show_text('SelectAera'); ?></option>
+									<option value="4"><?php echo $langue->show_text('SelectVolume'); ?></option>
+									<option value="5"><?php echo $langue->show_text('SelectOther'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="4" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -1267,25 +1258,24 @@
 			</form>
 	</div>
 	<div id="div10" class="tabcontent" >
-			<form method="post" name="Section" action="etudes.php" class="content-form" >
+			<form method="post" name="Section" action="manage-study.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>Prestation</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableService'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu3;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODESousFamille" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELSousFamille" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODESousFamille" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELSousFamille"></td>
 							<td>
 								<select name="AddRESSOURCESousFamille">
 									<?php echo $SectionListe ?>
@@ -1295,7 +1285,7 @@
 						<tr>
 							<td colspan="4" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -1304,7 +1294,5 @@
 			</form>
 		</div>
 	</div>
-
-
 </body>
 </html>

@@ -4,31 +4,30 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'manage-accounting', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
 	////////////////////////
 	//// CONDITION REG ////
 	///////////////////////
 
+	//Insert in db new payement condition
 	if(isset($_POST['AddCODECondiReg']) AND !empty($_POST['AddCODECondiReg'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CONDI_REG ." VALUE ('0',
@@ -37,9 +36,9 @@
 																		'". addslashes($_POST['AddNbrMoisCondiReg']) ."',
 																		'". addslashes($_POST['AddNbrJoursCondiReg']) ."',
 																		'". addslashes($_POST['AddFinDeMoiCondiReg']) ."')");
-
 	}
 
+	//if update list condition payement
 	if(isset($_POST['id_CondiReg']) AND !empty($_POST['id_CondiReg'])){
 
 		$UpdateIdCondiReg = $_POST['id_CondiReg'];
@@ -62,6 +61,7 @@
 		}
 	}
 
+	//generate condition payement liste
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_CONDI_REG .'.Id,
 									'. TABLE_ERP_CONDI_REG .'.CODE,
@@ -72,8 +72,7 @@
 									FROM `'. TABLE_ERP_CONDI_REG .'`
 									ORDER BY Id');
 
-	while ($donnees_id_CondiReg = $req->fetch())
-	{
+	while ($donnees_id_CondiReg = $req->fetch()){
 		 $contenu1 = $contenu1 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_CondiReg[]" id="id_CondiReg" value="'. $donnees_id_CondiReg['Id'] .'"></td>
@@ -83,8 +82,8 @@
 					<td><input type="number" name="UpdateNBRJOURSCondiReg[]" value="'. $donnees_id_CondiReg['NBR_JOURS'] .'" required="required"></td>
 					<td>
 						<select name="FINMOISCondiReg[]">
-							<option value="1" '. selected($donnees_id_CondiReg['FIN_MOIS'], "1") .'>Oui</option>
-							<option value="0" '. selected($donnees_id_CondiReg['FIN_MOIS'], "0") .'>Non</option>
+							<option value="1" '. selected($donnees_id_CondiReg['FIN_MOIS'], "1") .'>'. $langue->show_text('Yes') .'</option>
+							<option value="0" '. selected($donnees_id_CondiReg['FIN_MOIS'], "0") .'>'. $langue->show_text('No') .'</option>
 						</select>
 					</td>
 				</tr>	';
@@ -95,6 +94,7 @@
 	////  MODE REGLEMENT ////
 	/////////////////////////
 
+	//if add new payment mode
 	if(isset($_POST['AddCODEModeRef']) AND !empty($_POST['AddCODEModeRef'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_MODE_REG ." VALUE ('0',
@@ -104,6 +104,7 @@
 
 	}
 
+	//Update mode payement list
 	if(isset($_POST['id_ModeReg']) AND !empty($_POST['id_ModeReg'])){
 
 		$UpdateIdModeReg = $_POST['id_ModeReg'];
@@ -122,6 +123,7 @@
 		}
 	}
 
+	//generate liste of payement mode
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_MODE_REG .'.Id,
 									'. TABLE_ERP_MODE_REG .'.CODE,
@@ -130,8 +132,7 @@
 									FROM `'. TABLE_ERP_MODE_REG .'`
 									ORDER BY Id');
 
-	while ($donnees_ModeReg = $req->fetch())
-	{
+	while ($donnees_ModeReg = $req->fetch()){
 		 $contenu2 = $contenu2 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_ModeReg[]" id="id_ModeReg" value="'. $donnees_ModeReg['Id'] .'"></td>
@@ -146,6 +147,7 @@
 	////  TVA ////
 	//////////////
 
+	//if add new TVA type
 	if(isset($_POST['AddCODETVA']) AND !empty($_POST['AddCODETVA'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_TVA ." VALUE ('0',
@@ -155,6 +157,7 @@
 
 	}
 
+	//update TVA List
 	if(isset($_POST['id_TVA']) AND !empty($_POST['id_TVA'])){
 
 		$UpdateIdTVA = $_POST['id_TVA'];
@@ -164,7 +167,6 @@
 
 		$i = 0;
 		foreach ($UpdateIdTVA as $id_generation) {
-
 			$bdd->exec('UPDATE `'. TABLE_ERP_TVA .'` SET  CODE = \''. addslashes($UpdateCODETVA[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELTVA[$i]) .'\',
 																TAUX = \''. addslashes($UpdateTAUXTVA[$i]) .'\'
@@ -173,6 +175,7 @@
 		}
 	}
 
+	//Generate TVA list
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_TVA .'.Id,
 									'. TABLE_ERP_TVA .'.CODE,
@@ -181,8 +184,7 @@
 									FROM `'. TABLE_ERP_TVA .'`
 									ORDER BY Id');
 
-	while ($donnees_TVA = $req->fetch())
-	{
+	while ($donnees_TVA = $req->fetch()){
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_TVA[]" id="id_TVA" value="'. $donnees_TVA['Id'] .'"></td>
@@ -191,19 +193,16 @@
 					<td><input type="text" name="UpdateTAUXTVA[]" value="'. $donnees_TVA['TAUX'] .'" required="required"></td>
 				</tr>';
 		$i++;
+
+		$TVAListe .='<option value="'. $donnees_TVA['Id'] .'">'. $donnees_TVA['TAUX'] .'% - '. $donnees_TVA['LABEL'] .'</option>';
 	}
 
 
 	///////////////////////////////
-	////  IMPUTATION COMPTABLE ////
+	////  ACCOUNTING ENTRY////
 	///////////////////////////////
 
-	$req = $bdd -> query('SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .'');
-	while ($DonneesTVA = $req->fetch())
-	{
-		$TVAListe .='<option value="'. $DonneesTVA['Id'] .'">'. $DonneesTVA['TAUX'] .'% - '. $DonneesTVA['LABEL'] .'</option>';
-	}
-
+	//if Add new Accouting entry
 	if(isset($_POST['AddCODEIMPUT']) AND !empty($_POST['AddCODEIMPUT'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_IMPUT_COMPTA ." VALUE ('0',
@@ -213,9 +212,9 @@
 																		'". addslashes($_POST['AddCOMPTETVAIMPUT']) ."',
 																		'". addslashes($_POST['AddCODECOMPTAIMPUT']) ."',
 																		'". addslashes($_POST['AddTYPEIMPUT']) ."')");
-
 	}
 
+	//update list of entry accouting
 	if(isset($_POST['id_IMPUT']) AND !empty($_POST['id_IMPUT'])){
 
 		$UpdateIdTVA = $_POST['id_IMPUT'];
@@ -240,6 +239,7 @@
 		}
 	}
 
+	//gererate list of entry accouting
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_IMPUT_COMPTA .'.Id,
 									'. TABLE_ERP_IMPUT_COMPTA .'.CODE,
@@ -251,11 +251,10 @@
 									'. TABLE_ERP_TVA .'.TAUX,
 									'. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA
 									FROM `'. TABLE_ERP_IMPUT_COMPTA .'`
-									LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_IMPUT_COMPTA .'`.`TVA` = `'. TABLE_ERP_TVA .'`.`id`
+										LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_IMPUT_COMPTA .'`.`TVA` = `'. TABLE_ERP_TVA .'`.`id`
 									ORDER BY Id');
 
-	while ($donnees_IMPUT = $req->fetch())
-	{
+	while ($donnees_IMPUT = $req->fetch()){
 		 $contenu4 = $contenu4 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_IMPUT[]" id="id_IMPUT" value="'. $donnees_IMPUT['Id'] .'"></td>
@@ -271,12 +270,12 @@
 					<td><input type="text" name="UpdateCODECOMPTAIMPUT[]" value="'. $donnees_IMPUT['CODE_COMPTA'] .'" required="required"></td>
 					<td>
 						<select name="AddTYPEIMPUT[]">
-							<option value="1" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 1) .'>Achat</option>
-							<option value="2" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 2) .'>Achat (stock)</option>
-							<option value="3" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 3) .'>Acompte</option>
-							<option value="4" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 4) .'>Acompte (avec TVA)</option>
-							<option value="5" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 5) .'>Autre</option>
-							<option value="6" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 6) .'>TVA</option>
+							<option value="1" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 1) .'>'. $langue->show_text('TableSelect1') .'</option>
+							<option value="2" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 2) .'>'. $langue->show_text('TableSelect2') .'</option>
+							<option value="3" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 3) .'>'. $langue->show_text('TableSelect3') .'</option>
+							<option value="4" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 4) .'>'. $langue->show_text('TableSelect4') .'</option>
+							<option value="5" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 5) .'>'. $langue->show_text('TableSelect5') .'</option>
+							<option value="6" '. selected($donnees_IMPUT['TYPE_IMPUTATION'], 6) .'>'. $langue->show_text('TableSelect6') .'</option>
 						</select>
 					</td>
 				</tr>';
@@ -284,9 +283,10 @@
 	}
 
 	////////////////////////
-	//// ECHEANCIER TYPE ////
+	////TYPICAL TIMELINE PAYEMENT ////
 	///////////////////////
 
+	//if add new TimeLine payement
 	if(isset($_POST['AddCODEEcheancier']) AND !empty($_POST['AddCODEEcheancier'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ECHEANCIER_TYPE ." VALUE ('0',
@@ -295,6 +295,7 @@
 
 	}
 
+	//update TimeLine payement list
 	if(isset($_POST['UpdateIdEcheancier']) AND !empty($_POST['UpdateIdEcheancier'])){
 
 		$UpdateIdEcheancier = $_POST['UpdateIdEcheancier'];
@@ -303,14 +304,14 @@
 
 		$i = 0;
 		foreach ($UpdateIdEcheancier as $id_generation) {
-
-			$bdd->exec('UPDATE `'. TABLE_ERP_CONDI_REG .'` SET  CODE = \''. addslashes($UpdateCODEEcheancier[$i]) .'\',
+			$bdd->exec('UPDATE `'. TABLE_ERP_ECHEANCIER_TYPE .'` SET  CODE = \''. addslashes($UpdateCODEEcheancier[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELEcheancier[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 	}
 
+	// generate list of TimeLine payement
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_ECHEANCIER_TYPE .'.Id,
 									'. TABLE_ERP_ECHEANCIER_TYPE .'.CODE,
@@ -318,23 +319,24 @@
 									FROM `'. TABLE_ERP_ECHEANCIER_TYPE .'`
 									ORDER BY Id');
 
-	while ($donnees_Echeancier = $req->fetch())
-	{
+	while ($donnees_Echeancier = $req->fetch()){
 		 $EcheanchierTypeContenu = $EcheanchierTypeContenu .'
 				<tr>
 					<td><input type="hidden" name="UpdateIdEcheancier[]" id="UpdateIdEcheancier" value="'. $donnees_Echeancier['Id'] .'"></td>
 					<td><input type="text" name="UpdateCODEEcheancier[]" value="'. $donnees_Echeancier['CODE'] .'" required="required"></td>
 					<td><input type="text" name="UpdateLABELEcheancier[]" value="'. $donnees_Echeancier['LABEL'] .'" required="required"></td>
-					<td><a href="compta.php?Echeancier='. $donnees_Echeancier['Id']  .'">--></a></td>
+					<td><a href="manage-accounting.php?Echeancier='. $donnees_Echeancier['Id']  .'">--></a></td>
 				</tr>	';
 		$i++;
 	}
 
+	//if user want show timeline detail
 	if(isset($_GET['Echeancier']) AND !empty($_GET['Echeancier'])){
 
-
+		//we change default view on this section
 		$ParDefautDiv5 = 'id="defaultOpen"';
 
+		//if add new ligne of timeline 
 		if(isset($_POST['AddLABELLigneEcheancier']) AND !empty($_POST['AddLABELLigneEcheancier'])){
 
 			$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ECHEANCIER_TYPE_LIGNE ." VALUE ('0',
@@ -345,9 +347,9 @@
 																		'". addslashes($_POST['AddRegLigneEcheancier']) ."',
 																		'". addslashes($_POST['AddModeLigneEcheancier']) ."',
 																		'". addslashes($_POST['AddDelaisLigneEcheancier']) ."')");
-
 		}
 
+		//update timeline détail list
 		if(isset($_POST['UpdateIdLigneEcheancier']) AND !empty($_POST['UpdateIdLigneEcheancier'])){
 
 		$UpdateIdLigneEcheancier = $_POST['UpdateIdLigneEcheancier'];
@@ -372,7 +374,8 @@
 		}
 	}
 
-		$req = $bdd -> query('SELECT '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.Id,
+	//generate list of détail TimeLine payement
+	$req = $bdd -> query('SELECT '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.Id,
 									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.ECHEANCIER_ID,
 									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.LABEL,
 									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.POURC_MONTANT,
@@ -384,21 +387,18 @@
 										WHERE '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.ECHEANCIER_ID = \''. 	addslashes($_GET['Echeancier']).'\'
 									ORDER BY Id');
 
-		while ($donnees_Ligne_Echeancier = $req->fetch())
-		{
+		while ($donnees_Ligne_Echeancier = $req->fetch()){
 			$reqConditionReg = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
-			while ($DonneesConditionReg = $reqConditionReg->fetch())
-			{
+			while ($DonneesConditionReg = $reqConditionReg->fetch()){
 				$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected( $donnees_Ligne_Echeancier['CONDI_REG_ID'], $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
 			}
 
 			$reqModeReg = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
-			while ($DonneesModeReg = $reqModeReg->fetch())
-			{
+			while ($DonneesModeReg = $reqModeReg->fetch()){
 				$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected( $donnees_Ligne_Echeancier['MODE_REG_ID'], $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
 			}
 
-			 $LigneContenu = $LigneContenu .'
+			$LigneContenu = $LigneContenu .'
 					<tr>
 							<td><input type="hidden" name="UpdateIdLigneEcheancier[]" id="UpdateIdLigneEcheancier" value="'. $donnees_Ligne_Echeancier['Id'] .'" required="required"></td>
 							<td><input type="text"  name="UpdateLABELLigneEcheancier[]" value="'. $donnees_Ligne_Echeancier['LABEL'] .'" required="required"></td>
@@ -421,40 +421,42 @@
 			$CondiListe1 = '';
 			$i++;
 		}
-			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
-			while ($DonneesConditionReg = $req->fetch())
-			{
-				$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" >'. $DonneesConditionReg['LABEL'] .'</option>';
-			}
-			$req->closeCursor();
 
-			$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
-			while ($DonneesModeReg = $req->fetch())
-			{
-				$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" >'. $DonneesModeReg['LABEL'] .'</option>';
-			}
+		//re init liste of condition payement
+		$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
+		while ($DonneesConditionReg = $req->fetch()){
+			$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" >'. $DonneesConditionReg['LABEL'] .'</option>';
+		}
+		$req->closeCursor();
 
-		 $EcheanchierLigneContenu = $EcheanchierLigneContenu .'
-			<form method="post" name="Section" action="compta.php?Echeancier='. $_GET['Echeancier'] .'" class="content-form" >
+		//re init liste of methode payement
+		$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
+		while ($DonneesModeReg = $req->fetch()){
+			$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" >'. $DonneesModeReg['LABEL'] .'</option>';
+		}
+
+		//generate liste of detail timeline payement
+		$EcheanchierLigneContenu = $EcheanchierLigneContenu .'
+			<form method="post" name="Section" action="manage-accounting.php?Echeancier='. $_GET['Echeancier'] .'" class="content-form" >
 				<table class="content-table-decal">
 					<thead>
 						<tr>
 							<th></th>
-							<th>Libellé</th>
-							<th>Montant H.T. (%)</th>
-							<th>Montant TVA (%)</th>
-							<th>Condition de réglement</th>
-							<th>Mode de réglement</th>
-							<th>Délai (en jours)</th>
+							<th>'. $langue->show_text('TableLabel') .'</th>
+							<th>'. $langue->show_text('TableAmountHT') .'</th>
+							<th>'. $langue->show_text('TableAmountTVA') .'</th>
+							<th>'. $langue->show_text('TableCondiList') .'</th>
+							<th>'. $langue->show_text('TableMethodList') .'</th>
+							<th>'. $langue->show_text('TableDayDelay') .'</th>
 						</tr>
 					</thead>
 					<tbody>
 						'. $LigneContenu .'
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELLigneEcheancier" required="required"></td>
-							<td><input type="number" class="input-moyen-vide" name="AddPourcMontantLigneEcheancier" step=".001" required="required"></td>
-							<td><input type="number" class="input-moyen-vide" name="AddPourcTVALigneEcheancier" step=".001" required="required"></td>
+							<td>'. $langue->show_text('Addtext') .'</td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELLigneEcheancier" ></td>
+							<td><input type="number" class="input-moyen-vide" name="AddPourcMontantLigneEcheancier" step=".001" ></td>
+							<td><input type="number" class="input-moyen-vide" name="AddPourcTVALigneEcheancier" step=".001" ></td>
 							<td>
 								<select name="AddRegLigneEcheancier">
 									'. $CondiListe1 .'
@@ -462,42 +464,40 @@
 							</td>
 							<td>
 								<select name="AddModeLigneEcheancier">
-									'.$RegListe1 .'
+									'. $RegListe1 .'
 								</select>
 							</td>
-							<td><input type="number"  name="AddDelaisLigneEcheancier" required="required"></td>
+							<td><input type="number"  name="AddDelaisLigneEcheancier" ></td>
 						</tr>
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" /> <br/>
 								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</form>';
-
-
-
 	}
 	else{
 		$ParDefautDiv1 = 'id="defaultOpen"';
 	}
 
 	////////////////////////
-	//// TRANSPORT ////
+	//// DELEVERY ////
 	///////////////////////
 
+	//if add new delevery method
 	if(isset($_POST['AddCODETransport']) AND !empty($_POST['AddCODETransport'])){
-
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_TRANSPORT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODETransport']) ."',
 																		'". addslashes($_POST['AddLABELTransport']) ."')");
 
 	}
 
-	if(isset($_POST['UpdateIdEcheancier']) AND !empty($_POST['UpdateIdEcheancier'])){
+	//udpdate list of delevery method
+	if(isset($_POST['UpdateIdTransport']) AND !empty($_POST['UpdateIdTransport'])){
 
 		$UpdateIdTransport = $_POST['UpdateIdTransport'];
 		$UpdateCODETransport = $_POST['UpdateCODETransport'];
@@ -505,7 +505,6 @@
 
 		$i = 0;
 		foreach ($UpdateIdTransport as $id_generation) {
-
 			$bdd->exec('UPDATE `'. TABLE_ERP_TRANSPORT .'` SET  CODE = \''. addslashes($UpdateCODETransport[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELTransport[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
@@ -513,6 +512,7 @@
 		}
 	}
 
+	//generate list of delevery
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_TRANSPORT .'.Id,
 									'. TABLE_ERP_TRANSPORT .'.CODE,
@@ -520,8 +520,7 @@
 									FROM `'. TABLE_ERP_TRANSPORT .'`
 									ORDER BY Id');
 
-	while ($donnees_Transport= $req->fetch())
-	{
+	while ($donnees_Transport= $req->fetch()){
 		 $TransportContenu = $TransportContenu .'
 				<tr>
 					<td><input type="hidden" name="UpdateIdTransport[]" id="UpdateIdTransport" value="'. $donnees_Transport['Id'] .'" ></td>
@@ -531,7 +530,6 @@
 		$i++;
 	}
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
@@ -544,53 +542,49 @@
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
-
 ?>
-
-
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?php echo $ParDefautDiv1; ?>> Condition de réglement</button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')">Mode de réglement</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')">TVA</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Imputations comptables</button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')" <?php echo $ParDefautDiv5; ?> >Echéancier types</button>
-		<button class="tablinks" onclick="openDiv(event, 'div6')" >Transport</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?php echo $ParDefautDiv1; ?>><?php echo $langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')" <?php echo $ParDefautDiv5; ?> ><?php echo $langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')" ><?php echo $langue->show_text('Title6'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
-			<form method="post" name="Section" action="compta.php" class="content-form" >
+			<form method="post" name="Section" action="manage-accounting.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>Nombre de mois</th>
-							<th>Nombre de jours</th>
-							<th>Fin de mois</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableNumberOfMonth'); ?></th>
+							<th><?php echo $langue->show_text('TableNumberOfDay'); ?></th>
+							<th><?php echo $langue->show_text('TableEndMonth'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu1;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODECondiReg" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELCondiReg" required="required"></td>
-							<td><input type="number" class="input-moyen-vide" name="AddNbrMoisCondiReg" required="required"></td>
-							<td><input type="number" class="input-moyen-vide" name="AddNbrJoursCondiReg" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODECondiReg" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELCondiReg" ></td>
+							<td><input type="number" class="input-moyen-vide" name="AddNbrMoisCondiReg" ></td>
+							<td><input type="number" class="input-moyen-vide" name="AddNbrJoursCondiReg" ></td>
 							<td>
 								<select name="AddFinDeMoiCondiReg">
-									<option value="1">Oui</option>
-									<option value="0">Non</option>
+									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
+									<option value="0"><?php echo $langue->show_text('No'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -599,31 +593,30 @@
 			</form>
 		</div>
 	<div id="div2" class="tabcontent" >
-			<form method="post" name="Section" action="compta.php" class="content-form" >
+			<form method="post" name="Section" action="manage-accounting.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>CODE_COMTABLE</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableAcountCODE'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu2;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEModeRef" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELModeRef" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEComptaModeRef" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODEModeRef" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELModeRef" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODEComptaModeRef" ></td>
 						</tr>
 						<tr>
 							<td colspan="4" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -632,31 +625,30 @@
 			</form>
 		</div>
 	<div id="div3" class="tabcontent">
-			<form method="post" name="Section" action="compta.php" class="content-form" >
+			<form method="post" name="Section" action="manage-accounting.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>Taux</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableRate'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu3;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODETVA" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELTVA" required="required"></td>
-							<td><input type="number" class="input-moyen-vide" name="AddTAUXTVA" step=".001" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODETVA" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELTVA" ></td>
+							<td><input type="number" class="input-moyen-vide" name="AddTAUXTVA" step=".001"></td>
 						</tr>
 						<tr>
 							<td colspan="4" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -665,51 +657,49 @@
 			</form>
 		</div>
 	<div id="div4" class="tabcontent" >
-			<form method="post" name="Section" action="compta.php" class="content-form" >
+			<form method="post" name="Section" action="manage-accounting.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
-							<th>TVA</th>
-							<th>Compte TVA</th>
-							<th>CODE Compta</th>
-							<th>TYPE IMPUTATION</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?php echo $langue->show_text('TableTVAType'); ?></th>
+							<th><?php echo $langue->show_text('TableAccountTVA'); ?></th>
+							<th><?php echo $langue->show_text('TableAcountCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableImputationType'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu4;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEIMPUT" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELIMPUT" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODEIMPUT" ></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELIMPUT"></td>
 							<td>
 								<select name="AddTVAIMPUT">
 									<?php echo $TVAListe ?>
 								</select>
 							</td>
-							<td><input type="number" class="input-moyen-vide" name="AddCOMPTETVAIMPUT" required="required"></td>
-							<td><input type="number" class="input-moyen-vide" name="AddCODECOMPTAIMPUT" required="required"></td>
+							<td><input type="number" class="input-moyen-vide" name="AddCOMPTETVAIMPUT" ></td>
+							<td><input type="number" class="input-moyen-vide" name="AddCODECOMPTAIMPUT" ></td>
 							<td>
 								<select name="AddTYPEIMPUT">
-
-									<option value="1">Achat</option>
-									<option value="2">Achat (stock)</option>
-									<option value="3">Acompte</option>
-									<option value="4">Acompte (avec TVA)</option>
-									<option value="5">Autre</option>
-									<option value="6">TVA</option>
+									<option value="1"><?php echo $langue->show_text('TableSelect1'); ?></option>
+									<option value="2"><?php echo $langue->show_text('TableSelect2'); ?></option>
+									<option value="3"><?php echo $langue->show_text('TableSelect3'); ?></option>
+									<option value="4"><?php echo $langue->show_text('TableSelect4'); ?></option>
+									<option value="5"><?php echo $langue->show_text('TableSelect5'); ?></option>
+									<option value="6"><?php echo $langue->show_text('TableSelect6'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -718,47 +708,48 @@
 			</form>
 	</div>
 	<div id="div5" class="tabcontent" >
-			<form method="post" name="Section" action="compta.php" class="content-form" >
+			<form method="post" name="Section" action="manage-accounting.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
+<?php
 								Echo $EcheanchierTypeContenu;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODEEcheancier" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELEcheancier" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODEEcheancier"></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELEcheancier"></td>
 							<td></td>
+						</tr>
 						<tr>
 							<td colspan="4" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
-			<?php
+<?php
 				Echo $EcheanchierLigneContenu;
-			?>
+?>
 	</div>
 	<div id="div6" class="tabcontent" >
-		<form method="post" name="Section" action="compta.php" class="content-form" >
+		<form method="post" name="Section" action="manage-accounting.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
+							<th><?php echo $langue->show_text('TableCODE'); ?></th>
+							<th><?php echo $langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -766,13 +757,13 @@
 								Echo $TransportContenu;
 							?>
 						<tr>
-							<td>Ajout</td>
-							<td><input type="text" class="input-moyen-vide" name="AddCODETransport" required="required"></td>
-							<td><input type="text" class="input-moyen-vide" name="AddLABELTransport" required="required"></td>
+							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="AddCODETransport"></td>
+							<td><input type="text" class="input-moyen-vide" name="AddLABELTransport"></td>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>

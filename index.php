@@ -4,27 +4,26 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'index', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
-
+	// Get general info for timeline
 	$req = $bdd->query("SELECT id, ETAT, TIMESTAMP, TEXT FROM ". TABLE_ERP_INFO_GENERAL ." WHERE ETAT =1 ORDER BY id DESC LIMIT 0, 10");
 
 		$class = array('left', 'right');
@@ -43,6 +42,7 @@
 		$i++;
 		}
 
+	// get employees list
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
@@ -70,7 +70,7 @@
 								<h3>'. $donnees_membre['PRENOM'] .' '. $donnees_membre['NOM'] .'</h3>
 								<p>'. $donnees_membre['RIGHT_NAME'] .'</p>
 								<p>'. $donnees_membre['NUMERO_INTERNE'] .'</p>
-								<p><button onClick="location.href=\'mailto:'. $donnees_membre['MAIL'] .'\'">Contact</button></p>
+								<p><button onClick="location.href=\'mailto:'. $donnees_membre['MAIL'] .'\'">'. $langue->show_text('ContactEmployees') .'</button></p>
 							</div>
 						  </div>';
 		$i++;
@@ -90,9 +90,9 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Infos</button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')">Statu commandes</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')">Contact</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 			<div class="timeline">

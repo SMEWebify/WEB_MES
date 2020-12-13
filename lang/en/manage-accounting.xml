@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Accounting</TiltePage>
+   <Title1>Payment condition</Title1>
+   <Title2>Payment choice</Title2>
+   <Title3>VAT</Title3>
+   <Title4>Accounting allocations</Title4>
+   <Title5>Timeline paiement</Title5>
+   <Title6>Delevery</Title6>
+<!-- table 1 -->
+   <TableNumberOfMonth>Number of months</TableNumberOfMonth>
+   <TableNumberOfDay>Number of days</TableNumberOfDay>
+   <TableEndMonth>End mounth</TableEndMonth>
+<!-- table 2 -->
+   <TableAcountCODE>Accounting CODE</TableAcountCODE>
+<!-- table 3 -->
+   <TableRate>Rate</TableRate>
+<!-- table 4 -->
+   <TableAccountTVA>Compte VAT</TableAccountTVA>
+   <TableTVAType>VAT</TableTVAType>
+   <TableImputationType>Accounting allocations</TableImputationType>
+   <TableSelect1>Purchase</TableSelect1>
+   <TableSelect2>Purchase (stock)</TableSelect2>
+   <TableSelect3>Advance payment</TableSelect3>
+   <TableSelect4>Advance payment (with VAT)</TableSelect4>
+   <TableSelect5>other</TableSelect5>
+   <TableSelect6>VAT</TableSelect6>
+<!-- table 6 -->
+   <TableAmountHT>Amount D.F. (%)</TableAmountHT>
+   <TableAmountTVA>Amount VAT (%)</TableAmountTVA>
+   <TableCondiList>Payment condition</TableCondiList>
+   <TableMethodList>Payment choice</TableMethodList>
+   <TableDayDelay>Delay (in day)</TableDayDelay>
+<!-- general -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>label</TableLabel>
+   <Addtext>Add</Addtext>
+   <TableUpdateButton>Update</TableUpdateButton>
+   <Yes>Yes</Yes>
+   <No>No</No>
+</langue>

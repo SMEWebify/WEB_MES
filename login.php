@@ -4,12 +4,14 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
 
 	//if isset post variable name and password
 	if(isset($_POST['nom'])	AND	isset($_POST['mdp'])){
@@ -32,7 +34,7 @@
 
 						//check if user in not ban
 					if($verification_statut['statu']	!=	'1'){
-						stop('Votre	compte	a	été	suspendu.',	2,	'connexion.php');
+						stop('Votre	compte	a	été	suspendu.',	2,	'login.php');
 					}
 					else{
 						//update time of connexion timestamps
@@ -77,20 +79,20 @@
 
 						}
 						else{
-							stop('Erreur,	impossible	de	modifier	l\'enregistrement.',	300,	'connexion.php');
+							stop('Erreur,	impossible	de	modifier	l\'enregistrement.',	300,	'login.php');
 						}
 					}
 				}
 				else{
-					stop('Votre	mot	de	passe	ne	correspond	pas	avec	l\'identifiant.',	500,	'connexion.php');
+					stop('Votre	mot	de	passe	ne	correspond	pas	avec	l\'identifiant.',	500,	'login.php');
 				}
 			}
 			else	{
-				stop('Votre	mot	de	passe	est	invalide.',	102,	'connexion.php');
+				stop('Votre	mot	de	passe	est	invalide.',	102,	'login.php');
 			}
 		}
 		else	{
-			stop('Votre	identifiant	est	invalide.',	101,	'connexion.php');
+			stop('Votre	identifiant	est	invalide.',	101,	'login.php');
 		}
 	}
 	elseif	(isset($_GET['action'])	&	$_GET['action']=="deconnexion"){
@@ -98,14 +100,14 @@
 		session_unset();
 		session_destroy();
 
-		stop('Vous	êtes	bien	déconnecté(e).',	4,	'connexion.php');
+		stop('Vous	êtes	bien	déconnecté(e).',	4,	'login.php');
 	}
 	elseif	(isset($_GET['action'])	&	$_GET['action']=="deco_probleme"){
 
 		session_unset();
 		session_destroy();
 
-		stop('Vous	avez	été	déconnecté	de	force.',	5,	'connexion.php');
+		stop('Vous	avez	été	déconnecté	de	force.',	5,	'login.php');
 	}
 ?>
 <!DOCTYPE	html	PUBLIC	"-//W3C//DTD	XHTML	1.0	Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -128,7 +130,7 @@ function myFunction() {
 </head>
 <body>
 	<div id="id01" class="modal">
-		<form class="modal-content animate"	action="connexion.php"	method="post">
+		<form class="modal-content animate"	action="login.php"	method="post">
 				<div class="container">
 					<label	for="uname"><b>Utilisateur</b></label>
 					<input	type="text"	name="nom"	id="nom"	required>

@@ -4,25 +4,23 @@
 
 	//phpinfo();
 
+	// include for the constants
+	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
 	require_once 'include/include_connection_sql.php';
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	// include for the constants
-	require_once 'include/include_recup_config.php';
-
-	//session verification user
-	if(isset($_SESSION['mdp'])){
-		require_once 'include/verifications_session.php';
-	}
-	else{
-		stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'connexion.php');
-	}
+	//session checking  user
+	require_once 'include/include_checking_session.php';
+	//load info company
+	require_once 'include/include_recup_config_company.php';
+	// load language class
+	require_once 'class/language.class.php';
+	$langue = new Langues('lang', 'profil', $UserLanguage);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-
-		stop('L\'accès vous est interdit.', 161, 'connexion.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
 	///////////////////////////////////
@@ -62,7 +60,6 @@
 		else{
 			$AddSQL = 'LOGO = \''. addslashes($UpdateCompanyLogo) .'\',';
 		}
-
 
 
 		$bdd->exec('UPDATE `'. TABLE_ERP_COMPANY .'` SET  NAME = \''. addslashes($UpdateCompanyName) .'\',
@@ -403,9 +400,9 @@
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td></td>
-					<td><a href="gestion.php?mail='. $donnees_Mail['Id'] .'">'. $donnees_Mail['CODE'] .'</a></td>
-					<td><a href="gestion.php?mail='. $donnees_Mail['Id'] .'">'. $donnees_Mail['LABEL'] .'</a></td>
-					<td><a href="gestion.php?mail='. $donnees_Mail['Id'] .'">'. $donnees_Mail['OBJET'] .'</a></td>
+					<td><a href="manage-company.php?mail='. $donnees_Mail['Id'] .'">'. $donnees_Mail['CODE'] .'</a></td>
+					<td><a href="manage-company.php?mail='. $donnees_Mail['Id'] .'">'. $donnees_Mail['LABEL'] .'</a></td>
+					<td><a href="manage-company.php?mail='. $donnees_Mail['Id'] .'">'. $donnees_Mail['OBJET'] .'</a></td>
 					<td>'. extrait($donnees_Mail['TEXT']) .'</td>
 				</tr>';
 		$i++;
@@ -493,9 +490,9 @@
 		 $contenu5 = $contenu5 .'
 				<tr>
 					<td></td>
-					<td><a href="gestion.php?timeline='. $donnees_TimeLine['Id'] .'">'. $EtatTimeLine .'</a></td>
-					<td><a href="gestion.php?timeline='. $donnees_TimeLine['Id'] .'">'. extrait($donnees_TimeLine['TEXT']) .'</a></td>
-					<td><a href="gestion.php?timeline='. $donnees_TimeLine['Id'] .'">'. format_temps($donnees_TimeLine['TIMESTAMP']) .'</a></td>
+					<td><a href="manage-company.php?timeline='. $donnees_TimeLine['Id'] .'">'. $EtatTimeLine .'</a></td>
+					<td><a href="manage-company.php?timeline='. $donnees_TimeLine['Id'] .'">'. extrait($donnees_TimeLine['TEXT']) .'</a></td>
+					<td><a href="manage-company.php?timeline='. $donnees_TimeLine['Id'] .'">'. format_temps($donnees_TimeLine['TIMESTAMP']) .'</a></td>
 				</tr>';
 		$i++;
 	}
@@ -562,7 +559,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div5')" <?php echo $ParDefautDiv5; ?>>Timeline Informations</button>
 	</div>
 	<div id="div1" class="tabcontent" >
-			<form method="post" name="Company" action="gestion.php" class="content-form" enctype="multipart/form-data" >
+			<form method="post" name="Company" action="manage-company.php" class="content-form" enctype="multipart/form-data" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -590,7 +587,7 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent" >
-			<form method="post" name="Section" action="gestion.php" class="content-form" >
+			<form method="post" name="Section" action="manage-company.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -620,7 +617,7 @@
 			</form>
 	</div>
 	<div id="div3" class="tabcontent" >
-		<form method="post" name="Section" action="gestion.php" class="content-form" >
+		<form method="post" name="Section" action="manage-company.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -654,7 +651,7 @@
 			</form>
 	</div>
 	<div id="div4" class="tabcontent" >
-			<form method="post" name="Section" action="gestion.php" class="content-form" >
+			<form method="post" name="Section" action="manage-company.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -706,7 +703,7 @@
 			</form>
 	</div>
 	<div id="div5" class="tabcontent" >
-				<form method="post" name="TimeLine" action="gestion.php" class="content-form" >
+				<form method="post" name="TimeLine" action="manage-company.php" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>

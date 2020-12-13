@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Gestion des employé(e)s</TiltePage>
+    <Title1>Gestion des employés et utilisateurs</Title1>
+    <Title2>Gestion des droits</Title2>
+ <!-- table1 -->
+    <TableNumber>N°</TableNumber>
+    <TableLastConnexion>Dernière connexion</TableLastConnexion>
+    <TableCODE>CODE</TableCODE>
+    <TableSeudo>Speudo</TableSeudo>
+    <TableRight>Poste occupé</TableRight>
+    <TableSection>Section</TableSection>
+ <!-- table2 -->
+   <TableRightName>Fonction</TableRightName>
+   <TableIndex>Acceuil</TableIndex>
+   <TableQuoteStudy>Devis/Etudes</TableQuoteStudy>
+   <TableOrder>Commande</TableOrder>
+   <TablePlanning>Planning</TablePlanning>
+   <TableCalendar>Calendrier</TableCalendar>
+   <TablePurchase>Achats</TablePurchase>
+   <TableArticle>Article</TableArticle>
+   <TableQuality>Qualité</TableQuality>
+   <TableGeneralSetting>Gestion</TableGeneralSetting>
+   <TableAcounting>Comptabilité</TableAcounting>
+    <Yes>Oui</Yes>
+    <No>Non</No>
+ <!-- general -->
+    <Addtext>Ajout</Addtext>
+     <TableUpdateButton>Mettre à jours</TableUpdateButton>
+</langue>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+     <!-- admin UI -->
+     <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+ <!-- title page -->
+	<TiltePage>Study</TiltePage>
+   <Title1></Title1>
+   <Title2>Technical cuts</Title2>
+   <Title3>Nomenclature</Title3>
+   <Title4>Sub-assemblies</Title4>
+   <Title5>Puchases</Title5>
+   <Title6>Sales</Title6>
+   <Title7>Accounting allocations</Title7>
+   <Title8>Comment</Title8>
+   <Title9>Unit</Title9>
+   <Title10>Subfamily</Title10>
+    <ListArticle>Article :</ListArticle>
+
+<!-- select -->
+   <SelectMass>Mass</SelectMass>
+   <SelectLength>Length</SelectLength>
+   <SelectAera>Aera</SelectAera>
+   <SelectVolume>Volume</SelectVolume>
+   <SelectOther>Other</SelectOther>
+   <!-- -->
+   <SelectProductive>Productive</SelectProductive>
+   <SelectRawMat>Rax material</SelectRawMat>
+   <SelectRawMatSheet>Rax material (Sheet)</SelectRawMatSheet>
+   <SelectRawMatProfil>Rax material (Profil)</SelectRawMatProfil>
+   <SelectRawMatBlock>Rax material (block)</SelectRawMatBlock>
+   <SelectSupplies>Supplies</SelectSupplies>
+   <SelectSubcontracting>Sub-contracting</SelectSubcontracting>
+   <SelectCompoundItem>Compound item</SelectCompoundItem>
+<!-- Table -->
+   <TableType>Type</TableType>
+   <TableComment>Comment</TableComment>
+   <TableImputationType>Accounting allocations</TableImputationType>
+   <TableTVAType>VAT</TableTVAType>
+   <TableArticle>Article</TableArticle>
+   <TableQty>Quantity</TableQty>
+   <TableUnit>Unit</TableUnit>
+   <TableUnitPrice>Unit price</TableUnitPrice>
+   <TablePurchaseUnit>Purchase price</TablePurchaseUnit>
+   <TableSalePrice>Sale price</TableSalePrice>
+   <TableProductCost>Product cost</TableProductCost>
+   <TableSettingTime>Setting time</TableSettingTime>
+   <TableProductTime>Product time</TableProductTime>
+   <Tableindex>Index</Tableindex>
+   <TablePicture>Picture :</TablePicture>
+   <TableWeight>Weight :</TableWeight>
+   <TableThickness>Thickness :</TableThickness>
+   <TableMaterial>Material :</TableMaterial> 
+   <TableBuy>Buy :</TableBuy> 
+   <TableSold>Sold :</TableSold> 
+   <TableFamilly>Familly :</TableFamilly> 
+
+   <TableDimX>Size X</TableDimX>
+   <TableDimY>Size Y</TableDimY>
+   <TableDimZ>Size Z</TableDimZ>
+   <TableSurDimX>Over Size X</TableSurDimX>
+   <TableSurDimY>Over Size Y</TableSurDimY>
+   <TableSurDimZ>Over Size Z</TableSurDimZ>
+<!-- general -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Label</TableLabel>
+   <TableOrder>Order</TableOrder>
+   <TableService>Sevice</TableService>
+   
+   <Addtext>Add</Addtext>
+   <TableUpdateButton>Update</TableUpdateButton>
+   <TableAddArticleButton>Add article</TableAddArticleButton>
+   <Yes>yes</Yes>
+   <No>No</No>
+</langue>
