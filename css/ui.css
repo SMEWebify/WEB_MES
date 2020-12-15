@@ -201,3 +201,77 @@
 	Padding:50px;
 
 }
+
+/*--------------------------------------------*/
+/*-------------CALLOUT BOX NOTIFICATION--------------*/
+/*--------------------------------------------*/
+.callout {
+	position: fixed;
+	bottom: 35px;
+	right: 20px;
+	margin-left: 20px;
+	max-width: 300px;
+	transition: 0.5s;
+  }
+  
+  .callout-header {
+	padding: 25px 25px;
+	background: #555;
+	font-size: 20px;
+	color: white;
+  }
+  
+  .callout-container {
+	padding: 15px;
+	background-color: #ccc;
+	color: black
+  }
+  
+  .closebtn {
+	position: absolute;
+	top: 5px;
+	right: 15px;
+	color: white;
+	font-size: 30px;
+	cursor: pointer;
+  }
+  
+  .closebtn:hover {
+	color: lightgrey;
+  }
+
+  .alert {
+	padding: 20px;
+	background-color: #f44336;
+	color: white;
+	opacity: 1;
+	transition: opacity 0.6s;
+	margin-bottom: 15px;
+  }
+	.alert.success {background-color: #4CAF50;}
+	.alert.info {background-color: #2196F3;}
+	.alert.warning {background-color: #ff9800;}
+  
+  .closebtnligne {
+	margin-left: 15px;
+	color: white;
+	font-weight: bold;
+	float: right;
+	font-size: 22px;
+	line-height: 20px;
+	cursor: pointer;
+	transition: 0.3s;
+  }
+  
+  .closebtnligne:hover {
+	color: black;
+  }
+  .badge {
+	position: absolute;
+	top: -10px;
+	left: -10px;
+	padding: 5px 10px;
+	border-radius: 50%;
+	background: red;
+	color: white;
+  }

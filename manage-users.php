@@ -17,6 +17,9 @@
 	// load language class
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'manage-users', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/callOutBox.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -82,6 +85,8 @@
 																WHERE idUser = '. $id_generation . ' ');
 			$i++;
 		}
+
+		$CallOutBox->add_notification(array('2', $i . ' Ligne(s) employé mise à jours'));
 	}
 
 	//Update data right

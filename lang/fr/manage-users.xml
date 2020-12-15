@@ -48,8 +48,11 @@
    <TableQuality>Qualité</TableQuality>
    <TableGeneralSetting>Gestion</TableGeneralSetting>
    <TableAcounting>Comptabilité</TableAcounting>
-    <Yes>Oui</Yes>
-    <No>Non</No>
+   <Yes>Oui</Yes>
+   <No>Non</No>
+ <!-- notifications -->
+   <AddUserNotification>ligne(s) d'employé(s) modifiée(s).</AddUserNotification>
+    
  <!-- general -->
     <Addtext>Ajout</Addtext>
      <TableUpdateButton>Mettre à jours</TableUpdateButton>
