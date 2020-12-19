@@ -50,6 +50,15 @@
    <TableDayType>Type de jour</TableDayType>
    <TableDate>Date</TableDate>
    <TableFixedDate>Date fixe</TableFixedDate>
+  <!-- notifications -->
+   <AddEventNotification>Evenement machine ajouté</AddEventNotification>
+   <UpdateEventNotification> Evenement(s) machine modifié(s)</UpdateEventNotification>  
+   <AddImproductTimetNotification>Temps improductif ajouté</AddImproductTimetNotification>
+   <UpdateImproductTimetNotification> Temps improductif modifié(s)</UpdateImproductTimetNotification>  
+   <AddOutNotification>Type d'absence ajouté</AddOutNotification>
+   <UpdateOutNotification> Type d'absence modifié(s)</UpdateOutNotification> 
+   <AddBankNotification>Jour ferié ajouté</AddBankNotification>
+   <UpdateBankNotification> Jour ferié modifié(s)</UpdateBankNotification>  
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>

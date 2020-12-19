@@ -25,29 +25,6 @@
  <!-- systeminfo --> 
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
- <!-- title page -->
-	<TiltePage>Quality management</TiltePage>
-   <Title1>Measuring devices</Title1>
-   <Title2>Failing</Title2>
-   <Title3>Causes</Title3>
-   <Title4>Corrections</Title4>
-<!-- table 1 -->
-   <TableRessource>Ressources</TableRessource>
-   <TableUser>User</TableUser>
-   <TableImatNumber>Immat</TableImatNumber>
-   <TableEndDate>End Date</TableEndDate>
-  <!-- notifications -->
-   <AddDeviceNotification>Measuring devices added</AddDeviceNotification>
-   <AddFailNotification>Failing added</AddFailNotification>  
-   <AddCauseNotification>Cause added</AddCauseNotification>
-   <AddCorrectionNotification>Correction added</AddCorrectionNotification>  
-   <UpdateDeviceNotification> measuring devices updated</UpdateDeviceNotification>
-   <UpdateFailNotification> failing updated</UpdateFailNotification> 
-   <UpdateCauseNotification> cause updated</UpdateCauseNotification>
-   <UpdateCorrectionNotification> correction updated</UpdateCorrectionNotification>  
-<!-- general -->
-   <TableCODE>CODE</TableCODE>
-   <TableLabel>Label</TableLabel>
-   <Addtext>Add</Addtext>
-   <TableUpdateButton>Update</TableUpdateButton>
-</langue>
+ <!-- title page --> 
+    <Title1>planning</Title1>
+ </langue>

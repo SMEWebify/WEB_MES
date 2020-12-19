@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -17,6 +18,9 @@
 	// load language class
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'manage-methodes', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -41,7 +45,7 @@
 																		'". $_POST['COLORPosteCharge'] ."',
 																		'". addslashes($IsertPrestaImage) ."',
 																		'')");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddServiceNotification')));
 	}
 
 	//update service list 
@@ -69,6 +73,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateServiceNotification')));
 	}
 
 	//add new section in db
@@ -80,7 +85,7 @@
 																		'". $_POST['TAUXHSection'] ."',
 																		'". $_POST['RESPSection'] ."',
 																		'". $_POST['COLORSection'] ."')");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddSectionNotification')));
 	}
 
 	if(isset($_POST['id_section']) AND !empty($_POST['id_section'])){
@@ -105,6 +110,7 @@
 																WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectionNotification')));
 	}
 
 	if(isset($_POST['AddRessource']) AND !empty($_POST['AddRessource'])){
@@ -123,6 +129,7 @@
 																		'". $_POST['CAPARessource'] ."',
 																		'". $_POST['SECTIONRessource'] ."',
 																		'". $_POST['COLORRessource'] ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddRessourcesnNotification')));	
 	}
 
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
@@ -265,7 +272,7 @@
 					<td><input type="text" name="UpdateLABELSection[]" value="'. $donnees_section['LABEL'] .'" ></td>
 					<td><input type="number" name="UpdateTAUX_HSection[]" value="'. $donnees_section['COUT_H'] .'" id="number"></td>
 					<td>
-						<select name="UpdateRESPONSABLESection">
+						<select name="UpdateRESPONSABLESection[]">
 							<option value="'. $donnees_section['idUSER'] .'">'. $donnees_section['NOM'] .' '. $donnees_section['PRENOM'] .' - '. $donnees_section['RIGHT_NAME'] .'</option>
 							'. $EmployeeListe .'
 						</select>
@@ -293,6 +300,7 @@
 																		'". addslashes($_POST['AddLABELZoneStock']) ."',
 																		'". $_POST['AddRESSOURCEZoneStock'] ."',
 																		'". $_POST['AddCOLORZoneStock'] ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLocationNotification')));																		
 	}
 
 	//update list stock zone
@@ -314,6 +322,7 @@
 																WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLocationNotification')));
 	}
 
 	//generate list of zone stock
@@ -344,8 +353,7 @@
 				</tr>';
 		$i++;
 	}
-	?>
-
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
@@ -360,10 +368,10 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
 			<form method="post" name="PosteCharge" action="manage-methodes.php" class="content-form" enctype="multipart/form-data">
@@ -371,14 +379,14 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableOrder'); ?></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableType'); ?></th>
-							<th><?php echo $langue->show_text('TableHourlyRate'); ?></th>
-							<th><?php echo $langue->show_text('TableMargin'); ?></th>
-							<th><?php echo $langue->show_text('TableColor'); ?></th>
-							<th><?php echo $langue->show_text('TablePicture'); ?></th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableType'); ?></th>
+							<th><?=$langue->show_text('TableHourlyRate'); ?></th>
+							<th><?=$langue->show_text('TableMargin'); ?></th>
+							<th><?=$langue->show_text('TableColor'); ?></th>
+							<th><?=$langue->show_text('TablePicture'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -387,20 +395,20 @@
 								Echo $contenu1;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="number" name="ORDREPosteCharge" size="1" id="number"></td>
 							<td><input type="text"  name="CODEPosteCharge" size="10"></td>
 							<td><input type="text"  name="AddPosteCharge" ></td>
 							<td>
 								<select name="TYPEPosteCharge">
-									<option value="1"><?php echo $langue->show_text('SelectProductive'); ?></option>
-									<option value="2"><?php echo $langue->show_text('SelectRawMat'); ?></option>
-									<option value="3"><?php echo $langue->show_text('SelectRawMatSheet'); ?></option>
-									<option value="4"><?php echo $langue->show_text('SelectRawMatProfil'); ?></option>
-									<option value="5"><?php echo $langue->show_text('SelectRawMatBlock'); ?></option>
-									<option value="6"><?php echo $langue->show_text('SelectSupplies'); ?></option>
-									<option value="7"><?php echo $langue->show_text('SelectSubcontracting'); ?></option>
-									<option value="8"><?php echo $langue->show_text('SelectCompoundItem'); ?></option>
+									<option value="1"><?=$langue->show_text('SelectProductive'); ?></option>
+									<option value="2"><?=$langue->show_text('SelectRawMat'); ?></option>
+									<option value="3"><?=$langue->show_text('SelectRawMatSheet'); ?></option>
+									<option value="4"><?=$langue->show_text('SelectRawMatProfil'); ?></option>
+									<option value="5"><?=$langue->show_text('SelectRawMatBlock'); ?></option>
+									<option value="6"><?=$langue->show_text('SelectSupplies'); ?></option>
+									<option value="7"><?=$langue->show_text('SelectSubcontracting'); ?></option>
+									<option value="8"><?=$langue->show_text('SelectCompoundItem'); ?></option>
 								</select>
 							</td>
 							<td><input type="number"  name="TAUXPosteCharge" id="number"></td>
@@ -426,14 +434,14 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableOrder'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableMasktime'); ?></th>
-							<th><?php echo $langue->show_text('TableCapacity'); ?></th>
-							<th><?php echo $langue->show_text('TableSection'); ?></th>
-							<th><?php echo $langue->show_text('TableColor'); ?></th>
-							<th><?php echo $langue->show_text('TablePicture'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableMasktime'); ?></th>
+							<th><?=$langue->show_text('TableCapacity'); ?></th>
+							<th><?=$langue->show_text('TableSection'); ?></th>
+							<th><?=$langue->show_text('TableColor'); ?></th>
+							<th><?=$langue->show_text('TablePicture'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -442,20 +450,20 @@
 								Echo $contenu2;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="CODERessource" size="1"></td>
 							<td><input type="number"  name="ORDRERessource" size="1" id="number"></td>
 							<td><input type="text"  name="AddRessource" size="10"></td>
 							<td>
 								<select name="MASKRessource">
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
-									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td><input type="number"  name="CAPARessource" size="1" id="number"></td>
 							<td>
 								<select name="SECTIONRessource">
-									<?php echo $SectionListe ?>
+									<?=$SectionListe ?>
 								</select>
 							</td>
 							<td><input type="color"  name="COLORRessource" size="1"></td>
@@ -465,7 +473,7 @@
 						<tr>
 							<td colspan="10" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -479,12 +487,12 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableOrder'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableHourlyRate'); ?></th>
-							<th><?php echo $langue->show_text('TableResponsible'); ?></th>
-							<th><?php echo $langue->show_text('TableColor'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableHourlyRate'); ?></th>
+							<th><?=$langue->show_text('TableResponsible'); ?></th>
+							<th><?=$langue->show_text('TableColor'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -492,14 +500,14 @@
 								Echo $contenu3;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="CODESection" size="10"></td>
 							<td><input type="number"  name="ORDRESection" id="number"></td>
 							<td><input type="text"  name="AddSection" size="20"></td>
 							<td><input type="number"  name="TAUXHSection" size="1" id="number"></td>
 							<td>
 								<select name="RESPSection">
-									<?php echo $EmployeeListe ?>
+									<?=$EmployeeListe ?>
 								</select>
 							</td>
 							<td><input type="color"  name="COLORSection" ></td>
@@ -507,7 +515,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -521,10 +529,10 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableRessource'); ?></th>
-							<th><?php echo $langue->show_text('TableColor'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableRessource'); ?></th>
+							<th><?=$langue->show_text('TableColor'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -532,12 +540,12 @@
 								Echo $contenu4;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEZoneStock"></td>
 							<td><input type="text"  name="AddLABELZoneStock" ></td>
 							<td>
 								<select name="AddRESSOURCEZoneStock">
-									<?php echo $RessourcesListe ?>
+									<?=$RessourcesListe ?>
 								</select>
 							</td>
 							<td><input type="color"  name="AddCOLORZoneStock"></td>
@@ -545,7 +553,7 @@
 						<tr>
 							<td colspan="5" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -553,5 +561,9 @@
 				</table>
 			</form>
 		</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

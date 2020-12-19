@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+<!-- title page --> 
+	<TiltePage>Client and suppliers</TiltePage>
+    <Titre1>Add a company</Titre1>
+    <Titre2>Sites</Titre2>
+    <Titre3>Contacts</Titre3>
+    <Titre4>Industry and commentary</Titre4>
+<!-- table content --> 
+    <TableNameUser>Name :</TableNameUser>
+    <TableNameCompany>Name :</TableNameCompany>
+    <TableSurNameUser>Surname :</TableSurNameUser>
+    <TableMailUser>Mail :</TableMailUser>
+    <TablePhoneNumber>Phone number :</TablePhoneNumber> 
+    <TableMobilNumber>Modil phone number :</TableMobilNumber>
+    <TableTVAType>TVA</TableTVAType> 
+    <TableCODE>CODE</TableCODE>
+    <TableLabel>label</TableLabel>
+    <TableOrder>Oder</TableOrder>
+    <Addtext>Add</Addtext>
+    <TableCondiList>Payment condition</TableCondiList>
+    <TableMethodList>Payment choice</TableMethodList>
+    <TableUpdateButton>Update</TableUpdateButton>
+    <TableAdresseInvoice>Adresse Invoice</TableAdresseInvoice>
+    <TableAdresseDelevery>Adresse Delevery</TableAdresseDelevery>
+    <TableCity>City</TableCity>  
+    <TableZipCode>Zip Code</TableZipCode> 
+    <TableCountry>Country</TableCountry> 
+    <TableAdresse>Adresse</TableAdresse>
+    <TableFonction>Fonction</TableFonction>
+    <TableCivility>Civility</TableCivility>
+    <TableGeneralAccount>General Account</TableGeneralAccount> 
+    <TableSideAccount>Side Account</TableSideAccount> 
+    <TableReceptionControl>Reception Control :</TableReceptionControl> 
+    <TableSupplierStatus>Supplier Status :</TableSupplierStatus> 
+    <TableGeneralSupplier>General Supplier</TableGeneralSupplier> 
+    <TableDiscount>Discount %</TableDiscount> 
+    <TableGeneralCustomer>General Customer</TableGeneralCustomer> 
+    <TableCustomerStatus>Customer Status :</TableCustomerStatus> 
+    <TableSalesManager>Sales Manager</TableSalesManager> 
+    <TableTechnicalManager>Technical Manager</TableTechnicalManager> 
+    <TableTVAType>VAT</TableTVAType>
+    <TableSIREN>SIREN</TableSIREN>
+    <TableAPE>Code APE</TableAPE> 
+    <TableTVAINTRA>TVA INTRA</TableTVAINTRA> 
+    <TableWebSite>Web Site</TableWebSite> 
+    <TableFacebook>Facebook</TableFacebook>
+    <TableTwitter>Twitter</TableTwitter>
+    <TableLinked>Linked</TableLinked>
+    <TableFind>Find : </TableFind>
+ <!-- notifications -->
+    <AddCompanyNotification>Company added</AddCompanyNotification>
+    <AddSiteNotification>Site Added</AddSiteNotification>
+    <AddContactNotification>Contact added</AddContactNotification>
+    <UpdateCompanyNotification> Company modified</UpdateCompanyNotification>
+    <UpdateSiteNotification> Site modified</UpdateSiteNotification>
+    <UpdateContactNotification> Contactmodified</UpdateContactNotification>
+<!-- Select-->
+    <SelectMr>Mr</SelectMr>
+    <SelectMme>Mrs</SelectMme>
+    <SelectMlle>Ms</SelectMlle>
+
+    <SelectNoControl>No control</SelectNoControl>
+    <SelectControlWithoutBlok>Control without blocking reception</SelectControlWithoutBlok>
+    <SelectControlWithBlok>Control with reception blocking</SelectControlWithBlok>
+
+    <SelectInactive>Inactif</SelectInactive>
+    <SelectSupllier>Supllier</SelectSupllier>
+    <SelectProspect>Prospect</SelectProspect>
+    <SelectCustomer>Customer</SelectCustomer>
+    
+    <Yes>Yes</Yes>
+    <No>No</No>
+</langue>

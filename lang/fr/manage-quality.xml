@@ -36,6 +36,15 @@
    <TableUser>Utilisateur</TableUser>
    <TableImatNumber>Imatriculation</TableImatNumber>
    <TableEndDate>Date de fin</TableEndDate>
+  <!-- notifications -->
+   <AddDeviceNotification>Appareil de contrôle ajouté</AddDeviceNotification>
+   <AddFailNotification>Défaut ajouté</AddFailNotification>  
+   <AddCauseNotification>Cause ajoutée</AddCauseNotification>
+   <AddCorrectionNotification>Correction ajoutée</AddCorrectionNotification>  
+   <UpdateDeviceNotification> appareil(s) modifié(s)</UpdateDeviceNotification>
+   <UpdateFailNotification> défaut(s) modifié(s)</UpdateFailNotification> 
+   <UpdateCauseNotification> cause(s) modifié(s)</UpdateCauseNotification>
+   <UpdateCorrectionNotification> correction(s) modifiée(s)</UpdateCorrectionNotification>  
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>

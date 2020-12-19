@@ -1,5 +1,4 @@
 <?php
-
     echo'
 	<title>'. $CompanyName .'</title>
 	
@@ -15,7 +14,6 @@
 	
 	<link rel="shortcut icon" type="image/x-icon" href="image/favicon.ico" />
 	
-	<script src="css/js/modernizr.custom.js"></script>
-	<script src="css/js/divers.js"></script>
+	<script src="js/divers.js"></script>
 ';
 ?>

@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -17,6 +18,9 @@
 	// load language class
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'manage-quality', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -37,7 +41,7 @@
 																		'". addslashes($_POST['AddUSERAppareil']) ."',
 																		'". addslashes($_POST['AddIMMATAppareil']) ."',
 																		'". addslashes($_POST['AddDATEAppareil']) ."')");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeviceNotification')));
 	}
 
 //Update Devices
@@ -63,6 +67,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDeviceNotification')));
 	}
 
 	// GET Employees liste for form select
@@ -136,7 +141,7 @@
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEFAUT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEDefaut']) ."',
 																		'". addslashes($_POST['AddLABELDefaut']) ."')");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddFailNotification')));
 	}
 
 	//Update Flaw list
@@ -154,6 +159,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateFailNotification')));
 	}
 
 	 // generate table for flaw list
@@ -184,7 +190,7 @@
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CAUSES ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECauses']) ."',
 																		'". addslashes($_POST['AddLABELCauses']) ."')");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddCauseNotification')));
 	}
 
 	//Update Origin List
@@ -202,6 +208,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCauseNotification')));	
 	}
 
 	//generate origine of flaw list
@@ -232,6 +239,7 @@
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CORRECTIONS ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECorrection']) ."',
 																		'". addslashes($_POST['AddLABELCorrection'])  ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddCorrectionNotification')));																
 	}
 
 	//Uodate correction list
@@ -249,6 +257,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCorrectionNotification')));	
 	}
 
 	// Generate list of correction
@@ -283,10 +292,10 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 			<form method="post" name="Section" action="manage-quality.php" class="content-form" >
@@ -294,12 +303,12 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableRessource'); ?></th>
-							<th><?php echo $langue->show_text('TableUser'); ?></th>
-							<th><?php echo $langue->show_text('TableImatNumber'); ?></th>
-							<th><?php echo $langue->show_text('TableEndDate'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableRessource'); ?></th>
+							<th><?=$langue->show_text('TableUser'); ?></th>
+							<th><?=$langue->show_text('TableImatNumber'); ?></th>
+							<th><?=$langue->show_text('TableEndDate'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -308,17 +317,17 @@
 								Echo $contenu1;
 							?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEAppareil"></td>
 							<td><input type="text"  name="AddLABELAppareil"></td>
 							<td>
 								<select name="AddRESSOURCEAppareil">
-									<?php echo $RessourcesListe ?>
+									<?=$RessourcesListe ?>
 								</select>
 							</td>
 							<td>
 								<select name="AddUSERAppareil">
-									<?php echo $EmployeeListe ?>
+									<?=$EmployeeListe ?>
 								</select>
 							</td>
 							<td><input type="text"  name="AddIMMATAppareil"></td>
@@ -327,7 +336,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -341,8 +350,8 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -350,14 +359,14 @@
 								Echo $contenu2;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEDefaut"></td>
 							<td><input type="text"  name="AddLABELDefaut" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -371,8 +380,8 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -380,14 +389,14 @@
 								Echo $contenu3;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODECauses"></td>
 							<td><input type="text"  name="AddLABELCauses" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -401,8 +410,8 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -410,14 +419,14 @@
 								Echo $contenu4;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODECorrection"></td>
 							<td><input type="text"  name="AddLABELCorrection" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -425,5 +434,9 @@
 				</table>
 			</form>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

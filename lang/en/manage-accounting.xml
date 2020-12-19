@@ -57,6 +57,21 @@
    <TableCondiList>Payment condition</TableCondiList>
    <TableMethodList>Payment choice</TableMethodList>
    <TableDayDelay>Delay (in day)</TableDayDelay>
+ <!-- notifications -->
+   <AddCondiNotification>Payment condition added</AddCondiNotification>
+   <AddModeNotification>Payment choice added</AddModeNotification>
+   <AddTVANotification>VAT added</AddTVANotification> 
+   <AddAccountingNotification>Accounting allocations ajoutée</AddAccountingNotification> 
+   <AddTimeLinePayementNotification>Timeline paiement added</AddTimeLinePayementNotification> 
+   <AddLineTimeLinePayementNotification>Line Timeline paiement added</AddLineTimeLinePayementNotification> 
+   <AddDeleveryTypeNotification>Delevery added</AddDeleveryTypeNotification> 
+   <UpdateCondiNotification>Payment(s) condition modified</UpdateCondiNotification>
+   <UpdateModeNotification>Payment(s) choice modified</UpdateModeNotification>
+   <UpdateTVANotification>VAT modified</UpdateTVANotification> 
+   <UpdateAccountingNotification>Accounting allocations modified</UpdateAccountingNotification> 
+   <UpdateTimeLinePayementNotification>Timeline paiement(s) modified</UpdateTimeLinePayementNotification> 
+   <UpdateLineTimeLinePayementNotification>Line(s) Timeline paiement modified</UpdateLineTimeLinePayementNotification> 
+   <UpdateDeleveryNotification>Delevery(s) modified</UpdateDeleveryNotification> 
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>label</TableLabel>

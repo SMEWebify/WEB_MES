@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -16,7 +17,10 @@
 	require_once 'include/include_recup_config_company.php';
 	// load language class
 	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'profil', $UserLanguage);
+	$langue = new Langues('lang', 'quote', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -30,6 +34,7 @@
 
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	COMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));
 	}
 
 	///////////////////////////////
@@ -45,7 +50,7 @@
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS ." SET 	RESP_COM_ID='". addslashes($PostRepsComDevis) ."',
 																RESP_TECH_ID='". addslashes($PostRespTechDevis) ."'
 																		WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
-
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
 	}
 
 	///////////////////////////////
@@ -62,6 +67,7 @@
 																ECHEANCIER_ID='". addslashes($PostEcheancierDevis) ."',
 																TRANSPORT_ID='". addslashes($PostModeLivraisonDevis) ."'
 															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
 	}
 
 	///////////////////////////////
@@ -80,6 +86,7 @@
 																ADRESSE_ID='". addslashes($PostAdresseLivraisonDevis) ."',
 																FACTURATION_ID='". addslashes($PostAdresseFacturationDevis) ."'
 															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateInfoCustomerNotification')));
 	}
 
 	///////////////////////////////
@@ -88,6 +95,7 @@
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 
 		$req = $bdd->exec("DELETE FROM ". TABLE_ERP_DEVIS_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
+		$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteQuoteLineNotification')));
 	}
 
 	///////////////////////////////
@@ -108,11 +116,13 @@
 																DATE_VALIDITE='". addslashes($PostDevisDATE_VALIDITE) ."',
 																ETAT='". addslashes($PostDevisEtat) ."'
 															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
 
 		if(isset($_POST['DevisMajLigne']) AND !empty($_POST['DevisMajLigne'])){
 
 			$req = $bdd->exec("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET 	ETAT='". addslashes($PostDevisEtat) ."'
 															WHERE 	DEVIS_ID='". addslashes($_POST['IdDevis'])."'");
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 		}
 	}
 
@@ -154,6 +164,7 @@
 																				'0',
 																				'0',
 																				'')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddQuoteNotification')));
 		//update increment in num sequence db
 		$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (8)');
 
@@ -227,7 +238,7 @@
 			$DonneesDevis = $req->fetch();
 			$req->closeCursor();
 
-			$titleOnglet1 = "Mettre à jours";
+			$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 			$IDDevisSQL = $DonneesDevis['Id'];
 			$CommentaireDevis = $DonneesDevis['COMENT'];
@@ -338,7 +349,7 @@
 					<thead>
 						<tr>
 							<th colspan="5">
-								Modification / Consultation - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+							'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 							</th>
 						</tr>
 					</thead>
@@ -347,38 +358,38 @@
 							<td>
 								<input type="hidden" name="IdDevis" value="'. $IDDevisSQL .'">
 								<input type="hidden" name="CODEDevis" value="'. $CODEDevis .'">
-								Code et libellé du devis :
+								'. $langue->show_text('TableCodeLabel') .'
 							</td>
 							<td>
 								'. $DevisCODE .'
 							</td>
 							<td>
-								<input type="text" name="DevisLABEL" value="'. $DevisLABEL .'" placeholder="Libellé du devis">
+								<input type="text" name="DevisLABEL" value="'. $DevisLABEL .'" placeholder="'. $langue->show_text('TableLabelquote') .'">
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Indice et libellé de version  :
+								'. $langue->show_text('TableIndexLabel') .'
 							</td>
 							<td>
 								'. $DevisINDICE .'
 							</td>
 							<td>
-								<input type="text" name="DevisLABELIndice" value="'. $DevisLABEL_INDICE .'" placeholder="Libellé de la version">
+								<input type="text" name="DevisLABELIndice" value="'. $DevisLABEL_INDICE .'" placeholder="'. $langue->show_text('TableLabelIndexquote') .'">
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Référence client  :
+								'. $langue->show_text('TableCustomerReference') .'
 							</td>
 							<td>
-								<input type="text" name="DevisReference" value="'. $DevisREFERENCE .'" placeholder="Référence demande client" >
+								<input type="text" name="DevisReference" value="'. $DevisREFERENCE .'" placeholder="'. $langue->show_text('TableCustomerReference') .'" >
 							</td>
 							<td></td>
 						</tr>
 						<tr>
 							<td>
-								Date de création :
+								'. $langue->show_text('TableCreationDate') .'
 							</td>
 							<td>
 								'. $DevisDATE .'
@@ -387,7 +398,7 @@
 						</tr>
 						<tr>
 							<td>
-								Date de validité :
+								'. $langue->show_text('TableValidityDate') .'	
 							</td>
 							<td>
 								<input type="date" name="DevisDATE_VALIDITE" value="'. $DevisDATE_VALIDITE .'" >
@@ -396,24 +407,24 @@
 						</tr>
 						<tr>
 							<td>
-								Etat du devis :
+								'. $langue->show_text('TableQuoteStatu') .'
 							</td>
 							<td>
 								<select name="EtatDevis">
-									<option value="1" '. selected($DevisETAT, 1) .'>En cours</option>
-									<option value="2" '. selected($DevisETAT, 2) .'>Refusé</option>
-									<option value="3" '. selected($DevisETAT, 3) .'>Envoyé</option>
-									<option value="4" '. selected($DevisETAT, 4) .'>Décliné</option>
-									<option value="5" '. selected($DevisETAT, 5) .'>Fermé</option>
-									<option value="6" '. selected($DevisETAT, 6) .'>Obselète</option>
+									<option value="1" '. selected($DevisETAT, 1) .'>'. $langue->show_text('SelectOpen') .'</option>
+									<option value="2" '. selected($DevisETAT, 2) .'>'. $langue->show_text('SelectRefuse') .'</option>
+									<option value="3" '. selected($DevisETAT, 3) .'>'. $langue->show_text('SelectSend') .'</option>
+									<option value="4" '. selected($DevisETAT, 4) .'>'. $langue->show_text('SelectDecline') .'</option>
+									<option value="5" '. selected($DevisETAT, 5) .'>'. $langue->show_text('SelectClosed') .'</option>
+									<option value="6" '. selected($DevisETAT, 6) .'>'. $langue->show_text('SelectObsolete') .'</option>
 								</select>
 							</td>
-							<td><input type="checkbox" id="DevisMajLigne" name="DevisMajLigne" checked="checked"><label >Mettre à jours les lignes du devis</label></td>
+							<td><input type="checkbox" id="DevisMajLigne" name="DevisMajLigne" checked="checked"><label >'. $langue->show_text('UpdateQuoteLine') .'</label></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jours" /> <br/>
+								<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -425,7 +436,7 @@
 				<thead>
 					<tr>
 						<th colspan="2" >
-							Général - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+						'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -433,7 +444,7 @@
 					<tr>
 						<td>
 							<input type="hidden" name="CODEDevis" value="'. $CODEDevis .'">
-							Créateur :
+							'. $langue->show_text('TableUserCreate') .'
 						</td>
 						<td>
 							'. $DonneesDevis['NOM'] .' '. $DonneesDevis['PRENOM'] .'
@@ -441,7 +452,7 @@
 					</tr>
 					<tr>
 						<td>
-							Responsable commercial :
+							'. $langue->show_text('TableSalesManager') .'
 						</td>
 						<td>
 							<select name="RepsComDevis">
@@ -451,7 +462,7 @@
 					</tr>
 					<tr>
 						<td>
-							Responsable technique :
+							'. $langue->show_text('TableTechnicalManager') .'
 						</td>
 						<td>
 							<select name="RespTechDevis">
@@ -461,7 +472,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -472,7 +483,7 @@
 				<thead>
 					<tr>
 						<th colspan="2" >
-							Général - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+						'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -480,7 +491,7 @@
 					<tr>
 						<td>
 							<input type="hidden" name="CODEDevis" value="'. $CODEDevis .'">
-							Contact  :
+							'. $langue->show_text('TableContact') .'
 						</td>
 						<td>
 							<select name="ContactDevis">
@@ -490,7 +501,7 @@
 					</tr>
 					<tr>
 						<td>
-							Adresse de livraison :
+							'. $langue->show_text('TableAdresseDelevery') .'
 						</td>
 						<td>
 							<select name="AdresseLivraisonDevis">
@@ -500,7 +511,7 @@
 					</tr>
 					<tr>
 						<td>
-							Adresse de facturation :
+							'. $langue->show_text('TableAdresseInvoice') .'
 						</td>
 						<td>
 							<select name="AdresseFacturationDevis">
@@ -510,7 +521,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -522,7 +533,7 @@
 				<thead>
 					<tr>
 						<th colspan="2" >
-							Général - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+						'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -530,7 +541,7 @@
 					<tr>
 						<td>
 							<input type="hidden" name="CODEDevis" value="'. $CODEDevis .'">
-							Condition de réglement :
+							'. $langue->show_text('TableCondiList') .'
 						</td>
 						<td>
 							<select name="CondiRegDevis">
@@ -540,7 +551,7 @@
 					</tr>
 					<tr>
 						<td>
-							Mode de réglement :
+							'. $langue->show_text('TableMethodList') .'
 						</td>
 						<td>
 							<select name="ModeRegDevis">
@@ -550,7 +561,7 @@
 					</tr>
 					<tr>
 						<td>
-							Echeancier Type :
+							'. $langue->show_text('TimeLinePayement') .'
 						</td>
 						<td>
 							<select name="EcheancierDevis">
@@ -560,7 +571,7 @@
 					</tr>
 					<tr>
 						<td>
-							Mode de livraison :
+							'. $langue->show_text('TableDeleveryMode') .'
 						</td>
 						<td>
 							<select name="ModeLivraisonDevis">
@@ -570,7 +581,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -581,7 +592,7 @@
 				<thead>
 					<tr>
 						<th>
-							Commentaire - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+						'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -594,7 +605,7 @@
 					</tr>
 					<tr>
 						<td>
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -637,6 +648,7 @@
 																									'1')");
 								$i++;
 							}
+							$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddQuoteLineNotification')));
 						}
 
 						if(isset($_POST['UpdateIdLigneDevis']) AND !empty($_POST['UpdateIdLigneDevis'])){
@@ -670,11 +682,12 @@
 																						WHERE id='". addslashes($id_generation)."'");
 								$i++;
 							}
+							$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineNotification')));
 						}
 
-									///////////////////////////////
-									//// LISTE DES LIGNES  ////
-									///////////////////////////////
+						///////////////////////////////
+						//// LISTE DES LIGNES  ////
+						///////////////////////////////
 
 						$UnitListe ='<option value="0">Aucune</option>';
 						$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_UNIT .'');
@@ -771,12 +784,12 @@
 								<td><input type="date" name="UpdateDELAISLigneDevis[]" value="'. $DonneesListeLigneDuDevis['DELAIS'] .'"></td>
 								<td>
 									<select  name="UpdateETATLigneDevis[]">
-										<option value="1" '. selected($DonneesListeLigneDuDevis['ETAT'], 1) .'>En cours</option>
-										<option value="2" '. selected($DonneesListeLigneDuDevis['ETAT'], 2) .'>Refusé</option>
-										<option value="3" '. selected($DonneesListeLigneDuDevis['ETAT'], 3) .'>Envoyé</option>
-										<option value="4" '. selected($DonneesListeLigneDuDevis['ETAT'], 4) .'>Décliné</option>
-										<option value="5" '. selected($DonneesListeLigneDuDevis['ETAT'], 5) .'>Fermé</option>
-										<option value="6" '. selected($DonneesListeLigneDuDevis['ETAT'], 6) .'>Obselète</option>
+										<option value="1" '. selected($DonneesListeLigneDuDevis['ETAT'], 1) .'>'. $langue->show_text('SelectOpen') .'</option>
+										<option value="2" '. selected($DonneesListeLigneDuDevis['ETAT'], 2) .'>'. $langue->show_text('SelectRefuse') .'</option>
+										<option value="3" '. selected($DonneesListeLigneDuDevis['ETAT'], 3) .'>'. $langue->show_text('SelectSend') .'</option>
+										<option value="4" '. selected($DonneesListeLigneDuDevis['ETAT'], 4) .'>'. $langue->show_text('SelectDecline') .'</option>
+										<option value="5" '. selected($DonneesListeLigneDuDevis['ETAT'], 5) .'>'. $langue->show_text('SelectClosed') .'</option>
+										<option value="6" '. selected($DonneesListeLigneDuDevis['ETAT'], 6) .'>'. $langue->show_text('SelectObsolete') .'</option>
 									</select>
 								</td>
 							</tr>';
@@ -822,7 +835,7 @@
 									<thead>
 										<tr>
 											<th colspan="12" >
-												Général - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+											'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 											</th>
 										</tr>
 									</thead>
@@ -836,14 +849,14 @@
 									<thead>
 										<tr>
 											<th colspan="12" >
-												Créer une nouvelle commande ou lier à une existante :
+												'. $langue->show_text('TableSelectOrder') .'
 											</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td>
-												<input type="radio" id="new" name="AddCmd" value="0"><label for="new">Nouvelle Commande</label>
+												<input type="radio" id="new" name="AddCmd" value="0"><label for="new">'. $langue->show_text('TableNewOrder') .'</label>
 											</td>
 										</tr>
 										'. $CommandeExistante .'
@@ -855,24 +868,24 @@
 									<thead>
 										<tr>
 											<th colspan="12" >
-												Info générale
+											'. $langue->show_text('TableGeneralInfo') .'
 											</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td>
-												Référence client : <input type="text" name="AddReferenceClient" placeholder=N° de commande client">
+											'. $langue->show_text('TableCustomerReference') .' <input type="text" name="AddReferenceClient" placeholder="'. $langue->show_text('TableNumberCustomerOrder') .'">
 											</td>
 										</tr>
 										<tr>
 											<td>
-												Délais de livraison : <input type="date" name="AddDELAISCommande" required="required">
+											'. $langue->show_text('TableDeleveryDate') .' <input type="date" name="AddDELAISCommande" required="required">
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="submit" class="input-moyen" value="Créer commandes" />
+												<input type="submit" class="input-moyen" value="'. $langue->show_text('TableCreateOrder') .'" />
 											</td>
 										</tr>
 									</tbody>
@@ -909,22 +922,22 @@
 				<thead>
 					<tr>
 						<th colspan="12" >
-							Général - devis '. $DevisCODE .' version  '. $DevisINDICE .'
+						'. $langue->show_text('TableNumberQuote') .' '. $DevisCODE .' '. $langue->show_text('TableIndexQuote') .'  '. $DevisINDICE .'
 						</th>
 					</tr>
 					<tr>
 						<th></th>
-						<th>Ordre</th>
-						<th>Aricle</th>
-						<th>Label</th>
-						<th>Qt</th>
-						<th>Unité</th>
-						<th>Prix U.H.T (€)</th>
-						<th>Remise %</th>
-						<th>Total</th>
-						<th>T.V.A.</th>
-						<th>Délais</th>
-						<th>Etat</th>
+						<th>'. $langue->show_text('TableOrder') .'</th>
+						<th>'. $langue->show_text('TableArticle') .'</th>
+						<th>'. $langue->show_text('Tablelabel') .'</th>
+						<th>'. $langue->show_text('TableQty') .'</th>
+						<th>'. $langue->show_text('TableUnit') .'</th>
+						<th>'. $langue->show_text('TableUnitPrice') .'</th>
+						<th>'. $langue->show_text('TableDiscount') .'</th>
+						<th>'. $langue->show_text('TableTotal') .'</th>
+						<th>'. $langue->show_text('TableRate') .'</th>
+						<th>'. $langue->show_text('TableDelay') .'</th>
+						<th>'. $langue->show_text('TableStatu') .'</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -933,10 +946,10 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						<th colspan="2" >Montant H.T.</th>
-						<th >T.V.A.</th>
-						<th colspan="2" >Valeur de la T.V.A</th>
-						<th>Montant T.T.C</th>
+						<th colspan="2" >'. $langue->show_text('TotalPriceWithOutTax') .'</th>
+						<th >'. $langue->show_text('TableRate') .'</th>
+						<th colspan="2" >'. $langue->show_text('TotalTax') .'</th>
+						<th>'. $langue->show_text('TotalPriceWithTax') .'</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -945,10 +958,10 @@
 					<tr>
 						<th></th>
 						<th></th>
-						<th  >Total H.T. :</th>
+						<th>'. $langue->show_text('TotalWithOutTax') .'</th>
 						<th colspan="2">'. $TotalLigneDevisHT .' €</th>
-						<th ></th>
-						<th colspan="2" >Total T.T.C. :</th>
+						<th></th>
+						<th colspan="2" >'. $langue->show_text('TotalWithTax') .'</th>
 						<th>'. $TotalLigneDevisTTC .' €</th>
 						<th></th>
 						<th></th>
@@ -956,7 +969,7 @@
 					<tr>
 					</tr>
 						<th colspan="12" >
-							Ajouts de ligne
+							'. $langue->show_text('Addline') .'
 						</th>
 					</tr>
 					<tr>
@@ -972,7 +985,7 @@
 						<td><input type="number"  name="" id="AddQTLigneDevis" placeholder="1"  value="1"></td>
 						<td>
 							<select name="" id="AddUNITLigneDevis">
-							'. $UnitListe .'
+								'. $UnitListe .'
 							</select>
 						</td>
 						<td><input type="number"  name="" id="AddPrixLigneDevis" step=".001" placeholder="10 €"  value="0"></td>
@@ -988,9 +1001,9 @@
 					</tr>
 					<tr>
 						<td colspan="12" >
-							<input type="button" class="add" value="Ajouter une ligne">
-							<input type="button" class="delete" value="Supprimer une ligne">
-							<input type="submit" class="input-moyen" value="Mettre à jours le devis" />
+							<input type="button" class="add" value="'. $langue->show_text('Addline') .'">
+							<input type="button" class="delete" value="'. $langue->show_text('Deleteline') .'">
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('UpdateQuoteLine') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -1005,31 +1018,11 @@
 
 			$Acceuil =
 			'<div class="column">
-				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un devis">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="'. $langue->show_text('TableFindQuote') .'">
 				<ul id="myUL">
 					'. $ListeQuotePrincipale .'
 				</ul>
 			</div>
-			<script>
-					function myFunction() {
-					// Declare variables
-					var input, filter, ul, li, a, i, txtValue;
-					input = document.getElementById(\'myInput\');
-					filter = input.value.toUpperCase();
-					ul = document.getElementById("myUL");
-					li = ul.getElementsByTagName(\'li\');
-
-					for (i = 0; i < li.length; i++) {
-						a = li[i].getElementsByTagName("a")[0];
-						txtValue = a.textContent || a.innerText;
-						if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						li[i].style.display = "";
-						} else {
-						li[i].style.display = "none";
-						}
-					}
-					}
-			</script>
 			<div class="column">
 				<form method="post" name="quote" action="'. $actionForm .'" class="content-form" enctype="multipart/form-data" >
 					<table class="content-table">
@@ -1038,13 +1031,12 @@
 								<th colspan="5">
 									  <br/>
 								</th>
-
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td>
-									Créer un nouveau devis pour le client :
+								'. $langue->show_text('TableNewQuoteFor') .'
 								<td>
 								<td>
 									<select name="AddDevis">
@@ -1055,7 +1047,7 @@
 							<tr>
 								<td colspan="6" >
 									<br/>
-									<input type="submit" class="input-moyen" value="Nouveau Devis" /> <br/>
+									<input type="submit" class="input-moyen" value="'. $langue->show_text('TableNewButton') .'" /> <br/>
 									<br/>
 								</td>
 							</tr>
@@ -1073,7 +1065,7 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
-		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
+		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'quote.php?id='. $_GET['id'] .'';
 
 	}
@@ -1081,7 +1073,7 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
-		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
+		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'quote.php?id='. $_GET['id'] .'';
 
 	}
@@ -1090,11 +1082,10 @@
 		$ParDefautDiv2 = '';
 		$ParDefautDiv1 = 'id="defaultOpen"';
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
-		$ImputButton = ' Aucun devis chargé';
+		$ImputButton = $langue->show_text('TablenoQuote');
 		$actionForm = 'quote.php';
 	}
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
@@ -1188,7 +1179,7 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input type=\"checkbox\" name=\"select\"></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddORDRELigneDevis[]\" value=\""+ AddORDRELigneDevis +"\" id=\"number\" required=\"required\"></td>";
 		var ligne = ligne + "<td><input list=\"Article\" name=\"AddARTICLELigneDevis[]\" value=\"" + AddARTICLELigneDevis +"\"><datalist id=\"Article\">";
-		var ligne = ligne + <?php echo $ListeArticleJava ?>  ;
+		var ligne = ligne + <?=$ListeArticleJava ?>  ;
 		var ligne = ligne + "</datalist></td>";
 		var ligne = ligne + "<td><input type=\"text\" name=\"AddLABELLigneDevis[]\" value=\""+ AddLABELLigneDevis +"\" ></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddQTLigneDevis[]\" value=\""+ AddQTLigneDevis +"\"  id=\"number\" required=\"required\"></td>";
@@ -1213,77 +1204,78 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-
 <?php
 	//include interface
 	require_once 'include/include_interface.php';
 ?>
-
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?php echo $ParDefautDiv1; ?>>Accueil</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
 <?php
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
 	{
 ?>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?php echo $ParDefautDiv2; ?>>Devis</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?php echo $ParDefautDiv3; ?>>Détail de l'offre</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Général</button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')">Détail client</button>
-		<button class="tablinks" onclick="openDiv(event, 'div6')">Détail commerciales</button>
-		<button class="tablinks" onclick="openDiv(event, 'div7')">Commentaire</button>
-		<a href="document.php?id=<?php echo  $_GET['id'] ?>" target="_blank"><button class="tablinks" >Document</button></a>
-		<button class="tablinks" onclick="openDiv(event, 'div8')">Assistant de passage en commande</button>
-
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div7')"><?=$langue->show_text('Title7'); ?></button>
+		<a href="document.php?id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
 <?php
 	}
 ?>
 		<div class="DataListDroite">
-			<form method="get" name="devis" action="<?php echo $actionForm; ?>">
-				Devis : <input list="devis" name="id" id="id" placeholder="Ex: DV201118-01">
+			<form method="get" name="devis" action="<?=$actionForm; ?>">
+				<?=$langue->show_text('TableFind'); ?> <input list="devis" name="id" id="id" placeholder="Ex: DV201118-01">
 				<datalist id="devis">
-					<?php echo $ListeQuote; ?>
+					<?=$ListeQuote; ?>
 				</datalist>
 				<input type="submit" class="input-moyen" value="Go !" />
 			</form>
 		</div>
 	</div>
 	<div id="div1" class="tabcontent">
-			<?php echo $Acceuil; ?>
+			<?=$Acceuil; ?>
 	</div>
 	<div id="div2" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $DevisAcceuil; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$DevisAcceuil; ?>
 		</form>
 	</div>
 	<div id="div3" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $DevisLignes ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$DevisLignes ?>
 		</form>
 	</div>
 	<div id="div4" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $DevisGeneral; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$DevisGeneral; ?>
 		</form>
 	</div>
 	<div id="div5" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $DevisInfoClient; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$DevisInfoClient; ?>
 		</form>
 	</div>
 	<div id="div6" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $DevisInfoCommercial; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$DevisInfoCommercial; ?>
 		</form>
 	</div>
 	<div id="div7" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $DevisCommentaire; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$DevisCommentaire; ?>
 		</form>
 	</div>
 	<div id="div8" class="tabcontent">
 		<form method="post" name="Coment" action="commandes.php" class="content-form" >
-			<?php echo $DevisAssitCommande; ?>
+			<?=$DevisAssitCommande; ?>
 		</form>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

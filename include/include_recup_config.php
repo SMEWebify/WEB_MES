@@ -3,6 +3,8 @@
 define('SQL_HOST', 'localhost');
 define('DB_NAME', 'erp');
 define('DB_USER', 'root');
+define('DB_PASSWORD', '');
+
 
 //DATA BASE TABLE
 define('TABLE_ERP_ACTIVITY_SECTOR', 'activity_sector');
@@ -81,4 +83,78 @@ if(MAINTENANCE == 1)
 		</html>';
 	exit;	
 }
+
+/*
+  error_reporting(0);  
+  set_time_limit(10);
+  
+ header("Cache-Control: no-cache, must-revalidate");
+
+  //define your constant here
+  define('OS', strtoupper(substr(PHP_OS,0,3)) == 'WIN' ? 'WIN' : 'LINUX');
+  define('PATH','/url/to/path/');
+
+  define('IMGS_PATH','imgs/');
+  define('TEMPLATE_PATH','template/');
+  define('LIB_PATH','libs/');
+
+class init {  
+  var $envVariables =   array();
+  
+  function _construct() {
+    headers_sent() ? die('FATAL ERROR') : '';
+    $this->envVariables['get'] = init::parseVar($_GET);
+    $this->envVariables['post'] = init::parseVar($_POST);
+    $this->envVariables['cookie'] = init::parseVar($_COOKIE);
+    
+    unset($GLOBALS['HTTP_GET_VARS'],$GLOBALS['_GET']);
+    unset($GLOBALS['HTTP_POST_VARS'],$GLOBALS['_POST']);
+    unset($GLOBALS['HTTP_COOKIE_VARS'],$GLOBALS['_COOKIE']);
+    unset($GLOBALS['HTTP_SERVER_VARS'],$GLOBALS['_SERVER']);
+    unset($GLOBALS['HTTP_ENV_VARS'],$GLOBALS['_ENV']);
+    unset($GLOBALS['HTTP_POST_FILES'],$GLOBALS['_FILES']);
+    unset($GLOBALS['_REQUEST']);
+    register_shutdown_function( array( &$this, "_init" ) );
+  }
+  
+  function _init() {
+    unset($this->envVariables);
+    $this->envVariables = array();
+  }
+  
+  public static function parseVar($varName) {
+    foreach ($varName as $key => $val) {
+      $val = !addslashes($val);
+      $varName[$key] = $val;
+    }    
+    return $varName;
+  }
+  
+  function getEnvVariable($envName = '', $varName = '', $default = NULL) {
+    if(isset($this->envVariables[$envName])) {
+      if(isset($this->envVariables[$envName][$varName])) {
+        return $this->envVariables[$envName][$varName];
+      }
+      elseif(empty($varName)) {
+        return $this->envVariables[$envName];
+      }
+    }
+  }
+  
+  function isCallable($filename = '') {
+    return file_exists($filename) && is_readable($filename);
+  }
+  
+}  
+
+//Example of CODE
+
+  $_obj_INIT = new init();
+
+  echo $_obj_INIT->getEnvVariable('get','pge');
+  
+  if($_obj_INIT->isCallable(PATH.'file.php')) {
+    require_once(PATH.'file.php');
+  }
+  */
 ?>

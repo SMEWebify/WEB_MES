@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -16,7 +17,10 @@
 	require_once 'include/include_recup_config_company.php';
 	// load language class
 	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'profil', $UserLanguage);
+	$langue = new Langues('lang', 'manage-companies', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -27,7 +31,7 @@
 	////  CLIENT / FOURNISSEUR   ////
 	//////////////////////////////////
 
-	$titleOnglet1 = "Ajouter une société";
+	$titleOnglet1 = $langue->show_text('Titre1');
 
 	//if post CODE or isset get Id for display company
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
@@ -45,7 +49,7 @@
 			if($nb=1){
 
 				//change title tag
-				$titleOnglet1 = "Mettre à jours";
+				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 				//up picture of company and add sql or not
 				$dossier = 'images/ClientLogo/';
@@ -86,13 +90,15 @@
 																				COMPTE_AUX_FOUR='". addslashes($_POST['CompteAuxFourSte']) ."',
 																				CONTROLE_FOUR='". addslashes($_POST['ControlFour']) ."'
 																			WHERE Id='". addslashes($_POST['IDSte'])."'");
+
+				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 				//select new values for display
 				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
 			}
 			else{
 				//if not existe, we create new company or provider
 
-				$titleOnglet1 = "Mettre à jours";
+				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
@@ -128,8 +134,7 @@
 																				'". addslashes($_POST['ControlFour']) ."',
 																				NOW(),
 																				'')");
-
-				$req->closeCursor();
+				$CallOutBox->add_notification(array('2', $langue->show_text('AddCompanyNotification')));
 
 				//we can now selectt new value from new add
 				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY id DESC LIMIT 0, 1");
@@ -139,7 +144,7 @@
 
 			//if is get we select form db value
 			$Name = preg_replace('#-+#', ' ', addslashes($_GET['id']));
-			$titleOnglet1 = "Mettre à jours";
+			$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 			$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE NAME = '". $Name ."'");
 		}
@@ -244,6 +249,8 @@
 																		'". addslashes($_POST['AddEmailSite']) ."',
 																		'". addslashes($_POST['AddLIVSite']) ."',
 																		'". addslashes($_POST['AddFacSite'])  ."')");
+
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddSiteNotification')));
 	}
 
 	// update data site
@@ -277,6 +284,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSiteNotification')));
 		$req->closeCursor();
 	}
 
@@ -302,7 +310,7 @@
 		 $contenu2 = $contenu2 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="'. $donnees_Site['Id'] .'"></td>
-					<td><input type="number" name="UpdateORDRESite[]" value="'. $donnees_Site['ORDRE'] .'" size="10" id="number"></td>
+					<td><input type="number" name="UpdateORDRESite[]" value="'. $donnees_Site['ORDRE'] .'" id="number"></td>
 					<td><input type="text" name="UpdateLABELSite[]" value="'. $donnees_Site['LABEL'] .'" ></td>
 					<td><input type="text" name="UpdateADRESSESite[]" value="'. $donnees_Site['ADRESSE'] .'" ></td>
 					<td><input type="text" name="UpdateZIPCODESite[]" value="'. $donnees_Site['ZIPCODE'] .'" ></td>
@@ -312,14 +320,14 @@
 					<td><input type="text" name="UpdateMAILSite[]" value="'. $donnees_Site['MAIL'] .'" ></td>
 					<td>
 						<select name="UpdateLIVSite[]">
-							<option value="0" '. selected($donnees_Site['ADRESS_LIV'], 0) .'>Non</option>
-							<option value="1" '. selected($donnees_Site['ADRESS_LIV'], 1) .'>Oui</option>
+							<option value="0" '. selected($donnees_Site['ADRESS_LIV'], 0) .'>'. $langue->show_text('No') .'</option>
+							<option value="1" '. selected($donnees_Site['ADRESS_LIV'], 1) .'>'. $langue->show_text('Yes') .'</option>
 						</select>
 					</td>
 					<td>
 						<select name="UpdateFacSite[]">
-							<option value="0" '. selected($donnees_Site['ADRESS_FAC'], 0) .'>Non</option>
-							<option value="1" '. selected($donnees_Site['ADRESS_FAC'], 1) .'>Oui</option>
+							<option value="0" '. selected($donnees_Site['ADRESS_FAC'], 0) .'>'. $langue->show_text('No') .'</option>
+							<option value="1" '. selected($donnees_Site['ADRESS_FAC'], 1) .'>'. $langue->show_text('Yes') .'</option>
 						</select>
 					</td>
 				</tr>';
@@ -347,6 +355,8 @@
 																		'". addslashes($_POST['AddNumberContact']) ."',
 																		'". addslashes($_POST['AddMobileContact']) ."',
 																		'". addslashes($_POST['AddMailContact']) ."')");
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddContactNotification')));
+																		
 	}
 
 //update all contact
@@ -378,6 +388,7 @@
 															WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateContactNotification')));
 	}
 
 // display all contact of comppany in form line
@@ -445,44 +456,42 @@
 	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODESte" value="'. $SteCODE .'">' .$SteCODE;}
 	else{ $DisplayCode ='<input type="text" name="CODESte" required="required">'; }
 
-//variable of page if load an company
+	//variable of page if load an company
 	if(!isset($_GET['id']) or empty($_GET['id'])){
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
 		$ImputButton = ' Aucun client chargé';
-		$actionForm = 'clientfourni.php';
+		$actionForm = 'manage-companies.php';
 
 	}
 	else{
-			$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
-			$actionForm = 'clientfourni.php?id='. $SteNAME .'';
+		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
+		$actionForm = 'manage-companies.php?id='. $SteNAME .'';
 	}
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $titleOnglet1; ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$titleOnglet1; ?></button>
 <?php
 	// not display this menu if we dont have customer load
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
-		<button class="tablinks" onclick="openDiv(event, 'div2')">Sites</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')">Contacts</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Secteur d'activité et commentaire</button>
-
-
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Titre2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Titre3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Titre4'); ?></button>
 <?php
 	}
 ?>
 		<div class="DataListDroite">
-			<form method="get" name="client" action="<?php echo $actionForm; ?>">
-				Client : <input list="client" name="id" id="id" required>
+			<form method="get" name="client" action="<?=$actionForm; ?>">
+				<?=$langue->show_text('TableFind'); ?> <input list="client" name="id" id="id" required>
 				<datalist id="client">
-					<?php echo $ListeSte; ?>
+					<?=$ListeSte; ?>
 				</datalist>
 				<input type="submit" class="input-moyen" value="Go !" />
 			</form>
 		</div>
 	</div>
 	<div id="div1" class="tabcontent">
-			<form method="post" name="Section" action="<?php echo $actionForm; ?>" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -493,8 +502,8 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>CODE société</td>
-							<td>Nom de la Société</td>
+							<td><?=$langue->show_text('TableCODE'); ?></td>
+							<td><?=$langue->show_text('TableNameCompany'); ?></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -503,11 +512,11 @@
 						</tr>
 						<tr>
 							<td >
-								<input type="hidden" name="IDSte" value="<?php echo $SteId; ?>" size="10">
-								<?php echo $DisplayCode;?>
+								<input type="hidden" name="IDSte" value="<?=$SteId; ?>" size="10">
+								<?=$DisplayCode;?>
 							</td>
 							<td>
-								<input type="text" name="NameSte" value="<?php echo $SteNAME;?>" size="10">
+								<input type="text" name="NameSte" value="<?=$SteNAME;?>" size="10">
 							</td>
 							<td></td>
 							<td></td>
@@ -516,54 +525,54 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td>Site Web</td>
-							<td>FaceBook</td>
-							<td>Twitter</td>
-							<td>Linked</td>
+							<td><?=$langue->show_text('TableWebSite'); ?></td>
+							<td><?=$langue->show_text('TableFacebook'); ?></td>
+							<td><?=$langue->show_text('TableTwitter'); ?></td>
+							<td><?=$langue->show_text('TableLinked'); ?></td>
 							<td></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" name="WebSiteSte" value="<?php echo  $SteWEBSITE;?>" size="20">
+								<input type="text" name="WebSiteSte" value="<?= $SteWEBSITE;?>" size="20">
 							</td>
 							<td>
-								<input type="text" name="FbSiteSte" value="<?php echo  $SteFBSITE;?>" size="20">
+								<input type="text" name="FbSiteSte" value="<?= $SteFBSITE;?>" size="20">
 							</td>
 							<td >
-								<input type="text" name="TwitterSte" value="<?php echo  $SteTWITTERSITE;?>" size="20">
+								<input type="text" name="TwitterSte" value="<?= $SteTWITTERSITE;?>" size="20">
 							</td>
 							<td >
-								<input type="text" name="LkdSte" value="<?php echo  $SteLKDSITE;?>" size="20">
+								<input type="text" name="LkdSte" value="<?= $SteLKDSITE;?>" size="20">
 							</td>
 							<td></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td>SIREN</td>
-							<td>Code APE</td>
-							<td>TVA INTRA</td>
-							<td>Taux TVA</td>
+							<td><?=$langue->show_text('TableSIREN'); ?></td>
+							<td><?=$langue->show_text('TableAPE'); ?></td>
+							<td><?=$langue->show_text('TableTVAINTRA'); ?></td>
+							<td><?=$langue->show_text('TableTVAType'); ?></td>
 							<td></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td >
-								<input type="text" name="SIRENSte" value="<?php echo  $SteSIREN;?>" size="10">
+								<input type="text" name="SIRENSte" value="<?= $SteSIREN;?>" size="10">
 							</td>
 							<td >
-								<input type="text" name="APESte" value="<?php echo  $SteAPE;?>" size="10">
+								<input type="text" name="APESte" value="<?= $SteAPE;?>" size="10">
 							</td>
 							<td >
-								<input type="text" name="TVAINTRASte" value="<?php echo  $SteTVA_INTRA;?>" size="10">
+								<input type="text" name="TVAINTRASte" value="<?= $SteTVA_INTRA;?>" size="10">
 							</td>
 							<td >
 
 								<select name="TAUXTVASte">
-									<?php echo $TVAListe ?>
+									<?=$TVAListe ?>
 								</select>
 							</td>
 							<td></td>
@@ -578,27 +587,27 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td colspan="5"><img src="<?php echo $SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
+							<td colspan="5"><img src="<?=$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
 							<td></td>
 						</tr>
 					</tbody>
 					<thead>
 						<tr>
 							<th colspan="7">
-								 Général  Client
+								<?=$langue->show_text('TableGeneralCustomer'); ?>
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td >
-								Statu client :
+							<td>
+								<?=$langue->show_text('TableCustomerStatus'); ?>
 							</td>
 							<td >
 								<select name="StatuSte">
-									<option value="0"  <?php  echo selected($SteSTATU_CLIENT, 0) ?>>Inactif</option>
-									<option value="1"  <?php  echo selected($SteSTATU_CLIENT, 1) ?>>Prospect</option>
-									<option value="2"  <?php  echo selected($SteSTATU_CLIENT, 2) ?>>Client</option>
+									<option value="0"  <?php  echo selected($SteSTATU_CLIENT, 0) ?>><?=$langue->show_text('SelectInactive'); ?></option>
+									<option value="1"  <?php  echo selected($SteSTATU_CLIENT, 1) ?>><?=$langue->show_text('SelectProspect'); ?></option>
+									<option value="2"  <?php  echo selected($SteSTATU_CLIENT, 2) ?>><?=$langue->show_text('SelectCustomer'); ?></option>
 								</select>
 							</td>
 							<td></td>
@@ -608,40 +617,40 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td>Cond. Réglement</td>
-							<td>Mode de Réglement</td>
-							<td>Remise %</td>
-							<td colspan="2">Responsable commercial</td>
-							<td colspan="2">Responsable technique</td>
+							<td><?=$langue->show_text('TableCondiList'); ?></td>
+							<td><?=$langue->show_text('TableMethodList'); ?></td>
+							<td><?=$langue->show_text('TableDiscount'); ?></td>
+							<td colspan="2"><?=$langue->show_text('TableSalesManager'); ?></td>
+							<td colspan="2"><?=$langue->show_text('TableSalesTableTechnicalManagerManager'); ?></td>
 						</tr>
 						<tr>
 							<td >
 								<select name="CondiSte">
-									<?php echo $CondiListe1 ?>
+									<?=$CondiListe1 ?>
 								</select>
 							</td>
 							<td >
 								<select name="RegSte">
-									<?php echo $RegListe1 ?>
+									<?=$RegListe1 ?>
 								</select>
 							</td>
 							<td >
-								<input type="number" name="RemiseSte" value="<?php echo  $SteREMISE;?>" size="10">
+								<input type="number" name="RemiseSte" value="<?= $SteREMISE;?>" size="10">
 							</td>
 							<td colspan="2">
 								<select name="RepsComSte">
-									<?php echo $EmployeeListe1 ?>
+									<?=$EmployeeListe1 ?>
 								</select>
 							</td>
 							<td colspan="2">
 								<select name="RespTechSte">
-									<?php echo $EmployeeListe2 ?>
+									<?=$EmployeeListe2 ?>
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td>Compte général</td>
-							<td>Compte auxiliaire</td>
+							<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
+							<td><?=$langue->show_text('TableSideAccount'); ?></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -650,10 +659,10 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="number" name="CompteGeSte" value="<?php echo  $SteCOMPTE_GEN_CLIENT;?>">
+								<input type="number" name="CompteGeSte" value="<?= $SteCOMPTE_GEN_CLIENT;?>">
 							</td>
 							<td >
-								<input type="number" name="CompteAuxSte" value="<?php echo  $SteCOMPTE_AUX_CLIENT;?>" >
+								<input type="number" name="CompteAuxSte" value="<?= $SteCOMPTE_AUX_CLIENT;?>" >
 							</td>
 							<td></td>
 							<td></td>
@@ -664,20 +673,16 @@
 					</tbody>
 					<thead>
 						<tr>
-							<th colspan="7">
-								 Général  Fournisseur
-							</th>
+							<th colspan="7"><?=$langue->show_text('TableGeneralSupplier'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td >
-								Statu Fournisseur :
-							</td>
+							<td ><?=$langue->show_text('TableSupplierStatus'); ?></td>
 							<td >
 								<select name="StatuFour">
-									<option value="0" <?php  echo selected($SteSTATU_FOUR, 0) ?> >Inactif</option>
-									<option value="1" <?php  echo selected($SteSTATU_FOUR, 1) ?> >Fournisseur</option>
+									<option value="0" <?php  echo selected($SteSTATU_FOUR, 0) ?> ><?=$langue->show_text('SelectInactive'); ?></option>
+									<option value="1" <?php  echo selected($SteSTATU_FOUR, 1) ?> ><?=$langue->show_text('SelectSupllier'); ?></option>
 								</select>
 							</td>
 							<td></td>
@@ -687,35 +692,35 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td>Cond. Réglement</td>
-							<td>Mode de Réglement</td>
-							<td>Comppte général</td>
-							<td>Compte auxiliaire</td>
-							<td colspan="2">Contrôle reception :</td>
+							<td><?=$langue->show_text('TableCondiList'); ?></td>
+							<td><?=$langue->show_text('TableMethodList'); ?></td>
+							<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
+							<td><?=$langue->show_text('TableSideAccount'); ?></td>
+							<td colspan="2"><?=$langue->show_text('TableReceptionControl'); ?></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td >
 								<select name="CondiFourSte">
-									<?php echo $CondiListe2 ?>
+									<?=$CondiListe2 ?>
 								</select>
 							</td>
 							<td >
 								<select name="RegFourSte">
-									<?php echo $RegListe2 ?>
+									<?=$RegListe2 ?>
 								</select>
 							</td>
 							<td >
-								<input type="number" name="CompteGeFourSte" value="<?php echo  $SteCOMPTE_GEN_FOUR;?>" size="10">
+								<input type="number" name="CompteGeFourSte" value="<?= $SteCOMPTE_GEN_FOUR;?>" >
 							</td>
 							<td >
-								<input type="number" name="CompteAuxFourSte" value="<?php echo  $SteCOMPTE_AUX_FOUR;?>" size="10">
+								<input type="number" name="CompteAuxFourSte" value="<?= $SteCOMPTE_AUX_FOUR;?>" >
 							</td>
 							<td colspan="2">
 								<select name="ControlFour">
-									<option value="0" <?php  echo selected($SteCONTROLE_FOUR, 0) ?> >Pas de contrôle</option>
-									<option value="1" <?php  echo selected($SteCONTROLE_FOUR, 1) ?> >Contrôle sans bloquer reception</option>
-									<option value="2" <?php  echo selected($SteCONTROLE_FOUR, 2) ?> >Contrôle avec blocage reception</option>
+									<option value="0" <?php  echo selected($SteCONTROLE_FOUR, 0) ?> ><?=$langue->show_text('SelectNoControl'); ?></option>
+									<option value="1" <?php  echo selected($SteCONTROLE_FOUR, 1) ?> ><?=$langue->show_text('SelectControlWithoutBlok'); ?></option>
+									<option value="2" <?php  echo selected($SteCONTROLE_FOUR, 2) ?> ><?=$langue->show_text('SelectControlWithBlok'); ?></option>
 								</select>
 							</td>
 							<td></td>
@@ -725,7 +730,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -734,55 +739,56 @@
 			</form>
 		</div>
 <?php
+	// not display this content if we dont have customer load
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<div id="div2" class="tabcontent">
-			<form method="post" name="Section" action="<?php echo $actionForm; ?>" class="content-form" >
+			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>ODRE</th>
-							<th>Desciption</th>
-							<th>Adresse</th>
-							<th>Code postal</th>
-							<th>Ville</th>
-							<th>Pays</th>
-							<th>Téléphone</th>
-							<th>E-Mail</th>
-							<th>Adresse de livraison</th>
-							<th>Adresse de facturation</th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableAdresse'); ?></th>
+							<th><?=$langue->show_text('TableZipCode'); ?></th>
+							<th><?=$langue->show_text('TableCity'); ?></th>
+							<th><?=$langue->show_text('TableCountry'); ?></th>
+							<th><?=$langue->show_text('TablePhoneNumber'); ?></th>
+							<th><?=$langue->show_text('TableMailUser'); ?></th>
+							<th><?=$langue->show_text('TableAdresseDelevery'); ?></th>
+							<th><?=$langue->show_text('TableAdresseDelevery'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 <?php 	Echo $contenu2; 	?>
 						<tr>
-							<td>Ajout<input type="hidden"  name="AddIdSite" value="<?php echo $SteId; ?>"></td>
-							<td><input type="number"  name="AddORDRESite" size="2" <?php echo $VerrouInput; ?> id="number"></td>
-							<td><input type="text"  name="AddLABELSite" size="2" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddAdressSite" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddZIPSite" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddCITYSite" size="7"<?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddCOUNTRYSite" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddNumberSite" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddEmailSite" size="7" <?php echo $VerrouInput; ?>></td>
+							<td><?=$langue->show_text('Addtext'); ?><input type="hidden"  name="AddIdSite" value="<?=$SteId; ?>"></td>
+							<td><input type="number"  name="AddORDRESite" size="2" <?=$VerrouInput; ?> id="number"></td>
+							<td><input type="text"  name="AddLABELSite" size="2" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddAdressSite" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddZIPSite" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddCITYSite" size="7"<?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddCOUNTRYSite" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddNumberSite" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddEmailSite" size="7" <?=$VerrouInput; ?>></td>
 							<td>
 								<select name="AddLIVSite">
-									<option value="0">Non</option>
-									<option value="1">Oui</option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="AddFacSite">
-									<option value="0">Non</option>
-									<option value="1">Oui</option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="11" >
 								<br/>
-<?php echo $ImputButton; ?><br/>
+<?=$ImputButton; ?><br/>
 								<br/>
 							</td>
 						</tr>
@@ -791,50 +797,50 @@
 			</form>
 		</div>
 		<div id="div3" class="tabcontent">
-			<form method="post" name="Section" action="<?php echo $actionForm; ?>" class="content-form" >
+			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
-							<th>ODRE</th>
-							<th>Civilité</th>
-							<th>Prénom</th>
-							<th>Nom</th>
-							<th>Fonction</th>
-							<th>Adresse</th>
-							<th>Téléphone</th>
-							<th>Mobile</th>
-							<th>E-Mail</th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableCivility'); ?></th>
+							<th><?=$langue->show_text('TableSurNameUser'); ?></th>
+							<th><?=$langue->show_text('TableNameUser'); ?></th>
+							<th><?=$langue->show_text('TableFonction'); ?></th>
+							<th><?=$langue->show_text('TableAdresse'); ?></th>
+							<th><?=$langue->show_text('TablePhoneNumber'); ?></th>
+							<th><?=$langue->show_text('TableMobilNumber'); ?><</th>
+							<th><?=$langue->show_text('TableMailUser'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 <?php	Echo $contenu3; ?>
 						<tr>
-							<td>Ajout<input type="hidden"  name="AddIdContact" value="<?php echo $SteId;; ?>"></td>
-							<td><input type="number"  name="AddORDREContact" size="2" <?php echo $VerrouInput; ?> id="number"></td>
+							<td><?=$langue->show_text('Addtext'); ?><input type="hidden"  name="AddIdContact" value="<?=$SteId;; ?>"></td>
+							<td><input type="number"  name="AddORDREContact" size="2" <?=$VerrouInput; ?> id="number"></td>
 							<td>
 								<select name="AddCiviContact">
-									<option value="0">Mr.</option>
-									<option value="1">Mme</option>
-									<option value="2">Mlle</option>
+									<option value="0"><?=$langue->show_text('SelectMr'); ?></option>
+									<option value="1"><?=$langue->show_text('SelectMme'); ?></option>
+									<option value="2"><?=$langue->show_text('SelectMlle'); ?></option>
 								</select>
 							</td>
-							<td><input type="text"  name="AddPrenomContact" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddNomContact" size="7"<?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddFonctionContact" size="7" <?php echo $VerrouInput; ?>></td>
+							<td><input type="text"  name="AddPrenomContact" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddNomContact" size="7"<?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddFonctionContact" size="7" <?=$VerrouInput; ?>></td>
 							<td>
 								<select name="AddAdresseContact">
-<?php echo $AdresseListe; ?>
+<?=$AdresseListe; ?>
 								</select>
 							</td>
-							<td><input type="text"  name="AddNumberContact" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddMobileContact" size="7" <?php echo $VerrouInput; ?>></td>
-							<td><input type="text"  name="AddMailContact" size="7" <?php echo $VerrouInput; ?>></td>
+							<td><input type="text"  name="AddNumberContact" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddMobileContact" size="7" <?=$VerrouInput; ?>></td>
+							<td><input type="text"  name="AddMailContact" size="7" <?=$VerrouInput; ?>></td>
 						</tr>
 						<tr>
 							<td colspan="10" >
 								<br/>
-<?php echo $ImputButton; ?><br/>
+<?=$ImputButton; ?><br/>
 								<br/>
 							</td>
 						</tr>
@@ -846,6 +852,9 @@
 		</div>
 <?php
 	}
+
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
 ?>
 </body>
 </html>

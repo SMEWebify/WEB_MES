@@ -84,7 +84,22 @@
    <TableSurDimX>Sur dimension X</TableSurDimX>
    <TableSurDimY>Sur dimension Y</TableSurDimY>
    <TableSurDimZ>Sur dimension Z</TableSurDimZ>
-
+<!-- notifications -->
+   <UpdateCommentNotification>Commentaire modifié</UpdateCommentNotification>
+   <AddArticleNotification>Article ajouté</AddArticleNotification>
+   <UpdateArticleNotification>Article modifié</UpdateArticleNotification>
+   <AddFamillyNotification>Famille ajoutée</AddFamillyNotification>
+   <UpdateFamillyNotification> famille(s) modifiée(s)</UpdateFamillyNotification>
+   <AddUnitNotification>Unité ajoutée</AddUnitNotification>
+   <UpdateUnitNotification> unité(s) modifiée(s)</UpdateUnitNotification>
+   <AddAllocationNotification>Imputation ajoutée</AddAllocationNotification>
+   <UpdateAllocationNotification> imputation modifiée(s)</UpdateAllocationNotification>
+   <AddSubFamillyNotification>Sous-ensemble ajouté</AddSubFamillyNotification>
+   <UpdateSubFamillyNotification> sous-ensemble(s) modifié(s)</UpdateSubFamillyNotification>
+   <AddNomenclatureNotification>Nomenclature ajoutée</AddNomenclatureNotification>
+   <UpdateNomenclatureNotification> nomenclature(s) modifiée(s)</UpdateNomenclatureNotification>
+   <AddTechnicalCutNotification>Découpage technique ajouté</AddTechnicalCutNotification>
+   <UpdateTechnicalCutNotification> découpage technique modifié(s)</UpdateTechnicalCutNotification>
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>

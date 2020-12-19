@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -17,6 +18,9 @@
 	// load language class
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'quality', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_6'] != '1'){
@@ -37,10 +41,10 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')"><?php echo $langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 	</div>
@@ -50,5 +54,9 @@
 	</div>
 	<div id="div4" class="tabcontent" >
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

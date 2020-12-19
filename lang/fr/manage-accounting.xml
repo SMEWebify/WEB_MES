@@ -57,6 +57,21 @@
    <TableCondiList>Condition de réglement</TableCondiList>
    <TableMethodList>Mode de réglement</TableMethodList>
    <TableDayDelay>Délai (en jours)</TableDayDelay>
+ <!-- notifications -->
+   <AddCondiNotification>Condition de réglement ajoutée</AddCondiNotification>
+   <AddModeNotification>Mode de réglement ajouté</AddModeNotification>
+   <AddTVANotification>TVA ajoutée</AddTVANotification> 
+   <AddAccountingNotification>Imputation comptable ajoutée</AddAccountingNotification> 
+   <AddTimeLinePayementNotification>Echéancier ajouté</AddTimeLinePayementNotification> 
+   <AddLineTimeLinePayementNotification>Ligne Echéancier ajoutée</AddLineTimeLinePayementNotification> 
+   <AddDeleveryTypeNotification>Transport ajouté</AddDeleveryTypeNotification> 
+   <UpdateCondiNotification> Condition(s) de réglement modifiée(s)</UpdateCondiNotification>
+   <UpdateModeNotification> Mode(s) de réglement ajouté(s)</UpdateModeNotification>
+   <UpdateTVANotification> TVA modifiée(s)</UpdateTVANotification> 
+   <UpdateAccountingNotification> Imputation(s) comptable modifiée(s)</UpdateAccountingNotification> 
+   <UpdateTimeLinePayementNotification> Echéancier(s) modifiée(s)</UpdateTimeLinePayementNotification> 
+   <UpdateLineTimeLinePayementNotification> Ligne(s) Echéancier modifiée(s)</UpdateLineTimeLinePayementNotification> 
+   <UpdateDeleveryNotification> Transport(s) modifiée(s)</UpdateDeleveryNotification> 
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>

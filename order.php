@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -16,14 +17,15 @@
 	require_once 'include/include_recup_config_company.php';
 	// load language class
 	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'profil', $UserLanguage);
-
+	$langue = new Langues('lang', 'order', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
+	
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
-
-	$contenu = '';
 
 	///////////////////////////////
 	//// COMMMENT ORDER UPDATE ////
@@ -32,6 +34,7 @@
 
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	COMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));
 	}
 
 	///////////////////////////////
@@ -47,7 +50,7 @@
 		$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	RESP_COM_ID='". addslashes($PostRepsComcommande) ."',
 																RESP_TECH_ID='". addslashes($PostRespTechcommande) ."'
 																		WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
-
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
 	}
 
 	///////////////////////////////
@@ -64,6 +67,7 @@
 																ECHEANCIER_ID='". addslashes($PostEcheanciercommande) ."',
 																TRANSPORT_ID='". addslashes($PostModeLivraisoncommande) ."'
 															WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
 	}
 
 	///////////////////////////////
@@ -82,6 +86,7 @@
 																ADRESSE_ID='". addslashes($PostAdresseLivraisoncommande) ."',
 																FACTURATION_ID='". addslashes($PostAdresseFacturationcommande) ."'
 															WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateInfoCustomerNotification')));
 	}
 
 	///////////////////////////////
@@ -90,6 +95,7 @@
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 
 		$req = $bdd->exec("DELETE FROM ". TABLE_ERP_COMMANDE_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
+		$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderLineNotification')));
 	}
 
 	///////////////////////////////
@@ -108,11 +114,13 @@
 																REFERENCE='". addslashes($PostcommandeReference) ."'
 																ETAT='". addslashes($PostcommandeEtat) ."'
 															WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
 
 		if(isset($_POST['commandeMajLigne']) AND !empty($_POST['commandeMajLigne'])){
 
 			$req = $bdd->exec("UPDATE  ". TABLE_ERP_COMMANDE_LIGNE ." SET 	ETAT='". addslashes($PostcommandeEtat) ."'
 															WHERE 	commande_ID='". addslashes($_POST['Idcommande'])."'");
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 		}
 	}
 
@@ -153,7 +161,7 @@
 																				'0',
 																				'0',
 																				'')");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderNotification')));
 		//update increment number
 		$bdd->exec('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (4)');
 
@@ -176,8 +184,6 @@
 		$ListeCommande .= '<option  value="'. $donnees_commande['CODE'] .'" >';
 		$ListeCommandePrincipale  .= '<li><a href="order.php?id='. $donnees_commande['CODE'] .'">'. $donnees_commande['CODE'] .' - '. $donnees_commande['NAME'] .' </a></li>';
 	}
-
-
 
 	if(isset($_GET['id']) And !empty($_GET['id']) Or isset($_POST['Addcommande']) And !empty($_POST['Addcommande'])){
 
@@ -323,7 +329,7 @@
 					<thead>
 						<tr>
 							<th colspan="5">
-								Modification / Consultation - commandes '. $commandeCODE .' version  '. $commandeINDICE .'
+							'. $langue->show_text('TableNumberOrder') .'  '. $commandeCODE .' '. $langue->show_text('TableIndexOrder') .'  '. $commandeINDICE .'
 							</th>
 						</tr>
 					</thead>
@@ -332,38 +338,38 @@
 							<td>
 								<input type="hidden" name="Idcommande" value="'. $IDcommandeSQL .'">
 								<input type="hidden" name="CODEcommande" value="'. $CODEcommande .'">
-								Code et libellé de la commande:
+								'. $langue->show_text('TableCodeLabel') .'
 							</td>
 							<td>
 								'. $commandeCODE .'
 							</td>
 							<td>
-								<input type="text" name="commandeLABEL" value="'. $commandeLABEL .'" placeholder="Libellé de la commande">
+								<input type="text" name="commandeLABEL" value="'. $commandeLABEL .'" placeholder="'. $langue->show_text('TableLabelOrder') .'">
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Indice et libellé de version  :
+							'. $langue->show_text('TableIndexLabel') .'
 							</td>
 							<td>
 								'. $commandeINDICE .'
 							</td>
 							<td>
-								<input type="text" name="commandeLABELIndice" value="'. $commandeLABEL_INDICE .'" placeholder="Libellé de la version">
+								<input type="text" name="commandeLABELIndice" value="'. $commandeLABEL_INDICE .'" placeholder="'. $langue->show_text('TableLabelIndexOrder') .'">
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Référence client  :
+							'. $langue->show_text('TableCustomerReference') .'
 							</td>
 							<td>
-								<input type="text" name="commandeReference" value="'. $commandeREFERENCE .'" placeholder="Référence demande client" >
+								<input type="text" name="commandeReference" value="'. $commandeREFERENCE .'" placeholder="'. $langue->show_text('TableCustomerReference') .'" >
 							</td>
 							<td></td>
 						</tr>
 						<tr>
 							<td>
-								Date de création :
+							'. $langue->show_text('TableCreationDate') .'
 							</td>
 							<td>
 								'. $commandeDATE .'
@@ -372,24 +378,24 @@
 						</tr>
 						<tr>
 							<td>
-								Etat de la commande :
+							'. $langue->show_text('TableOrderStatu') .'
 							</td>
 							<td>
 								<select name="Etatcommande">
-									<option value="1" '. selected($commandeETAT, 1) .'>En cours</option>
-									<option value="2" '. selected($commandeETAT, 2) .'>Refusé</option>
-									<option value="3" '. selected($commandeETAT, 3) .'>Envoyé</option>
-									<option value="4" '. selected($commandeETAT, 4) .'>Décliné</option>
-									<option value="5" '. selected($commandeETAT, 5) .'>Fermé</option>
-									<option value="6" '. selected($commandeETAT, 6) .'>Obselète</option>
+									<option value="1" '. selected($DevisETAT, 1) .'>'. $langue->show_text('SelectOpen') .'</option>
+									<option value="2" '. selected($DevisETAT, 2) .'>'. $langue->show_text('SelectRefuse') .'</option>
+									<option value="3" '. selected($DevisETAT, 3) .'>'. $langue->show_text('SelectSend') .'</option>
+									<option value="4" '. selected($DevisETAT, 4) .'>'. $langue->show_text('SelectDecline') .'</option>
+									<option value="5" '. selected($DevisETAT, 5) .'>'. $langue->show_text('SelectClosed') .'</option>
+									<option value="6" '. selected($DevisETAT, 6) .'>'. $langue->show_text('SelectObsolete') .'</option>
 								</select>
 							</td>
-							<td><input type="checkbox" id="commandeMajLigne" name="commandeMajLigne" checked="checked"><label >Mettre à jours les lignes de la commande</label></td>
+							<td><input type="checkbox" id="commandeMajLigne" name="commandeMajLigne" checked="checked"><label >'. $langue->show_text('UpdateOrderLine') .'</label></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jours" /> <br/>
+								<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -401,7 +407,7 @@
 				<thead>
 					<tr>
 						<th colspan="2" >
-							Général - commande '. $commandeCODE .' version  '. $commandeINDICE .'
+						'. $langue->show_text('TableNumberOrder') .'  '. $commandeCODE .' '. $langue->show_text('TableIndexOrder') .'  '. $commandeINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -409,7 +415,7 @@
 					<tr>
 						<td>
 							<input type="hidden" name="CODEcommande" value="'. $CODEcommande .'">
-							Créateur :
+							'. $langue->show_text('TableUserCreate') .'
 						</td>
 						<td>
 							'. $Donneescommande['NOM'] .' '. $Donneescommande['PRENOM'] .'
@@ -417,7 +423,7 @@
 					</tr>
 					<tr>
 						<td>
-							Responsable commercial :
+						'. $langue->show_text('TableSalesManager') .'
 						</td>
 						<td>
 							<select name="RepsComcommande">
@@ -427,7 +433,7 @@
 					</tr>
 					<tr>
 						<td>
-							Responsable technique :
+						'. $langue->show_text('TableTechnicalManager') .'
 						</td>
 						<td>
 							<select name="RespTechcommande">
@@ -437,7 +443,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -448,7 +454,7 @@
 				<thead>
 					<tr>
 						<th colspan="2" >
-							Général - commande '. $commandeCODE .' version  '. $commandeINDICE .'
+						'. $langue->show_text('TableNumberOrder') .'  '. $commandeCODE .' '. $langue->show_text('TableIndexOrder') .'  '. $commandeINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -456,7 +462,7 @@
 					<tr>
 						<td>
 							<input type="hidden" name="CODEcommande" value="'. $CODEcommande .'">
-							Contact  :
+							'. $langue->show_text('TableContact') .'
 						</td>
 						<td>
 							<select name="Contactcommande">
@@ -466,7 +472,7 @@
 					</tr>
 					<tr>
 						<td>
-							Adresse de livraison :
+							'. $langue->show_text('TableAdresseDelevery') .'
 						</td>
 						<td>
 							<select name="AdresseLivraisoncommande">
@@ -476,7 +482,7 @@
 					</tr>
 					<tr>
 						<td>
-							Adresse de facturation :
+							'. $langue->show_text('TableAdresseInvoice') .'
 						</td>
 						<td>
 							<select name="AdresseFacturationcommande">
@@ -486,7 +492,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -498,7 +504,7 @@
 				<thead>
 					<tr>
 						<th colspan="2" >
-							Général - commande '. $commandeCODE .' version  '. $commandeINDICE .'
+						'. $langue->show_text('TableNumberOrder') .'  '. $commandeCODE .' '. $langue->show_text('TableIndexOrder') .'  '. $commandeINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -506,7 +512,7 @@
 					<tr>
 						<td>
 							<input type="hidden" name="CODEcommande" value="'. $CODEcommande .'">
-							Condition de réglement :
+							'. $langue->show_text('TableCondiList') .'
 						</td>
 						<td>
 							<select name="CondiRegcommande">
@@ -516,7 +522,7 @@
 					</tr>
 					<tr>
 						<td>
-							Mode de réglement :
+						'. $langue->show_text('TableMethodList') .'
 						</td>
 						<td>
 							<select name="ModeRegcommande">
@@ -526,7 +532,7 @@
 					</tr>
 					<tr>
 						<td>
-							Echeancier Type :
+							'. $langue->show_text('TimeLinePayement') .'
 						</td>
 						<td>
 							<select name="Echeanciercommande">
@@ -536,7 +542,7 @@
 					</tr>
 					<tr>
 						<td>
-							Mode de livraison :
+							'. $langue->show_text('TableDeleveryMode') .'
 						</td>
 						<td>
 							<select name="ModeLivraisoncommande">
@@ -546,7 +552,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" >
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -557,7 +563,7 @@
 				<thead>
 					<tr>
 						<th>
-							Commentaire - commande '. $commandeCODE .' version  '. $commandeINDICE .'
+						'. $langue->show_text('TableNumberOrder') .'  '. $commandeCODE .' '. $langue->show_text('TableIndexOrder') .'  '. $commandeINDICE .'
 						</th>
 					</tr>
 				</thead>
@@ -570,7 +576,7 @@
 					</tr>
 					<tr>
 						<td>
-							<input type="submit" class="input-moyen" value="Mettre à jour" />
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -613,6 +619,7 @@
 																									'1')");
 								$i++;
 							}
+							$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderLineNotification')));
 						}
 
 						if(isset($_POST['UpdateIdLignecommande']) AND !empty($_POST['UpdateIdLignecommande'])){
@@ -646,6 +653,7 @@
 																						WHERE id='". addslashes($id_generation)."'");
 								$i++;
 							}
+							$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineNotification')));
 						}
 
 									///////////////////////////////
@@ -748,12 +756,12 @@
 								<td><input type="date" name="UpdateDELAISLignecommande[]" value="'. $DonneesListeLigneDucommande['DELAIS'] .'"></td>
 								<td>
 									<select  name="UpdateETATLignecommande[]">
-										<option value="1" '. selected($DonneesListeLigneDucommande['ETAT'], 1) .'>En cours</option>
-										<option value="2" '. selected($DonneesListeLigneDucommande['ETAT'], 2) .'>Refusé</option>
-										<option value="3" '. selected($DonneesListeLigneDucommande['ETAT'], 3) .'>Envoyé</option>
-										<option value="4" '. selected($DonneesListeLigneDucommande['ETAT'], 4) .'>Décliné</option>
-										<option value="5" '. selected($DonneesListeLigneDucommande['ETAT'], 5) .'>Fermé</option>
-										<option value="6" '. selected($DonneesListeLigneDucommande['ETAT'], 6) .'>Obselète</option>
+										<option value="1" '. selected($DonneesListeLigneDuDevis['ETAT'], 1) .'>'. $langue->show_text('SelectOpen') .'</option>
+										<option value="2" '. selected($DonneesListeLigneDuDevis['ETAT'], 2) .'>'. $langue->show_text('SelectRefuse') .'</option>
+										<option value="3" '. selected($DonneesListeLigneDuDevis['ETAT'], 3) .'>'. $langue->show_text('SelectSend') .'</option>
+										<option value="4" '. selected($DonneesListeLigneDuDevis['ETAT'], 4) .'>'. $langue->show_text('SelectDecline') .'</option>
+										<option value="5" '. selected($DonneesListeLigneDuDevis['ETAT'], 5) .'>'. $langue->show_text('SelectClosed') .'</option>
+										<option value="6" '. selected($DonneesListeLigneDuDevis['ETAT'], 6) .'>'. $langue->show_text('SelectObsolete') .'</option>
 									</select>
 								</td>
 							</tr>';
@@ -794,17 +802,17 @@
 					</tr>
 					<tr>
 						<th></th>
-						<th>Ordre</th>
-						<th>Aricle</th>
-						<th>Label</th>
-						<th>Qt</th>
-						<th>Unité</th>
-						<th>Prix U.H.T (€)</th>
-						<th>Remise %</th>
-						<th>Total</th>
-						<th>T.V.A.</th>
-						<th>Délais</th>
-						<th>Etat</th>
+						<th>'. $langue->show_text('TableOrder') .'</th>
+						<th>'. $langue->show_text('TableArticle') .'</th>
+						<th>'. $langue->show_text('Tablelabel') .'</th>
+						<th>'. $langue->show_text('TableQty') .'</th>
+						<th>'. $langue->show_text('TableUnit') .'</th>
+						<th>'. $langue->show_text('TableUnitPrice') .'</th>
+						<th>'. $langue->show_text('TableDiscount') .'</th>
+						<th>'. $langue->show_text('TableTotal') .'</th>
+						<th>'. $langue->show_text('TableRate') .'</th>
+						<th>'. $langue->show_text('TableDelay') .'</th>
+						<th>'. $langue->show_text('TableStatu') .'</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -813,10 +821,10 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						<th colspan="2" >Montant H.T.</th>
-						<th >T.V.A.</th>
-						<th colspan="2" >Valeur de la T.V.A</th>
-						<th>Montant T.T.C</th>
+						<th colspan="2" >'. $langue->show_text('TotalPriceWithOutTax') .'</th>
+						<th >'. $langue->show_text('TableRate') .'</th>
+						<th colspan="2" >'. $langue->show_text('TotalTax') .'</th>
+						<th>'. $langue->show_text('TotalPriceWithTax') .'</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -825,10 +833,10 @@
 					<tr>
 						<th></th>
 						<th></th>
-						<th  >Total H.T. :</th>
+						<th>'. $langue->show_text('TotalWithOutTax') .'</th>
 						<th colspan="2">'. $TotalLignecommandeHT .' €</th>
 						<th ></th>
-						<th colspan="2" >Total T.T.C. :</th>
+						<th colspan="2" >'. $langue->show_text('TotalWithTax') .'</th>
 						<th>'. $TotalLignecommandeTTC .' €</th>
 						<th></th>
 						<th></th>
@@ -836,7 +844,7 @@
 					<tr>
 					</tr>
 						<th colspan="12" >
-							Ajouts de ligne
+							'. $langue->show_text('Addline') .'
 						</th>
 					</tr>
 					<tr>
@@ -868,9 +876,9 @@
 					</tr>
 					<tr>
 						<td colspan="12" >
-							<input type="button" class="add" value="Ajouter une ligne">
-							<input type="button" class="delete" value="Supprimer une ligne">
-							<input type="submit" class="input-moyen" value="Mettre à jours de la commande" />
+							<input type="button" class="add" value="'. $langue->show_text('Addline') .'">
+							<input type="button" class="delete" value="'. $langue->show_text('Deleteline') .'">
+							<input type="submit" class="input-moyen" value="'. $langue->show_text('UpdateOrderLine') .'" />
 						</td>
 					</tr>
 				</tbody>
@@ -886,32 +894,12 @@
 			}
 
 			$Acceuil =
-				'<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher une commande">
-					<ul id="myUL">
-						'. $ListeCommandePrincipale .'
-					</ul>
-				</div>
-				<script>
-				function myFunction() {
-				  // Declare variables
-				  var input, filter, ul, li, a, i, txtValue;
-				  input = document.getElementById(\'myInput\');
-				  filter = input.value.toUpperCase();
-				  ul = document.getElementById("myUL");
-				  li = ul.getElementsByTagName(\'li\');
-
-				  for (i = 0; i < li.length; i++) {
-					a = li[i].getElementsByTagName("a")[0];
-					txtValue = a.textContent || a.innerText;
-					if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					  li[i].style.display = "";
-					} else {
-					  li[i].style.display = "none";
-					}
-				  }
-				}
-				</script>
+			'<div class="column">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="'. $langue->show_text('TableFindOrder') .'">
+				<ul id="myUL">
+					'. $ListeCommandePrincipale .'
+				</ul>
+			</div>
 			<div class="column">
 				<form method="post" name="Commande" action="'. $actionForm .'" class="content-form" enctype="multipart/form-data" >
 					<table class="content-table">
@@ -920,13 +908,12 @@
 								<th colspan="5">
 									  <br/>
 								</th>
-
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td>
-									Créer une nouvelle commande pour le client :
+									'. $langue->show_text('TableNewOrderFor') .'
 								<td>
 								<td>
 									<select name="Addcommande">
@@ -937,7 +924,7 @@
 							<tr>
 								<td colspan="6" >
 									<br/>
-									<input type="submit" class="input-moyen" value="Nouvelle commande" /> <br/>
+									<input type="submit" class="input-moyen" value="'. $langue->show_text('TableNewButton') .'" /> <br/>
 									<br/>
 								</td>
 							</tr>
@@ -952,7 +939,7 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
-		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
+		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'order.php?id='. $_GET['id'] .'';
 
 	}
@@ -960,7 +947,7 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
-		$ImputButton = '<input type="submit" class="input-moyen" value="Mettre à jour" />';
+		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'order.php?id='. $_GET['id'] .'';
 
 	}
@@ -969,7 +956,7 @@
 		$ParDefautDiv2 = '';
 		$ParDefautDiv1 = 'id="defaultOpen"';
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
-		$ImputButton = ' Aucune commande chargée';
+		$ImputButton = $langue->show_text('TablenoOrder');
 		$actionForm = 'order.php';
 	}
 ?>
@@ -1002,7 +989,7 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input type=\"checkbox\" name=\"select\"></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddORDRELignecommande[]\" value=\""+ AddORDRELignecommande +"\" id=\"number\" required=\"required\"></td>";
 		var ligne = ligne + "<td><input list=\"Article\" name=\"AddARTICLELignecommande[]\" value=\"" + AddARTICLELignecommande +"\"><datalist id=\"Article\">";
-		var ligne = ligne + <?php echo $ListeArticleJava ?>  ;
+		var ligne = ligne + <?=$ListeArticleJava ?>  ;
 		var ligne = ligne + "</datalist></td>";
 		var ligne = ligne + "<td><input type=\"text\" name=\"AddLABELLignecommande[]\" value=\""+ AddLABELLignecommande +"\" ></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddQTLignecommande[]\" value=\""+ AddQTLignecommande +"\"  id=\"number\" required=\"required\"></td>";
@@ -1033,64 +1020,67 @@ $(document).ready(function() {
 ?>
 
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?php echo $ParDefautDiv1; ?>>Accueil</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
 <?php
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
 	{
 ?>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?php echo $ParDefautDiv2; ?>>Commande</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?php echo $ParDefautDiv3; ?>>Détail de la commande</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Général</button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')">Détail client</button>
-		<button class="tablinks" onclick="openDiv(event, 'div6')">Détail commerciales</button>
-		<button class="tablinks" onclick="openDiv(event, 'div7')">Commentaire</button>
-		<a href="document.php?id=<?php echo  $_GET['id'] ?>" target="_blank"><button class="tablinks" >Document</button></a>
-
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div7')"><?=$langue->show_text('Title7'); ?></button>
+		<a href="document.php?id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
 <?php
 	}
 ?>
 		<div class="DataListDroite">
-			<form method="get" name="commande" action="<?php echo $actionForm; ?>">
-				Commande : <input list="commande" name="id" id="id" required>
+			<form method="get" name="commande" action="<?=$actionForm; ?>">
+			<?=$langue->show_text('TableFind'); ?><input list="commande" name="id" id="id" required>
 				<datalist id="commande">
-					<?php echo $ListeCommande; ?>
+					<?=$ListeCommande; ?>
 				</datalist>
 				<input type="submit" class="input-moyen" value="Go !" />
 			</form>
 		</div>
 	</div>
 	<div id="div1" class="tabcontent">
-			<?php echo $Acceuil; ?>
+			<?=$Acceuil; ?>
 	</div>
 	<div id="div2" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $commandeAcceuil; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$commandeAcceuil; ?>
 		</form>
 	</div>
 	<div id="div3" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $commandeLignes ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$commandeLignes ?>
 		</form>
 	</div>
 	<div id="div4" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $commandeGeneral; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$commandeGeneral; ?>
 		</form>
 	</div>
 	<div id="div5" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $commandeInfoClient; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$commandeInfoClient; ?>
 		</form>
 	</div>
 	<div id="div6" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $commandeInfoCommercial; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$commandeInfoCommercial; ?>
 		</form>
 	</div>
 	<div id="div7" class="tabcontent">
-		<form method="post" name="Coment" action="<?php echo $actionForm; ?>" class="content-form" >
-			<?php echo $commandeCommentaire; ?>
+		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+			<?=$commandeCommentaire; ?>
 		</form>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

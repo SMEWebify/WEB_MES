@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Quote</QuoteLinkPage>
+	<OrderLinkPage>Order</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendar</CalendarLinkPage>
+    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Quality</QualityLinkPage>
+    <LogOutLinkPage>Logout</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Return</ReturnLinkPage>
+    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employees</EmployeesLinkPage>
+    <MethodLinkPage>Method</MethodLinkPage>
+    <StudyLinkPage>Study</StudyLinkPage>
+    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+    <AccountingLinkPage>Accouting</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
+<!-- title page --> 
+	<TiltePage>Order</TiltePage>
+    <Title1>Home</Title1> 
+    <Title2>Order</Title2>
+    <Title3>Order detail</Title3>
+    <Title4>General</Title4>
+    <Title5>Customer detail</Title5>
+    <Title6>Commercial information</Title6>
+    <Title7>Comment</Title7>
+    <Title8>Document</Title8>
+    <Title9>Order assistant</Title9>
+<!-- table content --> 
+    <TableNameUser>Name :</TableNameUser>
+    <TableNameCompany>Company name :</TableNameCompany>
+    <TableSurNameUser>Surname :</TableSurNameUser>
+    <TableMailUser>Mail :</TableMailUser>
+    <TablePhoneNumber>Phone number :</TablePhoneNumber> 
+    <TableMobilNumber>Mobile phone :</TableMobilNumber>
+    <TableTVAType>VAT</TableTVAType> 
+    <TableCODE>CODE</TableCODE>
+    <TableLabel>Label</TableLabel>
+    <TableOrder>Order</TableOrder>
+    <Addline>Add line</Addline>
+    <Deleteline>Delete line</Deleteline>
+    <UpdateOrderLine>Update Order lines</UpdateOrderLine>
+    <TableCondiList>Payment condition</TableCondiList>
+    <TableMethodList>Payment choice</TableMethodList>
+    <TableUpdateButton>Update</TableUpdateButton>
+    <TableNewButton>New Order</TableNewButton>
+    <TableNewOrderFor>Create a new Order for the customer:</TableNewOrderFor> 
+    <TimeLinePayement>TimeLine Payement</TimeLinePayement>
+    <TableAdresseInvoice>Adresse Invoice</TableAdresseInvoice>
+    <TableAdresseDelevery>Adresse Delevery</TableAdresseDelevery>
+    <TableDeleveryMode>Delevery mode :</TableDeleveryMode> 
+    <TableCustomerReference>Customer reference:</TableCustomerReference> 
+    <TableDeleveryDate>Delay :</TableDeleveryDate>
+    <TableNumberCustomerOrder>Customer order number</TableNumberCustomerOrder>
+    <TableCreateOrder>Create new order</TableCreateOrder>
+    <TableNewOrder>New order</TableNewOrder> 
+    <TableSelectOrder>Create a new order or link to an existing one:</TableSelectOrder> 
+    <TableIndexOrder>version</TableIndexOrder> 
+    <TableNumberOrder>Order number </TableNumberOrder> 
+    <TableUnitPrice>Price U.H.T (€)</TableUnitPrice> 
+    <TableQty>Qty</TableQty>
+    <TableArticle>Article</TableArticle>
+    <TableGeneralInfo>General information</TableGeneralInfo> 
+    <TableTotal>Total</TableTotal> 
+    <TableSalesManager>Sales Manager</TableSalesManager> 
+    <TableTechnicalManager>Technical Manager</TableTechnicalManager> 
+    <TableTVAType>VAT</TableTVAType>
+    <TableStatu>Etat</TableStatu>
+    <TableDelay>Delay</TableDelay> 
+    <TableUnit>Unit</TableUnit>
+    <TableDiscount>Discount %</TableDiscount> 
+    <TableRate>Rate</TableRate>
+    <TotalTax>Total VAT</TotalTax> 
+    <TotalPriceWithTax>Amount H.T.</TotalPriceWithTax>
+    <TotalPriceWithOutTax>Amount T.T.C :</TotalPriceWithOutTax> 
+    <TotalWithOutTax>Total H.T. :</TotalWithOutTax>
+    <TotalWithTax>Total T.T.C :</TotalWithTax>
+    <TableFind>Find : </TableFind>
+    <TableFindOrder>Find Order: </TableFindOrder>
+    <TablenoOrder>No Order loaded</TablenoOrder>
+    <TableContact>Contacts</TableContact>
+    <TableUserCreate>Creator</TableUserCreate>
+    <TableCodeLabel>Code and wording of the Order:</TableCodeLabel> 
+    <TableLabelOrder>Label of Order:</TableLabelOrder>      
+    <TableIndexLabel>Version index and label:</TableIndexLabel> 
+    <TableLabelIndexOrder>Label index  :</TableLabelIndexOrder>  
+    <TableCreationDate>Creation date :</TableCreationDate>  
+    <TableValidityDate>Validity date :</TableValidityDate>  
+    <TableOrderStatu>Order statu :</TableOrderStatu>     
+ <!-- notifications -->
+    <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
+    <UpdateLineNotification> line(s) updated</UpdateLineNotification>
+    <UpdateGeneralInfoNotification>General information changed</UpdateGeneralInfoNotification>
+    <UpdateStatuLineNotification> statu line changed</UpdateStatuLineNotification>
+    <UpdateInfoCustomerNotification>Customer information changed</UpdateInfoCustomerNotification>
+    <UpdateSalesInfoNotification>Sales information changed</UpdateSalesInfoNotification>
+    <UpdateGeneralNotification>Internal information changed</UpdateGeneralNotification>
+    <AddOrderNotification>Order created</AddOrderNotification>
+    <AddOrderLineNotification> Line add to Order</AddOrderLineNotification>
+    <DeleteOrderLineNotification> line delete to Order</DeleteOrderLineNotification>
+<!-- Select-->
+    <SelectOpen>Open</SelectOpen>
+    <SelectRefuse>Refuse</SelectRefuse>
+    <SelectSend>Send</SelectSend>
+    <SelectDecline>Decline</SelectDecline>
+    <SelectClosed>Closed</SelectClosed>
+    <SelectObsolete>Obsolete</SelectObsolete>
+
+    <Yes>Oui</Yes>
+    <No>Non</No>
+</langue>

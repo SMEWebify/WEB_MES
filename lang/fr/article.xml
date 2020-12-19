@@ -22,33 +22,11 @@
     <StudyLinkPage>Etudes</StudyLinkPage>
     <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
     <AccountingLinkPage>Comptabilité</AccountingLinkPage>
-<!-- systeminfo --> 
+ <!-- systeminfo --> 
     <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
-<!-- title page --> 
-	<TiltePage>Profil</TiltePage>
-    <Titre1>Modification du profil</Titre1>
-    <Titre2>Réglages</Titre2>
-    <Titre3>Déconnexion</Titre3>
-<!-- table content --> 
-    <TitreTable1>Modification du profil</TitreTable1>
-    <TableNameUser>Nom :</TableNameUser>
-    <TableSurNameUser>Prénom :</TableSurNameUser>
-    <TableDateBornUser>Date de naissance :</TableDateBornUser>
-    <TableSpeudoUser>Speudonyme :</TableSpeudoUser>
-    <TablePasswordUser>Mot de passe :</TablePasswordUser>
-    <TableConfirmPasswordUser>Confirmation du mot de passe :</TableConfirmPasswordUser>
-    <TableMailUser>Mail :</TableMailUser>
-    <TableInternalNumberUser>Numéro interne :</TableInternalNumberUser>
-    <TablePersonnalNumberUser>Numéro personnel :</TablePersonnalNumberUser>
-    <TablePictureUser>Photo de profil :</TablePictureUser>
-
-    <TitreTable2> Préférences du profil</TitreTable2>
-    <TableLanguageUser>Langue :</TableLanguageUser>
-    <TableUpdateButton>Mettre à jours</TableUpdateButton>
-
-    <french>Français</french>
-    <english>Anglais</english>
- <!-- notifications -->
-     <UpdateProfilNotification>Profil mis à jours</UpdateProfilNotification> 
-</langue>
+ <!-- title page --> 
+    <Title1>Article</Title1>
+ <!-- div content --> 
+    <FindArticle>Chercher un article</FindArticle>
+ </langue>

@@ -1,14 +1,14 @@
 		<div class="container">
 			<ul id="gn-menu" class="gn-menu-main">
-				<li><a  href="#" onclick="openNav()">&#9776; <?php echo $langue->show_text('MenuLinkPage') ; ?></a></li>
-				<li><a class="codrops-icon codrops-icon-back" href="<?php $_SERVER['HTTP_REFERER'] ?>"><?php echo $langue->show_text('ReturnLinkPage') ; ?></a></li>
+				<li><a  href="#" id="OpenNav" >&#9776; <?=$langue->show_text('MenuLinkPage') ; ?></a></li>
+				<li><a class="codrops-icon codrops-icon-back" href="<?php $_SERVER['HTTP_REFERER'] ?>"><?=$langue->show_text('ReturnLinkPage') ; ?></a></li>
 				<?php if($_SESSION['page_1'] == '1') echo  '<li><a class="codrops-icon codrops-icon-home" href="index.php">'. $CompanyName .'</a></li>' ?>
 				<?php if(isset($_SESSION['mdp'])) echo '<li><a class="codrops-icon codrops-icon-profil" href="profil.php"><span>'. $langue->show_text('ProfilLinkPage') .'</span></a></li>'; ?>
 			</ul>
 		</div>
 
 		<div id="myNav" class="overlay">
-		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		  <a href="javascript:void(0)" class="closebtn" id="ClosenNav">&times;</a>
 		  <div class="overlay-content">
 <?php
 
@@ -23,17 +23,6 @@
 ?>
 		  </div>
 		</div>
-<script>
-	function openNav() {
-	document.getElementById("myNav").style.width = "100%";
-	}
-
-	function closeNav() {
-	document.getElementById("myNav").style.width = "0%";
-	}
-</script>
-
-
 <?php
 	if($_SESSION['page_10'] == '1') echo '
 		<div class="DivButtonAdmin">
@@ -41,30 +30,14 @@
 		</div>
 		<div id="DivAdminListe" class="DivAdminListe">
 			<ul class="admin-menu">
-				<li>
-					<a class="" href="manage-company.php">'. $langue->show_text('GeneralSettingLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="clientfourni.php">'. $langue->show_text('CustoProvidLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="manage-time.php">'. $langue->show_text('SettingTimeLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="manage-users.php">'. $langue->show_text('EmployeesLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="manage-methodes.php">'. $langue->show_text('MethodLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="manage-study.php">'. $langue->show_text('StudyLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="manage-quality.php">'. $langue->show_text('QualitySettingLinkPage') .'</a>
-				</li>
-				<li>
-					<a class="" href="manage-accounting.php">'. $langue->show_text('AccountingLinkPage') .'</a>
-				</li>
+				<li><a class="" href="manage-company.php">'. $langue->show_text('GeneralSettingLinkPage') .'</a></li>
+				<li><a class="" href="manage-companies.php">'. $langue->show_text('CustoProvidLinkPage') .'</a></li>
+				<li><a class="" href="manage-time.php">'. $langue->show_text('SettingTimeLinkPage') .'</a></li>
+				<li><a class="" href="manage-users.php">'. $langue->show_text('EmployeesLinkPage') .'</a></li>
+				<li><a class="" href="manage-methodes.php">'. $langue->show_text('MethodLinkPage') .'</a></li>
+				<li><a class="" href="manage-study.php">'. $langue->show_text('StudyLinkPage') .'</a></li>
+				<li><a class="" href="manage-quality.php">'. $langue->show_text('QualitySettingLinkPage') .'</a></li>
+				<li><a class="" href="manage-accounting.php">'. $langue->show_text('AccountingLinkPage') .'</a></li>
 			</ul>
 		</div>';
 ?>

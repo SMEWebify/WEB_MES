@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -16,7 +17,10 @@
 	require_once 'include/include_recup_config_company.php';
 	// load language class
 	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'profil', $UserLanguage);
+	$langue = new Langues('lang', 'manage-company', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -27,12 +31,8 @@
 	////  PARAMETRE DE L'ENTREPRISE  ////
 	//////////////////////////////////
 
+	//if update gerenal info of company
 	if(isset($_POST['CompanyName']) AND !empty($_POST['CompanyName'])){
-
-		$dossier = 'images/';
-		$fichier = basename($_FILES['fichier_LOGO']['name']);
-
-		move_uploaded_file($_FILES['fichier_LOGO']['tmp_name'], $dossier . $fichier);
 
 		$UpdateCompanyName = $_POST['CompanyName'];
 		$UpdateCompanyAddress = $_POST['CompanyAddress'];
@@ -54,6 +54,9 @@
 		$UpdateCompanyCAPITAL = $_POST['CompanyCAPITAL'];
 		$UpdateCompanyRCS = $_POST['CompanyRCS'];
 
+		$dossier = 'images/';
+		$fichier = basename($_FILES['fichier_LOGO']['name']);
+		move_uploaded_file($_FILES['fichier_LOGO']['tmp_name'], $dossier . $fichier);
 		If(empty($fichier)){
 			$AddSQL = '';
 		}
@@ -61,7 +64,7 @@
 			$AddSQL = 'LOGO = \''. addslashes($UpdateCompanyLogo) .'\',';
 		}
 
-
+		//update data in db
 		$bdd->exec('UPDATE `'. TABLE_ERP_COMPANY .'` SET  NAME = \''. addslashes($UpdateCompanyName) .'\',
 																ADDRESS = \''. addslashes($UpdateCompanyAddress) .'\',
 																CITY = \''. addslashes($UpdateCompanyCity) .'\',
@@ -82,7 +85,7 @@
 																CAPITAL = \''. addslashes($UpdateCompanyCAPITAL) .'\',
 																RCS = \''. addslashes($UpdateCompanyRCS) .'\'
 																WHERE Id=1');
-
+		//select new data
 		$req = $bdd -> query('SELECT NAME,
 							ADDRESS,
 							CITY,
@@ -129,84 +132,84 @@
 
 	$contenu1 = '
 				<tr>
-					<td>Nom de la Société</td>
-					<td>Adresse</td>
-					<td>Ville</td>
-					<td>Code postal</td>
-					<td>Région</td>
-					<td>Pays</td>
+					<td>'. $langue->show_text('TableNameCompany') .'</td>
+					<td>'. $langue->show_text('TableAdresse') .'</td>
+					<td>'. $langue->show_text('TableCity') .'</td>
+					<td>'. $langue->show_text('TableZipCode') .'</td>
+					<td>'. $langue->show_text('TableRegion') .'</td>
+					<td>'. $langue->show_text('TableCountry') .'</td>
 				</tr>
 				<tr>
 					<td >
-						<input type="text" name="CompanyName" value="'. $CompanyName .'" >
+						<input type="text" name="CompanyName" value="'. $CompanyName .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyAddress" value="'. $CompanyAddress .'" >
+						<input type="text" name="CompanyAddress" value="'. $CompanyAddress .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyCity" value="'. $CompanyCity .'" >
+						<input type="text" name="CompanyCity" value="'. $CompanyCity .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyZipCode" value="'. $CompanyZipCode .'" size="10">
+						<input type="text" name="CompanyZipCode" value="'. $CompanyZipCode .'">
 					</td>
-					<td >
-						<input type="text" name="CompanyRegion" value="'. $CompanyRegion .'" size="10">
+					<td>
+						<input type="text" name="CompanyRegion" value="'. $CompanyRegion .'">
 					</td>
-					<td >
-						<input type="text" name="CompanyCountry" value="'. $CompanyCountry .'" size="10">
+					<td>
+						<input type="text" name="CompanyCountry" value="'. $CompanyCountry .'">
 					</td>
 				</tr>
 				<tr>
-					<td>Numéro de téléphone</td>
-					<td>Mail</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td >
-						<input type="text" name="CompanyPhone" value="'. $CompanyPhone .'" size="10">
-					</td>
-					<td >
-						<input type="text" name="CompanyMail" value="'. $CompanyMail .'" >
-					</td>
+					<td>'. $langue->show_text('TablePhoneNumber') .'</td>
+					<td>'. $langue->show_text('TableMail') .'</td>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td>Site Web</td>
-					<td>FaceBook</td>
-					<td>Twitter</td>
-					<td>Linked</td>
+					<td >
+						<input type="text" name="CompanyPhone" value="'. $CompanyPhone .'">
+					</td>
+					<td >
+						<input type="text" name="CompanyMail" value="'. $CompanyMail .'">
+					</td>
+					<td></td>
+					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td >
-						<input type="text" name="CompanyWebSite" value="'. $CompanyWebSite .'" size="10">
+					<td>'. $langue->show_text('TableWebSite') .'</td>
+					<td>'. $langue->show_text('TableFacebook') .'</td>
+					<td>'. $langue->show_text('TableTwitter') .'</td>
+					<td>'. $langue->show_text('TableLinked') .'</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" name="CompanyWebSite" value="'. $CompanyWebSite .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyFbSite" value="'. $CompanyFbSite .'" size="10">
+						<input type="text" name="CompanyFbSite" value="'. $CompanyFbSite .'">
 					</td>
-					<td >
-						<input type="text" name="CompanyTwitter" value="'. $CompanyTwitter .'" size="10">
+					<td>
+						<input type="text" name="CompanyTwitter" value="'. $CompanyTwitter .'">
 					</td>
-					<td >
-						<input type="text" name="CompanyLkd" value="'. $CompanyLkd .'" size="10">
+					<td>
+						<input type="text" name="CompanyLkd" value="'. $CompanyLkd .'">
 					</td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td>SIREN</td>
-					<td>Code APE</td>
-					<td>TVA INTRA</td>
-					<td>Taux TVA</td>
-					<td>CAPITAL</td>
-					<td>RCS</td>
+					<td>'. $langue->show_text('TableSIREN') .'</td>
+					<td>'. $langue->show_text('TableAPE') .'</td>
+					<td>'. $langue->show_text('TableTVAINTRA') .'</td>
+					<td>'. $langue->show_text('TableTVAType') .'</td>
+					<td>'. $langue->show_text('TableCapital') .'</td>
+					<td>'. $langue->show_text('TableRCS') .'</td>
 				</tr>
 				<tr>
 					<td >
@@ -229,7 +232,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan=6">Logo</td>
+					<td colspan=6">'. $langue->show_text('TableLogo') .'</td>
 				</tr>
 				<tr>
 					<td colspan=6" ><input type="file" name="fichier_LOGO" /></td>
@@ -243,14 +246,16 @@
 	//// SECTOR ACTIVITY////
 	///////////////////////
 
+	//add new sector activity
 	if(isset($_POST['AddCODESector']) AND !empty($_POST['AddCODESector'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ACTIVITY_SECTOR ." VALUE ('0',
 																		'". addslashes($_POST['AddCODESector']) ."',
 																		'". addslashes($_POST['AddLABELSector']) ."')");
-
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddSectorNotification')));
 	}
 
+	//update sector activity
 	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
 
 		$UpdateIdSector = $_POST['id_sector'];
@@ -259,14 +264,15 @@
 
 		$i = 0;
 		foreach ($UpdateIdSector as $id_generation) {
-
 			$bdd->exec('UPDATE `'. TABLE_ERP_ACTIVITY_SECTOR .'` SET  CODE = \''. addslashes($UpdateCODESector[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSector[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectorNotification')));
 	}
 
+	//generat list of actiity sector
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_ACTIVITY_SECTOR .'.Id,
 									'. TABLE_ERP_ACTIVITY_SECTOR .'.CODE,
@@ -274,8 +280,7 @@
 									FROM `'. TABLE_ERP_ACTIVITY_SECTOR .'`
 									ORDER BY Id');
 
-	while ($donnees_sector = $req->fetch())
-	{
+	while ($donnees_sector = $req->fetch()){
 		 $contenu2 = $contenu2 .'
 				<tr>
 					<td>'. $i .' <input type="hidden" name="id_sector[]" id="id_sector" value="'. $donnees_sector['Id'] .'"></td>
@@ -289,8 +294,7 @@
 	//// NUM DOCUMENTS ////
 	///////////////////////
 
-
-
+	//if add new document
 	if(isset($_POST['AddDOCNum']) AND !empty($_POST['AddDOCNum'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_NUM_DOC ." VALUE ('0',
@@ -298,9 +302,10 @@
 																		'". addslashes($_POST['AddModeleNum']) ."',
 																		'". addslashes($_POST['AddDigitNum']) ."',
 																		'0')");
-
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddDocNotification')));
 	}
 
+	// if update num sequence document
 	if(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
 
 		$UpdateIdNumDoc = $_POST['id_NumDoc'];
@@ -315,8 +320,10 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDocNotification')));
 	}
 
+	//generate list of Sequence number document
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_NUM_DOC .'.Id,
 									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
@@ -326,9 +333,7 @@
 									FROM `'. TABLE_ERP_NUM_DOC .'`
 									ORDER BY Id');
 
-	while ($donnees_Num_doc = $req->fetch())
-	{
-
+	while ($donnees_Num_doc = $req->fetch()){
 		$Exemple = NumDoc($donnees_Num_doc['MODEL'],$donnees_Num_doc['COMPTEUR'], $donnees_Num_doc['DIGIT']);
 
 		 $contenu4 = $contenu4 .'
@@ -336,18 +341,18 @@
 					<td>'. $i .' <input type="hidden" name="id_NumDoc[]" id="id_NumDoc" value="'. $donnees_Num_doc['Id'] .'"></td>
 					<td>
 						<select name="UpdateDOCNum[]">
-							<option value="0" '. selected($donnees_Num_doc['DOC_TYPE'], 0) .'>Accusés de reception</option>
-							<option value="1" '. selected($donnees_Num_doc['DOC_TYPE'], 1) .'>Bon de livraison fournisseur</option>
-							<option value="2" '. selected($donnees_Num_doc['DOC_TYPE'], 2) .'>Bon de retour client</option>
-							<option value="3" '. selected($donnees_Num_doc['DOC_TYPE'], 3) .'>Bon de livraison</option>
-							<option value="4" '. selected($donnees_Num_doc['DOC_TYPE'], 4) .'>Commande</option>
-							<option value="5" '. selected($donnees_Num_doc['DOC_TYPE'], 5) .'>Commande d\'achat</option>
-							<option value="6" '. selected($donnees_Num_doc['DOC_TYPE'], 6) .'>Commande interne</option>
-							<option value="7" '. selected($donnees_Num_doc['DOC_TYPE'], 7) .'>Consultation</option>
-							<option value="8" '. selected($donnees_Num_doc['DOC_TYPE'], 8) .'>Devis</option>
-							<option value="9" '. selected($donnees_Num_doc['DOC_TYPE'], 9) .'>Facture</option>
-							<option value="10" '. selected($donnees_Num_doc['DOC_TYPE'], 10) .'>Facture fournisseur</option>
-							<option value="11" '. selected($donnees_Num_doc['DOC_TYPE'], 11) .'>Fiche non conformité</option>
+							<option value="0" '. selected($donnees_Num_doc['DOC_TYPE'], 0) .'>'. $langue->show_text('SelectAR') .'</option>
+							<option value="1" '. selected($donnees_Num_doc['DOC_TYPE'], 1) .'>'. $langue->show_text('SelectBLS') .'</option>
+							<option value="2" '. selected($donnees_Num_doc['DOC_TYPE'], 2) .'>'. $langue->show_text('SelectBLC') .'</option>
+							<option value="3" '. selected($donnees_Num_doc['DOC_TYPE'], 3) .''. $langue->show_text('SelectBL') .'</option>
+							<option value="4" '. selected($donnees_Num_doc['DOC_TYPE'], 4) .'>'. $langue->show_text('SelectORDER') .'</option>
+							<option value="5" '. selected($donnees_Num_doc['DOC_TYPE'], 5) .'>'. $langue->show_text('SelectBUYORDER') .'</option>
+							<option value="6" '. selected($donnees_Num_doc['DOC_TYPE'], 6) .'>'. $langue->show_text('SelectINTORDER') .'</option>
+							<option value="7" '. selected($donnees_Num_doc['DOC_TYPE'], 7) .'>'. $langue->show_text('SelectASK') .'</option>
+							<option value="8" '. selected($donnees_Num_doc['DOC_TYPE'], 8) .'>'. $langue->show_text('SelectQUOTE') .'</option>
+							<option value="9" '. selected($donnees_Num_doc['DOC_TYPE'], 9) .'>'. $langue->show_text('SelectINVOICE') .'</option>
+							<option value="10" '. selected($donnees_Num_doc['DOC_TYPE'], 10) .'>'. $langue->show_text('SelectINVOICESUP') .'</option>
+							<option value="11" '. selected($donnees_Num_doc['DOC_TYPE'], 11) .'>'. $langue->show_text('SelectNONCONF') .'</option>
 						</select>
 					</td>
 					<td><input type="text" class="input-moyen-vide" name="UpddateModeleNum[]" value="'. $donnees_Num_doc['MODEL'] .'" ></td>
@@ -362,7 +367,7 @@
 	//// EMAIL ////
 	///////////////////////
 
-
+	//Model email add
 	if(isset($_POST['AddCODEMail']) AND !empty($_POST['AddCODEMail'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_EMAIL ." VALUE ('0',
@@ -370,9 +375,10 @@
 																		'". addslashes($_POST['AddLABELMAIL']) ."',
 																		'". addslashes($_POST['AddOBJETMail']) ."',
 																		'". addslashes($_POST['AddTEXTMAIL']) ."')");
-
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddMailNotification')));
 	}
 
+	//update mail model
 	if(isset($_POST['UpdateIdMail']) AND !empty($_POST['UpdateIdMail'])){
 
 		$UpdateIdMail = $_POST['UpdateIdMail'];
@@ -382,9 +388,10 @@
 			$bdd->exec('UPDATE `'. TABLE_ERP_EMAIL .'` SET  OBJET = \''. addslashes($UpddateObjetMail) .'\',
 																TEXT = \''. addslashes($UpddateTextMail) .'\'
 																WHERE id = '. $UpdateIdMail.'');
-
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateMailNotification')));
 	}
 
+	//generat list of mail model
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_EMAIL .'.Id,
 									'. TABLE_ERP_EMAIL .'.CODE,
@@ -394,9 +401,7 @@
 									FROM `'. TABLE_ERP_EMAIL .'`
 									ORDER BY Id');
 
-	while ($donnees_Mail = $req->fetch())
-	{
-
+	while ($donnees_Mail = $req->fetch()){
 		 $contenu3 = $contenu3 .'
 				<tr>
 					<td></td>
@@ -408,6 +413,7 @@
 		$i++;
 	}
 
+	//generat detail of select mail
 	if(isset($_GET['mail']) AND !empty($_GET['mail'])){
 
 		$req = $bdd -> query('SELECT '. TABLE_ERP_EMAIL .'.Id,
@@ -426,20 +432,20 @@
 						<td></td>
 					</tr>
 					<tr>
-						<td>Message :</td>
+						<td>'. $langue->show_text('TableMessage') .'</td>
 						<td colspan="3" >
 							<textarea id="UpddateTextMail" name="UpddateTextMail" rows="10" cols="100" style="align-content:left; white-space: normal;">'. $donnees_Mail['TEXT'] .'</textarea>
 						</td>
 						<td>
 							<p>
-								<01> - Politesse du contact<br/>
-								<02> - Civilité du contact<br/>
-								<03> - Nom du contact<br/>
-								<04> - Prénom du contact<br/>
-								<05> - Code du documents<br/>
-								<06> - Desciption du documents<br/>
-								<07> - Date du documents<br/>
-								<08> - Commentaire du document<br/>
+								<01> - '. $langue->show_text('CODEMAIL01') .'<br/>
+								<02> - '. $langue->show_text('CODEMAIL02') .'<br/>
+								<03> - '. $langue->show_text('CODEMAIL03') .'<br/>
+								<04> - '. $langue->show_text('CODEMAIL04') .'<br/>
+								<05> - '. $langue->show_text('CODEMAIL05') .'<br/>
+								<06> - '. $langue->show_text('CODEMAIL06') .'<br/>
+								<07> - '. $langue->show_text('CODEMAIL07') .'<br/>
+								<08> - '. $langue->show_text('CODEMAIL08') .'<br/>
 							</p>
 						</td>
 					</tr>';
@@ -451,16 +457,17 @@
 	//// TIMELINE ////
 	///////////////////////
 
-
+	//TIMELINE  add
 	if(isset($_POST['AddTEXTTIMELINE']) AND !empty($_POST['AddTEXTTIMELINE'])){
 
 		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_INFO_GENERAL ." VALUE ('0',
 																		'". addslashes($_POST['AddEtatTIMELINE']) ."',
 																		'". time() ."',
 																		'". addslashes($_POST['AddTEXTTIMELINE']) ."')");
-
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddTimelineNotification')));
 	}
 
+	//TIMELINE  update
 	if(isset($_POST['UpdateIdTimeLine']) AND !empty($_POST['UpdateIdTimeLine'])){
 
 		$UpdateIdTimeLine = $_POST['UpdateIdTimeLine'];
@@ -470,9 +477,10 @@
 			$bdd->exec('UPDATE `'. TABLE_ERP_INFO_GENERAL .'` SET  ETAT = \''. addslashes($UpddateEtatTimeLine) .'\',
 																TEXT = \''. addslashes($UpddateTextTimeLine) .'\'
 																WHERE id = '. $UpdateIdTimeLine.'');
-
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTimelineNotification')));
 	}
 
+	//generate TIMELINE
 	$i = 1;
 	$req = $bdd -> query('SELECT '. TABLE_ERP_INFO_GENERAL .'.Id,
 									'. TABLE_ERP_INFO_GENERAL .'.TIMESTAMP,
@@ -481,8 +489,7 @@
 									FROM `'. TABLE_ERP_INFO_GENERAL .'`
 									ORDER BY Id');
 
-	while ($donnees_TimeLine = $req->fetch())
-	{
+	while ($donnees_TimeLine = $req->fetch()){
 		if($donnees_TimeLine['ETAT'] == 2){$EtatTimeLine = "En édition";}
 		if($donnees_TimeLine['ETAT'] == 1){$EtatTimeLine = "Afficher";}
 		if($donnees_TimeLine['ETAT'] == 0){$EtatTimeLine = "Non publiée";}
@@ -511,16 +518,16 @@
 						<td><input type="hidden" name="UpdateIdTimeLine" value="'. $donnees_TimeLine['Id'] .'">Etat :</td>
 						<td>
 							<select name="UpddateEtatTimeLine">
-									<option value="2" '. selected($donnees_TimeLine['ETAT'], 2) .'>En édition</option>
-									<option value="1" '. selected($donnees_TimeLine['ETAT'], 1) .'>Afficher</option>
-									<option value="0" '. selected($donnees_TimeLine['ETAT'], 0) .'>Non publiée</option>
+									<option value="2" '. selected($donnees_TimeLine['ETAT'], 2) .'>'. $langue->show_text('SelectEdition') .'</option>
+									<option value="1" '. selected($donnees_TimeLine['ETAT'], 1) .'>'. $langue->show_text('SelectDisplay') .'</option>
+									<option value="0" '. selected($donnees_TimeLine['ETAT'], 0) .'>'. $langue->show_text('SelectNoDisplay') .'</option>
 								</select>
 						</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
-						<td>Message :</td>
+						<td>'. $langue->show_text('TableMessage') .'</td>
 						<td colspan="3" >
 							<textarea id="UpddateTextTimeLine" name="UpddateTextTimeLine" rows="10" cols="100" style="align-content:left; white-space: normal;">'. $donnees_TimeLine['TEXT'] .'</textarea>
 						</td>
@@ -537,7 +544,6 @@
 		$ParDefautDiv1 = 'id="defaultOpen"';
 	}
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
@@ -552,23 +558,19 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?php echo $ParDefautDiv1; ?>>Gestion de la société</button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')">Secteurs d'activités</button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"<?php echo $ParDefautDiv3; ?>>Gestion des e-mails</button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')">Numérotation des documents</button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')" <?php echo $ParDefautDiv5; ?>>Timeline Informations</button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Titre1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Titre2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"<?=$ParDefautDiv3; ?>><?=$langue->show_text('Titre3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Titre4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')" <?=$ParDefautDiv5; ?>><?=$langue->show_text('Titre5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 			<form method="post" name="Company" action="manage-company.php" class="content-form" enctype="multipart/form-data" >
 				<table class="content-table">
 					<thead>
 						<tr>
-							<th colspan="5">
-								  <br/>
-							</th>
-							<th>
-
-							</th>
+							<th colspan="5"><br/></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -578,7 +580,7 @@
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -592,8 +594,8 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Libellé</th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -601,14 +603,14 @@
 								Echo $contenu2;
 ?>
 						<tr>
-							<td>Ajout</td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODESector"></td>
 							<td><input type="text" class="input-moyen-vide" name="AddLABELSector" ></td>
 						</tr>
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -622,10 +624,10 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>CODE</th>
-							<th>Desciption</th>
-							<th>Objet</th>
-							<th>Texte</th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableObjet'); ?></th>
+							<th><?=$langue->show_text('TableText'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -633,7 +635,7 @@
 								Echo $contenu3;
 ?>
 						<tr>
-							<td>Ajout</td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODEMail" ></td>
 							<td><input type="text" class="input-moyen-vide" name="AddLABELMAIL" ></td>
 							<td><input type="text" class="input-moyen-vide" name="AddOBJETMail" ></td>
@@ -642,7 +644,7 @@
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -656,34 +658,33 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>Document</th>
-							<th>Modèle</th>
-							<th>Nombre de digits</th>
-							<th>Compteur actuel</th>
-							<th>Exemple</th>
+							<th><?=$langue->show_text('TableDocument'); ?></th>
+							<th><?=$langue->show_text('TableModel'); ?></th>
+							<th><?=$langue->show_text('TableDigitNumber'); ?></th>
+							<th><?=$langue->show_text('TableCurentIndex'); ?></th>
+							<th><?=$langue->show_text('TableExemple'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu4;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td>
 								<select name="AddDOCNum">
-									<option value="0">Accusés de reception</option>
-									<option value="1">Bon de livraison fournisseur</option>
-									<option value="2">Bon de retour client</option>
-									<option value="3">Bon de livraison</option>
-									<option value="4">Commande</option>
-									<option value="5">Commande d'achat</option>
-									<option value="6">Commande interne</option>
-									<option value="7">Consultation</option>
-									<option value="8">Devis</option>
-									<option value="9">Facture</option>
-									<option value="10">Facture fournisseur</option>
-									<option value="11">Fiche non conformité</option>
+									<option value="0"><?=$langue->show_text('SelectAR'); ?></option>
+									<option value="1"><?=$langue->show_text('SelectBLS'); ?></option>
+									<option value="2"><?=$langue->show_text('SelectBLC'); ?></option>
+									<option value="3"><?=$langue->show_text('SelectBL'); ?></option>
+									<option value="4"><?=$langue->show_text('SelectORDER'); ?></option>
+									<option value="5"><?=$langue->show_text('SelectBUYORDER'); ?></option>
+									<option value="6"><?=$langue->show_text('SelectINTORDER'); ?></option>
+									<option value="7"><?=$langue->show_text('SelectASK'); ?></option>
+									<option value="8"><?=$langue->show_text('SelectQUOTE'); ?></option>
+									<option value="9"><?=$langue->show_text('SelectINVOICE'); ?></option>
+									<option value="10"><?=$langue->show_text('SelectINVOICESUP'); ?></option>
+									<option value="11"><?=$langue->show_text('SelectNONCONF'); ?></option>
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="AddModeleNum" ></td>
@@ -694,7 +695,7 @@
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -708,23 +709,22 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>Etat</th>
-							<th>Texte</th>
-							<th>Posté le :</th>
+							<th><?=$langue->show_text('TableState'); ?></th>
+							<th><?=$langue->show_text('TableText'); ?></th>
+							<th><?=$langue->show_text('TablePostDate'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-							<?php
-
+<?php
 								Echo $contenu5;
-							?>
+?>
 						<tr>
-							<td>Ajout</td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td>
 								<select name="AddEtatTIMELINE">
-									<option value="2">En édition</option>
-									<option value="1">Afficher</option>
-									<option value="0">Non publiée</option>
+									<option value="2"><?=$langue->show_text('SelectEdition'); ?></option>
+									<option value="1"><?=$langue->show_text('SelectDisplay'); ?></option>
+									<option value="0"><?=$langue->show_text('SelectNoDisplay'); ?></option>
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="AddTEXTTIMELINE" ></td>
@@ -733,7 +733,7 @@
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -741,5 +741,9 @@
 				</table>
 			</form>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

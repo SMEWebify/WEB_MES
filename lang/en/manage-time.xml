@@ -50,6 +50,15 @@
    <TableDayType>Day type</TableDayType>
    <TableDate>Date</TableDate>
    <TableFixedDate>Fixed date</TableFixedDate>
+  <!-- notifications -->
+   <AddEventNotification>Event add</AddEventNotification>
+   <UpdateEventNotification> Event changed</UpdateEventNotification>  
+   <AddImproductTimetNotification>Improduct Time added</AddImproductTimetNotification>
+   <UpdateImproductTimetNotification> Improduct Time changed</UpdateImproductTimetNotification>  
+   <AddOutNotification>Type of absence added</AddOutNotification>
+   <UpdateOutNotification> Type of absence  changed</UpdateOutNotification> 
+   <AddBankNotification>Public holiday added</AddBankNotification>
+   <UpdateBankNotification> Public holiday changed</UpdateBankNotification>  
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Label</TableLabel>

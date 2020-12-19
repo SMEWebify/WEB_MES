@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+<!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+<!-- title page --> 
+	<TiltePage>Gestion de la société</TiltePage>
+    <Titre1>Gestion de la société</Titre1>
+    <Titre2>Secteurs d'activités</Titre2>
+    <Titre3>Gestion des e-mails</Titre3>
+    <Titre4>Numérotation des documents</Titre4>
+    <Titre5>Timeline Informations</Titre5>
+<!-- table content --> 
+    <TableNameCompany>Nom de la société:</TableNameCompany>
+    <TableCODE>CODE</TableCODE>
+    <TableLabel>Libelé</TableLabel>
+    <Addtext>Ajout</Addtext>
+    <TableUpdateButton>Mettre à jours</TableUpdateButton>
+    <TableAdresse>Adresse</TableAdresse>
+    <TableCity>Ville</TableCity>  
+    <TableZipCode>Code postal</TableZipCode> 
+    <TableCountry>Pay</TableCountry>
+    <TableRegion>Région</TableRegion> 
+    <TableMail>Mail :</TableMail>
+    <TablePhoneNumber>Téléphone :</TablePhoneNumber> 
+    <TableWebSite>Site Web</TableWebSite> 
+    <TableFacebook>Facebook</TableFacebook>
+    <TableTwitter>Twitter</TableTwitter>
+    <TableLinked>Linked</TableLinked>
+    <TableTVAType>TVA</TableTVAType>
+    <TableSIREN>SIREN</TableSIREN>
+    <TableAPE>Code APE</TableAPE> 
+    <TableTVAINTRA>TVA INTRA</TableTVAINTRA>
+    <TableLogo>Logo :</TableLogo>
+    <TableCapital>Capital :</TableCapital>
+    <TableRCS>RCS :</TableRCS>
+    <TableMessage>Message :</TableMessage>
+    <TableObjet>Objet</TableObjet> 
+    <TableText>Texte</TableText>
+    <TableDocument>Document</TableDocument>
+    <TableModel>Modèle</TableModel>
+    <TableDigitNumber>Nombre de digits</TableDigitNumber>
+    <TableCurentIndex>Compteur actuel</TableCurentIndex>
+    <TableExemple>Exemple</TableExemple>
+    <TableState>Etat</TableState>
+    <TablePostDate>Posté le : </TablePostDate> 
+
+    <CODEMAIL01>Politesse du contact</CODEMAIL01>
+    <CODEMAIL02>Civilité du contact</CODEMAIL02>
+    <CODEMAIL03>Nom du contact</CODEMAIL03>
+    <CODEMAIL04>Prénom du contact</CODEMAIL04>
+    <CODEMAIL05>Code du documents</CODEMAIL05>
+    <CODEMAIL06>Desciption du documents</CODEMAIL06>
+    <CODEMAIL07>Date du documents</CODEMAIL07>
+    <CODEMAIL08>Commentaire du document</CODEMAIL08>
+ <!-- notifications -->
+    <AddSectorNotification>Secteur d'ativité ajouté</AddSectorNotification>
+    <UpdateSectorNotification>Secteur(s) d'ativité modifié(s)</UpdateSectorNotification>
+    <AddDocNotification>Numérotation de document ajoutée</AddDocNotification>
+    <UpdateDocNotification>Numérotation de document modifiée(s)</UpdateDocNotification>
+    <AddMailNotification>Modèle de mail ajouté</AddMailNotification>
+    <UpdateMailNotification>Modèle de mail modifié(s)</UpdateMailNotification>
+    <AddTimelineNotification>Info timeline ajoutée</AddTimelineNotification>
+    <UpdateTimelineNotification>Info timeline modifié</UpdateTimelineNotification>
+<!-- Select-->
+    <SelectMr>Mr</SelectMr>
+    <SelectMme>Mme</SelectMme>
+    <SelectMlle>Mlle</SelectMlle>
+    <SelectNoControl>Pas de contrôle</SelectNoControl>
+    <SelectControlWithoutBlok>Contrôle sans bloquer reception</SelectControlWithoutBlok>
+    <SelectControlWithBlok>Contrôle avec blocage reception</SelectControlWithBlok>
+    <SelectEdition>En édition</SelectEdition>
+    <SelectDisplay>Afficher</SelectDisplay>
+    <SelectNoDisplay>Non publiée</SelectNoDisplay>
+
+    <SelectAR>Accusés de reception</SelectAR>
+    <SelectBLS>Bon de livraison fournisseur</SelectBLS>
+    <SelectBLC>Bon de retour client</SelectBLC>
+    <SelectBL>Bon de livraison</SelectBL>
+    <SelectORDER>Commande</SelectORDER>
+    <SelectBUYORDER>Commande d'achat</SelectBUYORDER>
+    <SelectINTORDER>Commande interne</SelectINTORDER>
+    <SelectASK>Consultation</SelectASK>
+    <SelectQUOTE>Devis</SelectQUOTE>
+    <SelectINVOICE>Facture</SelectINVOICE>
+    <SelectINVOICESUP>Facture fournisseur</SelectINVOICESUP>
+    <SelectNONCONF>Fiche non conformité</SelectNONCONF>
+
+    <Yes>Oui</Yes>
+    <No>Non</No>
+</langue>

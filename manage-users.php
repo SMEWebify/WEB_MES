@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -18,7 +19,7 @@
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'manage-users', $UserLanguage);
 	//load callOut notification box class
-	require_once 'class/callOutBox.class.php';
+	require_once 'class/notification.class.php';
 	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
@@ -33,7 +34,7 @@
 																		'". $_POST['Addcode_ajout'] ."',
 																		'',
 																		'',
-																		'',
+																		NOW(),
 																		'',
 																		'',
 																		'',
@@ -44,9 +45,9 @@
 																		'',
 																		'". $_POST['Addposte_ajout'] ."',
 																		'". $_POST['Addsection_ajout'] ."',
-																		'1')");
+																		'1')");	
 
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddUserNotification')));														
 	}
 
 	//If add Right
@@ -64,6 +65,8 @@
 																		'". $_POST['Addpage_8_ajout'] ."',
 																		'". $_POST['Addpage_9_ajout'] ."',
 																		'". $_POST['Addpage_10_ajout'] ."')");
+
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddRightNotification')));	
 	}
 
 	//Update data employees
@@ -86,7 +89,7 @@
 			$i++;
 		}
 
-		$CallOutBox->add_notification(array('2', $i . ' Ligne(s) employé mise à jours'));
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateUserNotification')));
 	}
 
 	//Update data right
@@ -135,6 +138,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateRightNotification')));
 	}
 
 	//Right list for employees
@@ -275,20 +279,20 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
 	</div>
 		<div id="div1" class="tabcontent" >
 			<form method="post" name="Employees" action="manage-users.php" class="content-form">
 				<table class="content-table" >
 					<thead>
 						<tr>
-							<th><?php echo $langue->show_text('TableNumber'); ?></th>
-							<th><?php echo $langue->show_text('TableLastConnexion'); ?></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableSeudo'); ?></th>
-							<th><?php echo $langue->show_text('TableRight'); ?></th>
-							<th><?php echo $langue->show_text('TableSection'); ?></th>
+							<th><?=$langue->show_text('TableNumber'); ?></th>
+							<th><?=$langue->show_text('TableLastConnexion'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableSeudo'); ?></th>
+							<th><?=$langue->show_text('TableRight'); ?></th>
+							<th><?=$langue->show_text('TableSection'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -296,25 +300,25 @@
 								Echo $EmployeesListContent;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td></td>
 							<td><input type="text" class="input-moyen-vide" name="Addcode_ajout" size="1"></td>
 							<td><input type="text" class="input-moyen-vide" name="Addnom_ajout" size="1"></td>
 							<td>
 								<select name="Addposte_ajout">
-									<?php echo $RightListe ?>
+									<?=$RightListe ?>
 								</select>
 							</td>
 							<td>
 								<select name="Addsection_ajout">
-									<?php echo $SectionListe ?>
+									<?=$SectionListe ?>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -328,17 +332,17 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableRightName'); ?></th>
-							<th><?php echo $langue->show_text('TableIndex'); ?></th>
-							<th><?php echo $langue->show_text('TableQuoteStudy'); ?></th>
-							<th><?php echo $langue->show_text('TableOrder'); ?></th>
-							<th><?php echo $langue->show_text('TablePlanning'); ?></th>
-							<th><?php echo $langue->show_text('TableCalendar'); ?></th>
-							<th><?php echo $langue->show_text('TablePurchase'); ?></th>
-							<th><?php echo $langue->show_text('TableArticle'); ?></th>
-							<th><?php echo $langue->show_text('TableQuality'); ?></th>
-							<th><?php echo $langue->show_text('TableGeneralSetting'); ?></th>
-							<th><?php echo $langue->show_text('TableAcounting'); ?></th>
+							<th><?=$langue->show_text('TableRightName'); ?></th>
+							<th><?=$langue->show_text('TableIndex'); ?></th>
+							<th><?=$langue->show_text('TableQuoteStudy'); ?></th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TablePlanning'); ?></th>
+							<th><?=$langue->show_text('TableCalendar'); ?></th>
+							<th><?=$langue->show_text('TablePurchase'); ?></th>
+							<th><?=$langue->show_text('TableArticle'); ?></th>
+							<th><?=$langue->show_text('TableQuality'); ?></th>
+							<th><?=$langue->show_text('TableGeneralSetting'); ?></th>
+							<th><?=$langue->show_text('TableAcounting'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -346,73 +350,73 @@
 								Echo $RightContent;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text" class="input-moyen-vide" name="AddRight" size="1"></td>
 							<td>
 								<select name="Addpage_1_ajout">
-								<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+								<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_2_ajout">
-								<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+								<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_3_ajout">
-									<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_4_ajout">
-									<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_5_ajout">
-									<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_6_ajout">
-									<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_7_ajout">
-								<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+								<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_8_ajout">
-								<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+								<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_9_ajout">
-								<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+								<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="Addpage_10_ajout">
-									<option value="1">"<?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1">"<?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="12" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -420,5 +424,9 @@
 				</table>
 			</form>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+<!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+<!-- title page --> 
+	<TiltePage>Devis</TiltePage>
+    <Title1>Accueil</Title1> 
+    <Title2>Devis</Title2>
+    <Title3>Détail de l'offre</Title3>
+    <Title4>Général</Title4>
+    <Title5>Détail client</Title5>
+    <Title6>Détail commerciales</Title6>
+    <Title7>Commentaire</Title7>
+    <Title8>Document</Title8>
+    <Title9>Assistant de passage en commande</Title9>
+<!-- table content --> 
+    <TableNameUser>Nom :</TableNameUser>
+    <TableNameCompany>Nom :</TableNameCompany>
+    <TableSurNameUser>Prénom :</TableSurNameUser>
+    <TableMailUser>Mail :</TableMailUser>
+    <TablePhoneNumber>Téléphone :</TablePhoneNumber> 
+    <TableMobilNumber>Portable :</TableMobilNumber>
+    <TableTVAType>TVA</TableTVAType> 
+    <TableCODE>CODE</TableCODE>
+    <TableLabel>Libelé</TableLabel>
+    <TableOrder>Ordre</TableOrder>
+    <Addline>Ajout de ligne</Addline>
+    <Deleteline>Suprimer ligne(s)</Deleteline>
+    <UpdateQuoteLine>Mettre à jours les lignes du devis</UpdateQuoteLine>
+    <TableCondiList>Condition de réglement</TableCondiList>
+    <TableMethodList>Mode de réglement</TableMethodList>
+    <TableUpdateButton>Mettre à jours</TableUpdateButton>
+    <TableNewButton>Mouveau devis</TableNewButton>
+    <TableNewQuoteFor>Créer un nouveau devis pour le client :</TableNewQuoteFor> 
+    <TimeLinePayement>Echéancier types</TimeLinePayement>
+    <TableAdresseInvoice>Adresse de facturation</TableAdresseInvoice>
+    <TableAdresseDelevery>Adresse de livraison</TableAdresseDelevery>
+    <TableDeleveryMode>Mode de livraison :</TableDeleveryMode> 
+    <TableCustomerReference>Référence client :</TableCustomerReference> 
+    <TableDeleveryDate>Délais de livraison :</TableDeleveryDate>
+    <TableNumberCustomerOrder>N° de commande client</TableNumberCustomerOrder>
+    <TableCreateOrder>Créer commandes</TableCreateOrder>
+    <TableNewOrder>Nouvelle Commande</TableNewOrder> 
+    <TableSelectOrder>Créer une nouvelle commande ou lier à une existante :</TableSelectOrder> 
+    <TableIndexQuote>version</TableIndexQuote> 
+    <TableNumberQuote>Devis numéro</TableNumberQuote> 
+    <TableUnitPrice>Prix U.H.T (€)</TableUnitPrice> 
+    <TableQty>Quantité</TableQty>
+    <TableArticle>Article</TableArticle>
+    <TableGeneralInfo>Informations générale</TableGeneralInfo> 
+    <TableTotal>Total</TableTotal> 
+    <TableSalesManager>Responsable commercial</TableSalesManager> 
+    <TableTechnicalManager>Responsable technique</TableTechnicalManager> 
+    <TableTVAType>TVA</TableTVAType>
+    <TableStatu>Etat</TableStatu>
+    <TableDelay>Délais</TableDelay> 
+    <TableUnit>Unité</TableUnit>
+    <TableDiscount>Remise %</TableDiscount> 
+    <TableRate>Taux</TableRate>
+    <TotalTax>Total TVA</TotalTax> 
+    <TotalPriceWithTax>Montant H.T.</TotalPriceWithTax>
+    <TotalPriceWithOutTax>Montant T.T.C :</TotalPriceWithOutTax> 
+    <TotalWithOutTax>Total H.T. :</TotalWithOutTax>
+    <TotalWithTax>Total T.T.C :</TotalWithTax>
+    <TableFind>Chercher : </TableFind>
+    <TableFindQuote>Chercher un devis: </TableFindQuote>
+    <TablenoQuote> Aucun devis chargé</TablenoQuote>
+    <TableContact>Contacts</TableContact>
+    <TableUserCreate>Créateur</TableUserCreate>
+    <TableCodeLabel>Code et libellé du devis :</TableCodeLabel>  
+    <TableLabelquote>Libellé du devis:</TableLabelquote>   
+    <TableIndexLabel>Indice et libellé de version  :</TableIndexLabel>  
+    <TableLabelIndexquote>Libellé de version  :</TableLabelIndexquote>  
+    <TableCreationDate>Date de création :</TableCreationDate>  
+    <TableValidityDate>Date de validité :</TableValidityDate>  
+    <TableQuoteStatu>Etat du devis :</TableQuoteStatu>     
+ <!-- notifications -->
+    <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
+    <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>
+    <UpdateGeneralInfoNotification>Information générales mise à jours</UpdateGeneralInfoNotification>
+    <UpdateStatuLineNotification> état des lignes mise à jours</UpdateStatuLineNotification>
+    <UpdateInfoCustomerNotification>Information client mise à jours</UpdateInfoCustomerNotification>
+    <UpdateSalesInfoNotification>Information commerciales mise à jours</UpdateSalesInfoNotification>
+    <UpdateGeneralNotification>Mise à jours des information interne</UpdateGeneralNotification>
+    <AddQuoteNotification>Devis créé</AddQuoteNotification>
+    <AddQuoteLineNotification> ligne(s) ajoutée(s) au devis</AddQuoteLineNotification>
+    <DeleteQuoteLineNotification> ligne(s) suprimée(s) du devis</DeleteQuoteLineNotification>
+<!-- Select-->
+    <SelectOpen>En cours</SelectOpen>
+    <SelectRefuse>Refusé</SelectRefuse>
+    <SelectSend>Envoyé</SelectSend>
+    <SelectDecline>Décliné</SelectDecline>
+    <SelectClosed>Fermé</SelectClosed>
+    <SelectObsolete>Obselète</SelectObsolete>
+
+
+    <Yes>Oui</Yes>
+    <No>Non</No>
+</langue>

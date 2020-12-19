@@ -51,8 +51,10 @@
    <Yes>Oui</Yes>
    <No>Non</No>
  <!-- notifications -->
-   <AddUserNotification>ligne(s) d'employé(s) modifiée(s).</AddUserNotification>
-    
+   <AddUserNotification>Employé(e) ajouté(e).</AddUserNotification>
+   <UpdateUserNotification> ligne(s) d'employé(s) modifiée(s).</UpdateUserNotification>  
+   <AddRightNotification>Droit ajouté.</AddRightNotification>
+   <UpdateRightNotification> droit(s) modifié(s).</UpdateRightNotification>  
  <!-- general -->
     <Addtext>Ajout</Addtext>
      <TableUpdateButton>Mettre à jours</TableUpdateButton>

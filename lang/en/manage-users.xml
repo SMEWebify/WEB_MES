@@ -48,8 +48,13 @@
    <TableQuality>Quality</TableQuality>
    <TableGeneralSetting>Settings</TableGeneralSetting>
    <TableAcounting>Accouting</TableAcounting>
-    <Yes>Yes</Yes>
-    <No>No</No>
+   <Yes>Yes</Yes>
+   <No>No</No>
+ <!-- notifications -->
+   <AddUserNotification>User add.</AddUserNotification>
+   <UpdateUserNotification> modified line(s).</UpdateUserNotification>
+   <AddRightNotification>Right add.</AddRightNotification>
+   <UpdateRightNotification> modified right(s).</UpdateRightNotification> 
  <!-- general -->
     <Addtext>Add</Addtext>
      <TableUpdateButton>Update</TableUpdateButton>

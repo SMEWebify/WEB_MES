@@ -50,4 +50,6 @@
 
     <french>French</french>
     <english>English</english>
+ <!-- notifications -->
+     <UpdateProfilNotification>Profil update</UpdateProfilNotification> 
 </langue>

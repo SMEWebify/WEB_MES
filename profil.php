@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -17,6 +18,9 @@
 	// load language class
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'profil', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//If user make change profil value
 	if(isset($_POST['ProfilSpeudo']) AND !empty($_POST['ProfilName'])){
@@ -54,6 +58,8 @@
 																NAME = \''. addslashes($UpdateProfilSpeudo) .'\',
 																PASSWORD = \''. addslashes($UpdateProfilMDP) .'\'
 																WHERE IdUser=\''. $_SESSION['id'] .'\'');
+
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateProfilNotification')));
 	}
 
 	//If user make change setting profil
@@ -83,7 +89,6 @@
 								FONCTION,
 								RIGHT_NAME,
 								LANGUAGE
-
 							FROM `'. TABLE_ERP_EMPLOYEES .'` LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id` WHERE IdUser=\''. $_SESSION['id'] .'\'');
 
 	$donnees_membre = $req->fetch();
@@ -233,21 +238,18 @@
 	//include interface
 	require_once 'include/include_header.php';
 ?>
-
 <script>
-var password = document.getElementById("ProfilMDP")
-  , confirm_password = document.getElementById("ProfilMDPComfirm");
-
-function validatePassword(){
-  if(password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Les mots de passes ne correspondent pas");
-  } else {
-    confirm_password.setCustomValidity('');
-  }
-}
-
-password.onchange = validatePassword;
-confirm_password.onkeyup = validatePassword;
+	var password = document.getElementById("ProfilMDP")
+	, confirm_password = document.getElementById("ProfilMDPComfirm");
+	function validatePassword(){
+	if(password.value != confirm_password.value) {
+		confirm_password.setCustomValidity("Les mots de passes ne correspondent pas");
+	} else {
+		confirm_password.setCustomValidity('');
+	}
+	}
+	password.onchange = validatePassword;
+	confirm_password.onkeyup = validatePassword;
 </script>
 </head>
 <body>
@@ -256,10 +258,9 @@ confirm_password.onkeyup = validatePassword;
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Titre1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" id="defaultOpen"><?php echo $langue->show_text('Titre2'); ?></button>
-		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/login.php?action=deconnexion';"><?php echo $langue->show_text('Titre3'); ?></button>
-
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Titre1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" id="defaultOpen"><?=$langue->show_text('Titre2'); ?></button>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/login.php?action=deconnexion';"><?=$langue->show_text('Titre3'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 <?php
@@ -271,5 +272,9 @@ confirm_password.onkeyup = validatePassword;
 	echo $setting;
 ?>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

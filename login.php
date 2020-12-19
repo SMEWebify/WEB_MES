@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//load info company
@@ -32,7 +33,7 @@
 					$reponse	=	$bdd	->	query('SELECT	statu	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
 					$verification_statut	=	$reponse->fetch();
 
-						//check if user in not ban
+					//check if user in not ban
 					if($verification_statut['statu']	!=	'1'){
 						stop('Votre	compte	a	été	suspendu.',	2,	'login.php');
 					}
@@ -117,16 +118,6 @@
 	//include header
 	require_once 'include/include_header.php';
 ?>
-<script>
-function myFunction() {
-  var x = document.getElementById("mdp");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
-</script>
 </head>
 <body>
 	<div id="id01" class="modal">
@@ -137,9 +128,9 @@ function myFunction() {
 					<label	for="psw"><b>Mot de passe</b></label>
 					<input	type="password"	name="mdp"	id="mdp"	name="psw"	required>
 					<button	type="submit">Connexion</button>
-					<input type="checkbox" onclick="myFunction()">Voir mot de passe
+					<input type="checkbox" onclick="DisplayPassword()">Voir mot de passe
 				</div>
 		</form>
-</div>
+	</div>
 </body>
 </html>

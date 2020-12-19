@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -283,18 +284,18 @@ printPdf = function (url) {
 }
 </script>
 <button onclick="Export2Doc('content-to-pdf');" class="bouton">Export en .doc</button>
-<button onclick="printPdf('<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>');" class="bouton">Export en .pdf</button>
+<button onclick="printPdf('<?="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>');" class="bouton">Export en .pdf</button>
 	<div id="content-to-pdf">
 		<page size="A4">
 			<table class="content-table-entete">
 					<tr>
 						<td colspan="5">
-									 <img src="<?php echo  "http://" . $_SERVER['HTTP_HOST'] . "/erp/" . $CompanyLogo   ?>" title="LOGO entreprise" alt="Logo" style="width:100px"/>
+									 <img src="<?= "http://" . $_SERVER['HTTP_HOST'] . "/erp/" . $CompanyLogo   ?>" title="LOGO entreprise" alt="Logo" style="width:100px"/>
 						</td>
 						<td colspan="5" class="TitreDevis">
 									 <h1>DEVIS</h1> 
-									 <h2  style="text-decoration: underline;">N° <?php echo $DevisCODE ?></h2>
-									 <h2><?php echo date("m-d-Y");  ?></h2>
+									 <h2  style="text-decoration: underline;">N° <?=$DevisCODE ?></h2>
+									 <h2><?=date("m-d-Y");  ?></h2>
 						</td>
 					</tr>
 					<tr>
@@ -307,17 +308,17 @@ printPdf = function (url) {
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $DevisNomName .' '. $DevisNomPrenom ?>
+											<?= $DevisNomName .' '. $DevisNomPrenom ?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $CompanyPhone?>
+											<?= $CompanyPhone?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $CompanyMail ?>
+											<?= $CompanyMail ?>
 											</td>
 										</tr>
 									</table>
@@ -331,27 +332,27 @@ printPdf = function (url) {
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $DevisCLIENT_NAME .' - '. $DevisCONTACT_CIVILITE .' '. $DevisCONTACT_NAME .' - '. $DevisCONTACT_PRENOM ?>
+											<?= $DevisCLIENT_NAME .' - '. $DevisCONTACT_CIVILITE .' '. $DevisCONTACT_NAME .' - '. $DevisCONTACT_PRENOM ?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $CompanyAddress?>
+											<?= $CompanyAddress?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $CompanyZipCode. ' '. $CompanyCity?>
+											<?= $CompanyZipCode. ' '. $CompanyCity?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $DevisCONTACT_NUMBER ?>
+											<?= $DevisCONTACT_NUMBER ?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-											<?php echo  $DevisCONTACT_MAIL ?>
+											<?= $DevisCONTACT_MAIL ?>
 											</td>
 										</tr>
 							</table>
@@ -361,7 +362,7 @@ printPdf = function (url) {
 				<table class="content-table"
 					<tr>
 						<td colspan="10" class="CompanyContact">
-							Votre référence : <?php echo  $DevisREFERENCE?>
+							Votre référence : <?= $DevisREFERENCE?>
 						</td>
 					</tr>
 				</table>
@@ -378,7 +379,7 @@ printPdf = function (url) {
 						</tr>
 					</thead>
 					<tbody>
-						<?php echo $DetailLigneDuDevis ?>
+						<?=$DetailLigneDuDevis ?>
 						<tr>
 							<td colspan="3">
 									<table style="float: left">
@@ -387,7 +388,7 @@ printPdf = function (url) {
 												 <B>Condition de réglement :  </B>
 											</td>
 											<td>
-												<?php echo  $DevisCONDI_REG_LABEL?>
+												<?= $DevisCONDI_REG_LABEL?>
 											</td>
 										</tr>
 										<tr>
@@ -395,7 +396,7 @@ printPdf = function (url) {
 												 <B>Mode de réglement :</B>
 											</td>
 											<td>
-												<?php echo  $DevisMODE_REG_LABEL?>
+												<?= $DevisMODE_REG_LABEL?>
 											</td>
 										</tr>
 										<tr>
@@ -403,7 +404,7 @@ printPdf = function (url) {
 												 <B>Mode de transport :</B>
 											</td>
 											<td>
-													<?php echo  $DevisMODE_DE_TRANSPORT ?>
+													<?= $DevisMODE_DE_TRANSPORT ?>
 											</td>
 										</tr>
 										<tr>
@@ -411,7 +412,7 @@ printPdf = function (url) {
 												 <B>Echéancier :</B>
 											</td>
 											<td>
-													<?php echo  $DevisECHEANCIER_LABEL ?>
+													<?= $DevisECHEANCIER_LABEL ?>
 											</td>
 										</tr>
 										
@@ -419,7 +420,7 @@ printPdf = function (url) {
 							</td>
 							<td colspan="7">
 								<table style="float: right">
-										<?php echo $DetailLigneTVA; ?>
+										<?=$DetailLigneTVA; ?>
 								</table>
 							</td>
 						</tr>

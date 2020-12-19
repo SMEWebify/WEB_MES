@@ -36,9 +36,8 @@
    <Title7>Accounting allocations</Title7>
    <Title8>Comment</Title8>
    <Title9>Unit</Title9>
-   <Title10>Subfamily</Title10>
-    <ListArticle>Article :</ListArticle>
-
+   <Title10>Sub family</Title10>
+   <ListArticle>Article :</ListArticle>
 <!-- select -->
    <SelectMass>Mass</SelectMass>
    <SelectLength>Length</SelectLength>
@@ -83,6 +82,22 @@
    <TableSurDimX>Over Size X</TableSurDimX>
    <TableSurDimY>Over Size Y</TableSurDimY>
    <TableSurDimZ>Over Size Z</TableSurDimZ>
+ <!-- notifications -->
+   <UpdateCommentNotification>Comment changed</UpdateCommentNotification>
+   <AddArticleNotification>Article added</AddArticleNotification>
+   <UpdateArticleNotification>Article changed</UpdateArticleNotification>
+   <AddFamillyNotification>Familly added</AddFamillyNotification>
+   <UpdateFamillyNotification> Familly changed</UpdateFamillyNotification>
+   <AddUnitNotification>Unit added</AddUnitNotification>
+   <UpdateUnitNotification> unit changed</UpdateUnitNotification>
+   <AddAllocationNotification>Allocation added</AddAllocationNotification>
+   <UpdateAllocationNotification> allocation changed</UpdateAllocationNotification>
+   <AddSubFamillyNotification>Sub-familly added</AddSubFamillyNotification>
+   <UpdateSubFamillyNotification> sub-familly changed</UpdateSubFamillyNotification>
+   <AddNomenclatureNotification>Nomenclature added</AddNomenclatureNotification>
+   <UpdateNomenclatureNotification> nomenclature changed</UpdateNomenclatureNotification>
+   <AddTechnicalCutNotification>Technical cut added</AddTechnicalCutNotification>
+   <UpdateTechnicalCutNotification> technical cut changed</UpdateTechnicalCutNotification>
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Label</TableLabel>

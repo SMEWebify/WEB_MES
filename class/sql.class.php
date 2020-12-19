@@ -1,11 +1,19 @@
 <?php
-try
+class SQL extends PDO
 {
-	$bdd = new PDO('mysql:host='. SQL_HOST .';dbname='. DB_NAME .';charset=utf8', DB_USER , '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-}
-catch (PDOException  $e)
-{
-	echo'
+    private static $_conn;
+ 
+    public function __construct ()
+	{}
+	
+    public static function getInstance (){
+        if (!isset (self::$_conn)){
+            try{
+                self::$_conn = new PDO('mysql:host='. SQL_HOST .';dbname='. DB_NAME .';charset=utf8', DB_USER , '');
+				self::$_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+            }
+ 			catch (PDOException $e){
+				echo'
 						<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 							<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 							<head>
@@ -22,6 +30,7 @@ catch (PDOException  $e)
 									<p "> 
 										Erreur de connexion à la base de données.<br/>
 										<br/>
+										'. $e -> getmessage() .'
 										Cela peut prendre quelques minutes à plusieures heures, veuillez nous excuser pour le dérangement occasionné.<br/>
 										Nous travaillons pour rétablir le site au plus vite.<br/>
 										<br/>
@@ -37,7 +46,10 @@ catch (PDOException  $e)
 									</p>
 								</div>
 							</body>
-						</html>	';			
-	exit;
+						</html>	';
+            }
+        }
+            return (self::$_conn) ;
+    }
 }
 ?>

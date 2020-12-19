@@ -41,7 +41,14 @@
    <SelectSupplies>Fourniture</SelectSupplies>
    <SelectSubcontracting>Sous-traitance</SelectSubcontracting>
    <SelectCompoundItem>Article composés</SelectCompoundItem>
-
+<!-- notifications -->
+   <AddServiceNotification>Prestation ajoutée</AddServiceNotification>
+   <AddSectionNotification>Section ajoutée</AddSectionNotification>  
+   <AddLocationNotification>Zone de stockage ajoutée</AddLocationNotification>
+   <AddRessourcesnNotification>Ressource ajoutée</AddRessourcesnNotification>  
+   <UpdateSectionNotification> section(s) modifiée(s)</UpdateSectionNotification>
+   <UpdateServiceNotification> prestation(s) modifiée(s)</UpdateServiceNotification> 
+   <UpdateLocationNotification> zone de stockage(s) modifiée(s)</UpdateLocationNotification>
 <!-- general -->
    <TableRessource>Ressources</TableRessource>
    <TableResponsible>Responsable</TableResponsible>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+<!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+<!-- title page --> 
+	<TiltePage>Client et fournisseurs</TiltePage>
+    <Titre1>Ajouter une société</Titre1>
+    <Titre2>Sites</Titre2>
+    <Titre3>Contacts</Titre3>
+    <Titre4>Secteur d'activité et commentaire</Titre4>
+<!-- table content --> 
+    <TableNameUser>Nom :</TableNameUser>
+    <TableNameCompany>Nom :</TableNameCompany>
+    <TableSurNameUser>Prénom :</TableSurNameUser>
+    <TableMailUser>Mail :</TableMailUser>
+    <TablePhoneNumber>Téléphone :</TablePhoneNumber> 
+    <TableMobilNumber>Portable :</TableMobilNumber>
+    <TableTVAType>TVA</TableTVAType> 
+    <TableCODE>CODE</TableCODE>
+    <TableLabel>Libelé</TableLabel>
+    <TableOrder>Ordre</TableOrder>
+    <Addtext>Ajout</Addtext>
+    <TableCondiList>Condition de réglement</TableCondiList>
+    <TableMethodList>Mode de réglement</TableMethodList>
+    <TableUpdateButton>Mettre à jours</TableUpdateButton>
+    <TableAdresseInvoice>Adresse de facturation</TableAdresseInvoice>
+    <TableAdresseDelevery>Adresse de livraison</TableAdresseDelevery>
+    <TableCity>Ville</TableCity>  
+    <TableZipCode>Code postal</TableZipCode> 
+    <TableCountry>Pay</TableCountry> 
+    <TableAdresse>Adresse</TableAdresse>
+    <TableFonction>Fonction</TableFonction>
+    <TableCivility>Civilité</TableCivility>
+    <TableGeneralAccount>Compte général</TableGeneralAccount> 
+    <TableSideAccount>Compte auxiliaire</TableSideAccount> 
+    <TableReceptionControl>Contrôle reception :</TableReceptionControl> 
+    <TableSupplierStatus>Statu Fournisseur :</TableSupplierStatus> 
+    <TableGeneralSupplier>Général Fournisseur</TableGeneralSupplier> 
+    <TableDiscount>Remise %</TableDiscount> 
+    <TableGeneralCustomer>Général client</TableGeneralCustomer> 
+    <TableCustomerStatus>Statu client :</TableCustomerStatus> 
+    <TableSalesManager>Responsable commercial</TableSalesManager> 
+    <TableTechnicalManager>Responsable technique</TableTechnicalManager> 
+    <TableTVAType>TVA</TableTVAType>
+    <TableSIREN>SIREN</TableSIREN>
+    <TableAPE>Code APE</TableAPE> 
+    <TableTVAINTRA>TVA INTRA</TableTVAINTRA> 
+    <TableWebSite>Site Web</TableWebSite> 
+    <TableFacebook>Facebook</TableFacebook>
+    <TableTwitter>Twitter</TableTwitter>
+    <TableLinked>Linked</TableLinked>
+    <TableFind>Chercher : </TableFind>
+ <!-- notifications -->
+    <AddCompanyNotification>Nouvelle société ajoutée</AddCompanyNotification>
+    <AddSiteNotification>Nouveau site ajouté</AddSiteNotification>
+    <AddContactNotification>Nouveau contact ajouté</AddContactNotification>
+    <UpdateCompanyNotification> société modifiée(s)</UpdateCompanyNotification>
+    <UpdateSiteNotification> Site modifié(s)</UpdateSiteNotification>
+    <UpdateContactNotification> Contact modifié(s)</UpdateContactNotification>
+<!-- Select-->
+    <SelectMr>Mr</SelectMr>
+    <SelectMme>Mme</SelectMme>
+    <SelectMlle>Mlle</SelectMlle>
+
+    <SelectNoControl>Pas de contrôle</SelectNoControl>
+    <SelectControlWithoutBlok>Contrôle sans bloquer reception</SelectControlWithoutBlok>
+    <SelectControlWithBlok>Contrôle avec blocage reception</SelectControlWithBlok>
+
+    <SelectInactive>Inactif</SelectInactive>
+    <SelectSupllier>Fournisseur</SelectSupllier>
+    <SelectProspect>Prospect</SelectProspect>
+    <SelectCustomer>Client</SelectCustomer>
+    
+    <Yes>Oui</Yes>
+    <No>Non</No>
+</langue>

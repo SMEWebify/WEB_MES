@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -16,20 +17,24 @@
 	require_once 'include/include_recup_config_company.php';
 	// load language class
 	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'profil', $UserLanguage);
+	$langue = new Langues('lang', 'article', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
+	//generate list for datalist find input
 	$req = $bdd->query("SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL");
 	while ($donnees_Article = $req->fetch()){
 		$ListeArticle  .= '<li><a href="article.php?id='. $donnees_Article['id'] .'">'. $donnees_Article['CODE'] .' - '. $donnees_Article['LABEL'] .' </a></li>';
 	}
 
 	if(isset($_GET['id'])){
-// FIRST RANK 1 PART LOOP
+	// FIRST RANK 1 PART LOOP
 		$reqDetailArticle = $bdd->query('SELECT '. TABLE_ERP_ARTICLE .'.ID,
 									'. TABLE_ERP_ARTICLE .'.CODE,
 									'. TABLE_ERP_ARTICLE .'.LABEL,
@@ -68,9 +73,9 @@
 			<div class="tree ">
 					<ul >
 						<li><span >'. $donnees_DetailArticle['CODE'] .' - '. $donnees_DetailArticle['LABEL'] .'</span>
-							<ul >';
+							<ul>';
 
-		// FIRST RANK 1 PART TECHNICAL RANGE
+			// FIRST RANK PART TECHNICAL CUT
 				$reqDecoupTech = $bdd -> query('SELECT '. TABLE_ERP_DEC_TECH .'.Id,
 												'. TABLE_ERP_DEC_TECH .'.ORDRE,
 												'. TABLE_ERP_DEC_TECH .'.PRESTA_ID,
@@ -87,7 +92,7 @@
 					$TpsTotal = $donnees_DecoupTech['TPS_PREP'] + $donnees_DecoupTech['TPS_PRO'];
 					$DetailArticle  .= ' <li>'. $TpsTotal .' hrs - '. $donnees_DecoupTech['PRESTA_LABEL'] .' </li>';
 				}
-
+			// FIRST RANK PART NOMENCLATURE
 				$reqNomencl = $bdd -> query('SELECT '. TABLE_ERP_NOMENCLATURE .'.Id,
 												'. TABLE_ERP_NOMENCLATURE .'.ORDRE,
 												'. TABLE_ERP_NOMENCLATURE .'.PARENT_ID,
@@ -109,7 +114,7 @@
 					$DetailArticle  .= ' <li> '. $donnees_Nomencl['QT'] .' '. $donnees_Nomencl['UNIT_LABEL'] .' - '. $donnees_Nomencl['ARTICLE_LABEL'] .'</li>';
 				}
 
-	//DEUSIEME BOUCLE ARTICLE RAND 2
+			//SECONDE LOOP ARTICLE RANK 2
 				$reqSSEns = $bdd -> query('SELECT '. TABLE_ERP_SOUS_ENSEMBLE .'.ID,
 										'. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID,
 										'. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE,
@@ -120,13 +125,13 @@
 											LEFT JOIN `'. TABLE_ERP_ARTICLE .'` ON `'. TABLE_ERP_SOUS_ENSEMBLE .'`.`ARTICLE_ID` = `'. TABLE_ERP_ARTICLE .'`.`id`
 										WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = \''. $donnees_DetailArticle['ID'] .'\'
 											ORDER BY '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE');
-
+			// SECOND RANK PART TECHNICAL CUT
 				while ($donnees_SousEns = $reqSSEns->fetch()){
 					$DetailArticle  .= '
 					<li><span><a href="article.php?id='. $donnees_SousEns['ARTICLE_ID'] .'">'. $donnees_SousEns['LABEL_ARTICLE'] .' </a></span>
 						<ul >';
 
-										$reqDecoupTech = $bdd -> query('SELECT '. TABLE_ERP_DEC_TECH .'.Id,
+					$reqDecoupTech = $bdd -> query('SELECT '. TABLE_ERP_DEC_TECH .'.Id,
 												'. TABLE_ERP_DEC_TECH .'.ORDRE,
 												'. TABLE_ERP_DEC_TECH .'.PRESTA_ID,
 												'. TABLE_ERP_DEC_TECH .'.LABEL,
@@ -142,8 +147,8 @@
 												$TpsTotal = $donnees_DecoupTech['TPS_PREP'] + $donnees_DecoupTech['TPS_PRO'];
 												$DetailArticle  .= ' <li>'. $TpsTotal .' hrs - '. $donnees_DecoupTech['PRESTA_LABEL'] .' </li>';
 											}
-
-											$reqNomencl = $bdd -> query('SELECT '. TABLE_ERP_NOMENCLATURE .'.Id,
+			// SECONDE RANK PART NOMENCLATURE
+					$reqNomencl = $bdd -> query('SELECT '. TABLE_ERP_NOMENCLATURE .'.Id,
 																			'. TABLE_ERP_NOMENCLATURE .'.ORDRE,
 																			'. TABLE_ERP_NOMENCLATURE .'.PARENT_ID,
 																			'. TABLE_ERP_NOMENCLATURE .'.ARTICLE_ID,
@@ -160,10 +165,9 @@
 																			WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = \''. $donnees_SousEns['ARTICLE_ID'] .'\'
 																				ORDER BY '. TABLE_ERP_NOMENCLATURE .'.ORDRE');
 
-											while ($donnees_Nomencl = $reqNomencl->fetch()){
-												$DetailArticle  .= ' <li> '. $donnees_Nomencl['QT'] .' '. $donnees_Nomencl['UNIT_LABEL'] .' - '. $donnees_Nomencl['ARTICLE_LABEL'] .'</li>';
-
-											}
+					while ($donnees_Nomencl = $reqNomencl->fetch()){
+						$DetailArticle  .= ' <li> '. $donnees_Nomencl['QT'] .' '. $donnees_Nomencl['UNIT_LABEL'] .' - '. $donnees_Nomencl['ARTICLE_LABEL'] .'</li>';
+					}
 				}
 						$DetailArticle  .= '
 						</ul>
@@ -183,9 +187,7 @@
 				</div>
 			</div>';
 	}
-
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
@@ -193,27 +195,6 @@
 	//include header
 	require_once 'include/include_header.php';
 ?>
-<script>
-//script from w3school
-function myFunction() {
-  // Declare variables
-  var input, filter, ul, li, a, i, txtValue;
-  input = document.getElementById('myInput');
-  filter = input.value.toUpperCase();
-  ul = document.getElementById("myUL");
-  li = ul.getElementsByTagName('li');
-
-  for (i = 0; i < li.length; i++) {
-    a = li[i].getElementsByTagName("a")[0];
-    txtValue = a.textContent || a.innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
-    } else {
-      li[i].style.display = "none";
-    }
-  }
-}
-</script>
 </head>
 <body>
 <?php
@@ -221,11 +202,11 @@ function myFunction() {
 	require_once 'include/include_interface.php';
 ?>
 <div class="tab">
-	<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen">Article </button>
+	<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
 </div>
 <div id="div1" class="tabcontent" >
 	<div class="column">
-		<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Chercher un article">
+		<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindArticle'); ?>">
 		<ul id="myUL">
 <?php
 		Echo $ListeArticle;
@@ -236,5 +217,9 @@ function myFunction() {
 		Echo $DetailArticle;
 ?>
 </div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>

@@ -41,7 +41,14 @@
    <SelectSupplies>Supplies</SelectSupplies>
    <SelectSubcontracting>Sub-contracting</SelectSubcontracting>
    <SelectCompoundItem>Compound item</SelectCompoundItem>
-
+<!-- notifications -->
+   <AddServiceNotification>Service added</AddServiceNotification>
+   <AddSectionNotification>Section added</AddSectionNotification>  
+   <AddLocationNotification>Location in worshop added</AddLocationNotification>
+   <AddRessourcesnNotification>Ressource added</AddRessourcesnNotification>  
+   <UpdateSectionNotification> section changed</UpdateSectionNotification>
+   <UpdateServiceNotification> service changed</UpdateServiceNotification> 
+   <UpdateLocationNotification> location changed</UpdateLocationNotification>
 <!-- general -->
    <TableRessource>Ressources</TableRessource>
    <TableResponsible>Responsible</TableResponsible>

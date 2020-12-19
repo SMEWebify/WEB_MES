@@ -7,7 +7,8 @@
 	// include for the constants
 	require_once 'include/include_recup_config.php';
 	//include for the connection to the SQL database
-	require_once 'include/include_connection_sql.php';
+	require_once 'class/sql.class.php';
+	$bdd = SQL::getInstance();
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
@@ -17,6 +18,9 @@
 	// load language class
 	require_once 'class/language.class.php';
 	$langue = new Langues('lang', 'manage-time', $UserLanguage);
+	//load callOut notification box class
+	require_once 'class/notification.class.php';
+	$CallOutBox = new CallOutBox();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -37,7 +41,7 @@
 																		'". addslashes($_POST['AddCOLOREventMach']) ."',
 																		'". addslashes($_POST['AddETATEventMach']) ."'
 																		)");
-
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddEventNotification')));
 	}
 
 	//Update list event machine
@@ -63,6 +67,7 @@
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateEventNotification')));
 	}
 
 	//generate list of event machine
@@ -117,6 +122,7 @@
 																		'". addslashes($_POST['AddRessourceImproductTime']) ."',
 																		'". addslashes($_POST['AddMASKImproductTime']) ."'
 																		)");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddImproductTimetNotification')));																	
 	}
 
 	//update improduct time list
@@ -137,6 +143,7 @@
 																		WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateImproductTimetNotification')));
 	}
 
 	//generate list of improduct time
@@ -190,6 +197,7 @@
 																		'". addslashes($_POST['AddPAYEAbs']) ."',
 																		'". addslashes($_POST['AddCOLORAbs']) ."',
 																		'". addslashes($_POST['AddTYPEAbs']) ."')");
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOutNotification')));																
 	}
 
 	//update list of absence
@@ -212,6 +220,7 @@
 																		WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateOutNotification')));
 	}
 
 	//generate list of absence
@@ -259,6 +268,7 @@
 																		'". addslashes($_POST['AddFixeFerier']) ."',
 																		'". addslashes($_POST['AddDATEFerier']) ."',
 																		'". addslashes($_POST['AddLABELFerier']) ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddBankNotification')));
 	}
 
 	//update list of bank holiday
@@ -276,6 +286,7 @@
 														WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateBankNotification')));
 	}
 
 	//generate list of bank holiday
@@ -347,11 +358,11 @@
 	require_once 'include/include_interface.php';
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?php echo $langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?php echo $langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"><?php echo $langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')"><?php echo $langue->show_text('Title4'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')"><?php echo $langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<form method="post" name="Section" action="manage-time.php" class="content-form" >
@@ -359,12 +370,12 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableOrder'); ?></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableMasktime'); ?></th>
-							<th><?php echo $langue->show_text('TableColor'); ?></th>
-							<th><?php echo $langue->show_text('TableMachineStatu'); ?></th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableMasktime'); ?></th>
+							<th><?=$langue->show_text('TableColor'); ?></th>
+							<th><?=$langue->show_text('TableMachineStatu'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -372,30 +383,30 @@
 								Echo $contenu1;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="number" class="input-moyen-vide" name="AddORDREEventMach"></td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODEEventMach"></td>
 							<td><input type="text" class="input-moyen-vide" name="AddLABELEventMach" ></td>
 							<td>
 								<select name="AddMASKEventMach">
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
-									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td><input type="color" class="input-moyen-vide" name="AddCOLOREventMach" size="1"></td>
 							<td>
 								<select name="AddETATEventMach">
-									<option value="1"><?php echo $langue->show_text('SelectStop'); ?></option>
-									<option value="2"><?php echo $langue->show_text('SelectSetting'); ?></option>
-									<option value="3"><?php echo $langue->show_text('SelectRun'); ?></option>
-									<option value="4"><?php echo $langue->show_text('SelectOff'); ?></option>
+									<option value="1"><?=$langue->show_text('SelectStop'); ?></option>
+									<option value="2"><?=$langue->show_text('SelectSetting'); ?></option>
+									<option value="3"><?=$langue->show_text('SelectRun'); ?></option>
+									<option value="4"><?=$langue->show_text('SelectOff'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -409,10 +420,10 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TableMachineStatu'); ?></th>
-							<th><?php echo $langue->show_text('TablenecessaryRessource'); ?></th>
-							<th><?php echo $langue->show_text('TableMasktime'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableMachineStatu'); ?></th>
+							<th><?=$langue->show_text('TablenecessaryRessource'); ?></th>
+							<th><?=$langue->show_text('TableMasktime'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -420,30 +431,30 @@
 								Echo $contenu2;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text" class="input-moyen-vide" name="AddLABELImproductTime" ></td>
 							<td>
 								<select name="AddETATImproductTime">
-									<?php echo $EventListe ; ?>
+									<?=$EventListe ; ?>
 								</select>
 							</td>
 							<td>
 								<select name="AddRessourceImproductTime">
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
-									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td>
 								<select name="AddMASKImproductTime">
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
-									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="5" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -457,11 +468,11 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableCODE'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
-							<th><?php echo $langue->show_text('TablePaid'); ?></th>
-							<th><?php echo $langue->show_text('TableColor'); ?></th>
-							<th><?php echo $langue->show_text('TableDayType'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TablePaid'); ?></th>
+							<th><?=$langue->show_text('TableColor'); ?></th>
+							<th><?=$langue->show_text('TableDayType'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -470,28 +481,28 @@
 								Echo $contenu3;
 							?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text" class="input-moyen-vide" name="AddCODEAbs" ></td>
 							<td><input type="text" class="input-moyen-vide" name="AddLABELAbs" ></td>
 							<td>
 								<select name="AddPAYEAbs">
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
-									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td><input type="color"  name="AddCOLORAbs" ></td>
 							<td>
 								<select name="AddTYPEAbs">
-									<option value="0"><?php echo $langue->show_text('SelectWorked'); ?></option>
-									<option value="1"><?php echo $langue->show_text('SelectOpenable'); ?></option>
-									<option value="2"><?php echo $langue->show_text('SelectCalendar'); ?></option>
+									<option value="0"><?=$langue->show_text('SelectWorked'); ?></option>
+									<option value="1"><?=$langue->show_text('SelectOpenable'); ?></option>
+									<option value="2"><?=$langue->show_text('SelectCalendar'); ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -505,9 +516,9 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php echo $langue->show_text('TableFixedDate'); ?></th>
-							<th><?php echo $langue->show_text('TableDate'); ?></th>
-							<th><?php echo $langue->show_text('TableLabel'); ?></th>
+							<th><?=$langue->show_text('TableFixedDate'); ?></th>
+							<th><?=$langue->show_text('TableDate'); ?></th>
+							<th><?=$langue->show_text('TableLabel'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -515,11 +526,11 @@
 								Echo $contenu4;
 ?>
 						<tr>
-							<td><?php echo $langue->show_text('Addtext'); ?></td>
+							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td>
 								<select name="AddFixeFerier">
-									<option value="1"><?php echo $langue->show_text('Yes'); ?></option>
-									<option value="0"><?php echo $langue->show_text('No'); ?></option>
+									<option value="1"><?=$langue->show_text('Yes'); ?></option>
+									<option value="0"><?=$langue->show_text('No'); ?></option>
 								</select>
 							</td>
 							<td><input type="date" class="input-moyen-vide" name="AddDATEFerier" ></td>
@@ -528,7 +539,7 @@
 						<tr>
 							<td colspan="4" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?php echo $langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -554,5 +565,9 @@
 				</table>
 			</form>
 	</div>
+<?php
+	//include CallOut
+	require_once 'include/include_CallOutBox.php';
+?>
 </body>
 </html>
