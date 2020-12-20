@@ -1,4 +1,6 @@
 <?php
+namespace ERP;
+
 class Session
 {
     const SESSION_STARTED = TRUE;

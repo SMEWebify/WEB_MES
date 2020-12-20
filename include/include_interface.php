@@ -2,7 +2,7 @@
 			<ul id="gn-menu" class="gn-menu-main">
 				<li><a  href="#" id="OpenNav" >&#9776; <?=$langue->show_text('MenuLinkPage') ; ?></a></li>
 				<li><a class="codrops-icon codrops-icon-back" href="<?php $_SERVER['HTTP_REFERER'] ?>"><?=$langue->show_text('ReturnLinkPage') ; ?></a></li>
-				<?php if($_SESSION['page_1'] == '1') echo  '<li><a class="codrops-icon codrops-icon-home" href="index.php">'. $CompanyName .'</a></li>' ?>
+				<?php if($_SESSION['page_1'] == '1') echo  '<li><a class="codrops-icon codrops-icon-home" href="index.php">'. $Company->CompanyName().'</a></li>' ?>
 				<?php if(isset($_SESSION['mdp'])) echo '<li><a class="codrops-icon codrops-icon-profil" href="profil.php"><span>'. $langue->show_text('ProfilLinkPage') .'</span></a></li>'; ?>
 			</ul>
 		</div>

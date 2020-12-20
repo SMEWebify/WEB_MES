@@ -1,7 +1,8 @@
 <?php
-error_reporting(E_ALL & ~E_NOTICE);
 
-class Langues {
+namespace ERP;
+
+class Language {
 	//Language by ISO 639 code (default: French)
 	private $_lang = 'fr';
 	

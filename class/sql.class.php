@@ -1,4 +1,8 @@
 <?php
+namespace ERP;
+use \PDO;
+use \PDOException;
+
 class SQL extends PDO
 {
     private static $_conn;

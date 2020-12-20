@@ -1,18 +1,28 @@
-<?php session_start();
-
-	header( 'content-type: text/html; charset=utf-8' );
-
+<?php 
 	//phpinfo();
+	use \ERP\Autoloader;
+	use \ERP\SQL;
+	use \ERP\COMPANY\Company;
+	use \ERP\COMPANY\CompanyManager;
+	use \ERP\Language;
 
 	// include for the constants
 	require_once 'include/include_recup_config.php';
-	//include for the connection to the SQL database
-	require_once 'class/sql.class.php';
+	//auto load class
+	require_once 'class/Autoload.class.php';
+	Autoloader::register();
+
+	session_start();
+	header( 'content-type: text/html; charset=utf-8' );
+
+	//open sql connexion
 	$bdd = SQL::getInstance();
+	//load company vairiable
+	$CompanyManager = new CompanyManager($bdd);
+	$donneesCompany = $CompanyManager->getDb();
+	$Company = new Company($donneesCompany);
 	// include for functions
 	require_once 'include/include_fonctions.php';
-	//load info company
-	require_once 'include/include_recup_config_company.php';
 
 	//if isset post variable name and password
 	if(isset($_POST['nom'])	AND	isset($_POST['mdp'])){

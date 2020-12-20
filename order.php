@@ -1,25 +1,34 @@
-<?php session_start();
-
-	header( 'content-type: text/html; charset=utf-8' );
-
+<?php 
 	//phpinfo();
+	use \ERP\Autoloader;
+	use \ERP\SQL;
+	use \ERP\COMPANY\Company;
+	use \ERP\COMPANY\CompanyManager;
+	use \ERP\Language;
+	use \ERP\CallOutBox;
 
 	// include for the constants
 	require_once 'include/include_recup_config.php';
-	//include for the connection to the SQL database
-	require_once 'class/sql.class.php';
+	//auto load class
+	require_once 'class/Autoload.class.php';
+	Autoloader::register();
+
+	session_start();
+	header( 'content-type: text/html; charset=utf-8' );
+
+	//open sql connexion
 	$bdd = SQL::getInstance();
+	//load company vairiable
+	$CompanyManager = new CompanyManager($bdd);
+	$donneesCompany = $CompanyManager->getDb();
+	$Company = new Company($donneesCompany);
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
 	require_once 'include/include_checking_session.php';
-	//load info company
-	require_once 'include/include_recup_config_company.php';
-	// load language class
-	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'order', $UserLanguage);
-	//load callOut notification box class
-	require_once 'class/notification.class.php';
+	//init xml for user language
+	$langue = new Language('lang', 'order', $UserLanguage);
+	//init call out box for notification
 	$CallOutBox = new CallOutBox();
 	
 	//Check if the user is authorized to view the page

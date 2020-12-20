@@ -1,26 +1,37 @@
-<?php session_start();
-
-	header( 'content-type: text/html; charset=utf-8' );
-
+<?php 
 	//phpinfo();
+	use \ERP\Autoloader;
+	use \ERP\SQL;
+	use \ERP\COMPANY\Company;
+	use \ERP\COMPANY\CompanyManager;
+	use \ERP\Language;
+	use \ERP\CallOutBox;
 
 	// include for the constants
 	require_once 'include/include_recup_config.php';
-	//include for the connection to the SQL database
-	require_once 'class/sql.class.php';
+	//auto load class
+	require_once 'class/Autoload.class.php';
+	Autoloader::register();
+
+	session_start();
+	header( 'content-type: text/html; charset=utf-8' );
+
+	//open sql connexion
 	$bdd = SQL::getInstance();
+	//load company vairiable
+	$CompanyManager = new CompanyManager($bdd);
+	$donneesCompany = $CompanyManager->getDb();
+	$Company = new Company($donneesCompany);
 	// include for functions
 	require_once 'include/include_fonctions.php';
 	//session checking  user
 	require_once 'include/include_checking_session.php';
-	//load info company
-	require_once 'include/include_recup_config_company.php';
-	// load language class
-	require_once 'class/language.class.php';
-	$langue = new Langues('lang', 'manage-company', $UserLanguage);
-	//load callOut notification box class
-	require_once 'class/notification.class.php';
+	//init xml for user language
+	$langue = new Language('lang', 'manage-company', $UserLanguage);
+	//init call out box for notification
 	$CallOutBox = new CallOutBox();
+
+
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -33,8 +44,31 @@
 
 	//if update gerenal info of company
 	if(isset($_POST['CompanyName']) AND !empty($_POST['CompanyName'])){
+		$Company->SetADDRESS('2 Rue Henriette Deloras');
 
-		$UpdateCompanyName = $_POST['CompanyName'];
+		/*$update = array('NAME' =>  'SUPER ERP',
+									'ADDRESS' =>  '2 Rue Henriette Deloras',
+									'CITY' =>  'grenoble',
+									'ZIPCODE' =>  '4000',
+									'REGION' =>  'BRETAGNE' ,
+									'COUNTRY' =>  'France' ,
+									'PHONE_NUMBER' =>  '0679214987' ,
+									'MAIL' =>  'SuperERP@gmail.com', 
+									'WEB_SITE' =>  'www.erp.com' ,
+									'FACEBOOK_SITE' =>  'https://www.facebook.com/Kevin.Niglaut',
+									'TWITTER_SITE' =>  'https://twitter.com/kevin_niglaut/' ,
+									'LKD_SITE' =>  '' ,
+									'LOGO' =>  'images/unnamed.jpg' ,
+									'SIREN' =>  '362 521 879' ,
+									'APE' =>  '12347' ,
+									'TVA_INTRA' =>  'FR53157896342.',
+									'TAUX_TVA' =>  '20',
+									'CAPITAL' =>  'SAS au capital de 2500 €',
+									'RCS' =>  '400 900 001');*/
+		
+		$CompanyManager->updateDb($Company);
+		
+		/*$UpdateCompanyName = $_POST['CompanyName'];
 		$UpdateCompanyAddress = $_POST['CompanyAddress'];
 		$UpdateCompanyCity = $_POST['CompanyCity'];
 		$UpdateCompanyZipCode= $_POST['CompanyZipCode'];
@@ -84,50 +118,7 @@
 																TAUX_TVA = \''. addslashes($UpdateCompanyTAUXTVA) .'\',
 																CAPITAL = \''. addslashes($UpdateCompanyCAPITAL) .'\',
 																RCS = \''. addslashes($UpdateCompanyRCS) .'\'
-																WHERE Id=1');
-		//select new data
-		$req = $bdd -> query('SELECT NAME,
-							ADDRESS,
-							CITY,
-							ZIPCODE,
-							REGION,
-							COUNTRY,
-							PHONE_NUMBER,
-							MAIL,
-							WEB_SITE,
-							FACEBOOK_SITE,
-							TWITTER_SITE,
-							LKD_SITE,
-							LOGO,
-							SIREN,
-							APE,
-							TVA_INTRA,
-							TAUX_TVA,
-							CAPITAL,
-							RCS
-							FROM '. TABLE_ERP_COMPANY .'');
-
-		$donnees = $req->fetch();
-
-		$CompanyName = $donnees['NAME'];
-		$CompanyAddress = $donnees['ADDRESS'];
-		$CompanyCity = $donnees['CITY'];
-		$CompanyZipCode= $donnees['ZIPCODE'];
-		$CompanyCountry = $donnees['COUNTRY'];
-		$CompanyRegion = $donnees['REGION'];
-		$CompanyPhone = $donnees['PHONE_NUMBER'];
-		$CompanyMail = $donnees['MAIL'];
-		$CompanyWebSite = $donnees['WEB_SITE'];
-		$CompanyFbSite = $donnees['FACEBOOK_SITE'];
-		$CompanyTwitter = $donnees['TWITTER_SITE'];
-		$CompanyLkd = $donnees['LKD_SITE'];
-		$CompanyLogo = $donnees['LOGO'];
-		$CompanySIREN = $donnees['SIREN'];
-		$CompanyAPE = $donnees['APE'];
-		$CompanyTVAINTRA = $donnees['TVA_INTRA'];
-		$CompanyTAUXTVA = $donnees['TAUX_TVA'];
-		$CompanyCAPITAL = $donnees['CAPITAL'];
-		$CompanyRCS = $donnees['RCS'];
+																WHERE Id=1');*/
 	}
 
 	$contenu1 = '
@@ -141,22 +132,22 @@
 				</tr>
 				<tr>
 					<td >
-						<input type="text" name="CompanyName" value="'. $CompanyName .'">
+						<input type="text" name="CompanyName" value="'. $Company->CompanyName() .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyAddress" value="'. $CompanyAddress .'">
+						<input type="text" name="CompanyAddress" value="'. $Company->CompanyAddress() .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyCity" value="'. $CompanyCity .'">
+						<input type="text" name="CompanyCity" value="'. $Company->CompanyCity() .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyZipCode" value="'. $CompanyZipCode .'">
+						<input type="text" name="CompanyZipCode" value="'. $Company->CompanyZipCode() .'">
 					</td>
 					<td>
-						<input type="text" name="CompanyRegion" value="'. $CompanyRegion .'">
+						<input type="text" name="CompanyRegion" value="'. $Company->CompanyRegion() .'">
 					</td>
 					<td>
-						<input type="text" name="CompanyCountry" value="'. $CompanyCountry .'">
+						<input type="text" name="CompanyCountry" value="'. $Company->CompanyCountry() .'">
 					</td>
 				</tr>
 				<tr>
@@ -169,10 +160,10 @@
 				</tr>
 				<tr>
 					<td >
-						<input type="text" name="CompanyPhone" value="'. $CompanyPhone .'">
+						<input type="text" name="CompanyPhone" value="'. $Company->CompanyPhone() .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyMail" value="'. $CompanyMail .'">
+						<input type="text" name="CompanyMail" value="'. $Company->CompanyMail() .'">
 					</td>
 					<td></td>
 					<td></td>
@@ -189,16 +180,16 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="text" name="CompanyWebSite" value="'. $CompanyWebSite .'">
+						<input type="text" name="CompanyWebSite" value="'. $Company->CompanyWebSite() .'">
 					</td>
 					<td >
-						<input type="text" name="CompanyFbSite" value="'. $CompanyFbSite .'">
+						<input type="text" name="CompanyFbSite" value="'. $Company->CompanyFbSite() .'">
 					</td>
 					<td>
-						<input type="text" name="CompanyTwitter" value="'. $CompanyTwitter .'">
+						<input type="text" name="CompanyTwitter" value="'.  $Company->CompanyTwitter() .'">
 					</td>
 					<td>
-						<input type="text" name="CompanyLkd" value="'. $CompanyLkd .'">
+						<input type="text" name="CompanyLkd" value="'.  $Company->CompanyLkd() .'">
 					</td>
 					<td></td>
 					<td></td>
@@ -213,22 +204,22 @@
 				</tr>
 				<tr>
 					<td >
-						<input type="text" name="CompanySIREN" value="'. $CompanySIREN .'" >
+						<input type="text" name="CompanySIREN" value="'. $Company->CompanySIREN() .'" >
 					</td>
 					<td >
-						<input type="text" name="CompanyAPE" value="'. $CompanyAPE .'" size="10">
+						<input type="text" name="CompanyAPE" value="'. $Company->CompanyAPE() .'" size="10">
 					</td>
 					<td >
-						<input type="text" name="CompanyTVAINTRA" value="'. $CompanyTVAINTRA .'" >
+						<input type="text" name="CompanyTVAINTRA" value="'. $Company->CompanyTVAINTRA() .'" >
 					</td>
 					<td >
-						<input type="text" name="CompanyTAUXTVA" value="'. $CompanyTAUXTVA .'" size="10">
+						<input type="text" name="CompanyTAUXTVA" value="'. $Company->CompanyTAUXTVA() .'" size="10">
 					</td>
 					<td>
-						<input type="text" name="CompanyCAPITAL" value="'. $CompanyCAPITAL .'" >
+						<input type="text" name="CompanyCAPITAL" value="'. $Company->CompanyCAPITAL() .'" >
 					</td>
 					<td>
-						<input type="text" name="CompanyRCS" value="'. $CompanyRCS .'" size="10">
+						<input type="text" name="CompanyRCS" value="'. $Company->CompanyRCS() .'" size="10">
 					</td>
 				</tr>
 				<tr>
@@ -238,7 +229,7 @@
 					<td colspan=6" ><input type="file" name="fichier_LOGO" /></td>
 				</tr>
 				<tr>
-					<td colspan=6"><img src="'. $CompanyLogo .'" title="LOGO entreprise" alt="Logo" /></td>
+					<td colspan=6"><img src="'. $Company->CompanyLogo() .'" title="LOGO entreprise" alt="Logo" /></td>
 				</tr>
 				';
 

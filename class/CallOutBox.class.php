@@ -1,5 +1,6 @@
 <?php
-error_reporting(E_ALL & ~E_NOTICE);
+namespace ERP;
+use\ArrayObject;
 
 class CallOutBox extends ArrayObject { 
     //inir constante
