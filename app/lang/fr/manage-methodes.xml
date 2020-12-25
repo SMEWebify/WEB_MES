@@ -31,7 +31,17 @@
    <Title2>Ressources</Title2>
    <Title3>Section</Title3>
    <Title4>Emplacement dans l'atelier</Title4>
-   
+   <TitrePresta1>Retour méthodes</TitrePresta1>
+   <TitrePresta2>Général</TitrePresta2>
+   <TitrePresta3>Fournisseurs</TitrePresta3>
+   <TitrePresta4>Imputations comptable</TitrePresta4>
+   <TitreRessource1>Retour méthodes</TitreRessource1>
+   <TitreRessource2>Général</TitreRessource2>
+   <TitreRessource3>Prestation associées</TitreRessource3>
+   <TitreRessource4>Tâches plannifiées</TitreRessource4>
+   <TitreRessource5>Commentaire</TitreRessource5>
+   <TitreRessource6>Evenement Machine</TitreRessource6>
+
 <!-- select -->
    <SelectProductive>Productive</SelectProductive>
    <SelectRawMat>Matière première</SelectRawMat>

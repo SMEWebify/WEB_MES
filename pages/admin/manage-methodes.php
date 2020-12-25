@@ -19,13 +19,12 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
 	}
 
+	//------------------------------
+	// SERVICE
+	//------------------------------
+
 	//if add new service
 	if(isset($_POST['AddPosteCharge']) AND !empty($_POST['AddPosteCharge'])){
-
-		$dossier = 'images/Presta/';
-		$fichier = basename($_FILES['IMAGEPosteCharge']['name']);
-		move_uploaded_file($_FILES['IMAGEPosteCharge']['tmp_name'], $dossier . $fichier);
-		$IsertPrestaImage = $dossier.$fichier;
 
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_PRESTATION ." VALUE ('0',
 																		'". addslashes($_POST['CODEPosteCharge']) ."',
@@ -35,7 +34,7 @@
 																		'". $_POST['TAUXPosteCharge'] ."',
 																		'". $_POST['MARGEPosteCharge'] ."',
 																		'". $_POST['COLORPosteCharge'] ."',
-																		'". addslashes($IsertPrestaImage) ."',
+																		'',
 																		'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddServiceNotification')));
 	}
@@ -50,7 +49,6 @@
 		$UpdateTAUX_Hpresta = $_POST['TAUX_Hpresta'];
 		$UpdateMARGEpresta = $_POST['MARGEpresta'];
 		$UpdateCOLORpresta = $_POST['COLORpresta'];
-		$UpdateINAGEpresta = $_POST['INAGEpresta'];
 
 		$i = 0;
 		foreach ($UpdateIdPresta as $id_generation) {
@@ -61,12 +59,15 @@
 																TAUX_H = \''. $UpdateTAUX_Hpresta[$i] .'\',
 																MARGE = \''. $UpdateMARGEpresta[$i] .'\',
 																COLOR = \''. $UpdateCOLORpresta[$i] .'\',
-																IMAGE = \''. addslashes($UpdateINAGEpresta[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateServiceNotification')));
 	}
+
+	//------------------------------
+	// SECTION
+	//------------------------------
 
 	//add new section in db
 	if(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
@@ -80,6 +81,7 @@
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddSectionNotification')));
 	}
 
+	//update section list 
 	if(isset($_POST['id_section']) AND !empty($_POST['id_section'])){
 
 		$UpdateIdSection = $_POST['id_section'];
@@ -105,17 +107,17 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectionNotification')));
 	}
 
-	if(isset($_POST['AddRessource']) AND !empty($_POST['AddRessource'])){
+	//------------------------------
+	// RESSOURCES
+	//------------------------------
 
-		$dossier = 'images/Ressources/';
-		$fichier = basename($_FILES['IMAGERessource']['name']);
-		move_uploaded_file($_FILES['IMAGERessource']['tmp_name'], $dossier . $fichier);
-		$IsertPrestaImage = $dossier.$fichier;
+	//add new ressource 
+	if(isset($_POST['AddRessource']) AND !empty($_POST['AddRessource'])){
 
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_RESSOURCE ." VALUE ('0',
 																		'". addslashes($_POST['CODERessource']) ."',
 																		'". addslashes($_POST['AddRessource']) ."',
-																		'". addslashes($IsertPrestaImage) ."',
+																		'',
 																		'". $_POST['MASKRessource'] ."',
 																		'". $_POST['ORDRERessource'] ."',
 																		'". $_POST['CAPARessource'] ."',
@@ -124,25 +126,10 @@
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddRessourcesnNotification')));	
 	}
 
-	$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
-									'. TABLE_ERP_EMPLOYEES .'.NOM,
-									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'`
-									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
-	foreach ($bdd->GetQuery($query) as $data){
-		 $EmployeeListe .=  '<option value="'. $dat->idUSER .'">'. $dat->NOM .' '. $dat->PRENOM .' - '. $dat->RIGHT_NAME .'</option>';
-	}
 
 	//------------------------------
-	// ZONE DE STOCKAGE
+	// ZONE OF STOCK
 	//------------------------------
-
-	$RessourcesListe ='<option value="0">Aucune</option>';
-	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$RessourcesListe .='<option value="'. $dat->Id .'">'. $data->LABEL .'</option>';
-	}
 
 	//add new stock zone in dd
 	if(isset($_POST['AddCODEZoneStock']) AND !empty($_POST['AddCODEZoneStock'])){
@@ -176,6 +163,174 @@
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLocationNotification')));
 	}
+
+	// Create selected value list
+	$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
+			'. TABLE_ERP_EMPLOYEES .'.NOM,
+			'. TABLE_ERP_EMPLOYEES .'.PRENOM,
+			'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
+		FROM `'. TABLE_ERP_EMPLOYEES .'`
+		LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
+	foreach ($bdd->GetQuery($query) as $data){
+	$EmployeeListe .=  '<option value="'. $dat->idUSER .'">'. $dat->NOM .' '. $dat->PRENOM .' - '. $dat->RIGHT_NAME .'</option>';
+	}
+
+	$RessourcesListe ='<option value="0">Aucune</option>';
+	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$RessourcesListe .='<option value="'. $dat->Id .'">'. $data->LABEL .'</option>';
+	}
+
+	if(isset($_GET['prestation']) && !empty($_GET['prestation'])){
+?>
+	<div class="tab">
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=login&action=deconnexion';"><?=$langue->show_text('TitrePresta1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitrePresta2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitrePresta3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitrePresta4'); ?></button>
+	</div>
+	<div id="div1" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?prestation=<?= $_GET['prestation'] ?> class="content-form" enctype="multipart/form-data">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div id="div2" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?prestation=<?= $_GET['prestation'] ?> class="content-form" >
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div id="div3" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?prestation=<?= $_GET['prestation'] ?> class="content-form">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>	
+<?php
+
+	}
+	elseif(isset($_GET['resources']) && !empty($_GET['resources'])){
+?>
+	<div class="tab">
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=login&action=deconnexion';"><?=$langue->show_text('TitreRessource1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitreRessource2');  ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitreRessource3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitreRessource4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('TitreRessource5'); ?></button>
+	</div>
+	<div id="div1" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div id="div2" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div id="div3" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div id="div4" class="tabcontent">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+
+<?php
+	}
+	else{
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
@@ -184,8 +339,8 @@
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-			<form method="post" name="PosteCharge" action="admin.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
-				<table class="content-table">
+		<form method="post" name="PosteCharge" action="admin.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
+			<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
@@ -222,7 +377,10 @@
 						$i = 1;
 						foreach ($bdd->GetQuery($query) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_presta[]" id="id_presta" value="<?= $data->Id ?>"></td>
+							<td>
+								<input type="hidden" name="id_presta[]" id="id_presta" value="<?= $data->Id ?>">
+								<a href="admin.php?page=manage-methodes&prestation=<?= $data->Id ?>">-></a>
+							</td>
 							<td><input type="number" name="ORDREpresta[]" value="<?= $data->ORDRE ?>" id="number"></td>
 							<td><input type="text" name="CODEpresta[]" value="<?= $data->CODE ?>" ></td>
 							<td><input type="text" name="LABELpresta[]" value="<?= $data->LABEL ?>" ></td>
@@ -242,7 +400,7 @@
 							<td><input type="number" name="MARGEpresta[]" value="<?= $data->MARGE ?>" id="number"></td>
 							<td><input type="color" name="COLORpresta[]" value="<?= $data->COLOR ?>"></td>
 							<td><img Class="Image-small" src="<?= $data->IMAGE ?>" title="Image <?= $data->LABEL ?>" alt="Prestation Image" /></td>
-							<td><input type="file" name="INAGEpresta[]" /></td>
+							<td></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -278,7 +436,7 @@
 					</tbody>
 				</table>
 			</form>
-		</div>
+	</div>
 	<div id="div2" class="tabcontent">
 			<form method="post" name="Ressources" action="admin.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
@@ -324,7 +482,10 @@
 						$i = 1;
 						foreach ($bdd->GetQuery($query) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>"></td>
+							<td>
+								<input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>">
+								<a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>">-></a>
+							</td>
 							<td><input type="text" name="UpdateORDREressource[]" value="<?=  $data->CODE ?>" ></td>
 							<td><input type="number" name="UpdateCODEressource[]" value="<?=  $data->ORDRE ?>" id="number"></td>
 							<td><input type="text" name="UpdateLABELressource[]" value="<?=  $data->LABEL ?>" ></td>
@@ -468,7 +629,9 @@
 					</thead>
 					<tbody>
 						<?php
-						//generate list of zone stock
+						//------------------------------
+						// ZONE OF STOCK
+						//------------------------------
 						$i = 1;
 						$query='SELECT '. TABLE_ERP_STOCK_ZONE .'.Id,
 										'. TABLE_ERP_STOCK_ZONE .'.CODE,
@@ -517,3 +680,5 @@
 				</table>
 			</form>
 		</div>
+<?php 
+}
