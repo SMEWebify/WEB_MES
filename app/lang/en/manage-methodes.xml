@@ -31,7 +31,17 @@
    <Title2>Ressources</Title2>
    <Title3>Section</Title3>
    <Title4>Location in the workshop</Title4>
-   
+    <TitrePresta1>Back to methodes</TitrePresta1>
+   <TitrePresta2>General</TitrePresta2>
+   <TitrePresta3>Fournisseurs</TitrePresta3>
+   <TitrePresta4>Accounting allocations</TitrePresta4>
+   <TitreRessource1>Back to methodes</TitreRessource1>
+   <TitreRessource2>General</TitreRessource2>
+   <TitreRessource3>Service associate</TitreRessource3>
+   <TitreRessource4>Scheduled tasks</TitreRessource4>
+   <TitreRessource5>Comment</TitreRessource5>
+   <TitreRessource6>Machine event</TitreRessource6>
+
 <!-- select -->
    <SelectProductive>Productive</SelectProductive>
    <SelectRawMat>Rax material</SelectRawMat>
