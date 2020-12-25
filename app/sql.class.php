@@ -67,9 +67,14 @@ class SQL extends PDO{
         return self::$pdo;
 	}
 	
-	public function GetQuery($statement, $one = false){
+	public function GetQuery($statement, $one = false, $class_name  = false){
 		$req = $this->getPDO()->query($statement);
-		$req->setFetchMode(PDO::FETCH_OBJ);
+		if($class_name){
+			$req->setFetchMode(PDO::FETCH_CLASS, $class_name);
+		}else{
+			$req->setFetchMode(PDO::FETCH_OBJ);
+		}
+		
 		if($one){
 			$datas = $req->fetch();
 		}else{

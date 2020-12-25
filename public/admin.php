@@ -5,6 +5,7 @@
     require_once '../include/include_fonctions.php';
     
     use \App\SQL;
+    use \App\Auth;
     use \App\Language;
     use \App\CallOutBox;
 	use \App\COMPANY\Company;
@@ -22,7 +23,10 @@
 	$CompanyManager = new CompanyManager($bdd);
 	$donneesCompany = $CompanyManager->getDb($bdd);
     $Company = new Company($donneesCompany);
-    
+
+	//session checking  user
+	$auth = New Auth($bdd);
+	$User = $auth->User();
 
     if(isset($_GET['page'])){
         $p = $_GET['page'];

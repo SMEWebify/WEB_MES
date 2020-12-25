@@ -7,8 +7,6 @@
 	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-	//session checking  user
-	require_once '../include/include_checking_session.php';
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){

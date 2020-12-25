@@ -2,15 +2,15 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\User;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-	
+
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-	//session checking  user
-	require_once '../include/include_checking_session.php';
+
 	//init form class
 	$Form = new Form($_POST);
 
@@ -22,7 +22,7 @@
 		$UpdateProfilSpeudo = $_POST['ProfilSpeudo'];
 		$UpdateProfilDate = strtotime($_POST['ProfilDate']);
 		$UpdateProfilDate = date('Y-m-d H:i:s', $UpdateProfilDate);
-		$UpdateProfilMDP = $_POST['ProfilMDP'];
+		$UpdateProfilMDP = password_hash($_POST['ProfilMDP'], PASSWORD_DEFAULT);
 		$UpdateProfilMail = $_POST['ProfilMAIL'];
 		$UpdateProfilInternalNumber = $_POST['ProfilInternalNumber'];
 		$UpdateProfilPersonnalNumber = $_POST['ProfilPersonnalNumber'];
@@ -39,6 +39,13 @@
 			$AddSQL = 'IMAGE_PROFIL = \''. addslashes($UpdatePhotoProfil) .'\',';
 		}
 
+		If(empty($_POST['ProfilMDP'])){
+			$AddSQL .= '';
+		}else{
+			$AddSQL .= 'PASSWORD = \''. addslashes($UpdateProfilMDP) .'\',';
+		}
+		
+															
 		//update database
 		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  NOM = \''. addslashes($UpdateProfilName) .'\',
 																PRENOM = \''. addslashes($UpdateProfilSurName) .'\',
@@ -47,8 +54,7 @@
 																NUMERO_PERSO = \''. addslashes($UpdateProfilPersonnalNumber) .'\',
 																NUMERO_INTERNE = \''. addslashes($UpdateProfilInternalNumber) .'\',
 																'. $AddSQL .'
-																NAME = \''. addslashes($UpdateProfilSpeudo) .'\',
-																PASSWORD = \''. addslashes($UpdateProfilMDP) .'\'
+																NAME = \''. addslashes($UpdateProfilSpeudo) .'\'
 																WHERE IdUser=\''. $_SESSION['id'] .'\'');
 
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateProfilNotification')));
@@ -56,35 +62,10 @@
 
 	//If user make change setting profil
 	if(isset($_POST['Language']) AND !empty($_POST['Language'])){
-		$UpdateProfilLang = $_POST['Language'];
-
-		//update database	
-		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  LANGUAGE = \''. addslashes($UpdateProfilLang) .'\'
-																WHERE IdUser=\''. $_SESSION['id'] .'\'');
-
+		$User = new User();
+		$User->UpdateLanguage($_POST['Language']);
 		stop($langue->show_text('SystemInfoLanguageDone'),	300,	'index.php?page=profil');
 	}
-
-	//load new value
-	$query='SELECT idUSER,
-					NOM,
-					PRENOM,
-					DATE_NAISSANCE,
-					MAIL,
-					NUMERO_PERSO,
-					NUMERO_INTERNE,
-					IMAGE_PROFIL,
-					STATU,
-					CONNEXION,
-					NAME,
-					PASSWORD,
-					FONCTION,
-					RIGHT_NAME,
-					LANGUAGE
-				FROM `'. TABLE_ERP_EMPLOYEES .'` LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
-				WHERE IdUser=\''. $_SESSION['id'] .'\'';
-
-	$data = $bdd->GetQuery($query, true)
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Titre1'); ?></button>
@@ -107,7 +88,7 @@
 							<?= $langue->show_text('TableNameUser') ?>
 						</td>
 						<td>
-							<input type="text" name="ProfilName" value="<?= $data->NOM ?>">
+							<input type="text" name="ProfilName" value="<?= $User->NOM ?>">
 						</td>
 					</tr>
 					<tr>
@@ -115,7 +96,7 @@
 							<?= $langue->show_text('TableSurNameUser') ?>
 						</td>
 						<td>
-							<input type="text" name="ProfilSurName" value="<?= $data->PRENOM ?>" >
+							<input type="text" name="ProfilSurName" value="<?= $User->PRENOM ?>" >
 						</td>
 					</tr>
 					<tr>
@@ -123,7 +104,7 @@
 							<?= $langue->show_text('TableDateBornUser') ?>
 						</td>
 						<td>
-							<input type="date" name="ProfilDate" value="<?= $data->DATE_NAISSANCE ?>" >
+							<input type="date" name="ProfilDate" value="<?= $User->DATE_NAISSANCE ?>" >
 						</td>
 					</tr>
 					<tr>
@@ -131,7 +112,7 @@
 							<?= $langue->show_text('TableSpeudoUser') ?>
 						</td>
 						<td>
-							<input type="text" name="ProfilSpeudo" value="<?= $data->NAME ?>" >
+							<input type="text" name="ProfilSpeudo" value="<?= $User->NAME ?>" >
 						</td>
 					</tr>
 					<tr>
@@ -139,7 +120,7 @@
 							<?= $langue->show_text('TablePasswordUser') ?>
 						</td>
 						<td>
-							<input type="password" name="ProfilMDP" value="" id="ProfilMDP" required>
+							<input type="password" name="ProfilMDP" value="" id="ProfilMDP" >
 						</td>
 					</tr>
 					<tr>
@@ -147,7 +128,7 @@
 							<?= $langue->show_text('TableConfirmPasswordUser') ?>
 						</td>
 						<td>
-							<input type="password" name="ProfilMDPComfirm" id="ProfilMDPComfirm" value="" required>
+							<input type="password" name="ProfilMDPComfirm" id="ProfilMDPComfirm" value="" >
 						</td>
 					</tr>
 					<tr>
@@ -155,7 +136,7 @@
 							<?= $langue->show_text('TableMailUser') ?>
 						</td>
 						<td>
-							<input type="text" name="ProfilMAIL" value="<?= $data->MAIL ?>">
+							<input type="text" name="ProfilMAIL" value="<?= $User->MAIL ?>">
 						</td>
 					</tr>
 					<tr>
@@ -163,7 +144,7 @@
 							<?= $langue->show_text('TableInternalNumberUser') ?>
 						</td>
 						<td>
-							<input type="text" name="ProfilInternalNumber" value="<?= $data->NUMERO_INTERNE ?>">
+							<input type="text" name="ProfilInternalNumber" value="<?= $User->NUMERO_INTERNE ?>">
 						</td>
 					</tr>
 					<tr>
@@ -171,7 +152,7 @@
 							<?= $langue->show_text('TablePersonnalNumberUser') ?>
 						</td>
 						<td>
-							<input type="text" name="ProfilPersonnalNumber" value="<?= $data->NUMERO_PERSO ?>" >
+							<input type="text" name="ProfilPersonnalNumber" value="<?= $User->NUMERO_PERSO ?>" >
 						</td>
 					</tr>
 					<tr>
@@ -184,7 +165,7 @@
 					</tr>
 					<tr>
 						<td colspan=2">
-							<img src="<?= $data->IMAGE_PROFIL ?>" title="Photo profil" alt="Photo" />
+							<img src="<?= $User->IMAGE_PROFIL ?>" title="Photo profil" alt="Photo" />
 						</td>
 					</tr>
 					<tr>
@@ -213,8 +194,8 @@
 						<td><?= $langue->show_text('TableLanguageUser') ?></td>
 						<td>
 							<select name="Language">
-								<option value="fr" <?= selected($data->LANGUAGE, 'fr') ?>><?= $langue->show_text('french') ?></option>
-								<option value="en" <?= selected($data->LANGUAGE, 'en') ?>><?= $langue->show_text('english') ?></option>
+								<option value="fr" <?= selected($User->LANGUAGE, 'fr') ?>><?= $langue->show_text('french') ?></option>
+								<option value="en" <?= selected($User->LANGUAGE, 'en') ?>><?= $langue->show_text('english') ?></option>
 							</select>
 						</td>
 					</tr>

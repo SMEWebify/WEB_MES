@@ -4,13 +4,13 @@ namespace App\COMPANY;
 use \App\SQL;
 use \PDO;
 
-class CompanyManager extends SQL
+class CompanyManager extends \App\SQL
 {
-  private $_db; // Instance de PDO
+  private $db; // Instance de \App\SQL
 
-  public function __construct($db)
+  public function __construct(\App\SQL $db)
   {
-    $this->setDb($db);
+    $this->db = $db;
   }
 
   public function getDb(SQL $bdd)
@@ -43,7 +43,7 @@ class CompanyManager extends SQL
 
   public function updateDb(Company $Company)
   {                          
-  /*  $q = $this->_db->prepare('UPDATE '. TABLE_ERP_COMPANY .' SET NAME = :UpdateCompanyName,
+   /* $this->GetPrepare('UPDATE '. TABLE_ERP_COMPANY .' SET NAME = :UpdateCompanyName,
                                                             ADDRESS = :UpdateCompanyAddress,
                                                             CITY = :UpdateCompanyCity,
                                                             ZIPCODE = :UpdateCompanyZipCode,
@@ -62,26 +62,26 @@ class CompanyManager extends SQL
                                                             CAPITAL = :UpdateCompanyCAPITAL,
                                                             RCS = :UpdateCompanyRCS');
 
-    $q->bindValue(':UpdateCompanyName', $Company->CompanyName(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyAddress', $Company->CompanyAddress(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyCity', $Company->CompanyCity(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyZipCode', $Company->CompanyZipCode(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyRegion', $Company->CompanyRegion(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyCountry', $Company->CompanyCountry(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyPhone', $Company->CompanyPhone(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyMail', $Company->CompanyMail(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyWebSite', $Company->CompanyWebSite(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyFbSite', $Company->CompanyFbSite(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyTwitter', $Company->CompanyTwitter(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyLkd', $Company->CompanyLkd(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanySIREN', $Company->CompanySIREN(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyAPE', $Company->CompanyAPE(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyTVAINTRA', $Company->CompanyTVAINTRA(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyTAUXTVA', $Company->CompanyTAUXTVA(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyCAPITAL', $Company->CompanyCAPITAL(), PDO::PARAM_STR );
-    $q->bindValue(':UpdateCompanyRCS', $Company->CompanyRCS(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyName', $Company->CompanyName(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyAddress', $Company->CompanyAddress(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyCity', $Company->CompanyCity(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyZipCode', $Company->CompanyZipCode(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyRegion', $Company->CompanyRegion(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyCountry', $Company->CompanyCountry(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyPhone', $Company->CompanyPhone(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyMail', $Company->CompanyMail(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyWebSite', $Company->CompanyWebSite(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyFbSite', $Company->CompanyFbSite(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyTwitter', $Company->CompanyTwitter(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyLkd', $Company->CompanyLkd(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanySIREN', $Company->CompanySIREN(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyAPE', $Company->CompanyAPE(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyTVAINTRA', $Company->CompanyTVAINTRA(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyTAUXTVA', $Company->CompanyTAUXTVA(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyCAPITAL', $Company->CompanyCAPITAL(), PDO::PARAM_STR );
+    $this->bindValue(':UpdateCompanyRCS', $Company->CompanyRCS(), PDO::PARAM_STR );
 
-    $q->execute();*/
+    $this->execute();*/
   }
 
   public function setDb(PDO $db)

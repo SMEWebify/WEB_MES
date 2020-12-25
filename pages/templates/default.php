@@ -25,7 +25,7 @@
 			<li><a  href="#" id="OpenNav" >&#9776; <?=$langue->show_text('MenuLinkPage') ; ?></a></li>
 			<li><a class="codrops-icon codrops-icon-back" href="<?php $_SERVER['HTTP_REFERER'] ?>"><?=  $langue->show_text('ReturnLinkPage') ; ?></a></li>
 			<li><a class="codrops-icon codrops-icon-home" href="index.php?page=home"><?=$Company->CompanyName() ?></a></li>
-			<?php if(isset($_SESSION['mdp'])) echo '<li><a class="codrops-icon codrops-icon-profil" href="index.php?page=profil"><span>'. $langue->show_text('ProfilLinkPage') .'</span></a></li>'; ?>
+			<?php if(isset($_SESSION['mdp'])) echo '<li><a class="codrops-icon codrops-icon-profil" href="index.php?page=profil"><span> '. $User->NAME .' ('. $langue->show_text('ProfilLinkPage') .')</span></a></li>'; ?>
 		</ul>
 	</div>
 	<div id="myNav" class="overlay">

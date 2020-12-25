@@ -9,8 +9,6 @@
 	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-	//session checking  user
-	require_once '../include/include_checking_session.php';
 	//init form class
 	$Form = new Form($_POST);
 	
@@ -25,7 +23,7 @@
 
 	//if update gerenal info of company
 	if(isset($_POST['CompanyName']) AND !empty($_POST['CompanyName'])){
-		//$Company->SetADDRESS('2 Rue Henriette Deloras');
+		$Company->SetADDRESS('2 Rue Henriette Deloras');
 
 		/*$update = array('NAME' =>  'SUPER ERP',
 									'ADDRESS' =>  '2 Rue Henriette Deloras',

@@ -5,11 +5,12 @@
     require_once '../include/include_fonctions.php';
     
     use \App\SQL;
+    use \App\Auth;
     use \App\Language;
     use \App\CallOutBox;
 	use \App\COMPANY\Company;
     use \App\COMPANY\CompanyManager;
-    
+
 	//auto load class
 	require '../app/Autoload.class.php';
     App\Autoloader::register();
@@ -23,6 +24,9 @@
 	$donneesCompany = $CompanyManager->getDb($bdd);
     $Company = new Company($donneesCompany);
     
+	//session checking  user
+	$auth = New Auth($bdd);
+	$User = $auth->User();
 
     if(isset($_GET['page'])){
         $p = $_GET['page'];
@@ -39,52 +43,52 @@
     }
     elseif($p == 'profil'){
         //init xml for user language
-        $langue = new Language('lang', 'profil', $UserLanguage);
+        $langue = new Language('lang', 'profil', $User->LANGUAGE);
         require '../pages/profil.php';
     }
     elseif($p == 'order'){
     	//init xml for user language
-        $langue = new Language('lang', 'order', $UserLanguage);
+        $langue = new Language('lang', 'order', $User->LANGUAGE);
         require '../pages/order.php';
     }
     elseif($p == 'quote'){
     	//init xml for user language
-        $langue = new Language('lang', 'quote', $UserLanguage);
+        $langue = new Language('lang', 'quote', $User->LANGUAGE);
         require '../pages/quote.php';
     }
     elseif($p == 'planning'){
     	//init xml for user language
-        $langue = new Language('lang', 'planning', $UserLanguage);
+        $langue = new Language('lang', 'planning', $User->LANGUAGE);
         require '../pages/planning.php';
     }
     elseif($p == 'calendar'){
     	//init xml for user language
-        $langue = new Language('lang', 'calendar', $UserLanguage);
+        $langue = new Language('lang', 'calendar', $User->LANGUAGE);
         require '../pages/calendar.php';
     }
     elseif($p == 'purchase'){
     	//init xml for user language
-        $langue = new Language('lang', 'purchase', $UserLanguage);
+        $langue = new Language('lang', 'purchase', $User->LANGUAGE);
         require '../pages/purchase.php';
     }
     elseif($p == 'article'){
     	//init xml for user language
-        $langue = new Language('lang', 'article', $UserLanguage);
+        $langue = new Language('lang', 'article', $User->LANGUAGE);
         require '../pages/article.php';
     }
     elseif($p == 'quality'){
     	//init xml for user language
-        $langue = new Language('lang', 'quality', $UserLanguage);
+        $langue = new Language('lang', 'quality', $User->LANGUAGE);
         require '../pages/quality.php';
     }
     elseif($p == 'login'){
     	//init xml for user language
-        $langue = new Language('lang', 'login', $UserLanguage);
+        $langue = new Language('lang', 'login', $User->LANGUAGE);
         require '../pages/login.php';
     }
     else{
     	//init xml for user language
-        $langue = new Language('lang', 'login', $UserLanguage);
+        $langue = new Language('lang', 'login', $User->LANGUAGE);
         require '../pages/login.php'; 
     }
     $content = ob_get_clean();

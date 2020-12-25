@@ -68,18 +68,18 @@ http://localhost/erp/login.php
     * manage-study.php        __Admin for study__
     * manage-time.php       __Admin for time gestion__
     * manage-users.php        __Admin for employees user__
- #### User pages
-  * article.php  __Article page__ 
-  * calandar.php    __Calendar page__
-  * document.php         __Generate document__
-  * index.php         __First page__
-  * info.php       __Empty__
-  * login.php         __page connexion__
-  * order.php          __Order page__
-  * planning.php        __Empty__
-  * profil.php       __Admin for profil user__
-  * purchase.php         __Empty__
-  * quality.php        __Empty__
-  * quote.php        __Quotation page__
+  #### User pages
+    * article.php  __Article page__ 
+    * calandar.php    __Calendar page__
+    * document.php         __Generate document__
+    * index.php         __First page__
+    * info.php       __Empty__
+    * login.php         __page connexion__
+    * order.php          __Order page__
+    * planning.php        __Empty__
+    * profil.php       __Admin for profil user__
+    * purchase.php         __Empty__
+    * quality.php        __Empty__
+    * quote.php        __Quotation page__
 
 

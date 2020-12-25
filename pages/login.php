@@ -2,7 +2,9 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
-
+	use \App\Auth;
+	use \App\SQL;
+	
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
@@ -12,32 +14,16 @@
 	//init form class
 	$Form = new Form($_POST);
 
+    //open sql connexion
+	$bdd = new SQL();
+	
+	$error = false;
 	//if isset post variable name and password
-	if(isset($_POST['nom'])	AND	isset($_POST['mdp'])){
+	if(!empty($_POST)){
 
-		//protect sql requete
-		$nom	=	addslashes($_POST['nom']);
-		$mdp	=	addslashes($_POST['mdp']);
-
-		//check if not empty post variable
-		if(!empty($nom)	or	strlen($mdp) > 4){
-			if(!empty($mdp)){
-				$data=$bdd->GetQuery('SELECT count(*) as nb	FROM '.	TABLE_ERP_EMPLOYEES	.'	WHERE NAME=\''.	$nom .'\' AND	PASSWORD=\''. $mdp .'\'', true);
-				$nb	= $data->nb;
-
-				//check if user exist
-				if($nb == 1){
-					$verification_statut=$bdd->GetQuery('SELECT	statu FROM '.	TABLE_ERP_EMPLOYEES	.' WHERE NAME=\''. $nom .'\' AND	PASSWORD=\''.	$mdp	.'\'');
-					
-					//check if user in not ban
-					if($verification_statut[0]->statu ='1'){
-
-						//update time of connexion timestamps
-						if($bdd->GetUpdate("UPDATE ".	TABLE_ERP_EMPLOYEES	."	SET	connexion='". time() ."'	WHERE	NAME='". $nom ."'	AND	PASSWORD='".	$mdp	."'"))	{
-							//initiat session variable
-							$_SESSION['nom'] = $nom;
-							$_SESSION['mdp'] = $mdp;
-
+		$Auth = new Auth($bdd);
+		$user = $Auth->login($_POST['nom'],$_POST['mdp']);
+		if($user){
 							//display good connect and exit page
 							echo ' <!DOCTYPE html PUBLIC	"-//W3C//DTD XHTML 1.0	Strict//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 							<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr"	>
@@ -70,38 +56,10 @@
 								</div>
 							</body>
 							</html>	';
-							exit;
+			exit();
+		}
 
-						}
-						else{
-							stop('Erreur,	impossible	de	modifier	l\'enregistrement.',	300,	'index.php?page=login');
-							session_unset();
-							session_destroy();
-						}
-					}
-					else{
-						stop('Votre	compte	a	été	suspendu.',	2,	'login.php');
-						session_unset();
-						session_destroy();
-					}
-				}
-				else{
-					stop('Votre	mot	de	passe	ne	correspond	pas	avec	l\'identifiant.',	500,	'index.php?page=login');
-					session_unset();
-					session_destroy();
-				}
-			}
-			else	{
-				stop('Votre	mot	de	passe	est	invalide.',	102,	'index.php?page=login');
-				session_unset();
-				session_destroy();
-			}
-		}
-		else	{
-			stop('Votre	identifiant	est	invalide.',	101,	'index.php?page=login');
-			session_unset();
-			session_destroy();
-		}
+		$CallOutBox->add_notification(array('3', 'Erreur: utilisateur ou mots de pass incorrect'));
 	}
 	elseif	(isset($_GET['action'])	&	$_GET['action']=="deconnexion"){
 
@@ -120,8 +78,8 @@
 	else{
 		session_unset();
 		session_destroy();
-		?>
-
+	}
+	?>
 		<div id="id01" class="modal">
 			<form class="modal-content animate"	action="index.php?page=login"	method="post">
 					<div class="container">
@@ -135,4 +93,3 @@
 			</form>
 		</div>
 		<?php
-		}
