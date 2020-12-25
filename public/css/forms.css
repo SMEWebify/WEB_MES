@@ -8,11 +8,7 @@
 #number{
 	width: 6em;
 }
-.content-form{
-	/*padding-top:100px;  
-	padding-left:100px; 
-	margin:auto;*/
-}
+
 .content-form input {
 	text-align:center;
 	padding:6px 0px 6px 0px;
@@ -66,7 +62,6 @@
 	border:1px solid #ccc;
 	box-shadow:1px 1px 3px #999;
 }
-
 
 .Comment{
 	margin:auto;

@@ -3,18 +3,28 @@ namespace App;
 use \PDO;
 use \PDOException;
 
-class SQL extends PDO
-{
-    private static $_conn;
- 
+class SQL extends PDO{
+
+	private static $pdo;
+	
+	public $GetErrorMysql = '';
+
+	public $CloseMysqlAuto = false;
+
+	public $AfficherMessException = true;
+
+	public $DernierID = 0;
+
     public function __construct ()
 	{}
 	
-    public static function getInstance (){
-        if (!isset (self::$_conn)){
+    public static function getPDO (){
+
+        if(self::$pdo === null){
             try{
-                self::$_conn = new PDO('mysql:host='. SQL_HOST .';dbname='. DB_NAME .';charset=utf8', DB_USER , '');
-				self::$_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+                $pdo = new PDO('mysql:host='. SQL_HOST .';dbname='. DB_NAME .';charset=utf8', DB_USER , '');
+				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+				self::$pdo = $pdo;
             }
  			catch (PDOException $e){
 				echo'
@@ -52,8 +62,68 @@ class SQL extends PDO
 							</body>
 						</html>	';
             }
-        }
-            return (self::$_conn) ;
-    }
+		}
+
+        return self::$pdo;
+	}
+	
+	public function GetQuery($statement, $one = false){
+		$req = $this->getPDO()->query($statement);
+		$req->setFetchMode(PDO::FETCH_OBJ);
+		if($one){
+			$datas = $req->fetch();
+		}else{
+			$datas = $req->fetchAll();
+		}
+
+		return $datas;
+	}
+
+	public function GetPrepare($statement, $attributes){
+		$req = $this->getPDO()->prepare($statement);
+		$req->execute($attributes);
+		$datas = $req->fetchAll(PDO::FETCH_OBJ);
+		return $datas;
+	}
+
+	public function GetUpdate($statement){
+		try{
+			$req = $this->getPDO()->exec($statement);
+		} catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage());
+		}
+		return true;
+	}
+
+	public function GetInsert($statement){
+		try{
+			$req = $this->getPDO()->exec($statement);
+		} catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage());
+		}
+		return true;
+		$this->DernierID = 0;
+	}
+
+	public function GetDelete($statement){
+		try{
+			$req = $this->getPDO()->exec($statement);
+		} catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage());
+		}
+		return true;
+	}
+
+	private function GestionException($message){        
+        $this->GetErrorMysql = $message;            
+        if($this->AfficherMessException) echo '<p>'.$message.'</p>';
+        // on ferme la connexion si $CloseMysqlAuto est TRUE
+        if ($this->CloseMysqlAuto) {
+            if(self::$pdo){
+				self::$pdo = NULL;
+			}
+		}
+        return false;
+    }  
 }
 ?>

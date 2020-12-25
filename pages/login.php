@@ -1,30 +1,16 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\SQL;
-	use \App\Language;
-	use \App\COMPANY\Company;
-	use \App\COMPANY\CompanyManager;
+	use \App\Form;
 
-	// include for the constants
-	require_once '../include/include_recup_config.php';
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-
+	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-
-	//open sql connexion
-	$bdd = SQL::getInstance();
-	//load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb();
-	$Company = new Company($donneesCompany);
-	// include for functions
-	require_once '../include/include_fonctions.php';
-	//init xml for user language
-	$langue = new Language('lang', 'login', 'fr');
+	//init form class
+	$Form = new Form($_POST);
 
 	//if isset post variable name and password
 	if(isset($_POST['nom'])	AND	isset($_POST['mdp'])){
@@ -34,31 +20,27 @@
 		$mdp	=	addslashes($_POST['mdp']);
 
 		//check if not empty post variable
-		if(!empty($nom)	or	strlen($mdp)	>	4)	{
+		if(!empty($nom)	or	strlen($mdp) > 4){
 			if(!empty($mdp)){
-				$res	=	$bdd->query('SELECT	count(*)	as	nb	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
-				$data	=	$res->fetch();
-				$nb	=	$data['nb'];
+				$data=$bdd->GetQuery('SELECT count(*) as nb	FROM '.	TABLE_ERP_EMPLOYEES	.'	WHERE NAME=\''.	$nom .'\' AND	PASSWORD=\''. $mdp .'\'', true);
+				$nb	= $data->nb;
 
 				//check if user exist
-				if($nb	==1	){
-					$reponse	=	$bdd	->	query('SELECT	statu	FROM	'.	TABLE_ERP_EMPLOYEES	.'	WHERE	NAME=\''.	$nom	.'\'	AND	PASSWORD=\''.	$mdp	.'\'');
-					$verification_statut	=	$reponse->fetch();
-
+				if($nb == 1){
+					$verification_statut=$bdd->GetQuery('SELECT	statu FROM '.	TABLE_ERP_EMPLOYEES	.' WHERE NAME=\''. $nom .'\' AND	PASSWORD=\''.	$mdp	.'\'');
+					
 					//check if user in not ban
-					if($verification_statut['statu']	!=	'1'){
-						stop('Votre	compte	a	été	suspendu.',	2,	'login.php');
-					}
-					else{
+					if($verification_statut[0]->statu ='1'){
+
 						//update time of connexion timestamps
-						if($bdd->exec("UPDATE	".	TABLE_ERP_EMPLOYEES	."	SET	connexion='".		time()	."'	WHERE	NAME='".	$nom	."'	AND	PASSWORD='".	$mdp	."'"))	{
+						if($bdd->GetUpdate("UPDATE ".	TABLE_ERP_EMPLOYEES	."	SET	connexion='". time() ."'	WHERE	NAME='". $nom ."'	AND	PASSWORD='".	$mdp	."'"))	{
 							//initiat session variable
-							$_SESSION['nom']	=	$nom;
-							$_SESSION['mdp']	=	$mdp;
+							$_SESSION['nom'] = $nom;
+							$_SESSION['mdp'] = $mdp;
 
 							//display good connect and exit page
-							echo	'	<!DOCTYPE	html	PUBLIC	"-//W3C//DTD	XHTML	1.0	Strict//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-							<html	xmlns="http://www.w3.org/1999/xhtml"	xml:lang="fr"	>
+							echo ' <!DOCTYPE html PUBLIC	"-//W3C//DTD XHTML 1.0	Strict//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+							<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr"	>
 							<head>
 								<title>'. $CompanyName .'</title>
 								<link	rel="stylesheet"	media="screen"	type="text/css"	title="deco"	href="css/stylesheet.css"	/>
@@ -97,6 +79,11 @@
 							session_destroy();
 						}
 					}
+					else{
+						stop('Votre	compte	a	été	suspendu.',	2,	'login.php');
+						session_unset();
+						session_destroy();
+					}
 				}
 				else{
 					stop('Votre	mot	de	passe	ne	correspond	pas	avec	l\'identifiant.',	500,	'index.php?page=login');
@@ -133,19 +120,19 @@
 	else{
 		session_unset();
 		session_destroy();
-?>
+		?>
 
-	<div id="id01" class="modal">
-		<form class="modal-content animate"	action="index.php?page=login"	method="post">
-				<div class="container">
-					<label	for="uname"><b>Utilisateur</b></label>
-					<input	type="text"	name="nom"	id="nom"	required>
-					<label	for="psw"><b>Mot de passe</b></label>
-					<input	type="password"	name="mdp"	id="mdp"	name="psw"	required>
-					<button	type="submit">Connexion</button>
-					<input type="checkbox" onclick="DisplayPassword()">Voir mot de passe
-				</div>
-		</form>
-	</div>
-<?php
-	}
+		<div id="id01" class="modal">
+			<form class="modal-content animate"	action="index.php?page=login"	method="post">
+					<div class="container">
+						<label	for="uname"><b>Utilisateur</b></label>
+						<input	type="text"	name="nom"	id="nom"	required>
+						<label	for="psw"><b>Mot de passe</b></label>
+						<input	type="password"	name="mdp"	id="mdp"	name="psw"	required>
+						<button	type="submit">Connexion</button>
+						<input type="checkbox" onclick="DisplayPassword()">Voir mot de passe
+					</div>
+			</form>
+		</div>
+		<?php
+		}

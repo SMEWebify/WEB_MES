@@ -1,9 +1,10 @@
 <?php
 
 namespace App\COMPANY;
+use \App\SQL;
 use \PDO;
 
-class CompanyManager
+class CompanyManager extends SQL
 {
   private $_db; // Instance de PDO
 
@@ -12,9 +13,10 @@ class CompanyManager
     $this->setDb($db);
   }
 
-  public function getDb()
+  public function getDb(SQL $bdd)
   {
-    $q = $this->_db->query('SELECT NAME,
+    $donnees[] = array();
+    $query = 'SELECT NAME,
                                   ADDRESS,
                                   CITY,
                                   ZIPCODE,
@@ -33,15 +35,15 @@ class CompanyManager
                                   TAUX_TVA,
                                   CAPITAL,
                                   RCS
-                                 FROM '. TABLE_ERP_COMPANY .'');
+                                 FROM '. TABLE_ERP_COMPANY .'';
 
-    $donnees = $q->fetch(PDO::FETCH_ASSOC); 
+    $donnees[] = $bdd->GetQuery($query);
     return   $donnees;
   }
 
   public function updateDb(Company $Company)
   {                          
-    $q = $this->_db->prepare('UPDATE '. TABLE_ERP_COMPANY .' SET NAME = :UpdateCompanyName,
+  /*  $q = $this->_db->prepare('UPDATE '. TABLE_ERP_COMPANY .' SET NAME = :UpdateCompanyName,
                                                             ADDRESS = :UpdateCompanyAddress,
                                                             CITY = :UpdateCompanyCity,
                                                             ZIPCODE = :UpdateCompanyZipCode,
@@ -79,7 +81,7 @@ class CompanyManager
     $q->bindValue(':UpdateCompanyCAPITAL', $Company->CompanyCAPITAL(), PDO::PARAM_STR );
     $q->bindValue(':UpdateCompanyRCS', $Company->CompanyRCS(), PDO::PARAM_STR );
 
-    $q->execute();
+    $q->execute();*/
   }
 
   public function setDb(PDO $db)

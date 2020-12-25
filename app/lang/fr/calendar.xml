@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<langue>
+<!-- UI node --> 
+	<QuoteLinkPage>Devis</QuoteLinkPage>
+	<OrderLinkPage>Commandes</OrderLinkPage>
+    <PlanningLinkPage>Planning</PlanningLinkPage>
+    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <PurchaseLinkPage>Achats</PurchaseLinkPage>
+    <ArticleLinkPage>Articles</ArticleLinkPage>
+    <QualityLinkPage>Qualité</QualityLinkPage>
+    <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+    <!-- admin UI -->
+    <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
+    <MenuLinkPage>Menu</MenuLinkPage>
+    <ProfilLinkPage>Profil</ProfilLinkPage>
+    <ReturnLinkPage>Retour</ReturnLinkPage>
+    <GeneralSettingLinkPage>Paramètre généraux</GeneralSettingLinkPage>
+    <CustoProvidLinkPage>Client/fournisseurs</CustoProvidLinkPage>
+    <SettingTimeLinkPage>Gestion du temps</SettingTimeLinkPage>
+    <EmployeesLinkPage>Employés</EmployeesLinkPage>
+    <MethodLinkPage>Méthodes</MethodLinkPage>
+    <StudyLinkPage>Etudes</StudyLinkPage>
+    <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
+    <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+ <!-- systeminfo --> 
+    <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
+    <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
+ <!-- title page --> 
+    <Title1>Calendrier</Title1>
+ </langue>

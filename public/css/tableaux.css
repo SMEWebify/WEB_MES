@@ -4,6 +4,7 @@
 
 .content-table, 
 .content-table-devis,
+.content-table-commande,
 .content-table-decal{
 	margin:auto;
 	border-collapse: collapse;
@@ -17,6 +18,7 @@
 	
 }
 .content-table-devis thead tr,
+.content-table-commande thead tr,
 .content-table-decal thead tr,
 .content-table thead tr{
 	background-color: #52A19A;
@@ -26,6 +28,8 @@
 }
 .content-table-devis th,
 .content-table-devis td,
+.content-table-commande th,
+.content-table-commande td,
 .content-table-decal th,
 .content-table-decal td,
 .content-table th,
@@ -34,6 +38,7 @@
 }
 
 .content-table-devis tbody tr,
+.content-table-commande tbody tr,
 .content-table-decal tbody tr,
 .content-table tbody tr{
 	border-bottom: 1px solid #dddddd;
@@ -41,23 +46,27 @@
 }
 
 .content-table-devis tbody tr:nth-of-type(even),
+.content-table-commande  tbody tr:nth-of-type(even),
 .content-table-decal tbody tr:nth-of-type(even),
 .content-table tbody tr:nth-of-type(even){
 	background-color: #f3f3f3;
 }
 .content-table-devis  tbody tr:last-of-type(even),
+.content-table-commande   tbody tr:last-of-type(even),
 .content-table-decal tbody tr:last-of-type(even),
 .content-table tbody tr:last-of-type(even){
 	border-bottom: 2px solid #009879;
 	background-color: #FFFFFF;
 }
 .content-table-devis tbody tr,
+.content-table-commande   tbody tr,
 .content-table-decal tbody tr,
 .content-table tbody tr.active-row{
 	font-weight: blod;
 	color: #009879;
 }
 .content-table-devis a,
+.content-table-commande   a,
 .content-table-decal a,
 .content-table a {
 	color: #566473;
@@ -67,6 +76,7 @@
 	font-family: 'Lato', Arial, sans-serif;
 }
 .content-table-devis a:hover,
+.content-table-commande   a:hover,
 .content-table-decal a:hover,
 .content-table a:hover {
 	color: #4f7bab;

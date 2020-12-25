@@ -1,36 +1,22 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\SQL;
-	use \App\Language;
-	use \App\COMPANY\Company;
-	use \App\COMPANY\CompanyManager;
+	use \App\Form;
 
-	// include for the constants
-	require_once '../include/include_recup_config.php';
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-
+	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-
-	//open sql connexion
-	$bdd = SQL::getInstance();
-	//load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb();
-	$Company = new Company($donneesCompany);
-	// include for functions
-	require_once '../include/include_fonctions.php';
 	//session checking  user
 	require_once '../include/include_checking_session.php';
-	//init xml for user language
-	$langue = new Language('lang', 'document', $UserLanguage);
+	//init form class
+	$Form = new Form($_POST);
 
 
 
-	$req = $bdd -> query('SELECT NAME,
+		$query='SELECT NAME,
 							ADDRESS,
 							CITY,
 							ZIPCODE,
@@ -49,41 +35,39 @@
 							TAUX_TVA,
 							CAPITAL,
 							RCS
-							FROM '. TABLE_ERP_COMPANY .'');
+							FROM '. TABLE_ERP_COMPANY .'';
 							
-		$donnees = $req->fetch();
+		$data = $bdd->GetQuery($query, true);
 
-		$CompanyName = $donnees['NAME'];
-		$CompanyAddress = $donnees['ADDRESS'];
-		$CompanyCity = $donnees['CITY'];
-		$CompanyZipCode= $donnees['ZIPCODE'];
-		$CompanyCountry = $donnees['COUNTRY'];
-		$CompanyRegion = $donnees['REGION'];
-		$CompanyPhone = $donnees['PHONE_NUMBER'];
-		$CompanyMail = $donnees['MAIL'];
-		$CompanyWebSite = $donnees['WEB_SITE'];
-		$CompanyFbSite = $donnees['FACEBOOK_SITE'];
-		$CompanyTwitter = $donnees['TWITTER_SITE'];
-		$CompanyLkd = $donnees['LKD_SITE'];
-		$CompanyLogo = $donnees['LOGO'];
-		$CompanySIREN = $donnees['SIREN'];
-		$CompanyAPE = $donnees['APE'];
-		$CompanyTVAINTRA = $donnees['TVA_INTRA'];
-		$CompanyTAUXTVA = $donnees['TAUX_TVA'];
-		$CompanyCAPITAL = $donnees['CAPITAL'];
-		$CompanyRCS = $donnees['RCS'];
+		$CompanyName = $data['NAME'];
+		$CompanyAddress = $data['ADDRESS'];
+		$CompanyCity = $data['CITY'];
+		$CompanyZipCode= $data['ZIPCODE'];
+		$CompanyCountry = $data['COUNTRY'];
+		$CompanyRegion = $data['REGION'];
+		$CompanyPhone = $data['PHONE_NUMBER'];
+		$CompanyMail = $data['MAIL'];
+		$CompanyWebSite = $data['WEB_SITE'];
+		$CompanyFbSite = $data['FACEBOOK_SITE'];
+		$CompanyTwitter = $data['TWITTER_SITE'];
+		$CompanyLkd = $data['LKD_SITE'];
+		$CompanyLogo = $data['LOGO'];
+		$CompanySIREN = $data['SIREN'];
+		$CompanyAPE = $data['APE'];
+		$CompanyTVAINTRA = $data['TVA_INTRA'];
+		$CompanyTAUXTVA = $data['TAUX_TVA'];
+		$CompanyCAPITAL = $data['CAPITAL'];
+		$CompanyRCS = $data['RCS'];
 	
 	if(isset($_GET['id'])){$IDdevis = addslashes($_GET['id']);}
 		
-				
-		$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_DEVIS ." WHERE CODE = '". $IDdevis."'");
-		$data = $req->fetch();
-		$req->closeCursor();
-		$nb = $data['nb'];
+		// check if exist	
+		$data=$bdd->GetQuery("SELECT COUNT(id) as nb FROM ". TABLE_ERP_DEVIS ." WHERE CODE = '". $IDdevis."'", true);
+		$nb = $data->nb;
 			
 		if($nb=1){
 
-				$req = $bdd -> query('SELECT '. TABLE_ERP_DEVIS .'.Id,
+			$query='SELECT '. TABLE_ERP_DEVIS .'.Id,
 									'. TABLE_ERP_DEVIS .'.CODE,
 									'. TABLE_ERP_DEVIS .'.INDICE,
 									'. TABLE_ERP_DEVIS .'.LABEL,
@@ -124,53 +108,53 @@
 										LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_DEVIS .'`.`MODE_REG_CLIENT_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
 										LEFT JOIN `'. TABLE_ERP_TRANSPORT .'` ON `'. TABLE_ERP_DEVIS .'`.`TRANSPORT_ID` = `'. TABLE_ERP_TRANSPORT .'`.`id`
 										LEFT JOIN `'. TABLE_ERP_ECHEANCIER_TYPE .'` ON `'. TABLE_ERP_DEVIS .'`.`ECHEANCIER_ID` = `'. TABLE_ERP_ECHEANCIER_TYPE .'`.`id`
-									WHERE '. TABLE_ERP_DEVIS .'.CODE = \''. $IDdevis.'\' ');
-			$DonneesDevis = $req->fetch();
-			$req->closeCursor();
+									WHERE '. TABLE_ERP_DEVIS .'.CODE = \''. $IDdevis.'\' ';
+
+			$data = $bdd->GetQuery($query, true);
 			
 			$titleOnglet1 = "Mettre à jours";
 			
-			$IDDevisSQL = $DonneesDevis['Id'];
-			$CommentaireDevis = $DonneesDevis['COMENT'];
-			$DevisCLIENT_ID = $DonneesDevis['CLIENT_ID'];
-			$DevisCLIENT_NAME = $DonneesDevis['NAME'];
+			$IDDevisSQL = $data['Id'];
+			$CommentaireDevis = $data['COMENT'];
+			$DevisCLIENT_ID = $data['CLIENT_ID'];
+			$DevisCLIENT_NAME = $data['NAME'];
 			
-			$DevisCONTACT_ID = $DonneesDevis['CONTACT_ID'];
-			$DevisCONTACT_CIVILITE = $DonneesDevis['CIVILITE'];
-			$DevisCONTACT_PRENOM = $DonneesDevis['PRENOM_CONTACT'];
-			$DevisCONTACT_NOM = $DonneesDevis['NOM_CONTACT'];
-			$DevisCONTACT_NUMBER = $DonneesDevis['NUMBER_CONTACT'];
-			$DevisCONTACT_MAIL = $DonneesDevis['MAIL_CONTACT'];
+			$DevisCONTACT_ID = $data['CONTACT_ID'];
+			$DevisCONTACT_CIVILITE = $data['CIVILITE'];
+			$DevisCONTACT_PRENOM = $data['PRENOM_CONTACT'];
+			$DevisCONTACT_NOM = $data['NOM_CONTACT'];
+			$DevisCONTACT_NUMBER = $data['NUMBER_CONTACT'];
+			$DevisCONTACT_MAIL = $data['MAIL_CONTACT'];
 			
-			$DevisNomName = $DonneesDevis['NOM'];
-			$DevisNomPrenom = $DonneesDevis['PRENOM'];
-			$DevisADRESSE_ID = $DonneesDevis['ADRESSE_ID'];
-			$DevisFACTURATION_ID = $DonneesDevis['FACTURATION_ID'];
-			$DevisRESP_COM_ID = $DonneesDevis['RESP_COM_ID'];
-			$DevisRESP_TECH_ID = $DonneesDevis['RESP_TECH_ID'];
-			$DevisCONDI_REG_ID = $DonneesDevis['COND_REG_CLIENT_ID'];
-			$DevisCONDI_REG_LABEL = $DonneesDevis['CONDI_REG_LABEL'];
-			
-			
-			$DevisMODE_REG_ID = $DonneesDevis['MODE_REG_CLIENT_ID'];
-			$DevisMODE_REG_LABEL = $DonneesDevis['CONDI_MODE_LABEL'];
-			
-			$DevisMODE_DE_TRANSPORT = $DonneesDevis['TRANSPORT_LABEL'];
-			$DevisECHEANCIER_LABEL = $DonneesDevis['ECHEANCIER_LABEL'];
+			$DevisNomName = $data['NOM'];
+			$DevisNomPrenom = $data['PRENOM'];
+			$DevisADRESSE_ID = $data['ADRESSE_ID'];
+			$DevisFACTURATION_ID = $data['FACTURATION_ID'];
+			$DevisRESP_COM_ID = $data['RESP_COM_ID'];
+			$DevisRESP_TECH_ID = $data['RESP_TECH_ID'];
+			$DevisCONDI_REG_ID = $data['COND_REG_CLIENT_ID'];
+			$DevisCONDI_REG_LABEL = $data['CONDI_REG_LABEL'];
 			
 			
-			$DevisEcheancier_ID = $DonneesDevis['ECHEANCIER_ID'];
-			$DevisTransport_ID = $DonneesDevis['TRANSPORT_ID'];
+			$DevisMODE_REG_ID = $data['MODE_REG_CLIENT_ID'];
+			$DevisMODE_REG_LABEL = $data['CONDI_MODE_LABEL'];
 			
-			$DevisCODE = $DonneesDevis['CODE'];
-			$DevisINDICE = $DonneesDevis['INDICE'];
-			$DevisLABEL = $DonneesDevis['LABEL'];
-			$DevisLABEL_INDICE = $DonneesDevis['LABEL_INDICE'];
+			$DevisMODE_DE_TRANSPORT = $data['TRANSPORT_LABEL'];
+			$DevisECHEANCIER_LABEL = $data['ECHEANCIER_LABEL'];
 			
-			$DevisDATE = $DonneesDevis['DATE'];
-			$DevisDATE_VALIDITE = $DonneesDevis['DATE_VALIDITE'];
-			$DevisETAT = $DonneesDevis['ETAT'];
-			$DevisREFERENCE = $DonneesDevis['REFERENCE'];
+			
+			$DevisEcheancier_ID = $data['ECHEANCIER_ID'];
+			$DevisTransport_ID = $data['TRANSPORT_ID'];
+			
+			$DevisCODE = $data['CODE'];
+			$DevisINDICE = $data['INDICE'];
+			$DevisLABEL = $data['LABEL'];
+			$DevisLABEL_INDICE =$data['LABEL_INDICE'];
+			
+			$DevisDATE = $data['DATE'];
+			$DevisDATE_VALIDITE = $data['DATE_VALIDITE'];
+			$DevisETAT = $data['ETAT'];
+			$DevisREFERENCE = $data['REFERENCE'];
 			
 			$req = $bdd -> query('SELECT  '. TABLE_ERP_DEVIS_LIGNE .'.Id, 
 														'. TABLE_ERP_DEVIS_LIGNE .'.ORDRE,

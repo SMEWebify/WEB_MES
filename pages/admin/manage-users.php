@@ -1,35 +1,18 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\SQL;
-	use \App\Language;
-	use \App\COMPANY\Company;
-	use \App\COMPANY\CompanyManager;
-	use \App\CallOutBox;
+	use \App\Form;
 
-	// include for the constants
-	require_once '../include/include_recup_config.php';
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
 
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-
-	//open sql connexion
-	$bdd = SQL::getInstance();
-	//load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb();
-	$Company = new Company($donneesCompany);
-	// include for functions
-	require_once '../include/include_fonctions.php';
 	//session checking  user
 	require_once '../include/include_checking_session.php';
-	//init xml for user language
-	$langue = new Language('lang', 'manage-users', $UserLanguage);
-	//init call out box for notification
-	$CallOutBox = new CallOutBox();
+	//init form class
+	$Form = new Form($_POST);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -39,7 +22,7 @@
 	// if add new employe
 	if(isset($_POST['Addnom_ajout']) AND !empty($_POST['Addnom_ajout'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_EMPLOYEES ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_EMPLOYEES ." VALUE ('0',
 																		'". $_POST['Addcode_ajout'] ."',
 																		'',
 																		'',
@@ -62,7 +45,7 @@
 	//If add Right
 	if(isset($_POST['AddRight']) AND !empty($_POST['AddRight'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_RIGHTS ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_RIGHTS ." VALUE ('0',
 																		'". $_POST['AddRight'] ."',
 																		'". $_POST['Addpage_1_ajout'] ."',
 																		'". $_POST['Addpage_2_ajout'] ."',
@@ -90,7 +73,7 @@
 		$i = 0;
 		foreach ($id_membre as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $CODEmembre[$i] .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $CODEmembre[$i] .'\',
 																NAME = \''. addslashes($nom_membre[$i]) .'\',
 																FONCTION = \''. $poste_membre[$i] .'\',
 																SECTION_ID = \''. $SECTIONmembre[$i] .'\'
@@ -132,7 +115,7 @@
 			If(empty($UpdatePage_9[$i])) $FinalUpdatePage_9 = 0; else $FinalUpdatePage_9 = 1;
 			If(empty($UpdatePage_10[$i])) $FinalUpdatePage_10 = 0; else $FinalUpdatePage_10 = 1;
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_RIGHTS .'` SET  RIGHT_NAME = \''. addslashes($UpdateNameRight[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_RIGHTS .'` SET  RIGHT_NAME = \''. addslashes($UpdateNameRight[$i]) .'\',
 																page_1 = \''. $FinalUpdatePage_1 .'\',
 																page_2 = \''. $FinalUpdatePage_2 .'\',
 																page_3 = \''. $FinalUpdatePage_3 .'\',
@@ -143,7 +126,6 @@
 																page_8 = \''. $FinalUpdatePage_8 .'\',
 																page_9 = \''. $FinalUpdatePage_9 .'\',
 																page_10 = \''. $FinalUpdatePage_10 .'\'
-
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
@@ -151,128 +133,17 @@
 	}
 
 	//Right list for employees
-	$req = $bdd -> query('SELECT Id, RIGHT_NAME   FROM '. TABLE_ERP_RIGHTS .'');
-	while ($DonneesRight = $req->fetch()){
-		$RightListe .='<option value="'. $DonneesRight['Id'] .'">'. $DonneesRight['RIGHT_NAME'] .'</option>';
+	$query='SELECT Id, RIGHT_NAME   FROM '. TABLE_ERP_RIGHTS .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$RightListe .='<option value="'. $data->Id .'">'.  $data->RIGHT_NAME .'</option>';
 	}
 
 	//section list for employees
-	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'');
-	while ($DonneesSection = $req->fetch()){
-		$SectionListe .='<option value="'. $DonneesSection['Id'] .'">'. $DonneesSection['LABEL'] .'</option>';
-	}
+	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$SectionListe .='<option value="'.  $data->Id .'">'.  $data->LABEL .'</option>';
+	}	//Generate employees list
 
-	//Generate employees list
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.IdUser,
-									'. TABLE_ERP_EMPLOYEES .'.CODE,
-									'. TABLE_ERP_EMPLOYEES .'.STATU,
-									'. TABLE_ERP_EMPLOYEES .'.CONNEXION,
-									'. TABLE_ERP_EMPLOYEES .'.NAME,
-									'. TABLE_ERP_EMPLOYEES .'.FONCTION,
-									'. TABLE_ERP_EMPLOYEES .'.SECTION_ID,
-									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME,
-									'. TABLE_ERP_SECTION .'.LABEL
-									FROM `'. TABLE_ERP_EMPLOYEES .'`
-									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
-									LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`');
-
-
-
-	while ($donnees_membre = $req->fetch()){
-		 $EmployeesListContent = $EmployeesListContent .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_membre[]" id="id_membre" value="'. $donnees_membre['IdUser'] .'"></td>
-					<td>'. format_temps($donnees_membre['CONNEXION']) .'</td>
-					<td><input type="text" name="CODEmembre[]" value="'. $donnees_membre['CODE'] .'" size="10"></td>
-					<td><input type="text" name="nom_membre[]" value="'. $donnees_membre['NAME'] .'" size="10"></td>
-					<td>
-						<select name="poste_membre[]">
-							<option value="'. $donnees_membre['FONCTION'] .'">'. $donnees_membre['RIGHT_NAME'] .'</option>
-							'.  $RightListe .'
-						</select>
-					</td>
-					<td>
-						<select name="SECTIONmembre[]">
-							<option value="'. $donnees_membre['SECTION_ID'] .'" '. selected($donnees_membre['SECTIONmembre'], 1) .'>'. $donnees_membre['LABEL'] .'</option>
-							'.  $SectionListe .'
-						</select>
-					</td>
-				</tr>	';
-		$i++;
-	}
-
-	//generate right list
-	$i = 1;
-	$req = $bdd -> query('SELECT Id, RIGHT_NAME, page_1, page_2, page_3, page_4, page_5, page_6, page_7, page_8, page_9, page_10   FROM '. TABLE_ERP_RIGHTS .'');
-	while ($DonneesRight = $req->fetch()){
-		 $RightContent = $RightContent .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_Right[]" id="id_Right" value="'. $DonneesRight['Id'] .'"></td>
-					<td><input type="text" name="RIGHT_NAME[]" value="'. $DonneesRight['RIGHT_NAME'] .'"></td>
-					<td>
-						<select name="page_1_membre[]">
-							<option value="1" '. selected($DonneesRight['page_1'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_1'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_2_membre[]">
-							<option value="1" '. selected($DonneesRight['page_2'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_2'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_3_membre[]">
-							<option value="1" '. selected($DonneesRight['page_3'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_3'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_4_membre[]">
-							<option value="1" '. selected($DonneesRight['page_4'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_4'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_5_membre[]">
-							<option value="1" '. selected($DonneesRight['page_5'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_5'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_6_membre[]">
-							<option value="1" '. selected($DonneesRight['page_6'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_6'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_7_membre[]">
-							<option value="1" '. selected($DonneesRight['page_7'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_7'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_8_membre[]">
-							<option value="1" '. selected($DonneesRight['page_8'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_8'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_9_membre[]">
-							<option value="1" '. selected($DonneesRight['page_9'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_9'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="page_10_membre[]">
-							<option value="1" '. selected($DonneesRight['page_10'], "1") .'>'. $langue->show_text('Yes') .'</option>
-							<option value="0" '. selected($DonneesRight['page_10'], "0") .'>'. $langue->show_text('No') .'</option>
-						</select>
-					</td>
-				</tr>';
-		$i++;
-	}
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
@@ -292,14 +163,45 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $EmployeesListContent;
-?>
+					<?php 
+					$query ='SELECT '. TABLE_ERP_EMPLOYEES .'.IdUser,
+						'. TABLE_ERP_EMPLOYEES .'.CODE,
+						'. TABLE_ERP_EMPLOYEES .'.STATU,
+						'. TABLE_ERP_EMPLOYEES .'.CONNEXION,
+						'. TABLE_ERP_EMPLOYEES .'.NAME,
+						'. TABLE_ERP_EMPLOYEES .'.FONCTION,
+						'. TABLE_ERP_EMPLOYEES .'.SECTION_ID,
+						'. TABLE_ERP_RIGHTS .'.RIGHT_NAME,
+						'. TABLE_ERP_SECTION .'.LABEL
+						FROM `'. TABLE_ERP_EMPLOYEES .'`
+						LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
+						LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`';
+					$i = 1;
+					foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i .''. $Form->input('hidden', 'id_membre[]',  $data->IdUser) ?></td>
+							<td><?= format_temps($data->CONNEXION) ?></td>
+							<td><?= $Form->input('text', 'CODEmembre[]',  $data->CODE) ?></td>
+							<td><?= $Form->input('text', 'nom_membre[]',  $data->NAME) ?></td>
+							<td>
+								<select name="poste_membre[]">
+									<option value="<?= $data->FONCTION ?>"><?= $data->RIGHT_NAME ?></option>
+									<?=  $RightListe ?>
+								</select>
+							</td>
+							<td>
+								<select name="SECTIONmembre[]">
+								<option value="<?= $data->SECTION_ID ?>" <?= selected($data->SECTIONmembre, 1) ?>><?= $data->LABEL ?></option>
+								<?=  $SectionListe ?>
+								</select>
+							</td>
+						</tr>
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td></td>
-							<td><input type="text" class="input-moyen-vide" name="Addcode_ajout" size="1"></td>
-							<td><input type="text" class="input-moyen-vide" name="Addnom_ajout" size="1"></td>
+							<td><?= $Form->input('text', 'Addcode_ajout', ''); ?></td>
+							<td><?= $Form->input('text', 'Addnom_ajout', ''); ?></td>
 							<td>
 								<select name="Addposte_ajout">
 									<?=$RightListe ?>
@@ -314,7 +216,7 @@
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -342,9 +244,76 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $RightContent;
-?>
+				<?php
+				//generate right list
+				$query='SELECT Id, RIGHT_NAME, page_1, page_2, page_3, page_4, page_5, page_6, page_7, page_8, page_9, page_10   FROM '. TABLE_ERP_RIGHTS .'';
+				$i = 1;
+				foreach ($bdd->GetQuery($query) as $data): ?>
+				<tr>
+					<td><?= $i ?> <?= $Form->input('hidden', 'id_Right[]',  $data->Id) ?></td>
+					<td><?= $Form->input('text', 'RIGHT_NAME[]',  $data->RIGHT_NAME) ?></td>
+					<td>
+						<select name="page_1_membre[]">
+							<option value="1" <?= selected($data->page_1, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_1, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_2_membre[]">
+							<option value="1" <?= selected($data->page_2, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_2, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_3_membre[]">
+							<option value="1" <?= selected($data->page_3, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_3, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_4_membre[]">
+							<option value="1" <?= selected($data->page_4, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_4, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_5_membre[]">
+							<option value="1" <?= selected($data->page_5, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_5, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_6_membre[]">
+							<option value="1" <?= selected($data->page_6, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_6, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_7_membre[]">
+							<option value="1" <?= selected($data->page_7, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_7, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_8_membre[]">
+							<option value="1" <?= selected($data->page_8, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_8, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_9_membre[]">
+							<option value="1" <?= selected($data->page_9, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_9, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="page_10_membre[]">
+							<option value="1" <?=selected($data->page_10, "1") ?>><?= $langue->show_text('Yes') ?></option>
+							<option value="0" <?= selected($data->page_10, "0") ?>><?= $langue->show_text('No') ?></option>
+						</select>
+					</td>
+				</tr>
+				<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text" class="input-moyen-vide" name="AddRight" size="1"></td>
@@ -412,7 +381,7 @@
 						<tr>
 							<td colspan="12" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>

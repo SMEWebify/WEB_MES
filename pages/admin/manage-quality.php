@@ -1,36 +1,19 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\SQL;
-	use \App\Language;
-	use \App\COMPANY\Company;
-	use \App\COMPANY\CompanyManager;
-	use \App\CallOutBox;
+	use \App\Form;
 
-	// include for the constants
-	require_once '../include/include_recup_config.php';
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-
+	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-
-	//open sql connexion
-	$bdd = SQL::getInstance();
-	//load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb();
-	$Company = new Company($donneesCompany);
-	// include for functions
-	require_once '../include/include_fonctions.php';
 	//session checking  user
 	require_once '../include/include_checking_session.php';
-	//init xml for user language
-	$langue = new Language('lang', 'manage-quality', $UserLanguage);
-	//init call out box for notification
-	$CallOutBox = new CallOutBox();
-
+	//init form class
+	$Form = new Form($_POST);
+	
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
@@ -43,7 +26,7 @@
 	//Create New device
 	if(isset($_POST['AddCODEAppareil']) AND !empty($_POST['AddCODEAppareil'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_APP_MESURE ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_QL_APP_MESURE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEAppareil']) ."',
 																		'". addslashes($_POST['AddLABELAppareil']) ."',
 																		'". addslashes($_POST['AddRESSOURCEAppareil']) ."',
@@ -53,7 +36,7 @@
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeviceNotification')));
 	}
 
-//Update Devices
+	//Update Devices
 	if(isset($_POST['id_Appareil']) AND !empty($_POST['id_Appareil'])){
 
 		$UpdateIdAppareil = $_POST['id_Appareil'];
@@ -67,7 +50,7 @@
 		$i = 0;
 		foreach ($UpdateIdAppareil as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_QL_APP_MESURE .'` SET  CODE = \''. addslashes($UpdateCODEAppareil[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_APP_MESURE .'` SET  CODE = \''. addslashes($UpdateCODEAppareil[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELAppareil[$i]) .'\',
 																RESSOURCE_ID = \''. addslashes($UpdateRESSOURCEAppareil[$i]) .'\',
 																USER_ID = \''. addslashes($UpdateUSERAppareil[$i]) .'\',
@@ -79,67 +62,6 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDeviceNotification')));
 	}
 
-	// GET Employees liste for form select
-	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
-									'. TABLE_ERP_EMPLOYEES .'.NOM,
-									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'`
-									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-	while ($donnees_membre = $req->fetch()){
-		 $EmployeeListe .=  '<option value="'. $donnees_membre['idUSER'] .'">'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
-
-	}
-
-	//generate resources list
-	$RessourcesListe ='<option value="0">Aucune</option>';
-	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
-	while ($DonneesRessource = $req->fetch()){
-		$RessourcesListe .='<option value="'. $DonneesRessource['Id'] .'">'. $DonneesRessource['LABEL'] .'</option>';
-	}
-
-	// Generable Table for device list
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_APP_MESURE .'.Id,
-									'. TABLE_ERP_QL_APP_MESURE .'.CODE,
-									'. TABLE_ERP_QL_APP_MESURE .'.LABEL,
-									'. TABLE_ERP_QL_APP_MESURE .'.RESSOURCE_ID,
-									'. TABLE_ERP_QL_APP_MESURE .'.USER_ID,
-									'. TABLE_ERP_QL_APP_MESURE .'.SERIAL_NUMBER,
-									'. TABLE_ERP_QL_APP_MESURE .'.DATE,
-									'. TABLE_ERP_RESSOURCE .'.LABEL AS LABEL_RESSOURCE,
-									'. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_USER,
-									'. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_USER
-									FROM `'. TABLE_ERP_QL_APP_MESURE .'`
-									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
-									LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`USER_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser`
-									ORDER BY Id');
-
-	while ($donnees_Appareil = $req->fetch()){
-		 $contenu1 = $contenu1 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_Appareil[]" id="id_Appareil" value="'. $donnees_Appareil['Id'] .'"></td>
-					<td><input type="text" name="UpdateCODEAppareil[]" value="'. $donnees_Appareil['CODE'] .'" size="10"></td>
-					<td><input type="text" name="UpdateLABELAppareil[]" value="'. $donnees_Appareil['LABEL'] .'" ></td>
-					<td>
-						<select name="UpdateRESSOURCEAppareil">
-							<option value="0" '. selected($donnees_ImproductTime['RESSOURCE_ID'], 0) .' >Aucune</option>
-							<option value="'. $donnees_Appareil['RESSOURCE_ID'] .'" >'. $donnees_Appareil['LABEL_RESSOURCE'] .'</option>
-							'. $RessourcesListe .'
-						</select>
-					</td>
-					<td>
-						<select name="UpdateUSERAppareil">
-							<option value="'. $donnees_Appareil['USER_ID'] .'">'. $donnees_Appareil['NOM_USER'] .'- '. $donnees_Appareil['PRENOM_USER'] .'</option>
-							'. $EmployeeListe .'
-						</select>
-					</td>
-					<td><input type="text" name="UpdateSERIALAppareil[]" value="'. $donnees_Appareil['SERIAL_NUMBER'] .'" ></td>
-					<td><input type="date" name="UpdateDATEAppareil[]" value="'. $donnees_Appareil['DATE'] .'" ></td>
-				</tr>	';
-		$i++;
-	}
-
 	////////////////////////
 	//// FLAW SECTION    ///
 	///////////////////////
@@ -147,7 +69,7 @@
 	// Create new type flaw
 	if(isset($_POST['AddCODEDefaut']) AND !empty($_POST['AddCODEDefaut'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_DEFAUT ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DEFAUT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEDefaut']) ."',
 																		'". addslashes($_POST['AddLABELDefaut']) ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddFailNotification')));
@@ -163,7 +85,7 @@
 		$i = 0;
 		foreach ($UpdateIdDefaut as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_DEFAUT .'` SET  CODE = \''. addslashes($UpdateCODEDefaut[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_DEFAUT .'` SET  CODE = \''. addslashes($UpdateCODEDefaut[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELDefaut[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
@@ -171,23 +93,7 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateFailNotification')));
 	}
 
-	 // generate table for flaw list
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_DEFAUT .'.Id,
-									'. TABLE_ERP_DEFAUT .'.CODE,
-									'. TABLE_ERP_DEFAUT .'.LABEL
-									FROM `'. TABLE_ERP_DEFAUT .'`
-									ORDER BY Id');
 
-	while ($donnees_defaut = $req->fetch())	{
-		 $contenu2 = $contenu2 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_Defaut[]" id="id_Defaut" value="'. $donnees_defaut['Id'] .'"></td>
-					<td><input type="text" name="UpdateCODEDefaut[]" value="'. $donnees_defaut['CODE'] .'" size="10"></td>
-					<td><input type="text" name="UpdateLABELDefaut[]" value="'. $donnees_defaut['LABEL'] .'" ></td>
-				</tr>	';
-		$i++;
-	}
 
 	///////////////////////
 	//// Origin  of flaw ////
@@ -196,7 +102,7 @@
 	//Create new origin
 	if(isset($_POST['AddCODECauses']) AND !empty($_POST['AddCODECauses'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CAUSES ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_QL_CAUSES ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECauses']) ."',
 																		'". addslashes($_POST['AddLABELCauses']) ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddCauseNotification')));
@@ -212,30 +118,12 @@
 		$i = 0;
 		foreach ($UpdateIdCauses as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_QL_CAUSES .'` SET  CODE = \''. addslashes($UpdateCODECauses[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_CAUSES .'` SET  CODE = \''. addslashes($UpdateCODECauses[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELCauses[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCauseNotification')));	
-	}
-
-	//generate origine of flaw list
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_CAUSES .'.Id,
-									'. TABLE_ERP_QL_CAUSES .'.CODE,
-									'. TABLE_ERP_QL_CAUSES .'.LABEL
-									FROM `'. TABLE_ERP_QL_CAUSES .'`
-									ORDER BY Id');
-
-	while ($donnees_Causes = $req->fetch()){
-		 $contenu3 = $contenu3 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_Causes[]" id="id_sector" value="'. $donnees_Causes['Id'] .'"></td>
-					<td><input type="text" name="UpdateCODECauses[]" value="'. $donnees_Causes['CODE'] .'" size="10"></td>
-					<td><input type="text" name="UpdateLABELCauses[]" value="'. $donnees_Causes['LABEL'] .'" ></td>
-				</tr>';
-		$i++;
 	}
 
 	////////////////////////////////
@@ -245,7 +133,7 @@
 	// Create new correction line
 	if(isset($_POST['AddCODECorrection']) AND !empty($_POST['AddCODECorrection'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_QL_CORRECTIONS ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_QL_CORRECTIONS ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECorrection']) ."',
 																		'". addslashes($_POST['AddLABELCorrection'])  ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddCorrectionNotification')));																
@@ -261,30 +149,12 @@
 		$i = 0;
 		foreach ($UpdateIdCorrection as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_QL_CORRECTIONS .'` SET  CODE = \''. addslashes($UpdateCODECorrection[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_CORRECTIONS .'` SET  CODE = \''. addslashes($UpdateCODECorrection[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELCorrection[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCorrectionNotification')));	
-	}
-
-	// Generate list of correction
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_QL_CORRECTIONS .'.Id,
-									'. TABLE_ERP_QL_CORRECTIONS .'.CODE,
-									'. TABLE_ERP_QL_CORRECTIONS .'.LABEL
-									FROM `'. TABLE_ERP_QL_CORRECTIONS .'`
-									ORDER BY Id');
-
-	while ($donnees_correction = $req->fetch())	{
-		 $contenu4 = $contenu4 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_Correction[]" id="id_Correction" value="'. $donnees_correction['Id'] .'"></td>
-					<td><input type="text" name="UpdateCODECorrection[]" value="'. $donnees_correction['CODE'] .'" size="10"></td>
-					<td><input type="text" name="UpdateLABELCorrection[]" value="'. $donnees_correction['LABEL'] .'" ></td>
-				</tr>';
-		$i++;
 	}
 ?>
 	<div class="tab">
@@ -308,12 +178,68 @@
 						</tr>
 					</thead>
 					<tbody>
-							<?php
+						<?php
+						// GET Employees liste for form select
+						$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
+								'. TABLE_ERP_EMPLOYEES .'.NOM,
+								'. TABLE_ERP_EMPLOYEES .'.PRENOM,
+								'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
+								FROM `'. TABLE_ERP_EMPLOYEES .'`
+								LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
 
-								Echo $contenu1;
-							?>
+						foreach ($bdd->GetQuery($query) as $data){
+							$EmployeeListe .=  '<option value="'. $data->idUSER .'">'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
+
+						}
+						//generate resources list
+						$RessourcesListe ='<option value="0">Aucune</option>';
+						$query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
+						foreach ($bdd->GetQuery($query) as $data){
+							$RessourcesListe .='<option value="'. $data->Id .'">'. $data->LABEL .'</option>';
+						}
+
+						// Generable Table for device list
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_QL_APP_MESURE .'.Id,
+									'. TABLE_ERP_QL_APP_MESURE .'.CODE,
+									'. TABLE_ERP_QL_APP_MESURE .'.LABEL,
+									'. TABLE_ERP_QL_APP_MESURE .'.RESSOURCE_ID,
+									'. TABLE_ERP_QL_APP_MESURE .'.USER_ID,
+									'. TABLE_ERP_QL_APP_MESURE .'.SERIAL_NUMBER,
+									'. TABLE_ERP_QL_APP_MESURE .'.DATE,
+									'. TABLE_ERP_RESSOURCE .'.LABEL AS LABEL_RESSOURCE,
+									'. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_USER,
+									'. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_USER
+									FROM `'. TABLE_ERP_QL_APP_MESURE .'`
+									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
+									LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`USER_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser`
+									ORDER BY Id';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
 						<tr>
-							<td><?=$langue->show_text('Addtext'); ?></td>
+							<td><?= $i  ?><input type="hidden" name="id_Appareil[]" id="id_Appareil" value="<?= $data->Id ?>"></td>
+							<td><input type="text" name="UpdateCODEAppareil[]" value="<?= $data->CODE ?>" size="10"></td>
+							<td><input type="text" name="UpdateLABELAppareil[]" value="<?= $data->ABEL ?>" ></td>
+							<td>
+								<select name="UpdateRESSOURCEAppareil">
+									<option value="0" <?= selected($data->RESSOURCE_ID, 0) ?> >Aucune</option>
+									<option value="<?= $data->RESSOURCE_ID ?>" ><?= $data->LABEL_RESSOURCE ?></option>
+									<?= $RessourcesListe ?>
+								</select>
+							</td>
+							<td>
+								<select name="UpdateUSERAppareil">
+									<option value="<?= $data->USER_ID ?>"><?= $data->NOM_USER ?>- <?= $data->PRENOM_USER ?></option>
+									<?= $EmployeeListe ?>
+								</select>
+							</td>
+							<td><input type="text" name="UpdateSERIALAppareil[]" value="<?= $data->SERIAL_NUMBER ?>" ></td>
+							<td><input type="date" name="UpdateDATEAppareil[]" value="<?= $data->DATE ?>" ></td>
+						</tr>		
+						<?php $i++; endforeach; ?>
+						<tr>
+							<td><?= $langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEAppareil"></td>
 							<td><input type="text"  name="AddLABELAppareil"></td>
 							<td>
@@ -332,7 +258,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -351,9 +277,23 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu2;
-?>
+						<?php
+						// generate table for flaw list
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_DEFAUT .'.Id,
+									 '. TABLE_ERP_DEFAUT .'.CODE,
+									 '. TABLE_ERP_DEFAUT .'.LABEL
+									 FROM `'. TABLE_ERP_DEFAUT .'`
+									 ORDER BY Id';
+ 
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?> <input type="hidden" name="id_Defaut[]" id="id_Defaut" value="<?= $data->Id ?>"></td>
+							<td><input type="text" name="UpdateCODEDefaut[]" value="<?= $data->CODE ?>" size="10"></td>
+							<td><input type="text" name="UpdateLABELDefaut[]" value="<?= $data->LABEL ?>" ></td>
+						</tr>			
+				 		<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEDefaut"></td>
@@ -362,7 +302,7 @@
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -381,9 +321,23 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu3;
-?>
+						<?php
+						//generate origine of flaw list
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_QL_CAUSES .'.Id,
+									'. TABLE_ERP_QL_CAUSES .'.CODE,
+									'. TABLE_ERP_QL_CAUSES .'.LABEL
+									FROM `'. TABLE_ERP_QL_CAUSES .'`
+									ORDER BY Id';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?> <input type="hidden" name="id_Causes[]" id="id_sector" value="<?= $data->Id ?>"></td>
+							<td><input type="text" name="UpdateCODECauses[]" value="<?= $data->CODE ?>" size="10"></td>
+							<td><input type="text" name="UpdateLABELCauses[]" value="<?= $data->LABEL ?>" ></td>
+						</tr>		
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODECauses"></td>
@@ -392,7 +346,7 @@
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -411,9 +365,22 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu4;
-?>
+						<?php
+						// Generate list of correction
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_QL_CORRECTIONS .'.Id,
+									'. TABLE_ERP_QL_CORRECTIONS .'.CODE,
+									'. TABLE_ERP_QL_CORRECTIONS .'.LABEL
+									FROM `'. TABLE_ERP_QL_CORRECTIONS .'`
+									ORDER BY Id';
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?> <input type="hidden" name="id_Correction[]" id="id_Correction" value="<?= $data->Id ?>"></td>
+							<td><input type="text" name="UpdateCODECorrection[]" value="<?= $data->CODE ?>" size="10"></td>
+							<td><input type="text" name="UpdateLABELCorrection[]" value="<?= $data->LABEL ?>" ></td>
+						</tr>				
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODECorrection"></td>
@@ -422,7 +389,7 @@
 						<tr>
 							<td colspan="3" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>

@@ -1,35 +1,18 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\SQL;
-	use \App\Language;
-	use \App\COMPANY\Company;
-	use \App\COMPANY\CompanyManager;
-	use \App\CallOutBox;
+	use \App\Form;
 
-	// include for the constants
-	require_once '../include/include_recup_config.php';
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-
+	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-
-	//open sql connexion
-	$bdd = SQL::getInstance();
-	//load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb();
-	$Company = new Company($donneesCompany);
-	// include for functions
-	require_once '../include/include_fonctions.php';
 	//session checking  user
 	require_once '../include/include_checking_session.php';
-	//init xml for user language
-	$langue = new Language('lang', 'manage-methodes', $UserLanguage);
-	//init call out box for notification
-	$CallOutBox = new CallOutBox();
+	//init form class
+	$Form = new Form($_POST);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -44,7 +27,7 @@
 		move_uploaded_file($_FILES['IMAGEPosteCharge']['tmp_name'], $dossier . $fichier);
 		$IsertPrestaImage = $dossier.$fichier;
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_PRESTATION ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_PRESTATION ." VALUE ('0',
 																		'". addslashes($_POST['CODEPosteCharge']) ."',
 																		'". $_POST['ORDREPosteCharge'] ."',
 																		'". addslashes($_POST['AddPosteCharge']) ."',
@@ -71,7 +54,7 @@
 
 		$i = 0;
 		foreach ($UpdateIdPresta as $id_generation) {
-			$bdd->exec('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  CODE = \''. addslashes($UpdateCODEpresta[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  CODE = \''. addslashes($UpdateCODEpresta[$i]) .'\',
 																ORDRE = \''. $UpdateORDREpresta[$i] .'\',
 																LABEL = \''. addslashes($UpdateLABELpresta[$i]) .'\',
 																TYPE = \''. $UpdateTYPEpresta[$i] .'\',
@@ -87,7 +70,7 @@
 
 	//add new section in db
 	if(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_SECTION ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_SECTION ." VALUE ('0',
 																		'". $_POST['ORDRESection'] ."',
 																		'". addslashes($_POST['CODESection']) ."',
 																		'". addslashes($_POST['AddSection']) ."',
@@ -110,7 +93,7 @@
 		$i = 0;
 		foreach ($UpdateIdSection as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_SECTION .'` SET  ORDRE = \''. $UpdateORDRESection[$i] .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SECTION .'` SET  ORDRE = \''. $UpdateORDRESection[$i] .'\',
 																CODE = \''. addslashes($UpdateCODESection[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSection[$i]) .'\',
 																COUT_H = \''. $UpdateTAUX_HSection[$i] .'\',
@@ -129,7 +112,7 @@
 		move_uploaded_file($_FILES['IMAGERessource']['tmp_name'], $dossier . $fichier);
 		$IsertPrestaImage = $dossier.$fichier;
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_RESSOURCE ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_RESSOURCE ." VALUE ('0',
 																		'". addslashes($_POST['CODERessource']) ."',
 																		'". addslashes($_POST['AddRessource']) ."',
 																		'". addslashes($IsertPrestaImage) ."',
@@ -141,154 +124,14 @@
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddRessourcesnNotification')));	
 	}
 
-	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
+	$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
 									FROM `'. TABLE_ERP_EMPLOYEES .'`
-									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-	while ($donnees_membre = $req->fetch()){
-		 $EmployeeListe .=  '<option value="'. $donnees_membre['idUSER'] .'">'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
-
-	}
-
-	//------------------------------
-	// PRESTA
-	//------------------------------
-
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_PRESTATION .'.Id,
-									'. TABLE_ERP_PRESTATION .'.CODE,
-									'. TABLE_ERP_PRESTATION .'.ORDRE,
-									'. TABLE_ERP_PRESTATION .'.LABEL,
-									'. TABLE_ERP_PRESTATION .'.TYPE,
-									'. TABLE_ERP_PRESTATION .'.TAUX_H,
-									'. TABLE_ERP_PRESTATION .'.MARGE,
-									'. TABLE_ERP_PRESTATION .'.COLOR,
-									'. TABLE_ERP_PRESTATION .'.IMAGE,
-									'. TABLE_ERP_PRESTATION .'.RESSOURCE_ID
-									FROM `'. TABLE_ERP_PRESTATION .'`
-									ORDER BY ORDRE');
-
-
-
-
-	while ($donnees_presta = $req->fetch()){
-		 $contenu1 = $contenu1 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_presta[]" id="id_presta" value="'. $donnees_presta['Id'] .'"></td>
-					<td><input type="number" name="ORDREpresta[]" value="'. $donnees_presta['ORDRE'] .'" id="number"></td>
-					<td><input type="text" name="CODEpresta[]" value="'. $donnees_presta['CODE'] .'" ></td>
-					<td><input type="text" name="LABELpresta[]" value="'. $donnees_presta['LABEL'] .'" ></td>
-					<td>
-						<select name="TYPEpresta[]">
-							<option value="1" '. selected($donnees_presta['TYPE'], 1) .'>Productive</option>
-							<option value="2" '. selected($donnees_presta['TYPE'], 2) .'>Matière première</option>
-							<option value="3" '. selected($donnees_presta['TYPE'], 3) .'>Matière première (tôle)</option>
-							<option value="4" '. selected($donnees_presta['TYPE'], 4) .'>Matière première (profilé)</option>
-							<option value="5" '. selected($donnees_presta['TYPE'], 5) .'>Matière première (bloc)</option>
-							<option value="6" '. selected($donnees_presta['TYPE'], 6) .'>Fourniture</option>
-							<option value="7" '. selected($donnees_presta['TYPE'], 7) .'>Sous-traitance</option>
-							<option value="8" '. selected($donnees_presta['TYPE'], 8) .'>Article composés</option>
-						</select>
-						</td>
-					<td><input type="number" name="TAUX_Hpresta[]" value="'. $donnees_presta['TAUX_H'] .'" id="number"></td>
-					<td><input type="number" name="MARGEpresta[]" value="'. $donnees_presta['MARGE'] .'" id="number"></td>
-					<td><input type="color" name="COLORpresta[]" value="'. $donnees_presta['COLOR'] .'"></td>
-					<td><img Class="Image-small" src="'. $donnees_presta['IMAGE'] .'" title="Image '. $donnees_presta['LABEL'] .'" alt="Prestation Image" /></td>
-					<td><input type="file" name="INAGEpresta[]" /></td>
-				</tr>	';
-		$i++;
-	}
-
-	//------------------------------
-	// RESSOURCES
-	//------------------------------
-
-	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'');
-	while ($DonneesSection = $req->fetch()){
-		$SectionListe .='<option value="'. $DonneesSection['Id'] .'">'. $DonneesSection['LABEL'] .'</option>';
-	}
-
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_RESSOURCE .'.Id,
-									'. TABLE_ERP_RESSOURCE .'.CODE,
-									'. TABLE_ERP_RESSOURCE .'.LABEL,
-									'. TABLE_ERP_RESSOURCE .'.IMAGE,
-									'. TABLE_ERP_RESSOURCE .'.MASK_TIME,
-									'. TABLE_ERP_RESSOURCE .'.ORDRE,
-									'. TABLE_ERP_RESSOURCE .'.CAPACITY,
-									'. TABLE_ERP_RESSOURCE .'.SECTION_ID,
-									'. TABLE_ERP_RESSOURCE .'.COLOR,
-									'. TABLE_ERP_SECTION .'.LABEL AS LABEL_SECTOR
-									FROM `'. TABLE_ERP_RESSOURCE .'`
-									LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_RESSOURCE .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`
-									ORDER BY ORDRE');
-
-	while ($donnees_Ressources = $req->fetch()){
-		 $contenu2 = $contenu2 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_ressource[]" id="id_presta" value="'. $donnees_Ressources['Id'] .'"></td>
-					<td><input type="text" name="UpdateORDREressource[]" value="'. $donnees_Ressources['CODE'] .'" ></td>
-					<td><input type="number" name="UpdateCODEressource[]" value="'. $donnees_Ressources['ORDRE'] .'" id="number"></td>
-					<td><input type="text" name="UpdateLABELressource[]" value="'. $donnees_Ressources['LABEL'] .'" ></td>
-					<td>
-						<select name="UpdateMASKressource[]">
-							<option value="1" '. selected($donnees_Ressources['MASK_TIME'], 1) .'>Oui</option>
-							<option value="0" '. selected($donnees_Ressources['MASK_TIME'], 0) .'>Non</option>
-						</select>
-					</td>
-					<td><input type="number" name="UpdateCAPACITYressource[]" value="'. $donnees_Ressources['CAPACITY'] .'" id="number"></td>
-					<td>
-						<select name="UpdateSECTIONIDressource[]">
-							<option value="'. $donnees_Ressources['SECTION_ID'] .'">'. $donnees_Ressources['LABEL_SECTOR'] .'</option>
-							'. $SectionListe .'
-						</select>
-					</td>
-					<td><input type="color" name="UpdateCOLORressource[]" value="'. $donnees_Ressources['COLOR'] .'" size="10"></td>
-					<td><img Class="Image-small" src="'. $donnees_Ressources['IMAGE'] .'" title="Image '. $donnees_Ressources['LABEL'] .'" alt="Ressource Image" /></td>
-					<td><input type="file" name="UpdateIMAGEPosteCharge[]" /></td>
-				</tr>';
-		$i++;
-	}
-
-	//------------------------------
-	// SECTION
-	//------------------------------
-
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_SECTION .'.Id,
-								'. TABLE_ERP_SECTION .'.ORDRE,
-								'. TABLE_ERP_SECTION .'.CODE,
-								'. TABLE_ERP_SECTION .'.LABEL,
-								'. TABLE_ERP_SECTION .'.COUT_H,
-								'. TABLE_ERP_SECTION .'.COLOR,
-								'. TABLE_ERP_EMPLOYEES .'.idUSER,
-								'. TABLE_ERP_EMPLOYEES .'.NOM,
-								'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-								'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-								FROM '. TABLE_ERP_SECTION .'
-								LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`idUSER` = `'. TABLE_ERP_SECTION .'`.`RESPONSABLE`
-								LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
-								ORDER BY '. TABLE_ERP_SECTION .'.ORDRE');
-	while ($donnees_section = $req->fetch()){
-
-		 $contenu3 = $contenu3 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_section[]" id="id_section" value="'. $donnees_section['Id'] .'"></td>
-					<td><input type="text" name="UpdateCODESection[]" value="'. $donnees_section['CODE'] .'" ></td>
-					<td><input type="number" name="UpdateORDRESection[]" value="'. $donnees_section['ORDRE'] .'" id="number"></td>
-					<td><input type="text" name="UpdateLABELSection[]" value="'. $donnees_section['LABEL'] .'" ></td>
-					<td><input type="number" name="UpdateTAUX_HSection[]" value="'. $donnees_section['COUT_H'] .'" id="number"></td>
-					<td>
-						<select name="UpdateRESPONSABLESection[]">
-							<option value="'. $donnees_section['idUSER'] .'">'. $donnees_section['NOM'] .' '. $donnees_section['PRENOM'] .' - '. $donnees_section['RIGHT_NAME'] .'</option>
-							'. $EmployeeListe .'
-						</select>
-					</td>
-					<td><input type="color" name="UpdateCOLORSection[]" value="'. $donnees_section['COLOR'] .'" size="10"></td>
-				</tr>	';
-		$i++;
+									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
+	foreach ($bdd->GetQuery($query) as $data){
+		 $EmployeeListe .=  '<option value="'. $dat->idUSER .'">'. $dat->NOM .' '. $dat->PRENOM .' - '. $dat->RIGHT_NAME .'</option>';
 	}
 
 	//------------------------------
@@ -296,15 +139,15 @@
 	//------------------------------
 
 	$RessourcesListe ='<option value="0">Aucune</option>';
-	$req = $bdd -> query('SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'');
-	while ($DonneesRessource = $req->fetch()){
-		$RessourcesListe .='<option value="'. $DonneesRessource['Id'] .'">'. $DonneesRessource['LABEL'] .'</option>';
+	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$RessourcesListe .='<option value="'. $dat->Id .'">'. $data->LABEL .'</option>';
 	}
 
 	//add new stock zone in dd
 	if(isset($_POST['AddCODEZoneStock']) AND !empty($_POST['AddCODEZoneStock'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_STOCK_ZONE ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STOCK_ZONE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEZoneStock']) ."',
 																		'". addslashes($_POST['AddLABELZoneStock']) ."',
 																		'". $_POST['AddRESSOURCEZoneStock'] ."',
@@ -324,7 +167,7 @@
 		$i = 0;
 		foreach ($UpdateIdZoneStock as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_STOCK_ZONE .'` SET CODE = \''. addslashes($UpdateCODEZoneStock[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_STOCK_ZONE .'` SET CODE = \''. addslashes($UpdateCODEZoneStock[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELZoneStock[$i]) .'\',
 																RESSOURCE_ID = \''. $UpdateRESSOURCEIDZoneStock[$i] .'\',
 																COLOR = \''. $UpdateCOLORZoneStock[$i] .'\'
@@ -332,35 +175,6 @@
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLocationNotification')));
-	}
-
-	//generate list of zone stock
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_STOCK_ZONE .'.Id,
-									'. TABLE_ERP_STOCK_ZONE .'.CODE,
-									'. TABLE_ERP_STOCK_ZONE .'.LABEL,
-									'. TABLE_ERP_STOCK_ZONE .'.RESSOURCE_ID,
-									'. TABLE_ERP_STOCK_ZONE .'.COLOR,
-									'. TABLE_ERP_RESSOURCE .'.LABEL AS LABEL_RESSOURCE
-									FROM `'. TABLE_ERP_STOCK_ZONE .'`
-									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_STOCK_ZONE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
-									ORDER BY '.TABLE_ERP_RESSOURCE .'.id ');
-
-	while ($donnees_ZoneStock = $req->fetch()){
-		 $contenu4 = $contenu4 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="id_ZoneStock[]" id="id_ZoneStock" value="'. $donnees_ZoneStock['Id'] .'"></td>
-					<td><input type="text" name="UpdateCODEZoneStock[]" value="'. $donnees_ZoneStock['CODE'] .'" id="number"></td>
-					<td><input type="text" name="UpdateLABELZoneStock[]" value="'. $donnees_ZoneStock['LABEL'] .'" </td>
-					<td>
-						<select name="UpdateRESSOURCEIDZoneStock[]">
-							<option value="'. $donnees_ZoneStock['RESSOURCE_ID'] .'">'. $donnees_ZoneStock['LABEL_RESSOURCE'] .'</option>
-							'. $RessourcesListe .'
-						</select>
-					</td>
-					<td><input type="color" name="UpdateCOLORZoneStock[]" value="'. $donnees_ZoneStock['COLOR'] .'" size="10"></td>
-				</tr>';
-		$i++;
 	}
 ?>
 	<div class="tab">
@@ -387,9 +201,50 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu1;
-?>
+						<?php
+						//------------------------------
+						// PRESTA
+						//------------------------------
+
+						$query='SELECT '. TABLE_ERP_PRESTATION .'.Id,
+									'. TABLE_ERP_PRESTATION .'.CODE,
+									'. TABLE_ERP_PRESTATION .'.ORDRE,
+									'. TABLE_ERP_PRESTATION .'.LABEL,
+									'. TABLE_ERP_PRESTATION .'.TYPE,
+									'. TABLE_ERP_PRESTATION .'.TAUX_H,
+									'. TABLE_ERP_PRESTATION .'.MARGE,
+									'. TABLE_ERP_PRESTATION .'.COLOR,
+									'. TABLE_ERP_PRESTATION .'.IMAGE,
+									'. TABLE_ERP_PRESTATION .'.RESSOURCE_ID
+									FROM `'. TABLE_ERP_PRESTATION .'`
+									ORDER BY ORDRE';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?> <input type="hidden" name="id_presta[]" id="id_presta" value="<?= $data->Id ?>"></td>
+							<td><input type="number" name="ORDREpresta[]" value="<?= $data->ORDRE ?>" id="number"></td>
+							<td><input type="text" name="CODEpresta[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABELpresta[]" value="<?= $data->LABEL ?>" ></td>
+							<td>
+								<select name="TYPEpresta[]">
+									<option value="1" <?= selected($data->TYPE, 1) ?>><?=$langue->show_text('SelectProductive'); ?></option>
+									<option value="2" <?= selected($data->TYPE, 2) ?>><?=$langue->show_text('SelectRawMat'); ?></option>
+									<option value="3" <?= selected($data->TYPE, 3) ?>><?=$langue->show_text('SelectRawMatSheet'); ?></option>
+									<option value="4" <?= selected($data->TYPE, 4) ?>><?=$langue->show_text('SelectRawMatProfil'); ?></option>
+									<option value="5" <?= selected($data->TYPE, 5) ?>><?=$langue->show_text('SelectRawMatBlock'); ?></option>
+									<option value="6" <?= selected($data->TYPE, 6) ?>><?=$langue->show_text('SelectSupplies'); ?><</option>
+									<option value="7" <?= selected($data->TYPE, 7) ?>><?=$langue->show_text('SelectSubcontracting'); ?></option>
+									<option value="8" <?= selected($data->TYPE, 8) ?>><?=$langue->show_text('SelectCompoundItem'); ?></option>
+								</select>
+								</td>
+							<td><input type="number" name="TAUX_Hpresta[]" value="<?= $data->TAUX_H ?>" id="number"></td>
+							<td><input type="number" name="MARGEpresta[]" value="<?= $data->MARGE ?>" id="number"></td>
+							<td><input type="color" name="COLORpresta[]" value="<?= $data->COLOR ?>"></td>
+							<td><img Class="Image-small" src="<?= $data->IMAGE ?>" title="Image <?= $data->LABEL ?>" alt="Prestation Image" /></td>
+							<td><input type="file" name="INAGEpresta[]" /></td>
+						</tr>
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="number" name="ORDREPosteCharge" size="1" id="number"></td>
@@ -416,7 +271,7 @@
 						<tr>
 							<td colspan="10" >
 								<br/>
-								<input type="submit" class="input-moyen" value="Mettre à jour" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -442,9 +297,55 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu2;
-?>
+						<?php
+						//------------------------------
+						// RESSOURCES
+						//------------------------------
+
+						$query='SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'';
+						foreach ($bdd->GetQuery($query) as $data){
+							$SectionListe .='<option value="'. $data->Id .'">'. $data->LABEL .'</option>';
+						}
+
+						$query='SELECT '. TABLE_ERP_RESSOURCE .'.Id,
+									'. TABLE_ERP_RESSOURCE .'.CODE,
+									'. TABLE_ERP_RESSOURCE .'.LABEL,
+									'. TABLE_ERP_RESSOURCE .'.IMAGE,
+									'. TABLE_ERP_RESSOURCE .'.MASK_TIME,
+									'. TABLE_ERP_RESSOURCE .'.ORDRE,
+									'. TABLE_ERP_RESSOURCE .'.CAPACITY,
+									'. TABLE_ERP_RESSOURCE .'.SECTION_ID,
+									'. TABLE_ERP_RESSOURCE .'.COLOR,
+									'. TABLE_ERP_SECTION .'.LABEL AS LABEL_SECTOR
+						FROM `'. TABLE_ERP_RESSOURCE .'`
+							LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_RESSOURCE .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`
+						ORDER BY ORDRE';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?> <input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>"></td>
+							<td><input type="text" name="UpdateORDREressource[]" value="<?=  $data->CODE ?>" ></td>
+							<td><input type="number" name="UpdateCODEressource[]" value="<?=  $data->ORDRE ?>" id="number"></td>
+							<td><input type="text" name="UpdateLABELressource[]" value="<?=  $data->LABEL ?>" ></td>
+							<td>
+								<select name="UpdateMASKressource[]">
+									<option value="1" <?=  selected($data->MASK_TIME, 1) ?>><?=$langue->show_text('No'); ?></option>
+									<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('Yes'); ?></option>
+								</select>
+							</td>
+							<td><input type="number" name="UpdateCAPACITYressource[]" value="<?=  $data->CAPACITY ?>" id="number"></td>
+							<td>
+								<select name="UpdateSECTIONIDressource[]">
+									<option value="<?=  $data->SECTION_ID ?>"><?=  $data->LABEL_SECTOR ?></option>
+									<?=  $SectionListe ?>
+								</select>
+							</td>
+							<td><input type="color" name="UpdateCOLORressource[]" value="<?=  $data->COLOR ?>" size="10"></td>
+							<td><img Class="Image-small" src="<?=  $data->IMAGE ?>" title="Image <?=  $data->LABEL ?>" alt="Ressource Image" /></td>
+							<td><input type="file" name="UpdateIMAGEPosteCharge[]" /></td>
+						</tr>
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="CODERessource" size="1"></td>
@@ -469,7 +370,7 @@
 						<tr>
 							<td colspan="10" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -492,9 +393,43 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu3;
-?>
+						<?php
+						//------------------------------
+						// SECTION
+						//------------------------------
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_SECTION .'.Id,
+													'. TABLE_ERP_SECTION .'.ORDRE,
+								'. TABLE_ERP_SECTION .'.CODE,
+								'. TABLE_ERP_SECTION .'.LABEL,
+								'. TABLE_ERP_SECTION .'.COUT_H,
+								'. TABLE_ERP_SECTION .'.COLOR,
+								'. TABLE_ERP_EMPLOYEES .'.idUSER,
+								'. TABLE_ERP_EMPLOYEES .'.NOM,
+								'. TABLE_ERP_EMPLOYEES .'.PRENOM,
+								'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
+								FROM '. TABLE_ERP_SECTION .'
+								LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`idUSER` = `'. TABLE_ERP_SECTION .'`.`RESPONSABLE`
+								LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
+								ORDER BY '. TABLE_ERP_SECTION .'.ORDRE';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?><input type="hidden" name="id_section[]" id="id_section" value="<?= $data->Id  ?>"></td>
+							<td><input type="text" name="UpdateCODESection[]" value="<?= $data->CODE  ?>" ></td>
+							<td><input type="number" name="UpdateORDRESection[]" value="<?= $data->ORDRE ?>" id="number"></td>
+							<td><input type="text" name="UpdateLABELSection[]" value="<?= $data->LABEL  ?>" ></td>
+							<td><input type="number" name="UpdateTAUX_HSection[]" value="<?= $data->COUT_H  ?>" id="number"></td>
+							<td>
+								<select name="UpdateRESPONSABLESection[]">
+									<option value="<?= $data->idUSER  ?>"><?= $data->NOM  ?> <?= $data->PRENOM  ?> - <?= $data->RIGHT_NAME  ?></option>
+									<?=$EmployeeListe ?>
+								</select>
+							</td>
+							<td><input type="color" name="UpdateCOLORSection[]" value="<?= $data->COLOR  ?>" size="10"></td>
+						</tr>	
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="CODESection" size="10"></td>
@@ -511,7 +446,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -532,9 +467,34 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
-								Echo $contenu4;
-?>
+						<?php
+						//generate list of zone stock
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_STOCK_ZONE .'.Id,
+										'. TABLE_ERP_STOCK_ZONE .'.CODE,
+										'. TABLE_ERP_STOCK_ZONE .'.LABEL,
+										'. TABLE_ERP_STOCK_ZONE .'.RESSOURCE_ID,
+										'. TABLE_ERP_STOCK_ZONE .'.COLOR,
+										'. TABLE_ERP_RESSOURCE .'.LABEL AS LABEL_RESSOURCE
+									FROM `'. TABLE_ERP_STOCK_ZONE .'`
+										LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_STOCK_ZONE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
+									ORDER BY '.TABLE_ERP_RESSOURCE .'.id ';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?><input type="hidden" name="id_ZoneStock[]" id="id_ZoneStock" value="<?= $data->Id ?>"></td>
+							<td><input type="text" name="UpdateCODEZoneStock[]" value="<?= $data->CODE ?>" id="number"></td>
+							<td><input type="text" name="UpdateLABELZoneStock[]" value="<?= $data->LABEL ?>" </td>
+							<td>
+								<select name="UpdateRESSOURCEIDZoneStock[]">
+									<option value="<?= $data->RESSOURCE_ID ?>"><?= $data->LABEL_RESSOURCE ?></option>
+									<?= $RessourcesListe ?>
+								</select>
+							</td>
+							<td><input type="color" name="UpdateCOLORZoneStock[]" value="<?= $data->COLOR ?>" size="10"></td>
+						</tr>
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td><input type="text"  name="AddCODEZoneStock"></td>
@@ -549,7 +509,7 @@
 						<tr>
 							<td colspan="5" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>

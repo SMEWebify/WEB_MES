@@ -3,6 +3,8 @@
 
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/main/MES_VIEW_DEMO.PNG)
 
+![alt text](https://github.com/billyboy35/WEB_MES/blob/main/Workflow.png)
+
 #For configuration
 * Use __erp.sql__ to import ERP database  
 * Connection to the SQL database in include_connection_sql file
@@ -36,7 +38,7 @@ http://localhost/erp/login.php
 * include  
   * include_checking_session.php
   * include_fonction.php
-  * include_recup_config_company.php
+  * include_recup_config_company.php __will be replaced by Company.class.php__
   * include_recup_config.php
 * public
   * css  

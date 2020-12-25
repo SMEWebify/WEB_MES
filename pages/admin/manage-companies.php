@@ -1,35 +1,18 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\SQL;
-	use \App\Language;
-	use \App\COMPANY\Company;
-	use \App\COMPANY\CompanyManager;
-	use \App\CallOutBox;
+	use \App\Form;
 
-	// include for the constants
-	require_once '../include/include_recup_config.php';
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-
+	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-
-	//open sql connexion
-	$bdd = SQL::getInstance();
-	//load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb();
-	$Company = new Company($donneesCompany);
-	// include for functions
-	require_once '../include/include_fonctions.php';
 	//session checking  user
 	require_once '../include/include_checking_session.php';
-	//init xml for user language
-	$langue = new Language('lang', 'manage-companies', $UserLanguage);
-	//init call out box for notification
-	$CallOutBox = new CallOutBox();
+	//init form class
+	$Form = new Form($_POST);
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -43,16 +26,14 @@
 	$titleOnglet1 = $langue->show_text('Titre1');
 
 	//if post CODE or isset get Id for display company
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 
 		//if isset new CODE company
 		if(isset($_POST['CODESte'])){
 
 			// check if exist
-			$req = $bdd->query("SELECT COUNT(id) as nb FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
-			$data = $req->fetch();
-			$req->closeCursor();
-			$nb = $data['nb'];
+			$data=$bdd->GetQuery("SELECT COUNT(id) as nb FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'", true);
+			$nb = $data->nb;
 
 			// if existe
 			if($nb=1){
@@ -73,7 +54,7 @@
 				}
 
 				//update database with post
-				$req = $bdd->exec("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODESte']) ."',
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODESte']) ."',
 																				NAME='". addslashes($_POST['NameSte']) ."',
 																				WEBSITE='". addslashes($_POST['WebSiteSte']) ."',
 																				FBSITE='". addslashes($_POST['FbSiteSte']) ."',
@@ -102,7 +83,7 @@
 
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 				//select new values for display
-				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'");
+				$query="SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'";
 			}
 			else{
 				//if not existe, we create new company or provider
@@ -115,7 +96,7 @@
 				$InsertImage = $dossier.$fichier;
 
 				//add to sql db
-				$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
+				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
 																				'". addslashes($_POST['CODESte']) ."',
 																				'". addslashes($_POST['NameSte']) ."',
 																				'". addslashes($_POST['WebSiteSte']) ."',
@@ -146,98 +127,90 @@
 				$CallOutBox->add_notification(array('2', $langue->show_text('AddCompanyNotification')));
 
 				//we can now selectt new value from new add
-				$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY id DESC LIMIT 0, 1");
+				$query="SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY id DESC LIMIT 0, 1";
 			}
 		}
 		else{
 
 			//if is get we select form db value
-			$Name = preg_replace('#-+#', ' ', addslashes($_GET['id']));
+			if(isset($_GET['id']) AND !empty($_GET['id'])){
+				$Name = preg_replace('#-+#', ' ', addslashes($_GET['id']));
+			}else{
+				$Name = preg_replace('#-+#', ' ', addslashes($_POST['id']));	
+			}
+			
 			$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
-			$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE NAME = '". $Name ."'");
+			$query="SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". $Name ."'";
 		}
 
-		$DonneesSte = $req->fetch();
-		$req->closeCursor();
-
+		$data = $bdd->GetQuery($query,true);
 		// stock value in variable for dislpay on form
-		$SteId = $DonneesSte['id'];
-		$SteCODE = $DonneesSte['CODE'];
-		$SteNAME = $DonneesSte['NAME'];
+		$SteId = $data->id;
+		$SteCODE = $data->CODE;
+		$SteNAME = $data->NAME;
 
-		$SteWEBSITE = $DonneesSte['WEBSITE'];
-		$SteFBSITE = $DonneesSte['FBSITE'];
-		$SteTWITTERSITE = $DonneesSte['TWITTERSITE'];
-		$SteLKDSITE = $DonneesSte['LKDSITE'];
+		$SteWEBSITE = $data->WEBSITE;
+		$SteFBSITE = $DonneesSte->FBSITE;
+		$SteTWITTERSITE = $data->TWITTERSITE;
+		$SteLKDSITE = $data->LKDSITE;
 
-		$SteSIREN = $DonneesSte['SIREN'];
-		$SteAPE = $DonneesSte['APE'];
-		$SteTVA_INTRA = $DonneesSte['TVA_INTRA'];
-		$SteTVA_ID = $DonneesSte['TVA_ID'];
+		$SteSIREN = $data->SIREN;
+		$SteAPE = $data->APE;
+		$SteTVA_INTRA = $data->TVA_INTRA;
+		$SteTVA_ID = $data->TVA_ID;
 
-		$SteLOGO = $DonneesSte['LOGO'];
-		$SteSTATU_CLIENT = $DonneesSte['STATU_CLIENT'];
-		$SteCOND_REG_CLIENT_ID = $DonneesSte['COND_REG_CLIENT_ID'];
-		$SteMODE_REG_CLIENT_ID = $DonneesSte['MODE_REG_CLIENT_ID'];
-		$SteREMISE = $DonneesSte['REMISE'];
-		$SteRESP_COM_ID = $DonneesSte['RESP_COM_ID'];
-		$SteRESP_TECH_ID = $DonneesSte['RESP_TECH_ID'];
-		$SteCOMPTE_GEN_CLIENT = $DonneesSte['COMPTE_GEN_CLIENT'];
-		$SteCOMPTE_AUX_CLIENT = $DonneesSte['COMPTE_AUX_CLIENT'];
+		$SteLOGO = $data->LOGO;
+		$SteSTATU_CLIENT = $data->STATU_CLIENT;
+		$SteCOND_REG_CLIENT_ID = $data->COND_REG_CLIENT_ID;
+		$SteMODE_REG_CLIENT_ID = $data->MODE_REG_CLIENT_ID;
+		$SteREMISE = $data->REMISE;
+		$SteRESP_COM_ID = $data->RESP_COM_ID;
+		$SteRESP_TECH_ID = $data->RESP_TECH_ID;
+		$SteCOMPTE_GEN_CLIENT = $data->COMPTE_GEN_CLIENT;
+		$SteCOMPTE_AUX_CLIENT = $data->COMPTE_AUX_CLIENT;
 
-		$SteSTATU_FOUR = $DonneesSte['STATU_FOUR'];
-		$SteCOND_REG_FOUR_ID = $DonneesSte['COND_REG_FOUR_ID'];
-		$SteMODE_REG_FOUR_ID = $DonneesSte['MODE_REG_FOUR_ID'];
-		$SteCOMPTE_GEN_FOUR = $DonneesSte['COMPTE_GEN_FOUR'];
-		$SteCOMPTE_AUX_FOUR = $DonneesSte['COMPTE_AUX_FOUR'];
-		$SteCONTROLE_FOUR = $DonneesSte['CONTROLE_FOUR'];
-		$SteDATE_CREA = $DonneesSte['DATE_CREA'];
-		$SteCOMMENT = $DonneesSte['COMMENT'];
+		$SteSTATU_FOUR = $data->STATU_FOUR;
+		$SteCOND_REG_FOUR_ID = $data->COND_REG_FOUR_ID;
+		$SteMODE_REG_FOUR_ID = $data->MODE_REG_FOUR_ID;
+		$SteCOMPTE_GEN_FOUR = $data->COMPTE_GEN_FOUR;
+		$SteCOMPTE_AUX_FOUR = $data->COMPTE_AUX_FOUR;
+		$SteCONTROLE_FOUR = $data->CONTROLE_FOUR;
+		$SteDATE_CREA = $data->DATE_CREA;
+		$SteCOMMENT = $data->COMMENT;
 	}
 
 	// Create liste for TVA choise
-	$req = $bdd -> query('SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .'');
-	while ($DonneesTVA = $req->fetch()){
-		$TVAListe .='<option value="'. $DonneesTVA['Id'] .'"  '. selected($SteTVA_ID, $DonneesTVA['Id']) .' $SteTVA_INTRA>'. $DonneesTVA['TAUX'] .'% - '. $DonneesTVA['LABEL'] .'</option>';
+	$query='SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$TVAListe .='<option value="'. $data->Id .'"  '. selected($SteTVA_ID, $data->Id) .' $SteTVA_INTRA>'. $data->TAUX .'% - '. $data->LABEL .'</option>';
 	}
-	$req->closeCursor();
 
 	// Create liste for payment regulation choise
-	$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'');
-	while ($DonneesConditionReg = $req->fetch()){
-		$CondiListe1 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($SteMODE_REG_CLIENT_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
-		$CondiListe2 .='<option value="'. $DonneesConditionReg['Id'] .'" '. selected($SteCOND_REG_FOUR_ID, $DonneesConditionReg['Id']) .'>'. $DonneesConditionReg['LABEL'] .'</option>';
+	$query='SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$CondiListe1 .='<option value="'. $data->Id .'" '. selected($SteMODE_REG_CLIENT_ID, $data->Id) .'>'. $data->LABEL .'</option>';
+		$CondiListe2 .='<option value="'. $data->Id .'" '. selected($SteCOND_REG_FOUR_ID, $data->Id) .'>'. $data->LABEL .'</option>';
 	}
-	$req->closeCursor();
 
 	// Create liste for payment mode choise
-	$req = $bdd -> query('SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'');
-	while ($DonneesModeReg = $req->fetch())	{
-		$RegListe1 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($SteCOND_REG_CLIENT_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
-		$RegListe2 .='<option value="'. $DonneesModeReg['Id'] .'" '. selected($SteMODE_REG_FOUR_ID, $DonneesModeReg['Id']) .'>'. $DonneesModeReg['LABEL'] .'</option>';
+	$query='SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'';
+	foreach ($bdd->GetQuery($query) as $data){
+		$RegListe1 .='<option value="'. $data->Id .'" '. selected($SteCOND_REG_CLIENT_ID, $data->Id) .'>'. $data->LABEL .'</option>';
+		$RegListe2 .='<option value="'. $data->Id .'" '. selected($SteMODE_REG_FOUR_ID, $data->Id) .'>'. $data->LABEL .'</option>';
 	}
-	$req->closeCursor();
 
 	// Create liste for person in charge choise
-	$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
+	$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
 									FROM `'. TABLE_ERP_EMPLOYEES .'`
-									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`');
-	while ($donnees_membre = $req->fetch())	{
-		 $EmployeeListe1 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($SteRESP_COM_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
-		 $EmployeeListe2 .=  '<option value="'. $donnees_membre['idUSER'] .'" '. selected($SteRESP_TECH_ID, $donnees_membre['idUSER']) .'>'. $donnees_membre['NOM'] .' '. $donnees_membre['PRENOM'] .' - '. $donnees_membre['RIGHT_NAME'] .'</option>';
+									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
+	foreach ($bdd->GetQuery($query) as $data){
+		 $EmployeeListe1 .=  '<option value="'. $data->idUSER .'" '. selected($SteRESP_COM_ID, $data->idUSER) .'>'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
+		 $EmployeeListe2 .=  '<option value="'. $data->idUSER .'" '. selected($SteRESP_TECH_ID, $data->idUSER) .'>'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
 	}
-	$req->closeCursor();
-
-	// Create liste datalist find company
-	$req = $bdd->query("SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME");
-	while ($donnees_ste = $req->fetch()){
-		$ListeSte .= '<option  value="'. $donnees_ste['NAME'] .'" >';
-	}
-	$req->closeCursor();
 
 	/////////////////////////////
 	////  Company SITE section  ////
@@ -246,7 +219,7 @@
 	// if creat new site we add in db
 	if(isset($_POST['AddLABELSite']) AND !empty($_POST['AddLABELSite'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_ADRESSE ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ADRESSE ." VALUE ('0',
 																		'". addslashes($_POST['AddIdSite']) ."',
 																		'". addslashes($_POST['AddORDRESite']) ."',
 																		'". addslashes($_POST['AddLABELSite']) ."',
@@ -280,7 +253,7 @@
 		$i = 0;
 		foreach ($UpdateIdSite as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_ADRESSE .'` SET  ORDRE = \''. addslashes($UpdateORDRESite[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ADRESSE .'` SET  ORDRE = \''. addslashes($UpdateORDRESite[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELSite[$i]) .'\',
 																ADRESSE = \''. addslashes($UpdateADRESSESite[$i]) .'\',
 																ZIPCODE = \''. addslashes($UpdateZIPCODESite[$i]) .'\',
@@ -294,57 +267,7 @@
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSiteNotification')));
-		$req->closeCursor();
 	}
-
-//display all site on form ligne
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_ADRESSE .'.Id,
-									'. TABLE_ERP_ADRESSE .'.ID_COMPANY,
-									'. TABLE_ERP_ADRESSE .'.ORDRE,
-									'. TABLE_ERP_ADRESSE .'.LABEL,
-									'. TABLE_ERP_ADRESSE .'.ADRESSE,
-									'. TABLE_ERP_ADRESSE .'.ZIPCODE,
-									'. TABLE_ERP_ADRESSE .'.CITY,
-									'. TABLE_ERP_ADRESSE .'.COUNTRY,
-									'. TABLE_ERP_ADRESSE .'.NUMBER,
-									'. TABLE_ERP_ADRESSE .'.MAIL,
-									'. TABLE_ERP_ADRESSE .'.ADRESS_LIV,
-									'. TABLE_ERP_ADRESSE .'.ADRESS_FAC
-									FROM `'. TABLE_ERP_ADRESSE .'`
-									WHERE ID_COMPANY=\''. $SteId .'\'
-									ORDER BY ORDRE');
-
-	while ($donnees_Site = $req->fetch())	{
-		 $contenu2 = $contenu2 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="'. $donnees_Site['Id'] .'"></td>
-					<td><input type="number" name="UpdateORDRESite[]" value="'. $donnees_Site['ORDRE'] .'" id="number"></td>
-					<td><input type="text" name="UpdateLABELSite[]" value="'. $donnees_Site['LABEL'] .'" ></td>
-					<td><input type="text" name="UpdateADRESSESite[]" value="'. $donnees_Site['ADRESSE'] .'" ></td>
-					<td><input type="text" name="UpdateZIPCODESite[]" value="'. $donnees_Site['ZIPCODE'] .'" ></td>
-					<td><input type="text" name="UpdateCITYSite[]" value="'. $donnees_Site['CITY'] .'" ></td>
-					<td><input type="text" name="UpdateCOUNTRYSite[]" value="'. $donnees_Site['COUNTRY'] .'" ></td>
-					<td><input type="text" name="UpdateNUMBERSite[]" value="'. $donnees_Site['NUMBER'] .'" ></td>
-					<td><input type="text" name="UpdateMAILSite[]" value="'. $donnees_Site['MAIL'] .'" ></td>
-					<td>
-						<select name="UpdateLIVSite[]">
-							<option value="0" '. selected($donnees_Site['ADRESS_LIV'], 0) .'>'. $langue->show_text('No') .'</option>
-							<option value="1" '. selected($donnees_Site['ADRESS_LIV'], 1) .'>'. $langue->show_text('Yes') .'</option>
-						</select>
-					</td>
-					<td>
-						<select name="UpdateFacSite[]">
-							<option value="0" '. selected($donnees_Site['ADRESS_FAC'], 0) .'>'. $langue->show_text('No') .'</option>
-							<option value="1" '. selected($donnees_Site['ADRESS_FAC'], 1) .'>'. $langue->show_text('Yes') .'</option>
-						</select>
-					</td>
-				</tr>';
-
-				$AdresseListe .='<option value="'. $donnees_Site['Id'] .'" >'. $donnees_Site['LABEL'] .'</option>';
-		$i++;
-	}
-	$req->closeCursor();
 
 	//////////////////
 	////  CONTACT Section  ////
@@ -353,7 +276,7 @@
 	//add new contact in db
 	if(isset($_POST['AddPrenomContact']) AND !empty($_POST['AddPrenomContact'])){
 
-		$req = $bdd->exec("INSERT INTO ". TABLE_ERP_CONTACT ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CONTACT ." VALUE ('0',
 																		'". addslashes($_POST['AddIdContact']) ."',
 																		'". addslashes($_POST['AddORDREContact']) ."',
 																		'". addslashes($_POST['AddCiviContact']) ."',
@@ -368,7 +291,7 @@
 																		
 	}
 
-//update all contact
+	//update all contact
 	if(isset($_POST['UpdateIdContact']) AND !empty($_POST['UpdateIdContact'])){
 
 		$UpdateIdContact = $_POST['UpdateIdContact'];
@@ -385,7 +308,7 @@
 		$i = 0;
 		foreach ($UpdateIdContact as $id_generation) {
 
-			$bdd->exec('UPDATE `'. TABLE_ERP_CONTACT .'` SET  ORDRE = \''. addslashes($UpdateORDREContact[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_CONTACT .'` SET  ORDRE = \''. addslashes($UpdateORDREContact[$i]) .'\',
 																CIVILITE = \''. addslashes($UpdateCiviContact[$i]) .'\',
 																PRENOM = \''. addslashes($UpdatePrenomContact[$i]) .'\',
 																NOM = \''. addslashes($UpdateNomContact[$i]) .'\',
@@ -400,67 +323,18 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateContactNotification')));
 	}
 
-// display all contact of comppany in form line
-	$i = 1;
-	$req = $bdd -> query('SELECT '. TABLE_ERP_CONTACT .'.Id,
-									'. TABLE_ERP_CONTACT .'.ID_COMPANY,
-									'. TABLE_ERP_CONTACT .'.ORDRE,
-									'. TABLE_ERP_CONTACT .'.CIVILITE,
-									'. TABLE_ERP_CONTACT .'.PRENOM,
-									'. TABLE_ERP_CONTACT .'.NOM,
-									'. TABLE_ERP_CONTACT .'.FONCTION,
-									'. TABLE_ERP_CONTACT .'.ADRESSE_ID,
-									'. TABLE_ERP_CONTACT .'.NUMBER,
-									'. TABLE_ERP_CONTACT .'.MOBILE,
-									'. TABLE_ERP_CONTACT .'.MAIL,
-									'. TABLE_ERP_ADRESSE .'.LABEL
-									FROM `'. TABLE_ERP_CONTACT .'`
-										LEFT JOIN `'. TABLE_ERP_ADRESSE .'` ON `'. TABLE_ERP_CONTACT .'`.`ADRESSE_ID` = `'. TABLE_ERP_ADRESSE .'`.`id`
-									WHERE '. TABLE_ERP_CONTACT .'.ID_COMPANY=\''. $SteId .'\'
-									ORDER BY ORDRE');
-
-	while ($donnees_Contact = $req->fetch()){
-		 $contenu3 = $contenu3 .'
-				<tr>
-					<td>'. $i .' <input type="hidden" name="UpdateIdContact[]" id="UpdateIdContact" value="'. $donnees_Contact['Id'] .'"></td>
-					<td><input type="number"  name="UpdateORDREContact[]"  value="'. $donnees_Contact['ORDRE'] .'" id="number"></td>
-					<td>
-						<select name="UpdateCiviContact[]">
-									<option value="0" '. selected($donnees_Contact['CIVILITE'], 0) .'>Mr.</option>
-									<option value="1" '. selected($donnees_Contact['CIVILITE'], 1) .'>Mme</option>
-									<option value="2" '. selected($donnees_Contact['CIVILITE'], 2) .'>Mlle</option>
-								</select>
-					<td><input type="text"  name="UpdatePrenomContact[]"  value="'. $donnees_Contact['PRENOM'] .'"></td>
-					<td><input type="text"  name="UpdateNomContact[]"  value="'. $donnees_Contact['NOM'] .'"></td>
-					<td><input type="text"  name="UpdateFonctionContact[]"   value="'. $donnees_Contact['FONCTION'] .'"></td>
-					<td>
-						<select name="UpdateAdresseContact[]">
-							<option value="'. $donnees_Contact['ADRESSE_ID'] .'" >'. $donnees_Contact['LABEL'] .'</option>
-						'.  $AdresseListe .'
-						</select>
-					</td>
-					<td><input type="text"  name="UpdateNumberContact[]" value="'. $donnees_Contact['NUMBER'] .'"></td>
-					<td><input type="text"  name="UpdateMobileContact[]"  value="'. $donnees_Contact['MOBILE'] .'"></td>
-					<td><input type="text"  name="UpdateMailContact[]"  value="'. $donnees_Contact['MAIL'] .'"></td>
-				</select>
-			</td>
-		</tr>';
-		$i++;
-	}
-
 	// we cant change codeId of DB, he can be used on other table
 	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODESte" value="'. $SteCODE .'">' .$SteCODE;}
 	else{ $DisplayCode ='<input type="text" name="CODESte" required="required">'; }
 
 	//variable of page if load an company
-	if(!isset($_GET['id']) or empty($_GET['id'])){
+	if(!isset($_GET['id'])  AND  !isset($_POST['id'])){
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
 		$ImputButton = ' Aucun client chargé';
 		$actionForm = 'admin.php?page=manage-companies';
-
 	}
 	else{
-		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
+		$ImputButton = $Form->submit($langue->show_text('TableUpdateButton'));
 		$actionForm = 'admin.php?page=manage-companies&id='. $SteNAME .'';
 	}
 ?>
@@ -468,7 +342,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$titleOnglet1; ?></button>
 <?php
 	// not display this menu if we dont have customer load
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Titre2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Titre3'); ?></button>
@@ -476,17 +350,19 @@
 <?php
 	}
 ?>
-		<div class="DataListDroite">
-			<form method="get" name="client" action="<?=$actionForm; ?>">
-				<?=$langue->show_text('TableFind'); ?> <input list="client" name="id" id="id" required>
-				<datalist id="client">
-					<?=$ListeSte; ?>
-				</datalist>
-				<input type="submit" class="input-moyen" value="Go !" />
-			</form>
-		</div>
 	</div>
 	<div id="div1" class="tabcontent">
+			<div class="column">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindArticle'); ?>">
+				<ul id="myUL">
+					<?php
+					//generate list for datalist find input
+					$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
+					foreach ($bdd->GetQuery($query) as $data): ?>
+					<li><a href="admin.php?page=manage-companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+					<?php $i++; endforeach; ?>
+				</ul>
+			</div>
 			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
@@ -617,7 +493,7 @@
 							<td><?=$langue->show_text('TableMethodList'); ?></td>
 							<td><?=$langue->show_text('TableDiscount'); ?></td>
 							<td colspan="2"><?=$langue->show_text('TableSalesManager'); ?></td>
-							<td colspan="2"><?=$langue->show_text('TableSalesTableTechnicalManagerManager'); ?></td>
+							<td colspan="2"></td>
 						</tr>
 						<tr>
 							<td >
@@ -639,19 +515,14 @@
 								</select>
 							</td>
 							<td colspan="2">
-								<select name="RespTechSte">
-									<?=$EmployeeListe2 ?>
-								</select>
 							</td>
 						</tr>
 						<tr>
 							<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
 							<td><?=$langue->show_text('TableSideAccount'); ?></td>
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td colspan="2"><?=$langue->show_text('TableTechnicalManager'); ?></td>
+							<td colspan="2"></td>
 						</tr>
 						<tr>
 							<td>
@@ -661,10 +532,12 @@
 								<input type="number" name="CompteAuxSte" value="<?= $SteCOMPTE_AUX_CLIENT;?>" >
 							</td>
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td colspan="2">
+							<select name="RespTechSte">
+									<?=$EmployeeListe2 ?>
+								</select>
+							</td>
+							<td colspan="2"></td>
 						</tr>
 					</tbody>
 					<thead>
@@ -726,7 +599,7 @@
 						<tr>
 							<td colspan="7" >
 								<br/>
-								<input type="submit" class="input-moyen" value="<?=$langue->show_text('TableUpdateButton'); ?>" /> <br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>
 							</td>
 						</tr>
@@ -736,7 +609,7 @@
 		</div>
 <?php
 	// not display this content if we dont have customer load
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<div id="div2" class="tabcontent">
 			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" >
@@ -757,7 +630,49 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php 	Echo $contenu2; 	?>
+						<?php 	//display all site on form ligne
+						$query='SELECT '. TABLE_ERP_ADRESSE .'.Id,
+									'. TABLE_ERP_ADRESSE .'.ID_COMPANY,
+									'. TABLE_ERP_ADRESSE .'.ORDRE,
+									'. TABLE_ERP_ADRESSE .'.LABEL,
+									'. TABLE_ERP_ADRESSE .'.ADRESSE,
+									'. TABLE_ERP_ADRESSE .'.ZIPCODE,
+									'. TABLE_ERP_ADRESSE .'.CITY,
+									'. TABLE_ERP_ADRESSE .'.COUNTRY,
+									'. TABLE_ERP_ADRESSE .'.NUMBER,
+									'. TABLE_ERP_ADRESSE .'.MAIL,
+									'. TABLE_ERP_ADRESSE .'.ADRESS_LIV,
+									'. TABLE_ERP_ADRESSE .'.ADRESS_FAC
+									FROM `'. TABLE_ERP_ADRESSE .'`
+									WHERE ID_COMPANY=\''. $SteId .'\'
+									ORDER BY ORDRE';
+				foreach ($bdd->GetQuery($query) as $data): ?>
+				<tr>
+					<td><?= $i ?> <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="<?= $data->Id ?>"></td>
+					<td><input type="number" name="UpdateORDRESite[]" value="<?= $data->ORDRE ?>" id="number"></td>
+					<td><input type="text" name="UpdateLABELSite[]" value="<?= $data->LABEL ?>" ></td>
+					<td><input type="text" name="UpdateADRESSESite[]" value="<?= $data->ADRESSE ?>" ></td>
+					<td><input type="text" name="UpdateZIPCODESite[]" value="<?= $data->ZIPCODE ?>" ></td>
+					<td><input type="text" name="UpdateCITYSite[]" value="<?= $data->CITY ?>" ></td>
+					<td><input type="text" name="UpdateCOUNTRYSite[]" value="<?= $data->COUNTRY ?>" ></td>
+					<td><input type="text" name="UpdateNUMBERSite[]" value="<?= $data->NUMBER ?>" ></td>
+					<td><input type="text" name="UpdateMAILSite[]" value="<?= $data->MAIL ?>" ></td>
+					<td>
+						<select name="UpdateLIVSite[]">
+							<option value="0" <?= selected($data->ADRESS_LIV, 0) ?>><?= $langue->show_text('No') ?></option>
+							<option value="1" <?= selected($data->ADRESS_LIV, 1) ?>><?= $langue->show_text('Yes') ?></option>
+						</select>
+					</td>
+					<td>
+						<select name="UpdateFacSite[]">
+							<option value="0" <?= selected($data->ADRESS_FAC, 0) ?>><?= $langue->show_text('No') ?></option>
+							<option value="1" <?= selected($data->ADRESS_FAC, 1) ?>><?= $langue->show_text('Yes') ?></option>
+						</select>
+					</td>
+				</tr>';
+				<?php
+				$AdresseListe .='<option value="'. $data->Id .'" >'. $data->LABEL .'</option>';
+				 $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?><input type="hidden"  name="AddIdSite" value="<?=$SteId; ?>"></td>
 							<td><input type="number"  name="AddORDRESite" size="2" <?=$VerrouInput; ?> id="number"></td>
@@ -784,7 +699,7 @@
 						<tr>
 							<td colspan="11" >
 								<br/>
-<?=$ImputButton; ?><br/>
+								<?=$ImputButton; ?><br/>
 								<br/>
 							</td>
 						</tr>
@@ -805,20 +720,62 @@
 							<th><?=$langue->show_text('TableFonction'); ?></th>
 							<th><?=$langue->show_text('TableAdresse'); ?></th>
 							<th><?=$langue->show_text('TablePhoneNumber'); ?></th>
-							<th><?=$langue->show_text('TableMobilNumber'); ?><</th>
+							<th><?=$langue->show_text('TableMobilNumber'); ?></th>
 							<th><?=$langue->show_text('TableMailUser'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-<?php	Echo $contenu3; ?>
+						<?php	// display all contact of comppany in form line
+						$i = 1;
+						$query='SELECT '. TABLE_ERP_CONTACT .'.Id,
+									'. TABLE_ERP_CONTACT .'.ID_COMPANY,
+									'. TABLE_ERP_CONTACT .'.ORDRE,
+									'. TABLE_ERP_CONTACT .'.CIVILITE,
+									'. TABLE_ERP_CONTACT .'.PRENOM,
+									'. TABLE_ERP_CONTACT .'.NOM,
+									'. TABLE_ERP_CONTACT .'.FONCTION,
+									'. TABLE_ERP_CONTACT .'.ADRESSE_ID,
+									'. TABLE_ERP_CONTACT .'.NUMBER,
+									'. TABLE_ERP_CONTACT .'.MOBILE,
+									'. TABLE_ERP_CONTACT .'.MAIL,
+									'. TABLE_ERP_ADRESSE .'.LABEL
+									FROM `'. TABLE_ERP_CONTACT .'`
+										LEFT JOIN `'. TABLE_ERP_ADRESSE .'` ON `'. TABLE_ERP_CONTACT .'`.`ADRESSE_ID` = `'. TABLE_ERP_ADRESSE .'`.`id`
+									WHERE '. TABLE_ERP_CONTACT .'.ID_COMPANY=\''. $SteId .'\'
+									ORDER BY ORDRE';
+
+						foreach ($bdd->GetQuery($query) as $data): ?>
+						<tr>
+							<td><?= $i ?> <input type="hidden" name="UpdateIdContact[]" id="UpdateIdContact" value="<?= $data->Id ?>"></td>
+							<td><input type="number"  name="UpdateORDREContact[]"  value="<?= $data->ORDRE ?>" id="number"></td>
+							<td>
+								<select name="UpdateCiviContact[]">
+									<option value="0" <?= selected($data->CIVILITE, 0) ?>><?=$langue->show_text('SelectMr'); ?></option>
+									<option value="1" <?= selected($data->CIVILITE, 1) ?>><?=$langue->show_text('SelectMme'); ?></option>
+									<option value="2" <?= selected($data->CIVILITE, 2) ?>><?=$langue->show_text('SelectMlle'); ?></option>
+								</select>
+							<td><input type="text"  name="UpdatePrenomContact[]"  value="<?= $data->PRENOM ?>"></td>
+							<td><input type="text"  name="UpdateNomContact[]"  value="<?= $data->NOM ?>"></td>
+							<td><input type="text"  name="UpdateFonctionContact[]"   value="<?= $data->FONCTION ?>"></td>
+							<td>
+								<select name="UpdateAdresseContact[]">
+									<option value="<?= $data->ADRESSE_ID ?>" ><?= $data->LABEL ?></option>
+									<?=  $AdresseListe ?>
+								</select>
+							</td>
+							<td><input type="text"  name="UpdateNumberContact[]" value="<?= $data->NUMBER ?>"></td>
+							<td><input type="text"  name="UpdateNumberContact[]" value="<?= $data->MOBILE ?>"></td>
+							<td><input type="text"  name="UpdateNumberContact[]" value="<?= $data->MAIL ?>"></td>
+						</tr>		
+						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?><input type="hidden"  name="AddIdContact" value="<?=$SteId;; ?>"></td>
 							<td><input type="number"  name="AddORDREContact" size="2" <?=$VerrouInput; ?> id="number"></td>
 							<td>
 								<select name="AddCiviContact">
-									<option value="0"><?=$langue->show_text('SelectMr'); ?></option>
-									<option value="1"><?=$langue->show_text('SelectMme'); ?></option>
-									<option value="2"><?=$langue->show_text('SelectMlle'); ?></option>
+									<option value="0"><?= $langue->show_text('SelectMr'); ?></option>
+									<option value="1"><?= $langue->show_text('SelectMme'); ?></option>
+									<option value="2"><?= $langue->show_text('SelectMlle'); ?></option>
 								</select>
 							</td>
 							<td><input type="text"  name="AddPrenomContact" size="7" <?=$VerrouInput; ?>></td>
@@ -826,7 +783,7 @@
 							<td><input type="text"  name="AddFonctionContact" size="7" <?=$VerrouInput; ?>></td>
 							<td>
 								<select name="AddAdresseContact">
-<?=$AdresseListe; ?>
+									<?=$AdresseListe; ?>
 								</select>
 							</td>
 							<td><input type="text"  name="AddNumberContact" size="7" <?=$VerrouInput; ?>></td>
@@ -836,7 +793,7 @@
 						<tr>
 							<td colspan="10" >
 								<br/>
-<?=$ImputButton; ?><br/>
+								<?=$ImputButton; ?><br/>
 								<br/>
 							</td>
 						</tr>

@@ -1,16 +1,14 @@
 <?php
-
 if(!isset($_SESSION['mdp'])){
-	stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'login.php');
+	stop('Aucune session ouverte, l\'accès vous est interdit.', 160, 'index.php');
 }
 else{
 	
 	$nom = addslashes($_SESSION['nom']);
 	$mdp = addslashes($_SESSION['mdp']);
 
-	$res = $bdd->query('SELECT count(*) as nb FROM '. TABLE_ERP_EMPLOYEES .' WHERE NAME=\''. $nom .'\' AND PASSWORD=\''. $mdp .'\'');
-	$data = $res->fetch();
-	$nb = $data['nb'];
+	$data=$bdd->GetQuery('SELECT count(*) as nb FROM '. TABLE_ERP_EMPLOYEES .' WHERE NAME=\''. $nom .'\' AND PASSWORD=\''. $mdp .'\'');
+	$nb	= $data[0]->nb;
 		
 	if($nb ==0 ){
 		session_unset();
@@ -19,7 +17,7 @@ else{
 		stop('Session inexistante.', 160, 'login.php');
 	}
 	else{
-		$req = $bdd -> query('SELECT '. TABLE_ERP_EMPLOYEES .'.IDUSER,
+		$req = $bdd->GetQuery('SELECT '. TABLE_ERP_EMPLOYEES .'.IDUSER,
 										'. TABLE_ERP_EMPLOYEES .'.STATU,
 										'. TABLE_ERP_EMPLOYEES .'.CONNEXION,
 										'. TABLE_ERP_EMPLOYEES .'.NAME,
@@ -38,26 +36,25 @@ else{
 										'. TABLE_ERP_RIGHTS .'.page_10
 										FROM `'. TABLE_ERP_EMPLOYEES .'` LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
 										WHERE NAME=\''. $nom .'\' AND PASSWORD=\''. $mdp .'\'');
-		$donnees = $req->fetch();
 			
-		$id = $donnees['IDUSER'];
-		$statu = $donnees['statu'];
-		$connexion = $donnees['connexion'];
-		$nom = stripslashes($donnees['NAME']);
-		$mdp = stripslashes($donnees['PASSWORD']);
-		$UserLanguage = $donnees['LANGUAGE'];
-		
-		$fonction = $donnees['fonction'];
-		$page_1 = $donnees['page_1'];
-		$page_2 = $donnees['page_2'];
-		$page_3 = $donnees['page_3'];
-		$page_4 = $donnees['page_4'];
-		$page_5 = $donnees['page_5'];
-		$page_6 = $donnees['page_6'];
-		$page_7 = $donnees['page_7'];
-		$page_8 = $donnees['page_8'];
-		$page_9 = $donnees['page_9'];
-		$page_10 = $donnees['page_10'];
+		$id = $req[0]->IDUSER;
+		$statu = $req[0]->statu;
+		$connexion = $req[0]->connexion;
+		$nom = stripslashes($req[0]->NAME);
+		$mdp = stripslashes($req[0]->PASSWORD);
+		$UserLanguage = $req[0]->LANGUAGE;
+	
+		$fonction = $req[0]->fonction;
+		$page_1 = $req[0]->page_1;
+		$page_2 = $req[0]->page_2;
+		$page_3 = $req[0]->page_3;
+		$page_4 = $req[0]->page_4;
+		$page_5 = $req[0]->page_5;
+		$page_6 = $req[0]->page_6;
+		$page_7 = $req[0]->page_7;
+		$page_8 = $req[0]->page_8;
+		$page_9 = $req[0]->page_9;
+		$page_10 = $req[0]->page_10;
 			
 		$_SESSION['id'] = $id;
 		$_SESSION['statu'] = $statu;
@@ -76,7 +73,6 @@ else{
 		$_SESSION['page_9'] = $page_9;
 		$_SESSION['page_10'] = $page_10;
 			
-		$bdd->exec('UPDATE '. TABLE_ERP_EMPLOYEES .' SET  connexion=\''. time() .'\' WHERE IDUSER=\''. $id .'\'');	
+		$bdd->GetUpdate('UPDATE '. TABLE_ERP_EMPLOYEES .' SET  connexion=\''. time() .'\' WHERE IDUSER=\''. $id .'\'');	
 	}
 }
-?>
