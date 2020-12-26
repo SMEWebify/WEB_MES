@@ -14,7 +14,7 @@
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
 	//------------------------------
@@ -182,7 +182,7 @@
 	if(isset($_GET['prestation']) && !empty($_GET['prestation'])){
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=login&action=deconnexion';"><?=$langue->show_text('TitrePresta1'); ?></button>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/admin.php?page=manage-methodes';"><?=$langue->show_text('TitrePresta1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitrePresta2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitrePresta3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitrePresta4'); ?></button>
@@ -247,7 +247,7 @@
 	elseif(isset($_GET['resources']) && !empty($_GET['resources'])){
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=login&action=deconnexion';"><?=$langue->show_text('TitreRessource1'); ?></button>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/admin.php?page=manage-methodes';"><?=$langue->show_text('TitreRessource1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitreRessource2');  ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitreRessource3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitreRessource4'); ?></button>

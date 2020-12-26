@@ -14,7 +14,7 @@
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
-		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'login.php');
+		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
 	// if add new employe
