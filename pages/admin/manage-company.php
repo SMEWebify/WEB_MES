@@ -247,7 +247,6 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php $CompanyManager->updateDb($Company);?>
 						<tr>
 							<td><?= $langue->show_text('TableNameCompany') ?></td>
 							<td><?= $langue->show_text('TableAdresse') ?></td>
@@ -531,17 +530,17 @@
 							<td>
 								<select name="UpdateDOCNum[]">
 									<option value="0" <?= selected($data->DOC_TYPE, 0) ?>><?= $langue->show_text('SelectAR') ?></option>
-									<option value="1" <?= selected($data->DOC_TYP, 1) ?>><?= $langue->show_text('SelectBLS') ?></option>
-									<option value="2" <?= selected($data->DOC_TYP, 2) ?>><?= $langue->show_text('SelectBLC') ?></option>
-									<option value="3" <?= selected($data->DOC_TYP, 3) ?>><?= $langue->show_text('SelectBL') ?></option>
-									<option value="4" <?= selected($data->DOC_TYP, 4) ?>><?= $langue->show_text('SelectORDER') ?></option>
-									<option value="5" <?= selected($data->DOC_TYP, 5) ?>><?= $langue->show_text('SelectBUYORDER') ?></option>
-									<option value="6" <?= selected($data->DOC_TYP, 6) ?>><?= $langue->show_text('SelectINTORDER') ?></option>
-									<option value="7" <?= selected($data->DOC_TYP, 7) ?>><?= $langue->show_text('SelectASK') ?></option>
-									<option value="8" <?= selected($data->DOC_TYP, 8) ?>><?= $langue->show_text('SelectQUOTE') ?></option>
-									<option value="9" <?= selected($data->DOC_TYP, 9) ?>><?= $langue->show_text('SelectINVOICE') ?></option>
-									<option value="10" <?= selected($data->DOC_TYP, 10) ?>><?= $langue->show_text('SelectINVOICESUP') ?></option>
-									<option value="11" <?= selected($data->DOC_TYP, 11) ?>><?= $langue->show_text('SelectNONCONF') ?></option>
+									<option value="1" <?= selected($data->DOC_TYPE, 1) ?>><?= $langue->show_text('SelectBLS') ?></option>
+									<option value="2" <?= selected($data->DOC_TYPE, 2) ?>><?= $langue->show_text('SelectBLC') ?></option>
+									<option value="3" <?= selected($data->DOC_TYPE, 3) ?>><?= $langue->show_text('SelectBL') ?></option>
+									<option value="4" <?= selected($data->DOC_TYPE, 4) ?>><?= $langue->show_text('SelectORDER') ?></option>
+									<option value="5" <?= selected($data->DOC_TYPE, 5) ?>><?= $langue->show_text('SelectBUYORDER') ?></option>
+									<option value="6" <?= selected($data->DOC_TYPE, 6) ?>><?= $langue->show_text('SelectINTORDER') ?></option>
+									<option value="7" <?= selected($data->DOC_TYPE, 7) ?>><?= $langue->show_text('SelectASK') ?></option>
+									<option value="8" <?= selected($data->DOC_TYPE, 8) ?>><?= $langue->show_text('SelectQUOTE') ?></option>
+									<option value="9" <?= selected($data->DOC_TYPE, 9) ?>><?= $langue->show_text('SelectINVOICE') ?></option>
+									<option value="10" <?= selected($data->DOC_TYPE, 10) ?>><?= $langue->show_text('SelectINVOICESUP') ?></option>
+									<option value="11" <?= selected($data->DOC_TYPE, 11) ?>><?= $langue->show_text('SelectNONCONF') ?></option>
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="UpddateModeleNum[]" value="<?= $data->MODEL ?>" ></td>

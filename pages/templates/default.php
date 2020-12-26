@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
-	<title><?=$Company->CompanyName() ?></title>
+	<title><?=$Company->CompanyName() ?> - <?=$langue->show_text('TiltePage') ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/ui.css" />
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/content.css" />

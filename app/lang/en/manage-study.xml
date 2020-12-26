@@ -98,6 +98,13 @@
    <UpdateNomenclatureNotification> nomenclature changed</UpdateNomenclatureNotification>
    <AddTechnicalCutNotification>Technical cut added</AddTechnicalCutNotification>
    <UpdateTechnicalCutNotification> technical cut changed</UpdateTechnicalCutNotification>
+ <!-- select-->
+   <TableSelect1>Purchase</TableSelect1>
+   <TableSelect2>Purchase (stock)</TableSelect2>
+   <TableSelect3>Advance payment</TableSelect3>
+   <TableSelect4>Advance payment (with VAT)</TableSelect4>
+   <TableSelect5>other</TableSelect5>
+   <TableSelect6>VAT</TableSelect6>
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Label</TableLabel>

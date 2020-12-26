@@ -68,19 +68,23 @@ class SQL extends PDO{
 	}
 	
 	public function GetQuery($statement, $one = false, $class_name  = false){
-		$req = $this->getPDO()->query($statement);
-		if($class_name){
-			$req->setFetchMode(PDO::FETCH_CLASS, $class_name);
-		}else{
-			$req->setFetchMode(PDO::FETCH_OBJ);
+		try{
+			$req = $this->getPDO()->query($statement);
+			if($class_name){
+				$req->setFetchMode(PDO::FETCH_CLASS, $class_name);
+			}else{
+				$req->setFetchMode(PDO::FETCH_OBJ);
+			}
+			
+			if($one){
+				$datas = $req->fetch();
+			}else{
+				$datas = $req->fetchAll();
+			}
+		} catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage(), $statement);
+			
 		}
-		
-		if($one){
-			$datas = $req->fetch();
-		}else{
-			$datas = $req->fetchAll();
-		}
-
 		return $datas;
 	}
 
@@ -95,33 +99,69 @@ class SQL extends PDO{
 		try{
 			$req = $this->getPDO()->exec($statement);
 		} catch (PDOException $exc) {
-			$this->GestionException($exc->getMessage());
+			$this->GestionException($exc->getMessage(), $statement);
 		}
 		return true;
 	}
 
+	public function GetUpdatePOST($table, $mise_a_jour, $clauses=''){
+		try{
+			
+			$maj = array();
+            foreach ($mise_a_jour as $cle => $valeur) {                
+                $maj[] = "`".$cle."`"."='". $this->ProtectVal($valeur)."'";                
+			}    
+
+			$statement="UPDATE `".$table."` SET ".implode(',',$maj)."  ". $clauses;
+
+			$req = $this->getPDO()->exec($statement);
+		} catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage(), $statement);
+		}
+		return true;
+	}
+
+	       
 	public function GetInsert($statement){
 		try{
 			$req = $this->getPDO()->exec($statement);
 		} catch (PDOException $exc) {
-			$this->GestionException($exc->getMessage());
+			$this->GestionException($exc->getMessage(), $statement);
 		}
 		return true;
 		$this->DernierID = 0;
+	}
+
+	public function GetInsertPOST($table,$POST){
+		try{
+			$add = array();
+			foreach ($POST as $cle => $valeur) {                
+				$add[] = "'". $this->ProtectVal($valeur)."'";                
+			}    
+
+			$statement="INSERT INTO `".$table."` VALUE ('0',".  implode(',',$add) ." )";
+
+			$req = $this->getPDO()->exec($statement);
+
+		} catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage(), $statement);
+		}
+		return true;
 	}
 
 	public function GetDelete($statement){
 		try{
 			$req = $this->getPDO()->exec($statement);
 		} catch (PDOException $exc) {
-			$this->GestionException($exc->getMessage());
+			$this->GestionException($exc->getMessage(), $statement);
 		}
 		return true;
 	}
 
-	private function GestionException($message){        
-        $this->GetErrorMysql = $message;            
-        if($this->AfficherMessException) echo '<p>'.$message.'</p>';
+	private function GestionException($message, $statement = false){        
+		$this->GetErrorMysql = $message;            
+		
+        if($this->AfficherMessException) echo '<p><br/>'.$message.'</p><p>'.$statement.'</p>';
         // on ferme la connexion si $CloseMysqlAuto est TRUE
         if ($this->CloseMysqlAuto) {
             if(self::$pdo){
@@ -129,6 +169,13 @@ class SQL extends PDO{
 			}
 		}
         return false;
-    }  
+	}  
+	
+	private function ProtectVal($chaine){
+		$chaine = trim($chaine);
+		$chaine = stripslashes($chaine);
+		$chaine = addslashes($chaine);    
+		return $chaine;    
+	}	
 }
 ?>

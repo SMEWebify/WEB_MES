@@ -26,6 +26,7 @@ define('TABLE_ERP_EVENT_MACHINE', 'evenement_machine');
 define('TABLE_ERP_EVENT_IMPRODUC_TIME', 'improductive_activity');
 define('TABLE_ERP_IMPUT_COMPTA', 'imputation_comptables');
 define('TABLE_ERP_IMPUT_COMPTA_LIGNE', 'imputation_comptables_ligne');
+define('TABLE_ERP_IMPUT_COMPTA_PRESTATION', 'imputation_comptables_prestations');
 define('TABLE_ERP_INFO_GENERAL', 'infos_generales'); 
 define('TABLE_ERP_FERIER', 'jours_feries');
 define('TABLE_ERP_MODE_REG', 'mode_reglement');
@@ -52,6 +53,12 @@ define('TABLE_ERP_EMPLOYEES', 'user');
 
 //if turn off web site
 define ('MAINTENANCE', 0);
+
+//FOLDER
+define('PICTURE_FOLDER', 'images/');
+define('PROFIL_FOLDER', 'Profils/');
+define('RESSOURCES_FOLDER', 'Ressources/');
+
 
 if(MAINTENANCE == 1)
 {

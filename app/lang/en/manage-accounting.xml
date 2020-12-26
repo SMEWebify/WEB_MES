@@ -61,7 +61,7 @@
    <AddCondiNotification>Payment condition added</AddCondiNotification>
    <AddModeNotification>Payment choice added</AddModeNotification>
    <AddTVANotification>VAT added</AddTVANotification> 
-   <AddAccountingNotification>Accounting allocations ajoutée</AddAccountingNotification> 
+   <AddAccountingNotification>Accounting allocations added</AddAccountingNotification> 
    <AddTimeLinePayementNotification>Timeline paiement added</AddTimeLinePayementNotification> 
    <AddLineTimeLinePayementNotification>Line Timeline paiement added</AddLineTimeLinePayementNotification> 
    <AddDeleveryTypeNotification>Delevery added</AddDeleveryTypeNotification> 

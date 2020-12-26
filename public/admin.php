@@ -71,6 +71,7 @@
         require '../pages/admin/manage-accounting.php';
     }
     else{
+        $langue = new Language('lang', 'manage-accounting', 'fr');
         require '../pages/login.php'; 
     }
     $content = ob_get_clean();

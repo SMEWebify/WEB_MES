@@ -19,7 +19,7 @@
 	
 	$error = false;
 	//if isset post variable name and password
-	if(!empty($_POST)){
+	if(isset($_POST['nom']) && !empty($_POST['nom'])){
 
 		$Auth = new Auth($bdd);
 		$user = $Auth->login($_POST['nom'],$_POST['mdp']);
@@ -78,6 +78,7 @@
 	else{
 		session_unset();
 		session_destroy();
+		
 	}
 	?>
 		<div id="id01" class="modal">

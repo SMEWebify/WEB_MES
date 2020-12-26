@@ -29,7 +29,9 @@
 	<TiltePage>Profil</TiltePage>
     <Titre1>Modification du profil</Titre1>
     <Titre2>Réglages</Titre2>
-    <Titre3>Déconnexion</Titre3>
+    <Titre3>Mots de passe</Titre3>
+    <Titre4>Photo de profil</Titre4>
+    <Titre5>Déconnexion</Titre5>
 <!-- table content --> 
     <TitreTable1>Modification du profil</TitreTable1>
     <TableNameUser>Nom :</TableNameUser>

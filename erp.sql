@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : Dim 06 déc. 2020 à 22:45
+-- Généré le : sam. 26 déc. 2020 à 19:01
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `client_fourniseur` (
 --
 
 INSERT INTO `client_fourniseur` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE`, `LKDSITE`, `SIREN`, `APE`, `TVA_INTRA`, `TVA_ID`, `LOGO`, `STATU_CLIENT`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `REMISE`, `RESP_COM_ID`, `RESP_TECH_ID`, `COMPTE_GEN_CLIENT`, `COMPTE_AUX_CLIENT`, `STATU_FOUR`, `COND_REG_FOUR_ID`, `MODE_REG_FOUR_ID`, `COMPTE_GEN_FOUR`, `COMPTE_AUX_FOUR`, `CONTROLE_FOUR`, `DATE_CREA`, `COMMENT`) VALUES
-(1, 'METALI', 'METALERIE GRENOBLE ALPE', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 0, 2, 1, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', ''),
+(1, 'METALI', 'METALERIE GRENOBLE ALPE', 'https://www.site.com/', '', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 8, 1, 0, 2, 1, 401000, 400000, 0, 8, 1, 401000, 400000, 1, '2020-10-28', ''),
 (2, 'LASERDEC ', 'LASER DECOUPE', 'https://www.decoupe.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 2, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', ''),
 (3, 'METALJ', 'METAL JOLI', 'https://www.jolie.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', ''),
 (4, 'GLOB1', 'GLOBAL METAL1', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', ''),
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `commande` (
 --
 
 INSERT INTO `commande` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CLIENT_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`) VALUES
-(1, 'CDE201205-002', '1', '', '', 9, 0, 0, 0, '2020-12-05', 1, 1, 0, 0, '', 9, 5, 0, 0, '');
+(1, 'CDE201205-002', '1', '', '', 9, 1, 0, 0, '2020-12-05', 1, 1, 2, 0, '', 9, 5, 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `company_setting` (
 --
 
 INSERT INTO `company_setting` (`id`, `NAME`, `ADDRESS`, `CITY`, `ZIPCODE`, `REGION`, `COUNTRY`, `PHONE_NUMBER`, `MAIL`, `WEB_SITE`, `FACEBOOK_SITE`, `TWITTER_SITE`, `LKD_SITE`, `LOGO`, `SIREN`, `APE`, `TVA_INTRA`, `TAUX_TVA`, `CAPITAL`, `RCS`) VALUES
-(1, 'SUPER ERP', '2 Rue Henriette Deloras', 'GRENOBLE', '4000', 'BRETAGNE', 'France', '0679214987', 'SuperERP@gmail.com', 'www.erp.com', 'https://www.facebook.com/Kevin.Niglaut', 'https://twitter.com/kevin_niglaut/', '', 'images/unnamed.jpg', '362 521 879', '12347', 'FR 53 157896342.', 20, 'SAS au capital de 2500 €', '400 900 001');
+(1, '0', '2', '0', '4000', '0', '0', '679214987', '0', '0', '0', '0', '0', 'images/unnamed.jpg', '362', '12347', '0', 20, '0', '400');
 
 -- --------------------------------------------------------
 
@@ -345,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
 INSERT INTO `contact` (`id`, `ID_COMPANY`, `ORDRE`, `CIVILITE`, `PRENOM`, `NOM`, `FONCTION`, `ADRESSE_ID`, `NUMBER`, `MOBILE`, `MAIL`) VALUES
 (1, 9, 1, 0, 'Gérad', 'Normand', 'Acheteur', 1, '026497345', '0654976', 'robert@arcelor.com'),
 (2, 9, 2, 2, 'Geraldine', 'Le marchand', 'Direction', 2, '026497345', '065497', ''),
-(3, 1, 1, 1, 'Julie', 'SOUCHIER', 'Acheteuse', 3, '02.64.25.25', '', 'julie@metalerie-grenoble.com');
+(3, 1, 1, 1, 'Julie', 'SOUCHIER', 'Acheteuse', 3, '02.64.25.25', '', '');
 
 -- --------------------------------------------------------
 
@@ -450,9 +450,6 @@ INSERT INTO `devis_lignes` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, 
 (1, 3, 10, 'PLATINE1', '', 2, 8, '100.000', '100.000', 1, '2020-10-29', 3),
 (2, 3, 20, 'super ligne', '', 2, 2, '100.000', '100.000', 1, '2020-11-20', 3),
 (3, 3, 30, 'super ligne3', '', 2, 4, '100.000', '0.000', 2, '2020-11-20', 3),
-(4, 3, 40, 'ligne inter', '', 2, 5, '100.000', '0.000', 2, '2020-11-05', 3),
-(5, 3, 50, 'super ligne', '', 2, 6, '100.000', '0.000', 3, '2020-11-23', 3),
-(6, 3, 50, 'super ligne', '', 2, 7, '100.000', '0.000', 3, '2020-11-23', 3),
 (9, 5, 10, '', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', 1),
 (10, 5, 10, 'PLATINE1', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', 1),
 (11, 5, 10, '', '', 1, 0, '0.000', '0.000', 4, '2020-11-05', 1),
@@ -505,9 +502,9 @@ CREATE TABLE IF NOT EXISTS `echeancier_type_ligne` (
 --
 
 INSERT INTO `echeancier_type_ligne` (`id`, `ECHEANCIER_ID`, `LABEL`, `POURC_MONTANT`, `POURC_TVA`, `CONDI_REG_ID`, `MODE_REG_ID`, `DELAI`) VALUES
-(1, 2, '3MOIS1', '33.333', '33.333', 0, 0, 0),
-(2, 2, '3MOIS2', '33.333', '33.333', 0, 0, 0),
-(3, 2, '3MOIS3', '33.330', '33.334', 0, 0, 0);
+(1, 2, '3MOIS1', '33.333', '33.333', 8, 1, 0),
+(2, 2, '3MOIS2', '33.333', '33.333', 8, 1, 0),
+(3, 2, '3MOIS3', '33.330', '33.334', 8, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -646,6 +643,28 @@ INSERT INTO `imputation_comptables_ligne` (`ID`, `ARTICLE_ID`, `ORDRE`, `IMPUTAT
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `imputation_comptables_prestations`
+--
+
+DROP TABLE IF EXISTS `imputation_comptables_prestations`;
+CREATE TABLE IF NOT EXISTS `imputation_comptables_prestations` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `PRESTATION_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `IMPUTATION_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `imputation_comptables_prestations`
+--
+
+INSERT INTO `imputation_comptables_prestations` (`ID`, `PRESTATION_ID`, `ORDRE`, `IMPUTATION_ID`) VALUES
+(1, 4, 10, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `infos_generales`
 --
 
@@ -746,7 +765,7 @@ CREATE TABLE IF NOT EXISTS `nomenclature` (
 --
 
 INSERT INTO `nomenclature` (`id`, `ORDRE`, `PARENT_ID`, `ARTICLE_ID`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `PRIX_ACHAT`) VALUES
-(1, 10, 23, 22, '', '1.000', 5, '2.000', '2.000'),
+(1, 10, 23, 22, 'Tole', '1.000', 5, '2.000', '2.000'),
 (2, 10, 24, 25, 'Tube', '1.000', 1, '0.000', '1.000'),
 (3, 20, 24, 26, 'Vis', '4.000', 1, '0.000', '0.500');
 
@@ -774,8 +793,8 @@ INSERT INTO `num_doc` (`id`, `DOC_TYPE`, `MODEL`, `DIGIT`, `COMPTEUR`) VALUES
 (1, 4, 'CDE<AA><MM><JJ>-<I>', 3, 5),
 (2, 0, 'AR<AA><MM><JJ>-<I>', 3, 0),
 (3, 3, 'BL<AA><MM><JJ>-<I>', 3, 0),
-(4, 6, 'ST<AA><MM><JJ>-<I>', 3, 0),
-(5, 8, 'DV<AA><MM><JJ>-<I>', 2, 4);
+(4, 0, 'ST<AA><MM><JJ>-<I>', 3, 0),
+(5, 0, 'DV<AA><MM><JJ>-<I>', 2, 4);
 
 -- --------------------------------------------------------
 
@@ -859,7 +878,7 @@ CREATE TABLE IF NOT EXISTS `prestations` (
   `MARGE` int(11) NOT NULL,
   `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `RESSOURCE_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `PROVIDER_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -867,20 +886,20 @@ CREATE TABLE IF NOT EXISTS `prestations` (
 -- Déchargement des données de la table `prestations`
 --
 
-INSERT INTO `prestations` (`id`, `CODE`, `ORDRE`, `LABEL`, `TYPE`, `TAUX_H`, `MARGE`, `COLOR`, `IMAGE`, `RESSOURCE_ID`) VALUES
-(1, 'MAT', 2, 'Tôle', 3, 0, 20, '#8fd548', '', ''),
-(2, 'LAS', 20, 'laser', 1, 110, 0, '#da1010', '', ''),
-(3, 'PROFILE', 3, 'Profilé', 4, 0, 0, '#39c926', '', ''),
-(4, 'PFTOL', 1, 'Produit finie de tolerie', 8, 0, 0, '#c0f1f2', '', ''),
-(6, 'PLI', 40, 'Pliage', 1, 50, 0, '#5ebbe4', '', ''),
-(7, 'ETU', 5, 'Etude', 1, 50, 0, '#f07c24', '', ''),
-(8, 'SOUDT', 50, 'Soudure TIG', 1, 60, 0, '#fbff05', '', ''),
-(9, 'SOUDM', 60, 'Soudure MIG', 1, 50, 0, '#afa72c', '', ''),
-(10, 'PARA', 70, 'Parachèvemet', 1, 45, 0, '#9e0000', '', ''),
-(11, 'EMB', 90, 'Emballage', 1, 50, 0, '#0818f7', '', ''),
-(12, 'TRANSEXT', 110, 'Transport externe', 7, 0, 0, '#0afbff', '', ''),
-(13, 'PAINT', 100, 'Peinture', 7, 0, 0, '#f019a1', '', ''),
-(14, 'ACHAT', 4, 'Consomables', 6, 0, 0, '#e72323', '', '');
+INSERT INTO `prestations` (`id`, `CODE`, `ORDRE`, `LABEL`, `TYPE`, `TAUX_H`, `MARGE`, `COLOR`, `IMAGE`, `PROVIDER_ID`) VALUES
+(1, 'MAT', 2, 'Tôle', 3, 0, 20, '#8fd548', '', '9,11,12'),
+(2, 'LAS', 20, 'laser', 1, 110, 0, '#da1010', '', '0'),
+(3, 'PROFILE', 3, 'Profilé', 4, 0, 0, '#39c926', '', '0'),
+(4, 'PFTOL', 0, 'Produit finie de tolerie', 8, 10, 10, '#41c6c8', '', '0'),
+(6, 'PLI', 40, 'Pliage', 1, 50, 0, '#5ebbe4', '', '0'),
+(7, 'ETU', 5, 'Etude', 1, 50, 0, '#f07c24', '', '0'),
+(8, 'SOUDT', 50, 'Soudure TIG', 1, 60, 0, '#fbff05', '', '0'),
+(9, 'SOUDM', 60, 'Soudure MIG', 1, 50, 0, '#afa72c', '', '0'),
+(10, 'PARA', 70, 'Parachèvemet', 1, 45, 0, '#9e0000', '', '0'),
+(11, 'EMB', 90, 'Emballage', 1, 50, 0, '#0818f7', '', '0'),
+(12, 'TRANSEXT', 110, 'Transport externe', 7, 0, 0, '#0afbff', '', '0'),
+(13, 'PAINT', 100, 'Peinture', 7, 0, 0, '#f019a1', '', '0'),
+(14, 'ACHAT', 4, 'Consomables', 6, 0, 0, '#f20202', '', '9');
 
 -- --------------------------------------------------------
 
@@ -905,7 +924,7 @@ CREATE TABLE IF NOT EXISTS `ql_appareil_mesure` (
 --
 
 INSERT INTO `ql_appareil_mesure` (`id`, `CODE`, `LABEL`, `RESSOURCE_ID`, `USER_ID`, `SERIAL_NUMBER`, `DATE`) VALUES
-(1, 'PIED', 'Pied à coulisse', 0, 1, '1235467', '2020-10-31');
+(1, 'PIED', '', 0, 1, '1235467', '2020-10-31');
 
 -- --------------------------------------------------------
 
@@ -987,6 +1006,8 @@ CREATE TABLE IF NOT EXISTS `ressource` (
   `CAPACITY` decimal(11,0) NOT NULL,
   `SECTION_ID` int(11) NOT NULL,
   `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `PRESTATION_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -994,16 +1015,16 @@ CREATE TABLE IF NOT EXISTS `ressource` (
 -- Déchargement des données de la table `ressource`
 --
 
-INSERT INTO `ressource` (`id`, `CODE`, `LABEL`, `IMAGE`, `MASK_TIME`, `ORDRE`, `CAPACITY`, `SECTION_ID`, `COLOR`) VALUES
-(1, 'LASER1', 'Laser trumpf', 'images/Ressources/TruLaser-3030-L20.jpg', 0, 10, '70', 4, '#d01616'),
-(2, 'LASER2', 'Laser Bystronic', 'images/Ressources/téléchargement (1).jpg', 0, 20, '70', 4, '#dd4b4b'),
-(3, 'PLIEUSE1', 'PLieuse Perrot', 'images/Ressources/téléchargement.jpg', 0, 30, '35', 5, '#39a923'),
-(4, 'PLIEUSE2', 'Plieuse Amada', 'images/Ressources/527.jpg', 0, 40, '35', 5, '#000000'),
-(5, 'POINC', 'Poinçonneuse Primat', 'images/Ressources/7222.jpg', 0, 25, '30', 4, '#b56e2c'),
-(7, 'USI', 'Centre d\'usinage Mazak', 'images/Ressources/téléchargement (2).jpg', 0, 50, '25', 7, '#4ba7be'),
-(8, 'SOUD', 'Soudure MIG', 'images/Ressources/soudure-jpg5d405386fe9b670001920b04.jpg', 0, 60, '30', 6, '#db8814'),
-(9, 'SOUD2', 'Soudure TIG', 'images/Ressources/téléchargement (3).jpg', 0, 65, '30', 6, '#7c4c27'),
-(10, 'EMB', 'Emballage', 'images/Ressources/product_9722964b.jpg', 0, 70, '32', 8, '#e9cd16');
+INSERT INTO `ressource` (`id`, `CODE`, `LABEL`, `IMAGE`, `MASK_TIME`, `ORDRE`, `CAPACITY`, `SECTION_ID`, `COLOR`, `PRESTATION_ID`, `COMMENT`) VALUES
+(1, 'LASER1', 'Laser trumpf', 'images/Ressources/TruLaser-3030-L20.jpg', 0, 10, '71', 4, '#d01616', '2', 'test'),
+(2, 'LASER2', 'Laser Bystronic', 'images/Ressources/téléchargement (1).jpg', 0, 20, '70', 4, '#dd4b4b', '2', ''),
+(3, 'PLIEUSE1', 'PLieuse Perrot', 'images/Ressources/téléchargement.jpg', 0, 30, '35', 5, '#39a923', '6', ''),
+(4, 'PLIEUSE2', 'Plieuse Amada', 'images/Ressources/527.jpg', 0, 40, '35', 5, '#000000', '', ''),
+(5, 'POINC', 'Poinçonneuse Primat', 'images/Ressources/7222.jpg', 0, 25, '30', 4, '#b56e2c', '', ''),
+(7, 'USI', 'Centre d\'usinage Mazak', 'images/Ressources/téléchargement (2).jpg', 0, 50, '25', 7, '#4ba7be', '', ''),
+(8, 'SOUD', 'Soudure MIG', 'images/Ressources/soudure-jpg5d405386fe9b670001920b04.jpg', 0, 60, '30', 6, '#db8814', '', ''),
+(9, 'SOUD2', 'Soudure TIG', 'images/Ressources/téléchargement (3).jpg', 0, 65, '30', 6, '#7c4c27', '8', ''),
+(10, 'EMB', 'Emballage', 'images/Ressources/product_9722964b.jpg', 0, 70, '32', 8, '#e9cd16', '11', '');
 
 -- --------------------------------------------------------
 
@@ -1301,23 +1322,27 @@ CREATE TABLE IF NOT EXISTS `user` (
   `STATU` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `CONNEXION` int(45) DEFAULT NULL,
   `NAME` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `PASSWORD` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `PASSWORD` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `FONCTION` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `SECTION_ID` int(11) NOT NULL,
+  `LANGUAGE` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`idUSER`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`idUSER`, `CODE`, `NOM`, `PRENOM`, `DATE_NAISSANCE`, `MAIL`, `NUMERO_PERSO`, `NUMERO_INTERNE`, `IMAGE_PROFIL`, `STATU`, `CONNEXION`, `NAME`, `PASSWORD`, `FONCTION`, `SECTION_ID`) VALUES
-(1, 'KNB', 'Kévin', 'Duchamps', '2020-11-18', 'kevin.duchamps@mail.fr', '0697764654', '553', 'images/Profils/photo,medium.1459798851.jpg', '1', 1607294706, 'Billy', 'KN1', '1', 1),
-(2, 'U11', 'Dupond', 'Robert', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538750, 'USER11', 'USER1', '8', 1),
-(3, 'U1', 'THOMAS', 'DEBOUT', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538787, 'USER1', 'USER1', '3', 1),
-(4, 'U3', 'Judi', 'LEGROUC', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538811, 'USER1', 'USER1', '5', 1),
-(5, 'U2', 'Yoann', 'DEPARIS', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538917, 'USER2', 'USER2', '6', 4),
-(6, 'U33', 'Corine', 'VENDUPAIN', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602539125, 'USER33', 'USER33', '7', 4);
+INSERT INTO `user` (`idUSER`, `CODE`, `NOM`, `PRENOM`, `DATE_NAISSANCE`, `MAIL`, `NUMERO_PERSO`, `NUMERO_INTERNE`, `IMAGE_PROFIL`, `STATU`, `CONNEXION`, `NAME`, `PASSWORD`, `FONCTION`, `SECTION_ID`, `LANGUAGE`) VALUES
+(1, 'U33', 'Kévin', 'Duchamp', '2020-11-18', 'kevin.duchamps@mail.fr', '0697764654', '553', 'img_avatar.png', '1', 1608917003, 'Billy', '$2y$10$6t9BuSEAJp.KYZxobYRqdOdTicOIFBudoRC2OW0seV/MujJ5jDugq', '1', 1, 'fr'),
+(2, 'USER11', 'Dupond', 'Robert', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538750, 'USER11', 'USER1', '8', 1, 'fr'),
+(3, 'USER1', 'THOMAS', 'DEBOUT', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538787, 'USER1', 'USER1', '3', 1, 'fr'),
+(4, 'USER1', 'Judi', 'LEGROUC', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538811, 'USER1', 'USER1', '5', 1, 'fr'),
+(5, 'USER22', 'Yoann', 'DEPARIS', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602538917, 'USER22', 'USER2', '6', 4, 'fr'),
+(6, 'USER33', 'Corine', 'VENDUPAIN', '2020-11-18', '', '00.00.00.00.01', '00.00.00.00.01', '', '1', 1602539125, 'USER33', 'USER33', '7', 4, 'fr'),
+(8, 'USER45', 'BUCHE', 'Georges', '2020-12-21', '', '', '', '', '1', 1608567054, 'USER44', '', '1', 1, '1'),
+(9, 'USER66', '', '', '2020-12-21', '', '', '', '', '1', 1608580484, 'USER66', '', '1', 1, '1'),
+(10, 'USER66', '', '', '2020-12-21', '', '', '', '', '1', 1608580677, 'USER66', '', '1', 1, '1');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

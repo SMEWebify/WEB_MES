@@ -26,6 +26,7 @@
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
  <!-- title page --> 
+    <TiltePage>Home</TiltePage>
     <Title1>Info</Title1>
     <Title2>Statu order</Title2>
     <Title3>Employees</Title3>

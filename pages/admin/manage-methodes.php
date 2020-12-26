@@ -1,7 +1,13 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
+	use \App\Methods\Prestation;
+	use \App\Methods\Ressource;
+	use \App\Methods\Section;
+	use \App\COMPANY\Employees;
+	use \App\Companies\Provider;
 	use \App\Form;
+	use \App\Accounting\Allocations;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,6 +17,12 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Employees = new Employees();
+	$Ressource = new Ressource();
+	$Prestation = new Prestation();
+	$Section = new Section();
+	$Provider = new Provider();
+	$Allocations = new Allocations();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -41,22 +53,15 @@
 	if(isset($_POST['id_presta']) AND !empty($_POST['id_presta'])){
 		$UpdateIdPresta = $_POST['id_presta'];
 		$UpdateORDREpresta = $_POST['ORDREpresta'];
-		$UpdateCODEpresta = $_POST['CODEpresta'];
-		$UpdateLABELpresta = $_POST['LABELpresta'];
 		$UpdateTYPEpresta = $_POST['TYPEpresta'];
-		$UpdateTAUX_Hpresta = $_POST['TAUX_Hpresta'];
-		$UpdateMARGEpresta = $_POST['MARGEpresta'];
 		$UpdateCOLORpresta = $_POST['COLORpresta'];
 
 		$i = 0;
 		foreach ($UpdateIdPresta as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  CODE = \''. addslashes($UpdateCODEpresta[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  
 																ORDRE = \''. $UpdateORDREpresta[$i] .'\',
-																LABEL = \''. addslashes($UpdateLABELpresta[$i]) .'\',
 																TYPE = \''. $UpdateTYPEpresta[$i] .'\',
-																TAUX_H = \''. $UpdateTAUX_Hpresta[$i] .'\',
-																MARGE = \''. $UpdateMARGEpresta[$i] .'\',
-																COLOR = \''. $UpdateCOLORpresta[$i] .'\',
+																COLOR = \''. $UpdateCOLORpresta[$i] .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
@@ -120,7 +125,9 @@
 																		'". $_POST['ORDRERessource'] ."',
 																		'". $_POST['CAPARessource'] ."',
 																		'". $_POST['SECTIONRessource'] ."',
-																		'". $_POST['COLORRessource'] ."')");
+																		'". $_POST['COLORRessource'] ."',
+																		'',
+																		'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddRessourcesnNotification')));	
 	}
 
@@ -162,43 +169,97 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLocationNotification')));
 	}
 
-	// Create selected value list
-	$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
-			'. TABLE_ERP_EMPLOYEES .'.NOM,
-			'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-			'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-		FROM `'. TABLE_ERP_EMPLOYEES .'`
-		LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
-	foreach ($bdd->GetQuery($query) as $data){
-	$EmployeeListe .=  '<option value="'. $dat->idUSER .'">'. $dat->NOM .' '. $dat->PRENOM .' - '. $dat->RIGHT_NAME .'</option>';
-	}
-
-	$RessourcesListe ='<option value="0">Aucune</option>';
-	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$RessourcesListe .='<option value="'. $dat->Id .'">'. $data->LABEL .'</option>';
-	}
-
+	//if user want display prestation detail
 	if(isset($_GET['prestation']) && !empty($_GET['prestation'])){
-?>
+		
+		//if update data from prestation
+		if(isset($_POST['id']) && !empty($_POST['id'])){
+			$bdd->GetUpdatePOST(TABLE_ERP_PRESTATION, $_POST, 'WHERE id IN ('. $_POST['id'] . ')');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateServiceNotification')));
+		}
+
+		//if update data from provider list
+		if(isset($_POST['PROVIDER_ID']) && !empty($_POST['PROVIDER_ID'])){
+			foreach($_POST['PROVIDER_ID'] as $POST => $Value){
+				$PROVIDER_ID .= $Value .',';
+			}
+			$UpdatePROVIDER_ID = array('PROVIDER_ID' => substr($PROVIDER_ID, 0, -1));
+			$bdd->GetUpdatePOST(TABLE_ERP_PRESTATION, $UpdatePROVIDER_ID, 'WHERE id IN ('. $_GET['prestation'] . ')');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateServiceNotification')));
+		}
+
+		//if add new allocation accouting
+		if(isset($_POST['PRESTATION_ID']) && !empty($_POST['ORDRE'])){
+			$bdd->GetInsertPOST(TABLE_ERP_IMPUT_COMPTA_PRESTATION, $_POST);
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddAccountingNotification')));
+		}	
+
+		if(isset($_GET['delete']) && !empty($_GET['delete'])){
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_IMPUT_COMPTA_PRESTATION ." WHERE id='". addslashes($_GET['delete'])."'");
+			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteAccountingNotification')));
+		}
+
+		//init new data
+		$Prestation = New Prestation();
+		$Data= $Prestation->GETPrestation($_GET['prestation']);
+	?>
 	<div class="tab">
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/admin.php?page=manage-methodes';"><?=$langue->show_text('TitrePresta1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitrePresta2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitrePresta2'); ?> - <?= $Data->LABEL?> </button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitrePresta3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitrePresta4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?prestation=<?= $_GET['prestation'] ?> class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td></td>
+						<td colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
-
+							<input type="hidden" name="id" id="id" value="<?= $Data->id ?>">
+							<?=$langue->show_text('TableOrder'); ?> <?= $Data->ORDRE ?>
+						</td>
+						<td><?=$langue->show_text('TableCODE'); ?> <?= $Data->CODE ?></td>
+						<td><?=$langue->show_text('TablePicture'); ?></td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableLabel'); ?></td>
+						<td><input type="text" name="LABEL" value="<?= $Data->LABEL ?>" ></td>
+						<td rowspan="3"><img Class="Image-small" src="<?= $data->IMAGE ?>" title="Image <?= $data->LABEL ?>" alt="Prestation Image" /></td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableType'); ?></td>
+						<td>
+							<select name="TYPE">
+								<option value="1" <?= selected($Data->TYPE, 1) ?>><?=$langue->show_text('SelectProductive'); ?></option>
+								<option value="2" <?= selected($Data->TYPE, 2) ?>><?=$langue->show_text('SelectRawMat'); ?></option>
+								<option value="3" <?= selected($Data->TYPE, 3) ?>><?=$langue->show_text('SelectRawMatSheet'); ?></option>
+								<option value="4" <?= selected($Data->TYPE, 4) ?>><?=$langue->show_text('SelectRawMatProfil'); ?></option>
+								<option value="5" <?= selected($Data->TYPE, 5) ?>><?=$langue->show_text('SelectRawMatBlock'); ?></option>
+								<option value="6" <?= selected($Data->TYPE, 6) ?>><?=$langue->show_text('SelectSupplies'); ?></option>
+								<option value="7" <?= selected($Data->TYPE, 7) ?>><?=$langue->show_text('SelectSubcontracting'); ?></option>
+								<option value="8" <?= selected($Data->TYPE, 8) ?>><?=$langue->show_text('SelectCompoundItem'); ?></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableHourlyRate'); ?><input type="number" name="TAUX_H" value="<?= $Data->TAUX_H ?>" id="number"></td>
+						<td><?=$langue->show_text('TableMargin'); ?><input type="number" name="MARGE" value="<?= $Data->MARGE ?>" id="number"></td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableColor'); ?></td>
+						<td><input type="color" name="COLOR" value="<?= $Data->COLOR ?>"></td>
+						<td><input type="file" name="IMAGE" /></td>
+					</tr>
+					<tr>
+						<td colspan="3" >
+							<br/>
+							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+							<br/>
 						</td>
 					</tr>
 				</tbody>
@@ -206,17 +267,20 @@
 		</form>
 	</div>
 	<div id="div2" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?prestation=<?= $_GET['prestation'] ?> class="content-form" >
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form" >
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td></td>
+						<td><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
 				</thead>
 				<tbody>
+					<?= $Provider->GetProviderCheckedList($Data->PROVIDER_ID) ?>
 					<tr>
-						<td>
-
+						<td colspan="3" >
+							<br/>
+							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+							<br/>
 						</td>
 					</tr>
 				</tbody>
@@ -224,47 +288,157 @@
 		</form>
 	</div>
 	<div id="div3" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?prestation=<?= $_GET['prestation'] ?> class="content-form">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form">
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td></td>
+						<td colspan="5" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
-				</thead>
-				<tbody>
 					<tr>
-						<td>
-
-						</td>
-					</tr>
+							<th></th>
+							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableImputationType'); ?></th>
+							<th><?=$langue->show_text('TableTVAType'); ?></th>
+							<th></th>
+						</tr>
+					</thead>
+						<?php
+						$query='SELECT '. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'.Id,
+										'. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'.ORDRE,
+										'. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'.IMPUTATION_ID,
+										'. TABLE_ERP_IMPUT_COMPTA .'.CODE AS CODE_IMPUTATION,
+										'. TABLE_ERP_IMPUT_COMPTA .'.LABEL AS LABEL_IMPUTATION,
+										'. TABLE_ERP_IMPUT_COMPTA .'.TYPE_IMPUTATION,
+										'. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA
+									FROM `'. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'`
+										LEFT JOIN `'. TABLE_ERP_IMPUT_COMPTA .'` ON `'. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'`.`IMPUTATION_ID` = `'. TABLE_ERP_IMPUT_COMPTA .'`.`ID`
+										LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_IMPUT_COMPTA .'`.`TVA` = `'. TABLE_ERP_TVA .'`.`ID`
+									WHERE '. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'.PRESTATION_ID = '. $Data->id .'
+										ORDER BY '. TABLE_ERP_IMPUT_COMPTA_PRESTATION .'.ORDRE';
+		
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data):
+						if($data->TYPE_IMPUTATION == 1) $TypeImputation = $langue->show_text('TableSelect1');
+						if($data->TYPE_IMPUTATION == 2) $TypeImputation = $langue->show_text('TableSelect2');
+						if($data->TYPE_IMPUTATION == 3) $TypeImputation = $langue->show_text('TableSelect3');
+						if($data->TYPE_IMPUTATION == 4) $TypeImputation = $langue->show_text('TableSelect4');
+						if($data->TYPE_IMPUTATION == 5) $TypeImputation = $langue->show_text('TableSelect5');
+						if($data->TYPE_IMPUTATION == 6) $TypeImputation = $langue->show_text('TableSelect6');?>
+		
+							<tr>
+								<td><a href="admin.php?page=manage-methodes&prestation=<?=$_GET['prestation'] ?>&delete=<?= $data->Id ?>">X</a></td>
+								<td><?= $data->ORDRE ?></td>
+								<td> <?= $data->CODE_IMPUTATION ?> - <?= $data->LABEL_IMPUTATION ?></td>
+								<td><?= $data->LABEL_TVA ?></td>
+								<td><?= $TypeImputation ?></td>
+							</tr>
+							<?php $i++; endforeach; ?>
+							<tr>
+								<td>
+									<?=$langue->show_text('Addtext'); ?>
+									<input type="hidden" name="PRESTATION_ID" value="<?=$_GET['prestation'] ?>">
+								</td>
+								<td><input type="number" name="ORDRE" ></td>
+								<td>
+									<select name="IMPUTATION_ID">
+										<?= $Allocations->GETAllocationsList() ?>
+									</select>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="5" >
+									<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+								</td>
+							</tr>
 				</tbody>
 			</table>
 		</form>
 	</div>	
-<?php
+	<?php
 
 	}
 	elseif(isset($_GET['resources']) && !empty($_GET['resources'])){
-?>
+
+		if(isset($_POST['id']) && !empty($_POST['id'])){
+			$bdd->GetUpdatePOST(TABLE_ERP_RESSOURCE, $_POST, 'WHERE id IN ('. $_POST['id'] . ')');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdatRessourcesnNotification')));
+		}
+
+		//if update data from provider list
+		if(isset($_POST['PRESTATION_ID']) && !empty($_POST['PRESTATION_ID'])){
+			foreach($_POST['PRESTATION_ID'] as $POST => $Value){
+				$PRESTATION_ID .= $Value .',';
+			}
+			$UpdatePRESTATION_ID = array('PRESTATION_ID' => substr($PRESTATION_ID, 0, -1));
+			$bdd->GetUpdatePOST(TABLE_ERP_RESSOURCE, $UpdatePRESTATION_ID, 'WHERE id IN ('. $_GET['resources'] . ')');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdatRessourcesnNotification')));
+		}
+
+		if(isset($_POST['COMMENT']) && !empty($_POST['COMMENT'])){
+			$bdd->GetUpdatePOST(TABLE_ERP_RESSOURCE, $_POST, 'WHERE id IN ('. $_GET['resources'] . ')');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdatRessourcesnNotification')));
+		}
+
+		$Resources = New Ressource();
+		$Data= $Resources->GETRessource($_GET['resources']);
+	?>
 	<div class="tab">
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/admin.php?page=manage-methodes';"><?=$langue->show_text('TitreRessource1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitreRessource2');  ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitreRessource2');  ?> - <?= $Data->LABEL?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitreRessource3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitreRessource4'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('TitreRessource5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td></td>
+						<td colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
-
+							<input type="hidden" name="id" id="id" value="<?= $Data->id ?>">
+							<?=$langue->show_text('TableOrder'); ?> <?= $Data->ORDRE ?>
+						</td>
+						<td><?=$langue->show_text('TableCODE'); ?> <?= $Data->CODE ?></td>
+						<td><?=$langue->show_text('TablePicture'); ?></td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableLabel'); ?></td>
+						<td><input type="text" name="LABEL" value="<?= $Data->LABEL ?>" ></td>
+						<td rowspan="3"><img Class="Image-small" src="<?= $Data->IMAGE ?>" title="Image <?= $Data->LABEL ?>" alt="Ressource Image" /></td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableSection'); ?></td>
+						<td>
+							<select name="SECTION_ID">
+								<?=  $Section->GetSectionList($Data->SECTION_ID) ?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><?=$langue->show_text('TableColor'); ?><input type="color" name="COLOR" value="<?= $Data->COLOR ?>"></td>
+						<td><?=$langue->show_text('TableCapacity'); ?><input type="number" name="CAPACITY" value="<?= $Data->CAPACITY ?>" id="number"></td>
+					</tr>
+					<tr>
+						<td colspan="2" ><?=$langue->show_text('TableMasktime'); ?>
+							<select name="MASK_TIME">
+								<option value="1" <?=  selected($data->MASK_TIME, 1) ?>><?=$langue->show_text('No'); ?></option>
+								<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('Yes'); ?></option>
+							</select>
+						</td>
+						<td><input type="file" name="IMAGE" /></td>
+					</tr>
+					<tr>
+						<td colspan="3" >
+							<br/>
+							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+							<br/>
 						</td>
 					</tr>
 				</tbody>
@@ -272,17 +446,20 @@
 		</form>
 	</div>
 	<div id="div2" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td></td>
+						<td><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
 				</thead>
 				<tbody>
+					<?= $Prestation->GetPrestationCheckedList($Data->PRESTATION_ID) ?>
 					<tr>
-						<td>
-
+						<td colspan="3" >
+							<br/>
+							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+							<br/>
 						</td>
 					</tr>
 				</tbody>
@@ -290,17 +467,17 @@
 		</form>
 	</div>
 	<div id="div3" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td></td>
+						<td colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
-
+						
 						</td>
 					</tr>
 				</tbody>
@@ -308,17 +485,24 @@
 		</form>
 	</div>
 	<div id="div4" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes?resources=<?= $_GET['resources'] ?> class="content-form" enctype="multipart/form-data">
-			<table class="content-table">
+		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
+			<table class="content-table"  style="width: 50%;">
 				<thead>
 					<tr>
-						<td></td>
+						<td ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
-
+							<textarea class="Comment" name="COMMENT" rows="40" ><?= $Data->COMMENT ?></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td >
+							<br/>
+							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+							<br/>
 						</td>
 					</tr>
 				</tbody>
@@ -326,10 +510,10 @@
 		</form>
 	</div>
 
-<?php
+	<?php
 	}
 	else{
-?>
+		?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
@@ -349,8 +533,6 @@
 							<th><?=$langue->show_text('TableHourlyRate'); ?></th>
 							<th><?=$langue->show_text('TableMargin'); ?></th>
 							<th><?=$langue->show_text('TableColor'); ?></th>
-							<th><?=$langue->show_text('TablePicture'); ?></th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -367,8 +549,7 @@
 									'. TABLE_ERP_PRESTATION .'.TAUX_H,
 									'. TABLE_ERP_PRESTATION .'.MARGE,
 									'. TABLE_ERP_PRESTATION .'.COLOR,
-									'. TABLE_ERP_PRESTATION .'.IMAGE,
-									'. TABLE_ERP_PRESTATION .'.RESSOURCE_ID
+									'. TABLE_ERP_PRESTATION .'.IMAGE
 									FROM `'. TABLE_ERP_PRESTATION .'`
 									ORDER BY ORDRE';
 
@@ -377,11 +558,10 @@
 						<tr>
 							<td>
 								<input type="hidden" name="id_presta[]" id="id_presta" value="<?= $data->Id ?>">
-								<a href="admin.php?page=manage-methodes&prestation=<?= $data->Id ?>">-></a>
 							</td>
 							<td><input type="number" name="ORDREpresta[]" value="<?= $data->ORDRE ?>" id="number"></td>
-							<td><input type="text" name="CODEpresta[]" value="<?= $data->CODE ?>" ></td>
-							<td><input type="text" name="LABELpresta[]" value="<?= $data->LABEL ?>" ></td>
+							<td><?= $data->CODE ?></td>
+							<td><a href="admin.php?page=manage-methodes&prestation=<?= $data->Id ?>"><?= $data->LABEL ?></a></td>
 							<td>
 								<select name="TYPEpresta[]">
 									<option value="1" <?= selected($data->TYPE, 1) ?>><?=$langue->show_text('SelectProductive'); ?></option>
@@ -389,16 +569,14 @@
 									<option value="3" <?= selected($data->TYPE, 3) ?>><?=$langue->show_text('SelectRawMatSheet'); ?></option>
 									<option value="4" <?= selected($data->TYPE, 4) ?>><?=$langue->show_text('SelectRawMatProfil'); ?></option>
 									<option value="5" <?= selected($data->TYPE, 5) ?>><?=$langue->show_text('SelectRawMatBlock'); ?></option>
-									<option value="6" <?= selected($data->TYPE, 6) ?>><?=$langue->show_text('SelectSupplies'); ?><</option>
+									<option value="6" <?= selected($data->TYPE, 6) ?>><?=$langue->show_text('SelectSupplies'); ?></option>
 									<option value="7" <?= selected($data->TYPE, 7) ?>><?=$langue->show_text('SelectSubcontracting'); ?></option>
 									<option value="8" <?= selected($data->TYPE, 8) ?>><?=$langue->show_text('SelectCompoundItem'); ?></option>
 								</select>
 								</td>
-							<td><input type="number" name="TAUX_Hpresta[]" value="<?= $data->TAUX_H ?>" id="number"></td>
-							<td><input type="number" name="MARGEpresta[]" value="<?= $data->MARGE ?>" id="number"></td>
+							<td><?= $data->TAUX_H ?></td>
+							<td><?= $data->MARGE ?></td>
 							<td><input type="color" name="COLORpresta[]" value="<?= $data->COLOR ?>"></td>
-							<td><img Class="Image-small" src="<?= $data->IMAGE ?>" title="Image <?= $data->LABEL ?>" alt="Prestation Image" /></td>
-							<td></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -421,8 +599,6 @@
 							<td><input type="number"  name="TAUXPosteCharge" id="number"></td>
 							<td><input type="number"  name="MARGEPosteCharge" id="number"></td>
 							<td><input type="color"  name="COLORPosteCharge"></td>
-							<td></td>
-							<td><input type="file" name="IMAGEPosteCharge" /></td>
 						</tr>
 						<tr>
 							<td colspan="10" >
@@ -441,14 +617,13 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th><?=$langue->show_text('TableCODE'); ?></th>
 							<th><?=$langue->show_text('TableOrder'); ?></th>
+							<th><?=$langue->show_text('TableCODE'); ?></th>
 							<th><?=$langue->show_text('TableLabel'); ?></th>
 							<th><?=$langue->show_text('TableMasktime'); ?></th>
 							<th><?=$langue->show_text('TableCapacity'); ?></th>
 							<th><?=$langue->show_text('TableSection'); ?></th>
 							<th><?=$langue->show_text('TableColor'); ?></th>
-							<th><?=$langue->show_text('TablePicture'); ?></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -458,10 +633,7 @@
 						// RESSOURCES
 						//------------------------------
 
-						$query='SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'';
-						foreach ($bdd->GetQuery($query) as $data){
-							$SectionListe .='<option value="'. $data->Id .'">'. $data->LABEL .'</option>';
-						}
+						
 
 						$query='SELECT '. TABLE_ERP_RESSOURCE .'.Id,
 									'. TABLE_ERP_RESSOURCE .'.CODE,
@@ -480,29 +652,25 @@
 						$i = 1;
 						foreach ($bdd->GetQuery($query) as $data): ?>
 						<tr>
-							<td>
-								<input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>">
-								<a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>">-></a>
-							</td>
-							<td><input type="text" name="UpdateORDREressource[]" value="<?=  $data->CODE ?>" ></td>
+							<td><input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>"></td>
 							<td><input type="number" name="UpdateCODEressource[]" value="<?=  $data->ORDRE ?>" id="number"></td>
-							<td><input type="text" name="UpdateLABELressource[]" value="<?=  $data->LABEL ?>" ></td>
+							<td><?=  $data->CODE ?></td>
+							<td><a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
 							<td>
 								<select name="UpdateMASKressource[]">
 									<option value="1" <?=  selected($data->MASK_TIME, 1) ?>><?=$langue->show_text('No'); ?></option>
 									<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
-							<td><input type="number" name="UpdateCAPACITYressource[]" value="<?=  $data->CAPACITY ?>" id="number"></td>
+							<td><?=  $data->CAPACITY ?></td>
 							<td>
 								<select name="UpdateSECTIONIDressource[]">
 									<option value="<?=  $data->SECTION_ID ?>"><?=  $data->LABEL_SECTOR ?></option>
-									<?=  $SectionListe ?>
+									<?=  $Section->GetSectionList() ?>
 								</select>
 							</td>
 							<td><input type="color" name="UpdateCOLORressource[]" value="<?=  $data->COLOR ?>" size="10"></td>
-							<td><img Class="Image-small" src="<?=  $data->IMAGE ?>" title="Image <?=  $data->LABEL ?>" alt="Ressource Image" /></td>
-							<td><input type="file" name="UpdateIMAGEPosteCharge[]" /></td>
+							<td></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -519,12 +687,11 @@
 							<td><input type="number"  name="CAPARessource" size="1" id="number"></td>
 							<td>
 								<select name="SECTIONRessource">
-									<?=$SectionListe ?>
+									<?=$Section->GetSectionList() ?>
 								</select>
 							</td>
 							<td><input type="color"  name="COLORRessource" size="1"></td>
 							<td></td>
-							<td><input type="file" name="IMAGERessource" /></td>
 						</tr>
 						<tr>
 							<td colspan="10" >
@@ -583,7 +750,7 @@
 							<td>
 								<select name="UpdateRESPONSABLESection[]">
 									<option value="<?= $data->idUSER  ?>"><?= $data->NOM  ?> <?= $data->PRENOM  ?> - <?= $data->RIGHT_NAME  ?></option>
-									<?=$EmployeeListe ?>
+									<?=$Employees->GETEmployeesList() ?>
 								</select>
 							</td>
 							<td><input type="color" name="UpdateCOLORSection[]" value="<?= $data->COLOR  ?>" size="10"></td>
@@ -597,7 +764,7 @@
 							<td><input type="number"  name="TAUXHSection" size="1" id="number"></td>
 							<td>
 								<select name="RESPSection">
-									<?=$EmployeeListe ?>
+									<?=$Employees->GETEmployeesList() ?>
 								</select>
 							</td>
 							<td><input type="color"  name="COLORSection" ></td>
@@ -650,7 +817,7 @@
 							<td>
 								<select name="UpdateRESSOURCEIDZoneStock[]">
 									<option value="<?= $data->RESSOURCE_ID ?>"><?= $data->LABEL_RESSOURCE ?></option>
-									<?= $RessourcesListe ?>
+									<?= $Ressource->GETRessourcesList() ?>
 								</select>
 							</td>
 							<td><input type="color" name="UpdateCOLORZoneStock[]" value="<?= $data->COLOR ?>" size="10"></td>
@@ -662,7 +829,7 @@
 							<td><input type="text"  name="AddLABELZoneStock" ></td>
 							<td>
 								<select name="AddRESSOURCEZoneStock">
-									<?=$RessourcesListe ?>
+									<?=$Ressource->GETRessourcesList() ?>
 								</select>
 							</td>
 							<td><input type="color"  name="AddCOLORZoneStock"></td>

@@ -56,6 +56,9 @@
    <AddSectionNotification>Section added</AddSectionNotification>  
    <AddLocationNotification>Location in worshop added</AddLocationNotification>
    <AddRessourcesnNotification>Ressource added</AddRessourcesnNotification>  
+   <AddAccountingNotification>Accounting allocations added</AddAccountingNotification> 
+   <DeleteAccountingNotification>Accounting allocations deleted</DeleteAccountingNotification>  
+   <UpdatRessourcesnNotification>Ressource changed</UpdatRessourcesnNotification>  
    <UpdateSectionNotification> section changed</UpdateSectionNotification>
    <UpdateServiceNotification> service changed</UpdateServiceNotification> 
    <UpdateLocationNotification> location changed</UpdateLocationNotification>
@@ -74,6 +77,8 @@
    <TableOrder>Order</TableOrder>
    <TableService>Prestation</TableService>
    <TablePicture>Picture :</TablePicture>
+   <TableImputationType>Accounting allocations</TableImputationType>
+   <TableTVAType>VAT</TableTVAType>
    <Addtext>Add</Addtext>
    <TableUpdateButton>Update</TableUpdateButton>
    <Yes>Yes</Yes>

@@ -26,6 +26,7 @@
     <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
  <!-- title page --> 
+   <TiltePage>Acceuil</TiltePage>
     <Title1>Info</Title1>
     <Title2>Statu commandes</Title2>
     <Title3>Employées</Title3>

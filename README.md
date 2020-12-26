@@ -7,7 +7,7 @@
 
 #For configuration
 * Use __erp.sql__ to import ERP database  
-* Connection to the SQL database in include_connection_sql file
+* Connection to the SQL database in __SQL.class.php__ file
 * SQL login to define in __include_recup_config.php__
 
 #Project
@@ -19,27 +19,39 @@
 # initial remote source code recovery
 git clone git@gitlab.com:billy_boy/ERP.git
 
-http://localhost/erp/login.php
+http://localhost/erp/public/
+
 -----------------
 
 ### Structure Project
 
 * app
+  * Acouting   __class for Acouting data__
+    * Allocations.class.php
+  * Companies   __class for customers & providers data__
+    * Customer.class.php
+    * Provider.class.php
   * COMPANY   __class for company data__
     * Company.class.php
     * CompanyManager.class.php
+    * Employees.class.php
   * Lang __folder for language class__
     * en  __XML folder for En lang__ 
     * fr __XML folder for fr lang__ 
+  * Methods
+    * Prestation.class.php
+    * Ressource.class.php
+    * Section.class.php
+  * Quality
+  * Auth.class.php   __Authentification user class__
   * Autoload.class.php   __Autoload class__
   * CallOutBox.class.php  __notification class__
   * language.class.php  __class language__
-  * sql.class.php  __class sql__
+  * SQL.class.php  __class sql__
+  * User.class.php  __User sql__
 * include  
-  * include_checking_session.php
   * include_fonction.php
-  * include_recup_config_company.php __will be replaced by Company.class.php__
-  * include_recup_config.php
+  * include_recup_config.php  __contain constant__
 * public
   * css  
     * component.css

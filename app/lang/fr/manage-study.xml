@@ -100,6 +100,13 @@
    <UpdateNomenclatureNotification> nomenclature(s) modifiée(s)</UpdateNomenclatureNotification>
    <AddTechnicalCutNotification>Découpage technique ajouté</AddTechnicalCutNotification>
    <UpdateTechnicalCutNotification> découpage technique modifié(s)</UpdateTechnicalCutNotification>
+<!-- select-->
+   <TableSelect1>Achat</TableSelect1>
+   <TableSelect2>Achat (stock)</TableSelect2>
+   <TableSelect3>Acompte</TableSelect3>
+   <TableSelect4>Acompte (avec TVA)</TableSelect4>
+   <TableSelect5>Autre</TableSelect5>
+   <TableSelect6>TVA</TableSelect6>
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>

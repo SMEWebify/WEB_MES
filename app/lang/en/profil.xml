@@ -29,7 +29,9 @@
 	<TiltePage>Profil</TiltePage>
     <Titre1>Profil Changes</Titre1>
     <Titre2>Setting</Titre2>
-    <Titre3>Logout</Titre3>
+    <Titre3>Password</Titre3>
+    <Titre4>Profil picture</Titre4>
+    <Titre5>Logout</Titre5>
 <!-- table content --> 
     <TitreTable1>Profile modification</TitreTable1>
     <TableNameUser>Name :</TableNameUser>

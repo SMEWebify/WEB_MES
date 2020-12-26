@@ -56,9 +56,12 @@
    <AddSectionNotification>Section ajoutée</AddSectionNotification>  
    <AddLocationNotification>Zone de stockage ajoutée</AddLocationNotification>
    <AddRessourcesnNotification>Ressource ajoutée</AddRessourcesnNotification>  
+   <UpdatRessourcesnNotification>Ressource modifiée</UpdatRessourcesnNotification>  
    <UpdateSectionNotification> section(s) modifiée(s)</UpdateSectionNotification>
    <UpdateServiceNotification> prestation(s) modifiée(s)</UpdateServiceNotification> 
    <UpdateLocationNotification> zone de stockage(s) modifiée(s)</UpdateLocationNotification>
+   <AddAccountingNotification>Imputation comptable ajoutée</AddAccountingNotification> 
+   <DeleteAccountingNotification>Imputation comptable supprimé</DeleteAccountingNotification>  
 <!-- general -->
    <TableRessource>Ressources</TableRessource>
    <TableResponsible>Responsable</TableResponsible>
@@ -74,6 +77,8 @@
    <TableOrder>Ordre</TableOrder>
    <TableService>Prestation</TableService>
    <TablePicture>Image :</TablePicture>
+   <TableImputationType>Imputation comptable</TableImputationType>
+   <TableTVAType>TVA</TableTVAType>
    <Addtext>Ajout</Addtext>
    <TableUpdateButton>Mettre à jours</TableUpdateButton>
    <TableAddArticleButton>Ajouter un article</TableAddArticleButton>

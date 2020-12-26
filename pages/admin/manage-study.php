@@ -2,6 +2,9 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\Methods\Prestation;
+	use \App\Methods\Section;
+	use \App\Accounting\Allocations;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,6 +14,9 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Prestation = new Prestation();
+	$Section = new Section();
+	$Allocations = new Allocations();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -263,13 +269,6 @@
 		$actionForm = 'admin.php?page=manage-study&id='. $ArticleId .'';
 	}
 
-	//create service list select
-	$PrestaListe ='<option value="0">Aucune</option>';
-	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$PrestaListe .='<option value="'. $data->Id .'" '. selected($ArticlePrestaId, $data->Id) .' >'. $data->LABEL .'</option>';
-	}
-
 	//create familly list select
 	$FamilleListe ='<option value="0">Aucune</option>';
 	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_SOUS_FAMILLE .'';
@@ -423,15 +422,6 @@
 	///////////////////////////////
 	//// IMPUTATION ////
 	///////////////////////////////
-	$query='SELECT '. TABLE_ERP_IMPUT_COMPTA .'.Id,
-									'. TABLE_ERP_IMPUT_COMPTA .'.CODE,
-									'. TABLE_ERP_IMPUT_COMPTA .'.LABEL
-									FROM `'. TABLE_ERP_IMPUT_COMPTA .'`
-									ORDER BY Id';
-
-	foreach ($bdd->GetQuery($query) as $data){
-		$ListeImput .='<option value="'. $data->Id .'">'. $data->CODE .' - '. $data->LABEL .'</option>';
-	}
 
 	if(isset($_POST['AddORDREImputation']) AND !empty($_POST['AddORDREImputation'])){
 
@@ -493,18 +483,6 @@
 	////////////////////////
 	////  SOUS-FAMILLE  ////
 	///////////////////////
-
-	$i = 1;
-	$query='SELECT '. TABLE_ERP_PRESTATION .'.Id,
-									'. TABLE_ERP_PRESTATION .'.CODE,
-									'. TABLE_ERP_PRESTATION .'.LABEL
-									FROM `'. TABLE_ERP_PRESTATION .'`
-									ORDER BY ORDRE';
-
-
-	foreach ($bdd->GetQuery($query) as $data){
-		$SectionListe .='<option value="'. $data->Id .'">'. $data->CODE .' - '. $data->LABEL .'</option>';
-	}
 
 	if(isset($_POST['AddCODESousFamille']) AND !empty($_POST['AddCODESousFamille'])){
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_SOUS_FAMILLE ." VALUE ('0',
@@ -595,7 +573,7 @@
 							</td>
 							<td >
 								<select name="PRESTA_IDAtricle">
-									<?= $PrestaListe ?>
+									<?= $Prestation ->GetPrestationList($ArticlePrestaId) ?>
 								</select>
 							</td>
 							<td >
@@ -818,7 +796,7 @@
 									<td><input type="number" name="AddORDREDecoupTech" ></td>
 									<td>
 										<select name="AddPRESTADecoupTech">
-											<?=$PrestaListe; ?>
+											<?=$Prestation ->GetPrestationList() ?>
 										</select>
 									</td>
 									<td><input type="text"  name="AddLABELDecoupTech" ></td>
@@ -1018,12 +996,12 @@
 		
 						$i = 1;
 						foreach ($bdd->GetQuery($query) as $data):
-						if($data->TYPE_IMPUTATION == 1) $TypeImputation = "Achat";
-						if($data->TYPE_IMPUTATION == 2) $TypeImputation = "Achat (stock)";
-						if($data->TYPE_IMPUTATION == 3) $TypeImputation = "Acompte";
-						if($data->TYPE_IMPUTATION == 4) $TypeImputation = "Acompte (avec TVA)";
-						if($data->TYPE_IMPUTATION == 5) $TypeImputation = "Autre";
-						if($data->TYPE_IMPUTATION == 6) $TypeImputation = "TVA";?>
+						if($data->TYPE_IMPUTATION == 1) $TypeImputation = $langue->show_text('TableSelect1');
+						if($data->TYPE_IMPUTATION == 2) $TypeImputation = $langue->show_text('TableSelect2');
+						if($data->TYPE_IMPUTATION == 3) $TypeImputation = $langue->show_text('TableSelect3');
+						if($data->TYPE_IMPUTATION == 4) $TypeImputation = $langue->show_text('TableSelect4');
+						if($data->TYPE_IMPUTATION == 5) $TypeImputation = $langue->show_text('TableSelect5');
+						if($data->TYPE_IMPUTATION == 6) $TypeImputation = $langue->show_text('TableSelect6');?>
 		
 							<tr>
 								<td>
@@ -1035,8 +1013,7 @@
 								</td>
 								<td>
 									<select name="UpdateIdImpuration[]">
-										<option value="<?= $data->IMPUTATION_ID ?>"  <?= selected( $data->IMPUTATION_ID , $data->IMPUTATION_ID) ?>><?= $data->CODE_IMPUTATION ?> - <?= $data->LABEL_IMPUTATION ?></option>
-										<?= $ListeImput ?>
+										<?= $Allocations->GETAllocationsList($data->IMPUTATION_ID) ?>
 									</select>
 								</td>
 								<td><?= $data->LABEL_TVA ?></td>
@@ -1051,7 +1028,7 @@
 								<td><input type="number" name="AddORDREImputation" ></td>
 								<td>
 									<select name="AddIdImpuration">
-										<?=$ListeImput; ?>
+										<?= $Allocations->GETAllocationsList() ?>
 									</select>
 								</td>
 								<td></td>
@@ -1186,8 +1163,7 @@
 							<td><input type="text" name="UpdateLABELSousFamille[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
 								<select name="AddTRESSOURCESousFamille[]">
-									<option value="<?= $data->PRESTATION_ID ?>"><?= $data->CODE_PRESTATION ?> - <?= $data->LABEL_PRESTATION ?></option>
-									<?= $SectionListe ?>
+									<?= $Prestation->GetPrestationList($data->PRESTATION_ID) ?>
 								</select>
 							</td>
 						</tr>
@@ -1198,7 +1174,7 @@
 							<td><input type="text" class="input-moyen-vide" name="AddLABELSousFamille"></td>
 							<td>
 								<select name="AddRESSOURCESousFamille">
-									<?=$SectionListe ?>
+									<?=$Prestation->GetPrestationList() ?>
 								</select>
 							</td>
 						</tr>
