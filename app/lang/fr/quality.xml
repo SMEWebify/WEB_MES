@@ -27,11 +27,77 @@
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
  <!-- title page -->
 	<TiltePage>Qualité</TiltePage>
-    <Title1>Fiche de non conformité</Title1>
-    <Title2>Actions</Title2>
-    <Title3>Dérogations</Title3>
+   <Title1>Fiche de non conformité</Title1>
+   <Title2>Actions</Title2>
+   <Title3>Dérogations</Title3>
    <Title4>Appareils de mesure</Title4>
+
+ <!-- table -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Libelé</TableLabel>
+   <TableDATE>Date de création : </TableDATE>
+   <TableAuteur>Auteur : </TableAuteur>
+   <TableType>Type : </TableType>
+   <TableEtat>Etat : </TableEtat>
+   <TableResp>Responsable : </TableResp>
+   <TableComment>Commentaire : </TableComment>
+   <TableProposal>Proposition : </TableProposal>
+   <TableLabelProb>Description du problème : </TableLabelProb>
+   <TableDecision>Décision : </TableDecision>
+   <TableReply>Réponse : </TableReply>
+   <TableCause>Cause : </TableCause>
+   <TableDefaut>Defaut : </TableDefaut>
+   <TableAction>Action : </TableAction>
+   <TableCorrection>Correction : </TableCorrection>
+   <TableColor>Couleur</TableColor>
+
+   <TableRessource>Ressources</TableRessource>
+   <TableUser>Utilisateur</TableUser>
+   <TableImatNumber>Imatriculation</TableImatNumber>
+   <TableEndDate>Date de fin</TableEndDate>
+   <TableNewButtonDerog>Mouvelle dérogation</TableNewButtonDerog>
+   <TableNewDerog>Code nouvelle dérogation : </TableNewDerog>
+   <TableNewButtonAct>Mouvelle action</TableNewButtonAct>
+   <TableNewAct>Code nouvelle action : </TableNewAct>
+   <TableNewButtonFNC>Mouvelle fiche de non-conformité </TableNewButtonFNC>
+   <TableNewFNC>Code nouvelle FNC : </TableNewFNC>
+
+   <TableCausedBy>Causé par : </TableCausedBy>
+   <TableSection>Section </TableSection>
+   <TableRessource>Ressource : </TableRessource>
+
+ <!-- notification -->
+   <UpdateDeviceNotification> appareil modifié</UpdateDeviceNotification>
+   <ErrorDeviceNotification> erreur à l'ajout de l'image</ErrorDeviceNotification>
+   <UpdateDerogation>Dérogation modifiée</UpdateDerogation>
+   <AddDerogation>Dérogation créée</AddDerogation>
+   <UpdateAction>Action modifiée</UpdateAction>
+   <AddAction>Action créée</AddAction>   
+   <UpdateFNC>Fiche de non conformité modifiée</UpdateFNC>
+   <AddFNC>Fiche de non conformité créée</AddFNC>  
+ <!-- select -->
+   <SelectInternal>Interne</SelectInternal>
+   <SelectExternal>Externe</SelectExternal>
+   
+   <SelectInProgess>En cours</SelectInProgess>
+   <SelectWaitingCustomerData>En attente de réponse</SelectWaitingCustomerData>
+   <SelectValidate>Validée</SelectValidate>
+   <SelectCanceled>Annulée</SelectCanceled>
+
+   <SelectPreventive>Préventive</SelectPreventive>
+   <SelectCorrective>Corrective</SelectCorrective>
+   <SelectImprovement>Amélioration</SelectImprovement>
+   <SelectOther>Autre</SelectOther>
+
+   <NoReply>Pas de réponse</NoReply>
+   <Accepted>Acceptée</Accepted>
+   <Refuse>Refusée</Refuse>
+
+   <Finddevice>Chercher appareil de mesure</Finddevice>
+   <FindDerogation>Chercher dérogation</FindDerogation>
+   <FindAction>Chercher action</FindAction>
+   <FindNFC>Chercher fiche de non conformité</FindNFC>
  <!-- general -->
-    <Addtext>Ajout</Addtext>
-     <TableUpdateButton>Mettre à jours</TableUpdateButton>
+   <Addtext>Ajout</Addtext>
+   <TableUpdateButton>Mettre à jours</TableUpdateButton>
 </langue>

@@ -31,6 +31,72 @@
    <Title2>Actions</Title2>
    <Title3>Derogations</Title3>
    <Title4>Measuring devices</Title4>
+
+ <!-- table -->
+   <TableCODE>CODE</TableCODE>
+   <TableLabel>Label</TableLabel>
+   <TableDATE>Date of object : </TableDATE>
+   <TableAuteur>Creator : </TableAuteur>
+   <TableType>Type : </TableType>
+   <TableEtat>Etat : </TableEtat>
+   <TableResp>Responsable : </TableResp>
+   <TableComment>Comment : </TableComment>
+   <TableProposal>Proposition : </TableProposal>
+   <TableLabelProb>Label problem : </TableLabelProb>
+   <TableDecision>Decision : </TableDecision>
+   <TableReply>Replay : </TableReply>
+   <TableCause>Cause : </TableCause>
+   <TableDefaut>Defaut : </TableDefaut>
+   <TableAction>Action : </TableAction>
+   <TableCorrection>Correction : </TableCorrection>
+   <TableColor>Color</TableColor>
+
+   <TableRessource>Ressources</TableRessource>
+   <TableUser>User</TableUser>
+   <TableImatNumber>Imat number :</TableImatNumber>
+   <TableEndDate>End date</TableEndDate>
+   <TableNewButtonDerog>New derogation</TableNewButtonDerog>
+   <TableNewDerog>Code of new derogation : </TableNewDerog>
+   <TableNewButtonAct>New action</TableNewButtonAct>
+   <TableNewAct>Code of new action : </TableNewAct>
+   <TableNewButtonFNC>New record of non-compliance </TableNewButtonFNC>
+   <TableNewFNC>Code of new RNC : </TableNewFNC>
+
+   <TableCausedBy>Cause by : </TableCausedBy>
+   <TableSection>Section </TableSection>
+   <TableRessource>Ressource : </TableRessource>
+
+ <!-- notification -->
+   <UpdateDeviceNotification> device  changed</UpdateDeviceNotification>
+   <ErrorDeviceNotification> update file fail</ErrorDeviceNotification>
+   <UpdateDerogation>Derogation changed</UpdateDerogation>
+   <AddDerogation>Derogation added</AddDerogation>
+   <UpdateAction>Action changed</UpdateAction>
+   <AddAction>Action added</AddAction>   
+   <UpdateFNC>>Record of non-compliance changed</UpdateFNC>
+   <AddFNC>Record of non-compliance added</AddFNC>  
+ <!-- select -->
+   <SelectInternal>Internal</SelectInternal>
+   <SelectExternal>ExtExternalerne</SelectExternal>
+   
+   <SelectInProgess>En cours</SelectInProgess>
+   <SelectWaitingCustomerData>Waiting Customer Data</SelectWaitingCustomerData>
+   <SelectValidate>Validate</SelectValidate>
+   <SelectCanceled>Canceled</SelectCanceled>
+
+   <SelectPreventive>Preventive</SelectPreventive>
+   <SelectCorrective>Corrective</SelectCorrective>
+   <SelectImprovement>Improvement</SelectImprovement>
+   <SelectOther>Other</SelectOther>
+
+   <NoReply>No reply</NoReply>
+   <Accepted>Accepted</Accepted>
+   <Refuse>Refuse</Refuse>
+
+   <Finddevice>Find device</Finddevice>
+   <FindDerogation>Find derogation</FindDerogation>
+   <FindAction>Find action</FindAction>
+   <FindNFC>Find record of non-compliance</FindNFC>
  <!-- general -->
    <Addtext>Add</Addtext>
    <TableUpdateButton>Update</TableUpdateButton>

@@ -212,7 +212,7 @@
 		</form>
 	</div>
 	<div id="div4" class="tabcontent" >
-		<form method="post" action="index.php?page=profil" class="content-form" >
+		<form method="post" action="index.php?page=profil" class="content-form" enctype="multipart/form-data" >
 			<table class="content-table">
 				<thead>
 					<tr>

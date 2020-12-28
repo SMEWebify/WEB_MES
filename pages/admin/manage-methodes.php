@@ -5,7 +5,7 @@
 	use \App\Methods\Ressource;
 	use \App\Methods\Section;
 	use \App\COMPANY\Employees;
-	use \App\Companies\Provider;
+	use \App\Companies\Companies;
 	use \App\Form;
 	use \App\Accounting\Allocations;
 
@@ -21,7 +21,7 @@
 	$Ressource = new Ressource();
 	$Prestation = new Prestation();
 	$Section = new Section();
-	$Provider = new Provider();
+	$Companies = new Companies();
 	$Allocations = new Allocations();
 
 	//Check if the user is authorized to view the page
@@ -275,7 +275,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?= $Provider->GetProviderCheckedList($Data->PROVIDER_ID) ?>
+					<?= $Companies->GetProviderCheckedList($Data->PROVIDER_ID) ?>
 					<tr>
 						<td colspan="3" >
 							<br/>
@@ -376,11 +376,13 @@
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdatRessourcesnNotification')));
 		}
 
+		//if update data from comment
 		if(isset($_POST['COMMENT']) && !empty($_POST['COMMENT'])){
 			$bdd->GetUpdatePOST(TABLE_ERP_RESSOURCE, $_POST, 'WHERE id IN ('. $_GET['resources'] . ')');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdatRessourcesnNotification')));
 		}
 
+		//init new data
 		$Resources = New Ressource();
 		$Data= $Resources->GETRessource($_GET['resources']);
 	?>
@@ -665,8 +667,7 @@
 							<td><?=  $data->CAPACITY ?></td>
 							<td>
 								<select name="UpdateSECTIONIDressource[]">
-									<option value="<?=  $data->SECTION_ID ?>"><?=  $data->LABEL_SECTOR ?></option>
-									<?=  $Section->GetSectionList() ?>
+									<?=  $Section->GetSectionList($data->SECTION_ID) ?>
 								</select>
 							</td>
 							<td><input type="color" name="UpdateCOLORressource[]" value="<?=  $data->COLOR ?>" size="10"></td>

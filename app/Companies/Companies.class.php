@@ -3,7 +3,7 @@
 namespace App\Companies;
 use \App\SQL;
 
-class Provider Extends SQL  {
+class Companies Extends SQL  {
 
     Public $id;
     Public $CODE;
@@ -33,15 +33,10 @@ class Provider Extends SQL  {
     Public $CONTROLE_FOUR;
     Public $DATE_CREA;
     Public $COMMENT;
+    Public $SECTOR_ID;
 
     Public $ProviderList;
     Public $ProviderCheckedList;
-
-    public function GETPrestation($id_GET_ROVIDER){
-
-        $Provider = $this->GetQuery('SELECT * FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE id = \''. $id_GET_ROVIDER .'\'');
-        return $this->$Provider;
-    }
 
     public function GetProviderList($IdData=0){
 
@@ -71,5 +66,23 @@ class Provider Extends SQL  {
 		}
         
         return  $this->ProviderCheckedList;
+    }
+
+    public function GetCustomerList(array $IdData){
+        $IdData = explode(",", $IdData);
+        $query='SELECT id, NAME   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_CLIENT=1 ';
+
+		foreach ($this->GetQuery($query) as $data){
+            if(in_array($data->id,$IdData)){
+                $checked = 'checked';
+            }
+            else{
+                $checked = '';
+            }
+
+			$this->CustomerList .='<option value="'. $data->id .'" '. $checked .'>'. $data->LABEL .'</option>';
+		}
+        
+        return  $this->CustomerList;
     }
 }

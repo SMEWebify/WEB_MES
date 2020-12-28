@@ -2,6 +2,7 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\Methods\Section;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,6 +12,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Section = new Section();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -22,8 +24,8 @@
 
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_EMPLOYEES ." VALUE ('0',
 																		'". $_POST['Addcode_ajout'] ."',
-																		'',
-																		'',
+																		'". $_POST['Addnom_ajout'] ."',
+																		'". $_POST['Addprenom_ajout'] ."',
 																		NOW(),
 																		'',
 																		'',
@@ -31,7 +33,7 @@
 																		'',
 																		'1',
 																		'". time() ."',
-																		'". $_POST['Addnom_ajout'] ."',
+																		'". $_POST['Addname_ajout'] ."',
 																		'',
 																		'". $_POST['Addposte_ajout'] ."',
 																		'". $_POST['Addsection_ajout'] ."',
@@ -63,18 +65,22 @@
 	if(isset($_POST['id_membre']) AND !empty($_POST['id_membre'])){
 
 		$id_membre = $_POST['id_membre'];
-		$CODEmembre = $_POST['CODEmembre'];
-		$nom_membre = $_POST['nom_membre'];
-		$poste_membre = $_POST['poste_membre'];
-		$SECTIONmembre = $_POST['SECTIONmembre'];
+		$CODE = $_POST['CODE'];
+		$NAME = $_POST['NAME'];
+		$PRENOM = $_POST['PRENOM'];
+		$NOM = $_POST['NOM'];
+		$FONCTION = $_POST['FONCTION'];
+		$SECTION_ID = $_POST['SECTION_ID'];
 
 		$i = 0;
 		foreach ($id_membre as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $CODEmembre[$i] .'\',
-																NAME = \''. addslashes($nom_membre[$i]) .'\',
-																FONCTION = \''. $poste_membre[$i] .'\',
-																SECTION_ID = \''. $SECTIONmembre[$i] .'\'
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $CODE[$i] .'\',
+																NOM = \''. addslashes($NOM[$i]) .'\',
+																PRENOM = \''. addslashes($PRENOM[$i]) .'\',
+																NAME = \''. addslashes($NAME[$i]) .'\',
+																FONCTION = \''. $FONCTION[$i] .'\',
+																SECTION_ID = \''. $SECTION_ID[$i] .'\'
 																WHERE idUser = '. $id_generation . ' ');
 			$i++;
 		}
@@ -156,6 +162,8 @@
 							<th><?=$langue->show_text('TableLastConnexion'); ?></th>
 							<th><?=$langue->show_text('TableCODE'); ?></th>
 							<th><?=$langue->show_text('TableSeudo'); ?></th>
+							<th><?=$langue->show_text('TableSeudo'); ?></th>
+							<th><?=$langue->show_text('TableSeudo'); ?></th>
 							<th><?=$langue->show_text('TableRight'); ?></th>
 							<th><?=$langue->show_text('TableSection'); ?></th>
 						</tr>
@@ -163,6 +171,9 @@
 					<tbody>
 					<?php 
 					$query ='SELECT '. TABLE_ERP_EMPLOYEES .'.IdUser,
+						'. TABLE_ERP_EMPLOYEES .'.CODE,
+						'. TABLE_ERP_EMPLOYEES .'.NOM,
+						'. TABLE_ERP_EMPLOYEES .'.PRENOM,
 						'. TABLE_ERP_EMPLOYEES .'.CODE,
 						'. TABLE_ERP_EMPLOYEES .'.STATU,
 						'. TABLE_ERP_EMPLOYEES .'.CONNEXION,
@@ -179,18 +190,19 @@
 						<tr>
 							<td><?= $i .''. $Form->input('hidden', 'id_membre[]',  $data->IdUser) ?></td>
 							<td><?= format_temps($data->CONNEXION) ?></td>
-							<td><?= $Form->input('text', 'CODEmembre[]',  $data->CODE) ?></td>
-							<td><?= $Form->input('text', 'nom_membre[]',  $data->NAME) ?></td>
+							<td><?= $Form->input('text', 'CODE[]',  $data->CODE) ?></td>
+							<td><?= $Form->input('text', 'NAME[]',  $data->NAME) ?></td>
+							<td><?= $Form->input('text', 'NOM[]',  $data->NOM) ?></td>
+							<td><?= $Form->input('text', 'PRENOM[]',  $data->PRENOM) ?></td>
 							<td>
-								<select name="poste_membre[]">
+								<select name="FONCTION[]">
 									<option value="<?= $data->FONCTION ?>"><?= $data->RIGHT_NAME ?></option>
 									<?=  $RightListe ?>
 								</select>
 							</td>
 							<td>
-								<select name="SECTIONmembre[]">
-								<option value="<?= $data->SECTION_ID ?>" <?= selected($data->SECTIONmembre, 1) ?>><?= $data->LABEL ?></option>
-								<?=  $SectionListe ?>
+								<select name="SECTION_ID[]">
+									<?=  $Section->GetSectionList($data->SECTION_ID) ?>
 								</select>
 							</td>
 						</tr>
@@ -199,7 +211,9 @@
 							<td><?=$langue->show_text('Addtext'); ?></td>
 							<td></td>
 							<td><?= $Form->input('text', 'Addcode_ajout', ''); ?></td>
+							<td><?= $Form->input('text', 'Addname_ajout', ''); ?></td>
 							<td><?= $Form->input('text', 'Addnom_ajout', ''); ?></td>
+							<td><?= $Form->input('text', 'Addprenom_ajout', ''); ?></td>
 							<td>
 								<select name="Addposte_ajout">
 									<?=$RightListe ?>
@@ -207,12 +221,12 @@
 							</td>
 							<td>
 								<select name="Addsection_ajout">
-									<?=$SectionListe ?>
+									<?=  $Section->GetSectionList() ?>
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td colspan="6" >
+							<td colspan="8" >
 								<br/>
 								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 								<br/>

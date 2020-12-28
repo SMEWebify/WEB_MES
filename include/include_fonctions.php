@@ -122,8 +122,7 @@
 	function NumDoc($NumDoc,$Index, $digit){
 		
 		$Index= $Index+1;
-		$Index = str_pad($Index, $digit, '0', STR_PAD_LEFT);;
-		
+		$Index = str_pad($Index, $digit, '0', STR_PAD_LEFT);
 		$NumDoc = str_replace('<AAAA>', date("Y") , $NumDoc);
 		$NumDoc = str_replace('<AA>', date("y") , $NumDoc);
 		$NumDoc = str_replace('<MM>', date("m") , $NumDoc);

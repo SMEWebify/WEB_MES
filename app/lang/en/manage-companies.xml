@@ -31,6 +31,7 @@
     <Titre2>Sites</Titre2>
     <Titre3>Contacts</Titre3>
     <Titre4>Industry and commentary</Titre4>
+    <Titre5>Comment</Titre5>
 <!-- table content --> 
     <TableNameUser>Name :</TableNameUser>
     <TableNameCompany>Name :</TableNameCompany>
@@ -94,6 +95,8 @@
     <SelectProspect>Prospect</SelectProspect>
     <SelectCustomer>Customer</SelectCustomer>
     
+    <FindCompany>Find company</FindCompany>
+
     <Yes>Yes</Yes>
     <No>No</No>
 </langue>

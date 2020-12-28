@@ -30,7 +30,8 @@
     <Titre1>Ajouter une société</Titre1>
     <Titre2>Sites</Titre2>
     <Titre3>Contacts</Titre3>
-    <Titre4>Secteur d'activité et commentaire</Titre4>
+    <Titre4>Secteur d'activité</Titre4>
+    <Titre5>Commentaire</Titre5>
 <!-- table content --> 
     <TableNameUser>Nom :</TableNameUser>
     <TableNameCompany>Nom :</TableNameCompany>
@@ -93,6 +94,9 @@
     <SelectSupllier>Fournisseur</SelectSupllier>
     <SelectProspect>Prospect</SelectProspect>
     <SelectCustomer>Client</SelectCustomer>
+
+    <FindCompany>Chercher une société</FindCompany>
+    
     
     <Yes>Oui</Yes>
     <No>Non</No>

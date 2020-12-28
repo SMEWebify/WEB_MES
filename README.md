@@ -1,8 +1,6 @@
 # WEB_ERP_MES
 ##  Ressource and Manufacturing execution system  Web
 
-![alt text](https://github.com/billyboy35/WEB_MES/blob/main/MES_VIEW_DEMO.PNG)
-
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/main/Workflow.png)
 
 #For configuration
@@ -29,8 +27,7 @@ http://localhost/erp/public/
   * Acouting   __class for Acouting data__
     * Allocations.class.php
   * Companies   __class for customers & providers data__
-    * Customer.class.php
-    * Provider.class.php
+    * Companies.class.php
   * COMPANY   __class for company data__
     * Company.class.php
     * CompanyManager.class.php

@@ -3,6 +3,9 @@
 	use \App\Autoloader;
 	use \App\Form;
 
+	use \App\Methods\Ressource;
+	use \App\COMPANY\Employees;
+
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
@@ -11,7 +14,9 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
-	
+	$Employees = new Employees();
+	$Ressource = new Ressource();
+
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -30,7 +35,8 @@
 																		'". addslashes($_POST['AddRESSOURCEAppareil']) ."',
 																		'". addslashes($_POST['AddUSERAppareil']) ."',
 																		'". addslashes($_POST['AddIMMATAppareil']) ."',
-																		'". addslashes($_POST['AddDATEAppareil']) ."')");
+																		'". addslashes($_POST['AddDATEAppareil']) ."',
+																		'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeviceNotification')));
 	}
 
@@ -90,8 +96,6 @@
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateFailNotification')));
 	}
-
-
 
 	///////////////////////
 	//// Origin  of flaw ////
@@ -177,24 +181,6 @@
 					</thead>
 					<tbody>
 						<?php
-						// GET Employees liste for form select
-						$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
-								'. TABLE_ERP_EMPLOYEES .'.NOM,
-								'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-								'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-								FROM `'. TABLE_ERP_EMPLOYEES .'`
-								LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
-
-						foreach ($bdd->GetQuery($query) as $data){
-							$EmployeeListe .=  '<option value="'. $data->idUSER .'">'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
-
-						}
-						//generate resources list
-						$RessourcesListe ='<option value="0">Aucune</option>';
-						$query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
-						foreach ($bdd->GetQuery($query) as $data){
-							$RessourcesListe .='<option value="'. $data->Id .'">'. $data->LABEL .'</option>';
-						}
 
 						// Generable Table for device list
 						$i = 1;
@@ -218,18 +204,16 @@
 						<tr>
 							<td><?= $i  ?><input type="hidden" name="id_Appareil[]" id="id_Appareil" value="<?= $data->Id ?>"></td>
 							<td><input type="text" name="UpdateCODEAppareil[]" value="<?= $data->CODE ?>" size="10"></td>
-							<td><input type="text" name="UpdateLABELAppareil[]" value="<?= $data->ABEL ?>" ></td>
+							<td><input type="text" name="UpdateLABELAppareil[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
 								<select name="UpdateRESSOURCEAppareil">
-									<option value="0" <?= selected($data->RESSOURCE_ID, 0) ?> >Aucune</option>
-									<option value="<?= $data->RESSOURCE_ID ?>" ><?= $data->LABEL_RESSOURCE ?></option>
-									<?= $RessourcesListe ?>
+									<?=$Ressource->GETRessourcesList($data->RESSOURCE_ID) ?>
 								</select>
 							</td>
 							<td>
 								<select name="UpdateUSERAppareil">
 									<option value="<?= $data->USER_ID ?>"><?= $data->NOM_USER ?>- <?= $data->PRENOM_USER ?></option>
-									<?= $EmployeeListe ?>
+									<?=$Employees->GETEmployeesList($data->USER_ID) ?>
 								</select>
 							</td>
 							<td><input type="text" name="UpdateSERIALAppareil[]" value="<?= $data->SERIAL_NUMBER ?>" ></td>
@@ -242,12 +226,12 @@
 							<td><input type="text"  name="AddLABELAppareil"></td>
 							<td>
 								<select name="AddRESSOURCEAppareil">
-									<?=$RessourcesListe ?>
+									<?=$Ressource->GETRessourcesList() ?>
 								</select>
 							</td>
 							<td>
 								<select name="AddUSERAppareil">
-									<?=$EmployeeListe ?>
+									<?=$Employees->GETEmployeesList() ?>
 								</select>
 							</td>
 							<td><input type="text"  name="AddIMMATAppareil"></td>

@@ -46,66 +46,6 @@
 }
 
 /*--------------------------------------------*/
-/*-------------ADMIN--------------*/
-/*--------------------------------------------*/
-
-.DivButtonAdmin{
-	position: absolute;
-	background: white;
-	top: 70px;
-	right: 20px;
-	position: fixed;	
-	z-index: 7;
-}
-.DivButtonAdmin button{
-	text-align:center;
-	padding:6px 20px 6px 20px;
-	font:bold 13px Arial;
-	background:#f5f5f5;
-	color:#555;
-	border-radius:2px;
-	box-shadow:1px 1px 3px #999;
-
-}
-.DivAdminListe {
-	position: absolute;
-	top: 120px;
-	right: 20px;
-	position: fixed;
-}
-
-.admin-menu{
-	text-align: left;
-	font-size: 18px;
-}
-		
-.admin-menu,
-.admin-menu li {
-	margin: 0;
-	list-style: none;
-	line-height: 60px;
-}
-
-.admin-menu a {
-	display: block;
-	background: white;
-	color: #566473;
-	background:#FFFFFF;
-	font:bold 13px Arial;
-	padding: 10px 14px 15px 13px;
-	cursor: pointer;
-	text-decoration: none;
-}
-.admin-menu a:hover {
-	display: block;
-	color: #FFFFFF;
-	background:#566473;
-	font:bold 13px Arial;
-	padding: 10px 14px 15px 13px;
-	cursor: pointer;
-	text-decoration: none;
-}
-/*--------------------------------------------*/
 /*-------------UI --------------*/
 /*--------------------------------------------*/
 .overlay {

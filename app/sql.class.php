@@ -13,7 +13,7 @@ class SQL extends PDO{
 
 	public $AfficherMessException = true;
 
-	public $DernierID = 0;
+	public $DernierID = false;
 
     public function __construct ()
 	{}
@@ -66,6 +66,21 @@ class SQL extends PDO{
 
         return self::$pdo;
 	}
+
+	public function GetCount($table, $compter='*', $clauses='')
+    {
+        $datas = 0;
+        try {   
+			if(empty($compter)) $compter='*';
+			$statement = "SELECT COUNT(".$compter.") FROM `".$table."`". $clauses;
+            $req = $this->getPDO()->query($statement);
+			$datas = $req->fetch(PDO::FETCH_NUM);
+            
+        } catch (PDOException $exc) {
+			$this->GestionException($exc->getMessage(), $statement);
+        }
+        return $datas[0];
+    }   
 	
 	public function GetQuery($statement, $one = false, $class_name  = false){
 		try{
@@ -125,11 +140,12 @@ class SQL extends PDO{
 	public function GetInsert($statement){
 		try{
 			$req = $this->getPDO()->exec($statement);
+			$DernierID = $this->getPDO()->lastInsertId();
 		} catch (PDOException $exc) {
 			$this->GestionException($exc->getMessage(), $statement);
 		}
-		return true;
-		$this->DernierID = 0;
+		return $DernierID;
+		
 	}
 
 	public function GetInsertPOST($table,$POST){

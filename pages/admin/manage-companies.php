@@ -2,6 +2,10 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\Companies\Companies;
+	use \App\COMPANY\Employees;
+	use \App\COMPANY\ActivitySector;
+
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,6 +15,9 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Employees = new Employees();
+	$Companies = new Companies();
+	$ActivitySector = new ActivitySector();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -121,6 +128,7 @@
 																				'". addslashes($_POST['CompteAuxFourSte']) ."',
 																				'". addslashes($_POST['ControlFour']) ."',
 																				NOW(),
+																				'',
 																				'')");
 				$CallOutBox->add_notification(array('2', $langue->show_text('AddCompanyNotification')));
 
@@ -176,6 +184,7 @@
 		$SteCONTROLE_FOUR = $data->CONTROLE_FOUR;
 		$SteDATE_CREA = $data->DATE_CREA;
 		$SteCOMMENT = $data->COMMENT;
+		$SteSECTOR_ID = $data->SECTOR_ID;
 	}
 
 	// Create liste for TVA choise
@@ -196,18 +205,6 @@
 	foreach ($bdd->GetQuery($query) as $data){
 		$RegListe1 .='<option value="'. $data->Id .'" '. selected($SteCOND_REG_CLIENT_ID, $data->Id) .'>'. $data->LABEL .'</option>';
 		$RegListe2 .='<option value="'. $data->Id .'" '. selected($SteMODE_REG_FOUR_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-	}
-
-	// Create liste for person in charge choise
-	$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
-									'. TABLE_ERP_EMPLOYEES .'.NOM,
-									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-									FROM `'. TABLE_ERP_EMPLOYEES .'`
-									LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
-	foreach ($bdd->GetQuery($query) as $data){
-		 $EmployeeListe1 .=  '<option value="'. $data->idUSER .'" '. selected($SteRESP_COM_ID, $data->idUSER) .'>'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
-		 $EmployeeListe2 .=  '<option value="'. $data->idUSER .'" '. selected($SteRESP_TECH_ID, $data->idUSER) .'>'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
 	}
 
 	/////////////////////////////
@@ -321,6 +318,22 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateContactNotification')));
 	}
 
+	// if udpdate comment 
+	if(isset($_POST['COMMENT']) && !empty($_POST['COMMENT'])){
+		$bdd->GetUpdatePOST(TABLE_ERP_CLIENT_FOUR, $_POST, 'WHERE id IN ('. $_GET['id'] . ')');
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
+	}
+
+	//if update data from sector activity list
+	if(isset($_POST['SECTOR_ID']) && !empty($_POST['SECTOR_ID'])){
+		foreach($_POST['SECTOR_ID'] as $POST => $Value){
+			$SECTOR_ID .= $Value .',';
+		}
+		$UpdateSECTOR_ID = array('SECTOR_ID' => substr($SECTOR_ID, 0, -1));
+		$bdd->GetUpdatePOST(TABLE_ERP_CLIENT_FOUR, $UpdateSECTOR_ID, 'WHERE id IN ('. $_GET['id'] . ')');
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
+	}
+
 	// we cant change codeId of DB, he can be used on other table
 	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODESte" value="'. $SteCODE .'">' .$SteCODE;}
 	else{ $DisplayCode ='<input type="text" name="CODESte" required="required">'; }
@@ -345,13 +358,14 @@
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Titre2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Titre3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Titre4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Titre5'); ?></button>
 <?php
 	}
 ?>
 	</div>
 	<div id="div1" class="tabcontent">
 			<div class="column">
-				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindArticle'); ?>">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
 				<ul id="myUL">
 					<?php
 					//generate list for datalist find input
@@ -372,27 +386,11 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><?=$langue->show_text('TableCODE'); ?></td>
-							<td><?=$langue->show_text('TableNameCompany'); ?></td>
+							<td ><?=$langue->show_text('TableCODE'); ?> : <?=$DisplayCode;?></td>
+							<td colspan="3"><?=$langue->show_text('TableNameCompany'); ?> <input type="text" name="NameSte" value="<?=$SteNAME;?>"></td>
 							<td></td>
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td >
-								<input type="hidden" name="IDSte" value="<?=$SteId; ?>" size="10">
-								<?=$DisplayCode;?>
-							</td>
-							<td>
-								<input type="text" name="NameSte" value="<?=$SteNAME;?>" size="10">
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td><input type="hidden" name="IDSte" value="<?=$SteId; ?>" size="10"></td>
 						</tr>
 						<tr>
 							<td><?=$langue->show_text('TableWebSite'); ?></td>
@@ -509,7 +507,7 @@
 							</td>
 							<td colspan="2">
 								<select name="RepsComSte">
-									<?=$EmployeeListe1 ?>
+									<?=$Employees->GETEmployeesList($SteRESP_COM_ID) ?>
 								</select>
 							</td>
 							<td colspan="2">
@@ -531,8 +529,8 @@
 							</td>
 							<td></td>
 							<td colspan="2">
-							<select name="RespTechSte">
-									<?=$EmployeeListe2 ?>
+								<select name="RespTechSte">
+									<?=$Employees->GETEmployeesList($SteRESP_TECH_ID) ?>
 								</select>
 							</td>
 							<td colspan="2"></td>
@@ -667,7 +665,7 @@
 							<option value="1" <?= selected($data->ADRESS_FAC, 1) ?>><?= $langue->show_text('Yes') ?></option>
 						</select>
 					</td>
-				</tr>';
+				</tr>
 				<?php
 				$AdresseListe .='<option value="'. $data->Id .'" >'. $data->LABEL .'</option>';
 				 $i++; endforeach; ?>
@@ -800,6 +798,50 @@
 			</form>
 		</div>
 		<div id="div4" class="tabcontent">
+			<form method="post" name="prestation" action="admin.php?page=manage-companies&id=<?= $_GET['id'] ?>" class="content-form" enctype="multipart/form-data">
+				<table class="content-table">
+					<thead>
+						<tr>
+						<td ><?= $Data->NAME?></td>
+						</tr>
+					</thead>
+					<tbody>
+						<?= $ActivitySector->GETActivitySectorCheckedList($SteSECTOR_ID) ?>
+						<tr>
+							<td colspan="3" >
+								<br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+								<br/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div id="div5" class="tabcontent">
+			<form method="post" name="prestation" action="admin.php?page=manage-companies&id=<?= $_GET['id'] ?>" class="content-form" enctype="multipart/form-data">
+				<table class="content-table"  style="width: 50%;">
+					<thead>
+						<tr>
+							<td ><?= $Data->NAME?></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<textarea class="Comment" name="COMMENT" rows="40" ><?= $SteCOMMENT ?></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td >
+								<br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+								<br/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
 		</div>
 <?php
 	}

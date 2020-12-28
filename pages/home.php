@@ -58,10 +58,10 @@
 
 		foreach ($bdd->GetQuery($query) as $data): 
 		if(!empty($data->IMAGE_PROFIL)){
-			$image = $data->IMAGE_PROFIL;
+			$image = PICTURE_FOLDER.PROFIL_FOLDER.$data->IMAGE_PROFIL;
 		}
 		else{
-			$image = 'images/Profils/img_avatar.png';
+			$image = PICTURE_FOLDER.PROFIL_FOLDER.'img_avatar.png';
 		}
 		?>
 				<div class="column">
