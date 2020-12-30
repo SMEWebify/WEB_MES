@@ -25,7 +25,7 @@
 	if(isset($_POST['Language']) AND !empty($_POST['Language'])){
 		$User = new User();
 		$User->UpdateLanguage($_POST['Language']);
-		stop($langue->show_text('SystemInfoLanguageDone'),	300,	'index.php?page=profil');
+		stop($langue->show_text('SystemInfoLanguageDone'),	300,	'index.php?page=profil&password');
 	}
 
 	//if picture is updated
@@ -50,13 +50,22 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateProfilNotification')));
 	}
 			
-				
+	if(isset($_GET['password'])){
+		$ParDefautDiv2 = 'id="defaultOpen"';
+	}
+	elseif(isset($_POST['IMAGE_PROFIL']) AND !empty($_POST['IMAGE_PROFIL'])){	
+		$ParDefautDiv3 = 'id="defaultOpen"';
+	}
+	else{
+		$ParDefautDiv1 = 'id="defaultOpen"';
+	}
+					
 ?>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Titre1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" id="defaultOpen"><?=$langue->show_text('Titre2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" id="defaultOpen"><?=$langue->show_text('Titre3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" id="defaultOpen"><?=$langue->show_text('Titre4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')"  <?= $ParDefautDiv1 ?>><?=$langue->show_text('Titre1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"  <?= $ParDefautDiv2 ?>><?=$langue->show_text('Titre2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"  <?= $ParDefautDiv3 ?>><?=$langue->show_text('Titre3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"  <?= $ParDefautDiv4 ?>><?=$langue->show_text('Titre4'); ?></button>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=login&action=deconnexion';"><?=$langue->show_text('Titre5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >

@@ -220,8 +220,14 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTimelineNotification')));
 	}
 
-	if(isset($_GET['mail']) AND !empty($_GET['mail'])){
+	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
+		$ParDefautDiv2 = 'id="defaultOpen"';
+	}
+	elseif(isset($_GET['mail']) AND !empty($_GET['mail'])){
 		$ParDefautDiv3 = 'id="defaultOpen"';
+	}
+	elseif(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
+		$ParDefautDiv4 = 'id="defaultOpen"';
 	}
 	elseif(isset($_GET['timeline']) AND !empty($_GET['timeline'])){
 		$ParDefautDiv5 = 'id="defaultOpen"';
@@ -232,9 +238,9 @@
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Titre1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Titre2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"<?=$ParDefautDiv3; ?>><?=$langue->show_text('Titre3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Titre4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Titre2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Titre3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv4; ?>><?=$langue->show_text('Titre4'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div5')" <?=$ParDefautDiv5; ?>><?=$langue->show_text('Titre5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
@@ -568,9 +574,7 @@
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="AddModeleNum" ></td>
-							<td><input type="number" class="input-moyen-vide" name="AddDigitNum" ></td>
-							<td></td>
-							<td></td>
+							<td colspan="3" ><input type="number" class="input-moyen-vide" name="AddDigitNum" ></td>
 						</tr>
 						<tr>
 							<td colspan="6" >

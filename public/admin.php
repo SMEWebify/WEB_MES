@@ -38,36 +38,36 @@
     ob_start();
     if($p == 'manage-company'){
         //init xml for user language
-         $langue = new Language('lang', 'manage-company', $UserLanguage);
+         $langue = new Language('lang', 'manage-company', $User->LANGUAGE);
         require '../pages/admin/manage-company.php';
     }
     elseif($p == 'manage-companies'){
         //init xml for user language
-        $langue = new Language('lang', 'manage-companies', $UserLanguage);
+        $langue = new Language('lang', 'manage-companies', $User->LANGUAGE);
         require '../pages/admin/manage-companies.php';
     }
     elseif($p == 'manage-time'){
-        $langue = new Language('lang', 'manage-time', $UserLanguage);
+        $langue = new Language('lang', 'manage-time', $User->LANGUAGE);
         require '../pages/admin/manage-time.php';
     }
     elseif($p == 'manage-users'){
-        $langue = new Language('lang', 'manage-users', $UserLanguage);
+        $langue = new Language('lang', 'manage-users', $User->LANGUAGE);
         require '../pages/admin/manage-users.php';
     }
     elseif($p == 'manage-methodes'){
-        $langue = new Language('lang', 'manage-methodes', $UserLanguage);
+        $langue = new Language('lang', 'manage-methodes', $User->LANGUAGE);
         require '../pages/admin/manage-methodes.php';
     }
     elseif($p == 'manage-study'){
-        $langue = new Language('lang', 'manage-study', $UserLanguage);
+        $langue = new Language('lang', 'manage-study', $User->LANGUAGE);
         require '../pages/admin/manage-study.php';
     }
     elseif($p == 'manage-quality'){
-        $langue = new Language('lang', 'manage-quality', $UserLanguage);
+        $langue = new Language('lang', 'manage-quality', $User->LANGUAGE);
         require '../pages/admin/manage-quality.php';
     }
     elseif($p == 'manage-accounting'){
-        $langue = new Language('lang', 'manage-accounting', $UserLanguage);
+        $langue = new Language('lang', 'manage-accounting', $User->LANGUAGE);
         require '../pages/admin/manage-accounting.php';
     }
     else{

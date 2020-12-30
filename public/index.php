@@ -61,10 +61,10 @@
         $langue = new Language('lang', 'planning', $User->LANGUAGE);
         require '../pages/planning.php';
     }
-    elseif($p == 'calendar'){
+    elseif($p == 'companies'){
     	//init xml for user language
-        $langue = new Language('lang', 'calendar', $User->LANGUAGE);
-        require '../pages/calendar.php';
+        $langue = new Language('lang', 'companies', $User->LANGUAGE);
+        require '../pages/companies.php';
     }
     elseif($p == 'purchase'){
     	//init xml for user language

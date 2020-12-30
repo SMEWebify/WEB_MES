@@ -1,8 +1,12 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
+	use \App\COMPANY\Employees;
+	use \App\Companies\Companies;
 	use \App\Form;
-
+	use \App\Accounting\PaymentMethod;
+	use \App\Accounting\PaymentCondition;
+	
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
@@ -11,6 +15,10 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Employees = new Employees();
+	$Companies = new Companies();
+	$PaymentMethod = new PaymentMethod();
+	$PaymentCondition = new PaymentCondition();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -20,10 +28,8 @@
 	///////////////////////////////
 	//// COMMMENT ////
 	///////////////////////////////
-	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-
-		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS ." SET 	COMENT='". addslashes($_POST['Comment']) ."'
-																		WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
+	if(isset($_POST['COMENT']) AND !empty($_POST['COMENT'])){
+		$bdd->GetUpdatePOST(TABLE_ERP_DEVIS, $_POST, 'WHERE CODE=\''. addslashes($_GET['id']).'\'');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));
 	}
 
@@ -46,17 +52,9 @@
 	///////////////////////////////
 	//// COMMERCIAL UPDATE ////
 	///////////////////////////////
-	if(isset($_POST['CondiRegDevis']) AND !empty($_POST['CondiRegDevis'])){
-		$PostCondiRegDevis= $_POST['CondiRegDevis'];
-		$PostModeRegDevis = $_POST['ModeRegDevis'];
-		$PostEcheancierDevis = $_POST['EcheancierDevis'];
-		$PostModeLivraisonDevis = $_POST['ModeLivraisonDevis'];
-
-		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS ." SET 	COND_REG_CLIENT_ID='". addslashes($PostCondiRegDevis) ."',
-																MODE_REG_CLIENT_ID='". addslashes($PostModeRegDevis) ."',
-																ECHEANCIER_ID='". addslashes($PostEcheancierDevis) ."',
-																TRANSPORT_ID='". addslashes($PostModeLivraisonDevis) ."'
-															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
+	if(isset($_POST['COND_REG_CLIENT_ID']) AND !empty($_POST['COND_REG_CLIENT_ID'])){
+		
+		$bdd->GetUpdatePOST(TABLE_ERP_DEVIS, $_POST, 'WHERE CODE=\''. addslashes($_GET['id']).'\'');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
 	}
 
@@ -91,28 +89,16 @@
 	///////////////////////////////
 	//// ACCEUIL DEVIS  ////
 	///////////////////////////////
-	if(isset($_POST['DevisDATE_VALIDITE']) AND !empty($_POST['DevisDATE_VALIDITE'])){
-
-		$PostDevisLABEL= $_POST['DevisLABEL'];
-		$PostDevisLABELIndice = $_POST['DevisLABELIndice'];
-		$PostDevisReference = $_POST['DevisReference'];
-		$PostDevisDATE_VALIDITE = $_POST['DevisDATE_VALIDITE'];
-		$PostDevisEtat = $_POST['EtatDevis'];
-
-		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS ." SET 	LABEL='". addslashes($PostDevisLABEL) ."',
-																LABEL_INDICE='". addslashes($PostDevisLABELIndice) ."',
-																REFERENCE='". addslashes($PostDevisReference) ."',
-																DATE_VALIDITE='". addslashes($PostDevisDATE_VALIDITE) ."',
-																ETAT='". addslashes($PostDevisEtat) ."'
-															WHERE CODE='". addslashes($_POST['CODEDevis'])."'");
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
+	if(isset($_POST['DATE_VALIDITE']) AND !empty($_POST['DATE_VALIDITE'])){
 
 		if(isset($_POST['DevisMajLigne']) AND !empty($_POST['DevisMajLigne'])){
-
-			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET 	ETAT='". addslashes($PostDevisEtat) ."'
-															WHERE 	DEVIS_ID='". addslashes($_POST['IdDevis'])."'");
+			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET 	ETAT='". addslashes($PostDevisEtat) ."'	WHERE 	DEVIS_ID='". addslashes($_POST['IdDevis'])."'");
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 		}
+
+		unset($_POST['DevisMajLigne']);
+		$bdd->GetUpdatePOST(TABLE_ERP_DEVIS, $_POST, 'WHERE CODE=\''. addslashes($_GET['id']).'\'');
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
 	}
 
 	//If user create new quote
@@ -144,7 +130,7 @@
 																				NOW(),
 																				NOW(),
 																				'1',
-																				'". $id ."',
+																				'". $User->idUSER ."',
 																				'0',
 																				'0',
 																				'',
@@ -157,10 +143,7 @@
 		//update increment in num sequence db
 		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (8)');
 
-		//select last id add in db
-		$query="SELECT CODE FROM ". TABLE_ERP_DEVIS ." ORDER BY id DESC LIMIT 0, 1";
-		$data = $bdd->GetQuery($query, true);
-		$CODEDevisAjout = $data->CODE;
+		$CODEDevisAjout = $CODE;
 	}
 
 	//If user want display an quote we check id isset GET or POST
@@ -236,34 +219,6 @@
 			$DevisDATE_VALIDITE = $data->DATE_VALIDITE;
 			$DevisETAT = $data->ETAT;
 			$DevisREFERENCE = $data->REFERENCE;
-
-			//create liste employees
-			$query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
-									'. TABLE_ERP_EMPLOYEES .'.NOM,
-									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-									'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-							FROM `'. TABLE_ERP_EMPLOYEES .'`
-								LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`';
-
-			 $EmployeeListe1 .=  '<option value="null" '. selected($DevisRESP_COM_ID, 0) .'>Aucun</option>';
-			 $EmployeeListe2 .=  '<option value="null" '. selected($DevisRESP_TECH_ID, 0) .'>Aucun</option>';
-
-			foreach ($bdd->GetQuery($query) as $data){
-				 $EmployeeListe1 .=  '<option value="'. $data->idUSER .'" '. selected($DevisRESP_COM_ID, $data->idUSER) .'>'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
-				 $EmployeeListe2 .=  '<option value="'. $data->idUSER .'" '. selected($DevisRESP_TECH_ID, $data->idUSER) .'>'. $data->NOM .' '. $data->PRENOM .' - '. $data->RIGHT_NAME .'</option>';
-			}
-
-			//create list mode payment
-			$query='SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'';
-			foreach ($bdd->GetQuery($query) as $data){
-				$RegListe1 .='<option value="'. $data->Id .'" '. selected($DevisCONDI_REG_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-			}
-
-			//Create list condition payment
-			$query='SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'';
-			foreach ($bdd->GetQuery($query) as $data){
-				$CondiListe1 .='<option value="'. $data->Id .'" '. selected($DevisMODE_REG_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-			}
 
 			//deadline payment list
 			$query='SELECT Id, LABEL FROM '. TABLE_ERP_ECHEANCIER_TYPE .'';
@@ -375,13 +330,8 @@
 			}
 		}
 
-	$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
-	foreach ($bdd->GetQuery($query) as $data){
-		$ListeSte .= '<option  value="'. $data->id .'" >'. $data->NAME .'</option>';
-	}
-
 	$ListeArticleJava  ='"';
-	$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL";
+	$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ."  WHERE VENDU=1 ORDER BY LABEL";
 	foreach ($bdd->GetQuery($query) as $data){
 		$ListeArticle  .= '<option  value="'. $data->CODE .'" >';
 		$ListeArticleJava  .= '<option  value=\"'. $data->CODE .'\" >';
@@ -539,8 +489,7 @@ $(document).ready(function() {
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
 <?php
 	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_GET['id']) AND !empty($_GET['id']))
-	{
-	?>
+	{?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
@@ -549,6 +498,10 @@ $(document).ready(function() {
 		<button class="tablinks" onclick="openDiv(event, 'div7')"><?=$langue->show_text('Title7'); ?></button>
 		<a href="document.php?id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
+	<?php
+	}
+	else{?>
+		<button class="tablinks" onclick="openDiv(event, 'div9')"><?=$langue->show_text('Title10'); ?></button>
 	<?php
 	}
 	?>
@@ -577,7 +530,7 @@ $(document).ready(function() {
 							<td>
 							<td>
 								<select name="AddDevis">
-									<?= $ListeSte ?>
+									<?= $Companies->GetCustomerList() ?>
 								</select>
 							<td>
 						</tr>
@@ -610,15 +563,13 @@ $(document).ready(function() {
 					<tbody>
 						<tr>
 							<td>
-								<input type="hidden" name="IdDevis" value="<?= $IDDevisSQL  ?>">
-								<input type="hidden" name="CODEDevis" value="<?= $CODEDevis  ?>">
 								<?= $langue->show_text('TableCodeLabel')  ?>
 							</td>
 							<td>
-							<?= $DevisCODE ?>
+								<?= $DevisCODE ?>
 							</td>
 							<td>
-								<input type="text" name="DevisLABEL" value="<?= $DevisLABEL  ?>" placeholder="<?= $langue->show_text('TableLabelquote')  ?>">
+								<input type="text" name="LABEL" value="<?= $DevisLABEL  ?>" placeholder="<?= $langue->show_text('TableLabelquote')  ?>">
 							</td>
 						</tr>
 						<tr>
@@ -629,7 +580,7 @@ $(document).ready(function() {
 								<?= $DevisINDICE  ?>
 							</td>
 							<td>
-								<input type="text" name="DevisLABELIndice" value="<?= $DevisLABEL_INDICE  ?>" placeholder="<?= $langue->show_text('TableLabelIndexquote') ?>">
+								<input type="text" name="LABEL_INDICE" value="<?= $DevisLABEL_INDICE  ?>" placeholder="<?= $langue->show_text('TableLabelIndexquote') ?>">
 							</td>
 						</tr>
 						<tr>
@@ -637,7 +588,7 @@ $(document).ready(function() {
 								<?= $langue->show_text('TableCustomerReference')  ?>
 							</td>
 							<td>
-								<input type="text" name="DevisReference" value="<?= $DevisREFERENCE ?>" placeholder="<?= $langue->show_text('TableCustomerReference') ?>" >
+								<input type="text" name="REFERENCE" value="<?= $DevisREFERENCE ?>" placeholder="<?= $langue->show_text('TableCustomerReference') ?>" >
 							</td>
 							<td></td>
 						</tr>
@@ -655,7 +606,7 @@ $(document).ready(function() {
 								<?= $langue->show_text('TableValidityDate')  ?>	
 							</td>
 							<td>
-								<input type="date" name="DevisDATE_VALIDITE" value="<?= $DevisDATE_VALIDITE  ?>" >
+								<input type="date" name="DATE_VALIDITE" value="<?= $DevisDATE_VALIDITE  ?>" >
 							</td>
 							<td></td>
 						</tr>
@@ -664,7 +615,7 @@ $(document).ready(function() {
 								<?= $langue->show_text('TableQuoteStatu') ?>
 							</td>
 							<td>
-								<select name="EtatDevis">
+								<select name="ETAT">
 									<option value="1" <?= selected($DevisETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 									<option value="2" <?= selected($DevisETAT, 2) ?>><?= $langue->show_text('SelectRefuse') ?></option>
 									<option value="3" <?= selected($DevisETAT, 3) ?>><?= $langue->show_text('SelectSend') ?></option>
@@ -780,9 +731,7 @@ $(document).ready(function() {
 								<td>'. $data->REMISE .' %</td>
 								<td>'.   $TotalLigneHTEnCours .' € </td>
 								<td>'. $data->DELAIS .'</td>
-							</tr>';
-
-							?>
+							</tr>';?>
 							<tr>
 								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="<?= $data->Id ?>"><a href="index.php?page=quote&id=<?= $_GET['id'] ?>&amp;delete=<?= $data->Id ?>" title="Supprimer la ligne">x</a></td>
 								<td><input type="number" name="UpdateORDRELigneDevis[]" value="<?= $data->ORDRE ?>" ></td>
@@ -897,7 +846,7 @@ $(document).ready(function() {
 								<?=  $TVAListe ?>
 							</select>
 						</td>
-						<td><input type="date" name="" id="AddDELAISigneDevis" required="required"></td>
+						<td><input type="date" name="" id="AddDELAISigneDevis"></td>
 						<td></td>
 					</tr>
 					<tr>
@@ -937,7 +886,7 @@ $(document).ready(function() {
 						</td>
 						<td>
 							<select name="RepsComDevis">
-								<?=  $EmployeeListe1 ?>
+								<?=$Employees->GETEmployeesList($DevisRESP_COM_ID) ?>
 							</select>
 						</td>
 					</tr>
@@ -947,7 +896,7 @@ $(document).ready(function() {
 						</td>
 						<td>
 							<select name="RespTechDevis">
-								<?= $EmployeeListe2 ?>
+							<?=$Employees->GETEmployeesList($DevisRESP_TECH_ID) ?>
 							</select>
 						</td>
 					</tr>
@@ -1024,12 +973,11 @@ $(document).ready(function() {
 				<tbody>
 					<tr>
 						<td>
-							<input type="hidden" name="CODEDevis" value="<?= $CODEDevis ?>">
 							<?= $langue->show_text('TableCondiList') ?>
 						</td>
 						<td>
-							<select name="CondiRegDevis">
-								<?= $CondiListe1 ?>
+							<select name="COND_REG_CLIENT_ID">
+								<?=$PaymentCondition->GETPaymentConditionList($DevisCONDI_REG_ID)?>
 							</select>
 						</td>
 					</tr>
@@ -1038,8 +986,8 @@ $(document).ready(function() {
 							<?= $langue->show_text('TableMethodList') ?>
 						</td>
 						<td>
-							<select name="ModeRegDevis">
-								<?=  $RegListe1 ?>
+							<select name="MODE_REG_CLIENT_ID">
+								<?=$PaymentMethod->GETPaymentMethodList($DevisMODE_REG_ID); ?>
 							</select>
 						</td>
 					</tr>
@@ -1048,7 +996,7 @@ $(document).ready(function() {
 							<?= $langue->show_text('TimeLinePayement') ?>
 						</td>
 						<td>
-							<select name="EcheancierDevis">
+							<select name="ECHEANCIER_ID">
 								<?=  $EcheancierListe1 ?>
 							</select>
 						</td>
@@ -1058,7 +1006,7 @@ $(document).ready(function() {
 							<?= $langue->show_text('TableDeleveryMode') ?>
 						</td>
 						<td>
-							<select name="ModeLivraisonDevis">
+							<select name="TRANSPORT_ID">
 							<?=  $TransportListe1 ?>
 							</select>
 						</td>
@@ -1085,8 +1033,7 @@ $(document).ready(function() {
 				<tbody>
 					<tr>
 						<td>
-							<input type="hidden" name="CODEDevis" value="<?= $CODEDevis ?>">
-							<textarea class="Comment" name="Comment" rows="40" ><?= $CommentaireDevis ?></textarea>
+							<textarea class="Comment" name="COMENT" id="COMENT" rows="40" ><?= $CommentaireDevis ?></textarea>
 						</td>
 					</tr>
 					<tr>
@@ -1177,4 +1124,6 @@ $(document).ready(function() {
 				</table>
 			</div>
 		</form>
+	</div>
+	<div id="div9" class="tabcontent">
 	</div>

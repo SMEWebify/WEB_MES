@@ -142,12 +142,6 @@
 		$RightListe .='<option value="'. $data->Id .'">'.  $data->RIGHT_NAME .'</option>';
 	}
 
-	//section list for employees
-	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$SectionListe .='<option value="'.  $data->Id .'">'.  $data->LABEL .'</option>';
-	}	//Generate employees list
-
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
@@ -247,7 +241,7 @@
 							<th><?=$langue->show_text('TableQuoteStudy'); ?></th>
 							<th><?=$langue->show_text('TableOrder'); ?></th>
 							<th><?=$langue->show_text('TablePlanning'); ?></th>
-							<th><?=$langue->show_text('TableCalendar'); ?></th>
+							<th><?=$langue->show_text('TableCompanies'); ?></th>
 							<th><?=$langue->show_text('TablePurchase'); ?></th>
 							<th><?=$langue->show_text('TableArticle'); ?></th>
 							<th><?=$langue->show_text('TableQuality'); ?></th>

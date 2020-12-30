@@ -8,16 +8,17 @@
 * Connection to the SQL database in __SQL.class.php__ file
 * SQL login to define in __include_recup_config.php__
 
-#Project
-* level of development  Beginner ++
-* Currently most of the project is procedural
-
 -----------------
 
 # initial remote source code recovery
 git clone git@gitlab.com:billy_boy/ERP.git
 
+# url acces with wamp server
 http://localhost/erp/public/
+
+# Log acces to user pages
+Login : Billy
+Password : KN1
 
 -----------------
 

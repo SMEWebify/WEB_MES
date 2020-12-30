@@ -4,11 +4,20 @@
 	<QuoteLinkPage>Devis</QuoteLinkPage>
 	<OrderLinkPage>Commandes</OrderLinkPage>
     <PlanningLinkPage>Planning</PlanningLinkPage>
-    <CalendarLinkPage>Calendrier</CalendarLinkPage>
+    <CompaniesLinkPage>Sociétés</CompaniesLinkPage>
     <PurchaseLinkPage>Achats</PurchaseLinkPage>
     <ArticleLinkPage>Articles</ArticleLinkPage>
     <QualityLinkPage>Qualité</QualityLinkPage>
     <LogOutLinkPage>Déconnexion</LogOutLinkPage>
+      <!-- Sub menu User UI -->
+      <SubQuoteLinkPage>Devis | Lines de devis </SubQuoteLinkPage>
+      <SubOrderLinkPage>Commandes | lignes de commande | AR | BL | Facture</SubOrderLinkPage>
+      <SubPlanningLinkPage>Calendrier | Ressource | Section | Prestation</SubPlanningLinkPage>
+      <SubCompaniesLinkPage>Société | Adresse | Contacts | Secteur d'activité | Commentaire</SubCompaniesLinkPage>
+      <SubPurchaseLinkPage>Demande de prix | Commande achat | AR | BL | Facture</SubPurchaseLinkPage>
+      <SubArticleLinkPage>Article | Stock | Inventaire</SubArticleLinkPage>
+      <SubQualityLinkPage>FNC | Action | Dérogation | Apareils de mesure</SubQualityLinkPage>
+      <SubLogOutLinkPage>This disconnect from the application</SubLogOutLinkPage>
     <!-- admin UI -->
     <DisplaySettingAdmin>Afficher le menu de gestion</DisplaySettingAdmin>
     <MenuLinkPage>Menu</MenuLinkPage>
@@ -22,6 +31,15 @@
     <StudyLinkPage>Etudes</StudyLinkPage>
     <QualitySettingLinkPage>Qualité</QualitySettingLinkPage>
     <AccountingLinkPage>Comptabilité</AccountingLinkPage>
+      <!-- Sub menu admin UI -->
+      <SubGeneralSettingLinkPage>Information société | Secteur d'activité | Modèle d'E-mail | Numérotation des documents | Timeline information</SubGeneralSettingLinkPage>
+      <SubCustoProvidLinkPage>Sociétés | Adresses | Contacts | Secteur d'activité | Commentaire</SubCustoProvidLinkPage>
+      <SubSettingTimeLinkPage>Evenement machine | Temps improductif | Absence  | Jours feriés | Modèle horaire</SubSettingTimeLinkPage>
+      <SubEmployeesLinkPage>Employés | Drtois</SubEmployeesLinkPage>
+      <SubMethodLinkPage>Prestation | Ressources | Section | Localisation dans l'atelier</SubMethodLinkPage>
+      <SubStudyLinkPage>Article | Découpage technique | Nomenclature | Sous-ensemble | Achat | Ventes | Allocation comptable | Commentaire  | Unité | Familles</SubStudyLinkPage>
+      <SubQualitySettingLinkPage>Apareils de mesure| Défaut | Causes | Correction</SubQualitySettingLinkPage>
+      <SubAccountingLinkPage>Conditions de paiement | Méthode de paiement | TAV | Allocations comptables | Echéancier | Mode de livraison</SubAccountingLinkPage>
  <!-- systeminfo --> 
     <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
@@ -42,7 +60,7 @@
    <TableQuoteStudy>Devis/Etudes</TableQuoteStudy>
    <TableOrder>Commande</TableOrder>
    <TablePlanning>Planning</TablePlanning>
-   <TableCalendar>Calendrier</TableCalendar>
+   <TableCompanies>Société</TableCompanies>
    <TablePurchase>Achats</TablePurchase>
    <TableArticle>Article</TableArticle>
    <TableQuality>Qualité</TableQuality>

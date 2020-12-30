@@ -44,6 +44,11 @@
  <!-- systeminfo --> 
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
-<!-- title page --> 
-	<TiltePage>Informations</TiltePage>
+ <!-- title page --> 
+  	<TiltePage>Companies</TiltePage>
+    <Titre1>companies</Titre1>
+    <Titre2>Sites</Titre2>
+    <Titre3>Contacts</Titre3>
+    <Titre4>Industry</Titre4>
+    <Titre5>Comment</Titre5>
  </langue>

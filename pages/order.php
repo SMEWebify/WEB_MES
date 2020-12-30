@@ -21,7 +21,7 @@
 	//// COMMMENT ORDER UPDATE ////
 	///////////////////////////////
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-
+		
 		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	COMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE CODE='". addslashes($_POST['CODEcommande'])."'");
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));

@@ -165,20 +165,21 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateBankNotification')));
 	}
 ?>
-	<script type="text/javascript">
-	google.charts.load("current", {packages:["timeline"]});
-	google.charts.load('visualization', '1', {'packages':['corechart'], 'language': 'en'});
-	google.charts.setOnLoadCallback(drawChart);
-	function drawChart() {
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['timeline']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var container = document.getElementById('timeline');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
 
-		var container = document.getElementById('example5.1');
-		var chart = new google.visualization.Timeline(container);
-		var dataTable = new google.visualization.DataTable();
-		dataTable.addColumn({ type: 'string', id: 'Room' });
+        dataTable.addColumn({ type: 'string', id: 'Room' });
 		dataTable.addColumn({ type: 'string', id: 'Name' });
 		dataTable.addColumn({ type: 'date', id: 'Start' });
 		dataTable.addColumn({ type: 'date', id: 'End' });
 		dataTable.addRows([
+		[ 'day', 'day',       new Date(0,0,0,00,0,0),  new Date(0,0,0,24,0,0) ],
 		[ 'Interdite', 'Interdite',       new Date(0,0,0,03,0,0),  new Date(0,0,0,9,0,0) ],
 		[ 'Variable', 'Variable',    new Date(0,0,0,9,0,0),  new Date(0,0,0,9,30,0) ],
 		[ 'Fixe', 'Fixe',        new Date(0,0,0,9,30,0),  new Date(0,0,0,12,30,0) ],
@@ -187,14 +188,16 @@
 		[ 'Interdite',   'Interdite',     new Date(0,0,0,17,00,0), new Date(0,0,0,18,0,0) ]]);
 
 		var options = {
-		timeline: { colorByRowLabel: true },
-		width: 1200
+			timeline: { colorByRowLabel: true },
+			width: 1200,
+			height: 500,
+			timeline: { showRowLabels: false },
+       		 avoidOverlappingGridLines: false
 		};
 
 		chart.draw(dataTable, options);
-	}
-
-	</script>
+      }
+    </script>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
@@ -517,10 +520,11 @@
 					<tbody>
 						<tr>
 							<td>
-								<div id="example5.1" style="height: 200px; width: 1300px;"></div>
+								<div id="timeline" style="height: 300px;"></div>
+							
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</form>
+		</form>
 	</div>

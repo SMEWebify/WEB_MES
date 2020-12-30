@@ -43,47 +43,13 @@
  <!-- systeminfo --> 
     <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
- <!-- title page -->
-	<TiltePage>Gestion des temps</TiltePage>
-   <Title1>Evènement machines</Title1>
-   <Title2>Activités improductives</Title2>
-   <Title3>Type d'absence</Title3>
-   <Title4>Jours fériés</Title4>
-   <Title5>Modèles horraires</Title5>
-<!-- select -->
-   <SelectStop>Arrêtée</SelectStop>
-   <SelectSetting>En préparation</SelectSetting>
-   <SelectRun>En marche</SelectRun>
-   <SelectOff>En panne</SelectOff>
-   <!-- -->
-   <SelectWorked>Ouvré</SelectWorked>
-   <SelectOpenable>Ouvrable</SelectOpenable>
-   <SelectCalendar>Calendaire</SelectCalendar>
- <!-- table -->
-   <TableMasktime>Temps masqué</TableMasktime>
-   <TableColor>Couleur</TableColor>
-   <TableMachineStatu>Etat machine</TableMachineStatu>
-   <TablenecessaryRessource>Ressource nécessaire</TablenecessaryRessource>
-   <TablePaid>Payé</TablePaid>
-   <TableDayType>Type de jour</TableDayType>
-   <TableDate>Date</TableDate>
-   <TableFixedDate>Date fixe</TableFixedDate>
-  <!-- notifications -->
-   <AddEventNotification>Evenement machine ajouté</AddEventNotification>
-   <UpdateEventNotification> Evenement(s) machine modifié(s)</UpdateEventNotification>  
-   <AddImproductTimetNotification>Temps improductif ajouté</AddImproductTimetNotification>
-   <UpdateImproductTimetNotification> Temps improductif modifié(s)</UpdateImproductTimetNotification>  
-   <AddOutNotification>Type d'absence ajouté</AddOutNotification>
-   <UpdateOutNotification> Type d'absence modifié(s)</UpdateOutNotification> 
-   <AddBankNotification>Jour ferié ajouté</AddBankNotification>
-   <UpdateBankNotification> Jour ferié modifié(s)</UpdateBankNotification>  
-<!-- general -->
-   <TableCODE>CODE</TableCODE>
-   <TableLabel>Libelé</TableLabel>
-   <TableOrder>Ordre</TableOrder>
-   <TableService>Prestation</TableService>
-   <Addtext>Ajout</Addtext>
-   <TableUpdateButton>Mettre à jours</TableUpdateButton>
-   <Yes>Oui</Yes>
-   <No>Non</No>
-</langue>
+ <!-- title page --> 
+   <TiltePage>Sociétés</TiltePage>
+    <Titre1>Sociétés</Titre1>
+    <Titre2>Sites</Titre2>
+    <Titre3>Contacts</Titre3>
+    <Titre4>Secteur d'activité</Titre4>
+    <Titre5>Commentaire</Titre5>
+ <!-- div content --> 
+    <FindArticle>Chercher un article</FindArticle>
+ </langue>

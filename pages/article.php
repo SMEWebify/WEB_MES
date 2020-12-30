@@ -19,6 +19,8 @@
 ?>
 <div class="tab">
 	<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+	<button class="tablinks" onclick="openDiv(event, 'div2')" id="defaultOpen"><?=$langue->show_text('Title2'); ?></button>
+	<button class="tablinks" onclick="openDiv(event, 'div3')" id="defaultOpen"><?=$langue->show_text('Title3'); ?></button>
 </div>
 <div id="div1" class="tabcontent" >
 	<div class="column">
@@ -185,6 +187,10 @@
 					</div>
 				</div>
 			</div>
-		<?php
-		}
-		?>
+	<?php
+	}
+	?>
+	<div id="div2" class="tabcontent" >
+	</div>	
+	<div id="div3" class="tabcontent" >
+	</div>	

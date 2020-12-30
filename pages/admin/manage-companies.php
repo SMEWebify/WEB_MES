@@ -5,7 +5,8 @@
 	use \App\Companies\Companies;
 	use \App\COMPANY\Employees;
 	use \App\COMPANY\ActivitySector;
-
+	use \App\Accounting\PaymentMethod;
+	use \App\Accounting\PaymentCondition;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -18,6 +19,8 @@
 	$Employees = new Employees();
 	$Companies = new Companies();
 	$ActivitySector = new ActivitySector();
+	$PaymentMethod = new PaymentMethod();
+	$PaymentCondition = new PaymentCondition();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -193,19 +196,6 @@
 		$TVAListe .='<option value="'. $data->Id .'"  '. selected($SteTVA_ID, $data->Id) .' $SteTVA_INTRA>'. $data->TAUX .'% - '. $data->LABEL .'</option>';
 	}
 
-	// Create liste for payment regulation choise
-	$query='SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$CondiListe1 .='<option value="'. $data->Id .'" '. selected($SteMODE_REG_CLIENT_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-		$CondiListe2 .='<option value="'. $data->Id .'" '. selected($SteCOND_REG_FOUR_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-	}
-
-	// Create liste for payment mode choise
-	$query='SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$RegListe1 .='<option value="'. $data->Id .'" '. selected($SteCOND_REG_CLIENT_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-		$RegListe2 .='<option value="'. $data->Id .'" '. selected($SteMODE_REG_FOUR_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-	}
 
 	/////////////////////////////
 	////  Company SITE section  ////
@@ -494,12 +484,12 @@
 						<tr>
 							<td >
 								<select name="CondiSte">
-									<?=$CondiListe1 ?>
+									<?=$PaymentCondition->GETPaymentConditionList($SteCOND_REG_CLIENT_ID)?>
 								</select>
 							</td>
 							<td >
 								<select name="RegSte">
-									<?=$RegListe1 ?>
+									<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_CLIENT_ID); ?>
 								</select>
 							</td>
 							<td >
@@ -567,12 +557,12 @@
 						<tr>
 							<td >
 								<select name="CondiFourSte">
-									<?=$CondiListe2 ?>
+									<?=$PaymentCondition->GETPaymentConditionList($SteCOND_REG_FOUR_ID)?>
 								</select>
 							</td>
 							<td >
 								<select name="RegFourSte">
-									<?=$RegListe2 ?>
+									<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_FOUR_ID); ?>
 								</select>
 							</td>
 							<td >

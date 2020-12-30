@@ -1,30 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <langue>
 <!-- UI node --> 
+   <!-- User UI -->
 	<QuoteLinkPage>Quote</QuoteLinkPage>
 	<OrderLinkPage>Order</OrderLinkPage>
-    <PlanningLinkPage>Planning</PlanningLinkPage>
-    <CalendarLinkPage>Calendar</CalendarLinkPage>
-    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
-    <ArticleLinkPage>Articles</ArticleLinkPage>
-    <QualityLinkPage>Quality</QualityLinkPage>
-    <LogOutLinkPage>Logout</LogOutLinkPage>
-     <!-- admin UI -->
-     <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
-    <MenuLinkPage>Menu</MenuLinkPage>
-    <ProfilLinkPage>Profil</ProfilLinkPage>
-    <ReturnLinkPage>Return</ReturnLinkPage>
-    <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
-    <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
-    <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
-    <EmployeesLinkPage>Employees</EmployeesLinkPage>
-    <MethodLinkPage>Method</MethodLinkPage>
-    <StudyLinkPage>Study</StudyLinkPage>
-    <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
-    <AccountingLinkPage>Accouting</AccountingLinkPage>
+   <PlanningLinkPage>Planning</PlanningLinkPage>
+   <CompaniesLinkPage>Companies</CompaniesLinkPage>
+   <PurchaseLinkPage>Purchase</PurchaseLinkPage>
+   <ArticleLinkPage>Articles</ArticleLinkPage>
+   <QualityLinkPage>Quality</QualityLinkPage>
+   <LogOutLinkPage>Logout</LogOutLinkPage>
+      <!-- Sub menu User UI -->
+      <SubQuoteLinkPage>Quote | Quote lines</SubQuoteLinkPage>
+      <SubOrderLinkPage>Order | Order lines | AR | Delivery form | Invoice</SubOrderLinkPage>
+      <SubPlanningLinkPage>Calendar | Ressource | Section | Service</SubPlanningLinkPage>
+      <SubCompaniesLinkPage>Companies | Adresse | Contacts | Activity Sector | Coment</SubCompaniesLinkPage>
+      <SubPurchaseLinkPage>Consultation | Purchase Order | AR | Delivery form | Invoice</SubPurchaseLinkPage>
+      <SubArticleLinkPage>Article | Stock | Inventory</SubArticleLinkPage>
+      <SubQualityLinkPage>NCR | Action | Derogations | Devices</SubQualityLinkPage>
+      <SubLogOutLinkPage>This disconnect from the application</SubLogOutLinkPage>
+   <!-- admin UI -->
+   <DisplaySettingAdmin>Display admin menu</DisplaySettingAdmin>
+   <MenuLinkPage>Menu</MenuLinkPage>
+   <ProfilLinkPage>Profil</ProfilLinkPage>
+   <ReturnLinkPage>Return</ReturnLinkPage>
+   <GeneralSettingLinkPage>General setting</GeneralSettingLinkPage>
+   <CustoProvidLinkPage>Customers/providers</CustoProvidLinkPage>
+   <SettingTimeLinkPage>Setting times</SettingTimeLinkPage>
+   <EmployeesLinkPage>Employees</EmployeesLinkPage>
+   <MethodLinkPage>Method</MethodLinkPage>
+   <StudyLinkPage>Study</StudyLinkPage>
+   <QualitySettingLinkPage>Quality</QualitySettingLinkPage>
+   <AccountingLinkPage>Accouting</AccountingLinkPage>
+      <!-- Sub menu admin UI -->
+      <SubGeneralSettingLinkPage>Company information | Activity Sector | E-mail Template | Document Numbering | Timeline informations</SubGeneralSettingLinkPage>
+      <SubCustoProvidLinkPage>Companies | Adresse | Contacts | Activity Sector | Coment</SubCustoProvidLinkPage>
+      <SubSettingTimeLinkPage>Machine event | Improduct time | Absence  |Banck holiday | Hourly models</SubSettingTimeLinkPage>
+      <SubEmployeesLinkPage>Employees | Rights</SubEmployeesLinkPage>
+      <SubMethodLinkPage>Services | Ressources | Section | Location in workshop</SubMethodLinkPage>
+      <SubStudyLinkPage>Article | Technical cut | Nomenclature | Sub assemblies | Purchase | Sales | Accouting allocations | Comment  | Unit | Familly</SubStudyLinkPage>
+      <SubQualitySettingLinkPage>Measuring devices | Failing | Causes | Correction</SubQualitySettingLinkPage>
+      <SubAccountingLinkPage>Payment condition | Payment choice | VAT | Accouting allocations | Timeline paiement | Delevery mode</SubAccountingLinkPage>
  <!-- systeminfo --> 
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
  <!-- title page --> 
-    <Title1>planning</Title1>
+	<TiltePage>Planning</TiltePage>
+   <Title1>Calendar</Title1>
+   <Title2>Ressource</Title2>
+   <Title3>Section</Title3>
+   <Title4>Service</Title4>
  </langue>
