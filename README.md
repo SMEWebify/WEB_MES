@@ -1,7 +1,7 @@
 # WEB_ERP_MES
 ##  Ressource and Manufacturing execution system  Web
 
-![alt text](https://github.com/billyboy35/WEB_MES/blob/main/Workflow.png)
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Workflow.png)
 
 #For configuration
 * Use __erp.sql__ to import ERP database  
@@ -21,26 +21,33 @@ Login : Billy
 Password : KN1
 
 -----------------
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Menu.PNG)
 
 ### Structure Project
 
 * app
   * Acouting   __class for Acouting data__
     * Allocations.class.php
+    * PaymentCondition.class.php
+    * PaymentMethod.class.php
   * Companies   __class for customers & providers data__
     * Companies.class.php
   * COMPANY   __class for company data__
+    * ActivitySector.class.php
     * Company.class.php
     * CompanyManager.class.php
     * Employees.class.php
   * Lang __folder for language class__
     * en  __XML folder for En lang__ 
     * fr __XML folder for fr lang__ 
-  * Methods
+  * Methods __class for methods data__
     * Prestation.class.php
     * Ressource.class.php
     * Section.class.php
-  * Quality
+  * Quality  __class for quality data__
+  * Study __class for study data__
+    * Article.class.php
+    * Unit.class.php
   * Auth.class.php   __Authentification user class__
   * Autoload.class.php   __Autoload class__
   * CallOutBox.class.php  __notification class__
@@ -52,7 +59,6 @@ Password : KN1
   * include_recup_config.php  __contain constant__
 * public
   * css  
-    * component.css
     * content.css  __content page style__
     * forms.css   __form style__
     * print.css
@@ -60,11 +66,10 @@ Password : KN1
     * ScreenDocument.css
     * tableaux.css  __table style__
     * ui.css  __user interface__
-  * fonts  
   * images
   * js
-  * index.php __ROUTING PAGE FRONT-END__
-  * admin.php  __ROUTING PAGE BACK-END__
+  * index.php __ROUTING PAGE __
+  * admin.php  __ROUTING PAGE __
 * pages
   * templates
     * default.php __Main Template__
@@ -82,7 +87,7 @@ Password : KN1
     * article.php  __Article page__ 
     * companies.php    __Companies page__
     * document.php         __Generate document__
-    * index.php         __First page__
+    * home.php         __First page__
     * info.php       __Empty__
     * login.php         __page connexion__
     * order.php          __Order page__
