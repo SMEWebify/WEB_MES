@@ -38,7 +38,7 @@
     ob_start();
     if($p == 'home'){
     	//init xml for user language
-        $langue = new Language('lang', 'index', $UserLanguage);
+        $langue = new Language('lang', 'index', $User->LANGUAGE);
         require '../pages/home.php';
     }
     elseif($p == 'profil'){

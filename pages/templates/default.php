@@ -9,8 +9,6 @@
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/tableaux.css" />
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/forms.css" />
 	
-	<link rel="stylesheet" type="text/css" href="../public/css/component.css" />
-	
 	<link rel="shortcut icon" type="image/x-icon" href="../public/image/favicon.ico" />
 	
 	<script src="../public/js/divers.js"></script>
@@ -20,13 +18,11 @@
 <?php 
 	if(isset($_SESSION['mdp'])){
 ?>
-	<div class="container">
-		<ul id="gn-menu" class="gn-menu-main">
-			<li><a href="#" id="OpenNav" >&#9776; <?=$langue->show_text('MenuLinkPage') ; ?></a></li>
-			<li><a href="<?=$_SERVER['HTTP_REFERER'] ?>"><?=  $langue->show_text('ReturnLinkPage') ; ?></a></li>
-			<li><a href="index.php?page=home"><?=$Company->CompanyName() ?></a></li>
-			<li><a  href="index.php?page=profil"><span><?=$User->NAME ?>  <img src="<?= PICTURE_FOLDER.PROFIL_FOLDER.$User->IMAGE_PROFIL ?>" title="Photo profil" alt="Photo" style="border-radius: 50%; width: 30px; vertical-align: middle;" /></span></a></li>
-		</ul>
+	<div class="navbar">
+		<a href="#" id="OpenNav" >&#9783; <?=$langue->show_text('MenuLinkPage') ; ?></a>
+		<a href="<?=$_SERVER['HTTP_REFERER'] ?>">&#8634; <?=  $langue->show_text('ReturnLinkPage') ; ?></a>
+		<a href="index.php?page=home"><?=$Company->CompanyName() ?></a>
+		<span class="profil-nav"><a  href="index.php?page=profil"><?=$User->NAME ?>  <img src="<?= PICTURE_FOLDER.PROFIL_FOLDER.$User->IMAGE_PROFIL ?>" title="Photo profil" alt="Photo" style="border-radius: 50%; width: 30px; vertical-align: middle;" /></a></span>
 	</div>
 	<div id="myNav" class="overlay">
 		<a href="javascript:void(0)" class="closebtn" id="ClosenNav">&times;</a>

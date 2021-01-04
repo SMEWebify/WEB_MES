@@ -82,7 +82,7 @@ class SQL extends PDO{
         return $datas[0];
     }   
 	
-	public function GetQuery($statement, $one = false, $class_name  = false){
+	public function GetQuery($statement, $one = false, $class_name  = false, $debug  = false){
 		try{
 			$req = $this->getPDO()->query($statement);
 			if($class_name){
@@ -100,6 +100,10 @@ class SQL extends PDO{
 			$this->GestionException($exc->getMessage(), $statement);
 			
 		}
+		if($debug){
+			var_dump($datas);
+		}
+		
 		return $datas;
 	}
 

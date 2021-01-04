@@ -80,7 +80,7 @@ Password : KN1
     * manage-users.php        __Admin for employees user__
   #### User pages
     * article.php  __Article page__ 
-    * calandar.php    __Calendar page__
+    * companies.php    __Companies page__
     * document.php         __Generate document__
     * index.php         __First page__
     * info.php       __Empty__
@@ -89,7 +89,7 @@ Password : KN1
     * planning.php        __Empty__
     * profil.php       __Admin for profil user__
     * purchase.php         __Empty__
-    * quality.php        __Empty__
+    * quality.php       __Quality page__
     * quote.php        __Quotation page__
 
 

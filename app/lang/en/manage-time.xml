@@ -60,6 +60,10 @@
    <SelectWorked>Worked</SelectWorked>
    <SelectOpenable>Oenable</SelectOpenable>
    <SelectCalendar>Calendar</SelectCalendar>
+    <!-- -->
+   <Forbiden>Forbiden</Forbiden>
+   <Variable>Variable</Variable>
+   <Fixed>Fixed</Fixed>
  <!-- table -->
    <TableMasktime>Mask time</TableMasktime>
    <TableColor>Color</TableColor>
@@ -78,10 +82,17 @@
    <UpdateOutNotification> Type of absence  changed</UpdateOutNotification> 
    <AddBankNotification>Public holiday added</AddBankNotification>
    <UpdateBankNotification> Public holiday changed</UpdateBankNotification>  
+   <AddMODELtimeNotification>Model horraire added</AddMODELtimeNotification>
+   <UpdateMODELtimeNotification> Model horraire changed</UpdateMODELtimeNotification> 
+   <AddLineMODELtimetNotification>Line added</AddLineMODELtimetNotification>
+   <UpdateLineMODELtimeNotification> Line  changed</UpdateLineMODELtimeNotification>  
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Label</TableLabel>
    <TableOrder>Order</TableOrder>
+   <TableType>Type</TableType>
+   <TableStart>Start</TableStart>
+   <TableEnd>End</TableEnd>
    <TableService>Service</TableService>
    <Addtext>Add</Addtext>
    <TableUpdateButton>Update</TableUpdateButton>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <langue>
 <!-- UI node --> 
+   <!-- User UI -->
 	<QuoteLinkPage>Devis</QuoteLinkPage>
 	<OrderLinkPage>Commandes</OrderLinkPage>
     <PlanningLinkPage>Planning</PlanningLinkPage>
@@ -59,6 +60,10 @@
    <SelectWorked>Ouvré</SelectWorked>
    <SelectOpenable>Ouvrable</SelectOpenable>
    <SelectCalendar>Calendaire</SelectCalendar>
+   <!-- -->
+   <Forbiden>Interdite</Forbiden>
+   <Variable>Variable</Variable>
+   <Fixed>Fixe</Fixed>
  <!-- table -->
    <TableMasktime>Temps masqué</TableMasktime>
    <TableColor>Couleur</TableColor>
@@ -77,10 +82,17 @@
    <UpdateOutNotification> Type d'absence modifié(s)</UpdateOutNotification> 
    <AddBankNotification>Jour ferié ajouté</AddBankNotification>
    <UpdateBankNotification> Jour ferié modifié(s)</UpdateBankNotification>  
+   <AddMODELtimeNotification>Modèle horraire ajouté</AddMODELtimeNotification>
+   <UpdateMODELtimeNotification> Modèle(s) horraire modifié(s)</UpdateMODELtimeNotification> 
+   <AddLineMODELtimetNotification>Ligne ajoutée</AddLineMODELtimetNotification>
+   <UpdateLineMODELtimeNotification> Ligne(s)  modifié(s)</UpdateLineMODELtimeNotification>  
 <!-- general -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>
    <TableOrder>Ordre</TableOrder>
+   <TableType>Type</TableType>
+   <TableStart>Début</TableStart>
+   <TableEnd>Fin</TableEnd>
    <TableService>Prestation</TableService>
    <Addtext>Ajout</Addtext>
    <TableUpdateButton>Mettre à jours</TableUpdateButton>

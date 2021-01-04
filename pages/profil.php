@@ -136,11 +136,6 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan=2">
-							<?= $langue->show_text('TablePictureUser') ?>
-						</td>
-					</tr>
-					<tr>
 						<td colspan="2" >
 							<br/>
 							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>

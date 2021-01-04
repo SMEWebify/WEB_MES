@@ -63,6 +63,7 @@
     <TableLabel>label</TableLabel>
     <TableOrder>Oder</TableOrder>
     <Addtext>Add</Addtext>
+      <TableDateCreation>Date of creation :</TableDateCreation>
     <TableCondiList>Payment condition</TableCondiList>
     <TableMethodList>Payment choice</TableMethodList>
     <TableUpdateButton>Update</TableUpdateButton>

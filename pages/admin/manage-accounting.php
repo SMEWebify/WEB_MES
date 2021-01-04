@@ -594,7 +594,7 @@
 
 				//generate liste of detail timeline payement
 			?>
-			<form method="post" name="Section" action="admin.php?page=manage-accounting&Echeancier='. $_GET['Echeancier'] .'" class="content-form" >
+			<form method="post" name="Section" action="admin.php?page=manage-accounting&Echeancier=<?= $_GET['Echeancier'] ?>" class="content-form" >
 				<table class="content-table-decal">
 					<thead>
 						<tr>

@@ -100,7 +100,7 @@ span.psw {
 }
 
 /*--------------------------------------------*/
-/*-------------INDEX--------------*/
+/*-------------HOME--------------*/
 /*--------------------------------------------*/
 /* The actual timeline (the vertical ruler) */
 .timeline {
@@ -128,7 +128,7 @@ span.psw {
   padding: 10px 40px;
   position: relative;
   background-color: inherit;
-  width: 50%;
+  width: 43.7%;
 }
 
 /* The circles on the timeline */
@@ -238,7 +238,20 @@ span.psw {
 	padding: 0 10px;
 	margin-bottom:30px;
 }
-
+.column-half {
+	float: left;
+	width: 50%;
+	padding: 0 10px;
+	margin-bottom:30px;
+}
+.dashboard{
+  float: left;
+  width: 30%;
+  margin:10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	text-align: center;
+	background-color: white;;
+}
 /* Remove extra left and right margins, due to padding */
 .row {margin: 0 -5px;}
 
@@ -282,22 +295,22 @@ span.psw {
   opacity: 0.7;
 }
 
-/*--------------------------------------------*/
-/*-------------ARTICLE PAGE --------------*/
-/*--------------------------------------------*/
+
 ul, #myUL {
 	list-style-type: none;
 }
-
+/*--------------------------------------------*/
+/*-------------FIND LIST --------------*/
+/*--------------------------------------------*/
 #myInput {
-  background-image: url('/css/searchicon.png');
+  background-image: url('../css/searchicon.png');
   background-position: 10px 12px;
   background-repeat: no-repeat;
   font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
   margin-bottom: 12px;
-  width: 100%;
+  width: 89%;
 }
 
 #myUL {
@@ -324,7 +337,9 @@ ul, #myUL {
 #myUL li a:hover:not(.header) {
   background-color: #eee;
 }
-
+/*--------------------------------------------*/
+/*-------------ARTICLE PAGE --------------*/
+/*--------------------------------------------*/
 .tree {
     min-height:20px;
     padding:19px;

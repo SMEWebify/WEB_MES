@@ -34,17 +34,14 @@
 	$titleOnglet1 = $langue->show_text('Titre1');
 
 	//if post CODE or isset get Id for display company
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODE']) AND isset($_POST['NameSte']) AND !empty($_POST['CODE']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 
 		//if isset new CODE company
-		if(isset($_POST['CODESte'])){
+		if(isset($_POST['CODE'])){
 
 			// check if exist
-			$data=$bdd->GetQuery("SELECT COUNT(id) as nb FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'", true);
-			$nb = $data->nb;
-
-			// if existe
-			if($nb=1){
+			$nb = $Companies->GETCompanieCount(addslashes($_POST['id']));
+			if($nb==1){
 
 				//change title tag
 				$titleOnglet1 = $langue->show_text('TableUpdateButton');
@@ -62,7 +59,7 @@
 				}
 
 				//update database with post
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODESte']) ."',
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODE']) ."',
 																				NAME='". addslashes($_POST['NameSte']) ."',
 																				WEBSITE='". addslashes($_POST['WebSiteSte']) ."',
 																				FBSITE='". addslashes($_POST['FbSiteSte']) ."',
@@ -87,11 +84,11 @@
 																				COMPTE_GEN_FOUR='". addslashes($_POST['CompteGeFourSte']) ."',
 																				COMPTE_AUX_FOUR='". addslashes($_POST['CompteAuxFourSte']) ."',
 																				CONTROLE_FOUR='". addslashes($_POST['ControlFour']) ."'
-																			WHERE Id='". addslashes($_POST['IDSte'])."'");
+																			WHERE Id='". addslashes($_POST['id'])."'");
 
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 				//select new values for display
-				$query="SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". addslashes($_POST['IDSte'])."'";
+				$Name = addslashes($_POST['id']);
 			}
 			else{
 				//if not existe, we create new company or provider
@@ -105,7 +102,7 @@
 
 				//add to sql db
 				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
-																				'". addslashes($_POST['CODESte']) ."',
+																				'". addslashes($_POST['CODE']) ."',
 																				'". addslashes($_POST['NameSte']) ."',
 																				'". addslashes($_POST['WebSiteSte']) ."',
 																				'". addslashes($_POST['FbSiteSte']) ."',
@@ -136,7 +133,7 @@
 				$CallOutBox->add_notification(array('2', $langue->show_text('AddCompanyNotification')));
 
 				//we can now selectt new value from new add
-				$query="SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY id DESC LIMIT 0, 1";
+				$Name = $req;
 			}
 		}
 		else{
@@ -147,13 +144,11 @@
 			}else{
 				$Name = preg_replace('#-+#', ' ', addslashes($_POST['id']));	
 			}
-			
 			$titleOnglet1 = $langue->show_text('TableUpdateButton');
-
-			$query="SELECT * FROM ". TABLE_ERP_CLIENT_FOUR ." WHERE id = '". $Name ."'";
 		}
 
-		$data = $bdd->GetQuery($query,true);
+		$data = $Companies->GETCompanie($Name);
+		
 		// stock value in variable for dislpay on form
 		$SteId = $data->id;
 		$SteCODE = $data->CODE;
@@ -325,8 +320,8 @@
 	}
 
 	// we cant change codeId of DB, he can be used on other table
-	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODESte" value="'. $SteCODE .'">' .$SteCODE;}
-	else{ $DisplayCode ='<input type="text" name="CODESte" required="required">'; }
+	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODE" value="'. $SteCODE .'">' .$SteCODE;}
+	else{ $DisplayCode ='<input type="text" name="CODE" required="required">'; }
 
 	//variable of page if load an company
 	if(!isset($_GET['id'])  AND  !isset($_POST['id'])){
@@ -343,7 +338,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$titleOnglet1; ?></button>
 <?php
 	// not display this menu if we dont have customer load
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODE']) AND isset($_POST['NameSte']) AND !empty($_POST['CODE']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Titre2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Titre3'); ?></button>
@@ -354,17 +349,17 @@
 ?>
 	</div>
 	<div id="div1" class="tabcontent">
-			<div class="column">
-				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
-				<ul id="myUL">
-					<?php
-					//generate list for datalist find input
-					$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
-					foreach ($bdd->GetQuery($query) as $data): ?>
-					<li><a href="admin.php?page=manage-companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-					<?php $i++; endforeach; ?>
-				</ul>
-			</div>
+		<div class="column">
+			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
+			<ul id="myUL">
+				<?php
+				//generate list for datalist find input
+				$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
+				foreach ($bdd->GetQuery($query) as $data): ?>
+				<li><a href="admin.php?page=manage-companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+				<?php $i++; endforeach; ?>
+			</ul>
+		</div>
 			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
@@ -378,9 +373,9 @@
 						<tr>
 							<td ><?=$langue->show_text('TableCODE'); ?> : <?=$DisplayCode;?></td>
 							<td colspan="3"><?=$langue->show_text('TableNameCompany'); ?> <input type="text" name="NameSte" value="<?=$SteNAME;?>"></td>
+							<td><?=$langue->show_text('TableDateCreation') .' '. $SteDATE_CREA ?> </td>
 							<td></td>
-							<td></td>
-							<td><input type="hidden" name="IDSte" value="<?=$SteId; ?>" size="10"></td>
+							<td><input type="hidden" name="id" value="<?=$SteId; ?>" size="10"></td>
 						</tr>
 						<tr>
 							<td><?=$langue->show_text('TableWebSite'); ?></td>
@@ -438,10 +433,7 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td colspan="7">Logo</td>
-						</tr>
-						<tr>
-							<td colspan="7" ><input type="file" name="fichier_LOGOSte" /></td>
+							<td colspan="7" >Logo : <input type="file" name="fichier_LOGOSte" /></td>
 						</tr>
 						<tr>
 							<td></td>
@@ -595,7 +587,7 @@
 		</div>
 <?php
 	// not display this content if we dont have customer load
-	if(isset($_POST['CODESte']) AND isset($_POST['NameSte']) AND !empty($_POST['CODESte']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
+	if(isset($_POST['CODE']) AND isset($_POST['NameSte']) AND !empty($_POST['CODE']) AND !empty($_POST['NameSte']) OR  isset($_POST['id']) AND !empty($_POST['id']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
 ?>
 		<div id="div2" class="tabcontent">
 			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" >

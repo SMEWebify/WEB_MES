@@ -62,6 +62,7 @@
     <TableLabel>Libelé</TableLabel>
     <TableOrder>Ordre</TableOrder>
     <Addtext>Ajout</Addtext>
+    <TableDateCreation>Date de création :</TableDateCreation>
     <TableCondiList>Condition de réglement</TableCondiList>
     <TableMethodList>Mode de réglement</TableMethodList>
     <TableUpdateButton>Mettre à jours</TableUpdateButton>

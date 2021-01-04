@@ -733,7 +733,7 @@ $(document).ready(function() {
 								<td>'. $data->DELAIS .'</td>
 							</tr>';?>
 							<tr>
-								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="<?= $data->Id ?>"><a href="index.php?page=quote&id=<?= $_GET['id'] ?>&amp;delete=<?= $data->Id ?>" title="Supprimer la ligne">x</a></td>
+								<td><input type="hidden" name="UpdateIdLigneDevis[]" id="UpdateIdLigneDevis" value="<?= $data->Id ?>"><a href="index.php?page=quote&id=<?= $_GET['id'] ?>&amp;delete=<?= $data->Id ?>" title="Supprimer la ligne">&#10007;</a></td>
 								<td><input type="number" name="UpdateORDRELigneDevis[]" value="<?= $data->ORDRE ?>" ></td>
 								<td>
 									<input list="Article" name="UpdateIDArticleLigneDevis[]" id="UpdateIDArticleLigneDevis" value="<?= $data->ARTICLE_CODE ?>">

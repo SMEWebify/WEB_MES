@@ -28,14 +28,26 @@ Class User Extends SQL{
     public  $page_9;
     public  $page_10;
 
+    Public $UserCount;
+
     public function __construct() {}
 
     public function UpdateLanguage($POST){
         
         //update database	
-        $this->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  LANGUAGE = \''. addslashes($POST) .'\' WHERE IdUser=\''. $_SESSION['id'] .'\'');
+        $this->GetUpdate('UPDATE '. TABLE_ERP_EMPLOYEES .' SET  LANGUAGE = \''. addslashes($POST) .'\' WHERE IdUser=\''. $_SESSION['id'] .'\'');
         $this->_LANGUAGE = $POST;
 
         return $this->_LANGUAGE;
+    }
+
+    public function GETUserCount($ID = null){
+        $Clause = '';
+        if($ID != null){
+            $Clause = 'WHERE IdUser = \''. $ID .'\'';
+        }
+
+        $UserCount =  $this->GetCount(TABLE_ERP_EMPLOYEES,'IdUser', $Clause);
+        return $UserCount;
     }
 }

@@ -20,6 +20,10 @@ define('TABLE_ERP_COMMANDE_LIGNE', 'commande_ligne');
 define('TABLE_ERP_COMPANY', 'company_setting');
 define('TABLE_ERP_CONDI_REG', 'condition_reg');
 define('TABLE_ERP_CONTACT', 'contact');
+define('TABLE_ERP_DAILY_HOURLY_MODEL', 'daily_hourly_model');
+define('TABLE_ERP_DAILY_HOURLY_MODEL_LINES', 'daily_hourly_model_line');
+
+
 define('TABLE_ERP_DEC_TECH', 'decoupage_tech');
 
 //QUOTE
@@ -73,7 +77,7 @@ define('PICTURE_FOLDER', 'images/');
 define('PROFIL_FOLDER', 'Profils/');
 define('RESSOURCES_FOLDER', 'Ressources/');
 define('QUALITY_DEVICES_FOLDER', 'Quality/');
-
+define('STUDY_ARTICLE_FOLDER', 'Articles/');
 
 if(MAINTENANCE == 1)
 {

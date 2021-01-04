@@ -10,7 +10,7 @@ class Companies Extends SQL  {
     Public $NAME;
     Public $WEBSITE;  
     Public $FBSITE;  
-    Public $TWITTERITE; 
+    Public $TWITTERSITE; 
     Public $LKDSITE;   
     Public $SIREN;
     Public $APE;
@@ -34,9 +34,59 @@ class Companies Extends SQL  {
     Public $DATE_CREA;
     Public $COMMENT;
     Public $SECTOR_ID;
+    Public $TVA_LABEL;
 
     Public $ProviderList;
     Public $ProviderCheckedList;
+    Public $CompaniesCount;
+
+    public function GETCompanie($id_GET_Companie){
+
+        $GETCompanie = $this->GetQuery('SELECT  '. TABLE_ERP_CLIENT_FOUR .'.id,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.CODE,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.NAME,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.WEBSITE,  
+                                                '. TABLE_ERP_CLIENT_FOUR .'.FBSITE,  
+                                                '. TABLE_ERP_CLIENT_FOUR .'.TWITTERSITE, 
+                                                '. TABLE_ERP_CLIENT_FOUR .'.LKDSITE,   
+                                                '. TABLE_ERP_CLIENT_FOUR .'.SIREN,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.APE,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.TVA_INTRA,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.TVA_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.LOGO,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.STATU_CLIENT,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COND_REG_CLIENT_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.MODE_REG_CLIENT_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.REMISE,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.RESP_COM_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.RESP_TECH_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COMPTE_GEN_CLIENT,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COMPTE_AUX_CLIENT,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.STATU_FOUR,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COND_REG_FOUR_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.MODE_REG_FOUR_ID,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COMPTE_GEN_FOUR,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COMPTE_AUX_FOUR,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.CONTROLE_FOUR,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.DATE_CREA,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.COMMENT,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.SECTOR_ID ,
+                                                '. TABLE_ERP_TVA .'.LABEL AS TVA_LABEL
+                                            FROM '. TABLE_ERP_CLIENT_FOUR .' 
+                                            LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_CLIENT_FOUR .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
+                                            WHERE  '. TABLE_ERP_CLIENT_FOUR .'.id = \''. $id_GET_Companie . '\'', true, 'App\Companies\Companies');
+        return $GETCompanie;
+    }
+
+    public function GETCompanieCount($ID = null){
+        $Clause = '';
+        if($ID != null){
+            $Clause = 'WHERE id = \''. $ID .'\'';
+        }
+
+        $CompaniesCount =  $this->GetCount(TABLE_ERP_CLIENT_FOUR,'id', $Clause);
+        return $CompaniesCount;
+    }
 
     public function GetProviderList($IdData=0){
 

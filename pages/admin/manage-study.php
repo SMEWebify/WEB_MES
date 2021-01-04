@@ -5,6 +5,8 @@
 	use \App\Methods\Prestation;
 	use \App\Methods\Section;
 	use \App\Accounting\Allocations;
+	use \App\Study\Article;
+	use \App\Study\Unit;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -17,7 +19,8 @@
 	$Prestation = new Prestation();
 	$Section = new Section();
 	$Allocations = new Allocations();
-
+	$Article = new Article();
+	$Unit = new Unit();
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -56,16 +59,15 @@
 				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 				//if update image
-				$dossier = 'images/ArticlesImage/';
+				$dossier = PICTURE_FOLDER.STUDY_ARTICLE_FOLDER;
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-				$InsertImage = $dossier.$fichier;
-
+					
 				If(empty($fichier)){
 					$AddSQL = '';
 				}
 				else{
-					$AddSQL = ', IMAGE = \''. addslashes($InsertImage) .'\'';
+					$AddSQL = ', IMAGE = \''. addslashes($fichier) .'\'';
 				}
 
 				//update article value
@@ -131,10 +133,9 @@
 				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 
-				$dossier = 'images/ArticlesImage/';
+				$dossier = PICTURE_FOLDER.STUDY_ARTICLE_FOLDER;
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-				$InsertImage = $dossier.$fichier;
 
 				//insert in db
 				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ARTICLE ." VALUE ('0',
@@ -158,7 +159,7 @@
 																				'". addslashes($_POST['SURDIMYArticle']) ."',
 																				'". addslashes($_POST['SURDIMZArticle']) ."',
 																				'',
-																				'". addslashes($InsertImage) ."')");
+																				'". addslashes($fichier) ."')");
 
 				$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddArticleNotification')));
 
@@ -276,24 +277,8 @@
 		$FamilleListe .='<option value="'. $data->Id .'" '. selected($ArticleFamilleId, $data->Id) .'>'. $data->LABEL .'</option>';
 	}
 
-	//create unit list select
-	$UnitListe ='<option value="0">Aucune</option>';
-	$UnitListeInit  ='<option value="0">Aucune</option>';
-	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_UNIT .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$UnitListe .='<option value="'. $data->Id .'" '. selected($ArticleUNIT_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-		$UnitListeInit .='<option value="'. $data->Id .'>'. $data->LABEL .'</option>';
-	}
-
 	if(!empty($ArticleCODE)){$DisplayCode = '<input type="hidden" name="CODEArticle" value="'. $ArticleCODE .'">' .$ArticleCODE;}
 	else{ $DisplayCode ='<input type="text" name="CODEArticle" required="required">'; }
-
-	//create data list article
-	$query='SELECT * FROM '. TABLE_ERP_ARTICLE .' ORDER BY LABEL';
-	foreach ($bdd->GetQuery($query) as $data){
-		$ListeArticle .= '<option  value="'. $data->LABEL .'" >';
-		$FormListeArticle .= '<option value="'. $data->id .'" >'. $data->LABEL .'</option>';
-	}
 
 	///////////////////////////////
 	//// TECHNICAL CUT  ////
@@ -636,7 +621,7 @@
 						<tr>
 							<td >
 								<select name="UNITArticle">
-									<?= $UnitListe ?>
+									<?= $Unit->GetUnitList($ArticleUNIT_ID, true) ?>
 								</select>
 							</td>
 							<td >
@@ -686,7 +671,7 @@
 							<td colspan=6" ><input type="file" name="FichierImageArticle" /></td>
 						</tr>
 						<tr>
-							<td colspan=6"><img src="<?= $ArticleImage ?>" title="Image article" alt="Article" style="width: 400px;"/></td>
+							<td colspan=6"><img src="<?= PICTURE_FOLDER.STUDY_ARTICLE_FOLDER.$ArticleImage ?>" title="Image article" alt="Article" style="width: 400px;"/></td>
 						</tr>
 						<tr>
 							<td colspan="6" >
@@ -726,21 +711,7 @@
 								$TtCout = 0;
 								$TtPrix = 0;
 	
-								$query='SELECT '. TABLE_ERP_DEC_TECH .'.Id,
-																'. TABLE_ERP_DEC_TECH .'.ORDRE,
-																'. TABLE_ERP_DEC_TECH .'.PRESTA_ID,
-																'. TABLE_ERP_DEC_TECH .'.LABEL,
-																'. TABLE_ERP_DEC_TECH .'.TPS_PREP,
-																'. TABLE_ERP_DEC_TECH .'.TPS_PRO,
-																'. TABLE_ERP_DEC_TECH .'.COUT,
-																'. TABLE_ERP_DEC_TECH .'.PRIX,
-																'. TABLE_ERP_PRESTATION .'.LABEL AS PRESTA_LABEL
-																FROM `'. TABLE_ERP_DEC_TECH .'`
-																	LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_DEC_TECH .'`.`PRESTA_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-																WHERE '. TABLE_ERP_DEC_TECH .'.ARTICLE_ID = '. $ArticleId .'
-																	ORDER BY '. TABLE_ERP_DEC_TECH .'.ORDRE ';
-	
-								foreach ($bdd->GetQuery($query) as $data){
+								foreach ($Article->GETTechnicalCut($ArticleId) as $data){
 	
 									$PrestaListe ='<option value="0">Aucune</option>';
 									$query='SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'';
@@ -833,24 +804,8 @@
 							</thead>
 							<tbody>
 							<?php
-								$query='SELECT '. TABLE_ERP_NOMENCLATURE .'.Id,
-																'. TABLE_ERP_NOMENCLATURE .'.ORDRE,
-																'. TABLE_ERP_NOMENCLATURE .'.PARENT_ID,
-																'. TABLE_ERP_NOMENCLATURE .'.ARTICLE_ID,
-																'. TABLE_ERP_NOMENCLATURE .'.LABEL,
-																'. TABLE_ERP_NOMENCLATURE .'.QT,
-																'. TABLE_ERP_NOMENCLATURE .'.UNIT_ID,
-																'. TABLE_ERP_NOMENCLATURE .'.PRIX_U,
-																'. TABLE_ERP_NOMENCLATURE .'.PRIX_ACHAT	,
-																'. TABLE_ERP_ARTICLE .'.LABEL AS ARTICLE_LABEL,
-																'. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL
-																FROM `'. TABLE_ERP_NOMENCLATURE .'`
-																	LEFT JOIN `'. TABLE_ERP_ARTICLE .'` ON `'. TABLE_ERP_NOMENCLATURE .'`.`ARTICLE_ID` = `'. TABLE_ERP_ARTICLE .'`.`id`
-																	LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_NOMENCLATURE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-																WHERE '. TABLE_ERP_NOMENCLATURE .'.PARENT_ID = '. $ArticleId .'
-																	ORDER BY '. TABLE_ERP_NOMENCLATURE .'.ORDRE';
 								$i = 0;
-								foreach ($bdd->GetQuery($query) as $data): ?>
+								foreach ($Article->GETNomenclature($ArticleId) as $data): ?>
 									<tr>
 										<td></td>
 										<td>
@@ -865,8 +820,7 @@
 										<td><input type="number"  name="UpdateQTNomencl[]" value="<?= $data->QT  ?>" step=".001" required="required"></td>
 										<td>
 										<select name="UpdateUNITNomencl[]">
-												<option value="<?= $data->UNIT_ID  ?>" <?= selected($data->UNIT_ID, $data->UNIT_ID)  ?>><?= $data->UNIT_LABEL  ?></option>
-												<?= $UnitListeInit ?>
+												<?= $Unit->GetUnitList($data->UNIT_ID, true) ?>
 											</select>
 										</td>
 										<td><input type="number"  name="UpdatePRIXUNomencl[]" value="<?= $data->PRIX_U  ?>" step=".001" required="required"></td>
@@ -878,14 +832,14 @@
 									<td><input type="number" name="AddORDRENomencl" ></td>
 									<td>
 										<select name="AddARTICLENomencl">
-											<?=$FormListeArticle; ?>
+											<?= $Article->GETArticleList() ?>
 										</select>
 									</td>
 									<td><input type="text"  name="AddLABELNomencl" ></td>
 									<td><input type="number"  name="AddQTNomencl" step=".001" ></td>
 									<td>
 										<select name="AddTUNITNomencl">
-											<?=$UnitListe; ?>
+										<?= $Unit->GetUnitList('', true) ?>
 										</select>
 									</td>
 									<td><input type="number"  name="AddPRIXUNomencl" step=".001" ></td>
@@ -916,26 +870,16 @@
 							</thead>
 							<tbody>
 								<?php
-								$query='SELECT '. TABLE_ERP_SOUS_ENSEMBLE .'.Id,
-																			'. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID,
-																			'. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE,
-																			'. TABLE_ERP_SOUS_ENSEMBLE .'.ARTICLE_ID,
-																			'. TABLE_ERP_SOUS_ENSEMBLE .'.QT,
-																			'. TABLE_ERP_ARTICLE .'.LABEL AS LABEL_ARTICLE
-																			FROM `'. TABLE_ERP_SOUS_ENSEMBLE .'`
-																				LEFT JOIN `'. TABLE_ERP_ARTICLE .'` ON `'. TABLE_ERP_SOUS_ENSEMBLE .'`.`ARTICLE_ID` = `'. TABLE_ERP_ARTICLE .'`.`id`
-																			WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = '. $ArticleId .'
-																				ORDER BY '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE';
-									
+							
 								$i = 1;
-								foreach ($bdd->GetQuery($query) as $data):?>
+								foreach ($Article->GETSubAssembly($ArticleId) as $data):?>
 								<tr>
-									<td><input type="hidden" name="UpdateIdSousEns[]" id="UpdateIdSousEns" value="<?= $data->Id ?>"></td>
+									<td><input type="hidden" name="UpdateIdSousEns[]" id="UpdateIdSousEns" value="<?= $data->id ?>"></td>
 									<td><input type="number" name="UpdateORDRESousEns[]" value="<?= $data->ORDRE ?>"></td>
 									<td>
 										<select name="UpdateARTICLESousEns[]">
 											<option value="<?= $data->ARTICLE_ID ?>" <?= selected($data->ARTICLE_ID, $data->ARTICLE_ID) ?>><?= $data->LABEL_ARTICLE ?></option>
-											<?= $FormListeArticle ?>
+											<?= $Article->GETArticleList() ?>
 										</select>
 									</td>
 									<td><input type="number"  name="UpdateQTSousEns[]" value="<?= $data->QT ?>" step=".001"></td>
@@ -947,7 +891,7 @@
 									<td><input type="number" name="AddORDRESousEns" ></td>
 									<td>
 										<select name="AddARTICLESousEns">
-											<?=$FormListeArticle; ?>
+											<?= $Article->GETArticleList() ?>
 										</select>
 									</td>
 									<td><input type="number"  name="AddQTSousEns" step=".001"></td>
@@ -1091,7 +1035,7 @@
 										FROM `'. TABLE_ERP_UNIT .'`
 										ORDER BY TYPE';
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data):?>
+						foreach ($Unit->GetUnitList('', false) as $data):?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_unit[]" id="id_unit" value="<?= $data->Id ?>"></td>
 							<td><input type="text" name="UpdateCODEUnit[]" value="<?= $data->CODE ?>" size="10"></td>

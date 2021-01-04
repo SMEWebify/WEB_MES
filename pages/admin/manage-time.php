@@ -164,8 +164,79 @@
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateBankNotification')));
 	}
+
+	//////////////////////////////////
+	////TIME MODEL ////
+	/////////////////////////////////
+
+	//if add new hourly model day
+	if(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
+
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DAILY_HOURLY_MODEL ." VALUE ('0',
+																		'". addslashes($_POST['CODE']) ."',
+																		'". addslashes($_POST['LABEL']) ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddMODELtimeNotification')));
+	}
+
+	//update hourly model day
+	if(isset($_POST['UpdateIdHourdlyModel']) AND !empty($_POST['UpdateIdHourdlyModel'])){
+
+		$UpdateIdHourdlyModel = $_POST['UpdateIdHourdlyModel'];
+		$UpdateCODEHourdlyModel = $_POST['UpdateCODEHourdlyModel'];
+		$UpdateLABELHourdlyModel = $_POST['UpdateLABELHourdlyModel'];
+
+		$i = 0;
+		foreach ($UpdateIdHourdlyModel as $id_generation) {
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_DAILY_HOURLY_MODEL .' SET  CODE = \''. addslashes($UpdateCODEHourdlyModel[$i]) .'\',
+																LABEL = \''. addslashes($UpdateLABELHourdlyModel[$i]) .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateMODELtimeNotification')));
+	}
+
+	//if add new line of hourly model day 
+	if(isset($_POST['AddORDREHourdlyModelLine']) AND !empty($_POST['AddORDREHourdlyModelLine'])){
+
+			$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DAILY_HOURLY_MODEL_LINES ." VALUE ('0',
+																			'". addslashes($_GET['HourdlyModel']) ."',
+																			'". addslashes($_POST['AddORDREHourdlyModelLine']) ."',
+																			'". addslashes($_POST['AddTYPEHourdlyModelLine']) ."',
+																			'". addslashes($_POST['AddSTARTHourdlyModelLine']) ."',
+																			'". addslashes($_POST['AddENDHourdlyModelLine']) ."')");
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLineMODELtimetNotification')));
+	}
+
+	//update hourly model day line
+	if(isset($_POST['UpdateIdHourdlyModelLine']) AND !empty($_POST['UpdateIdHourdlyModelLine'])){
+
+		$UpdateIdHourdlyModelLine = $_POST['UpdateIdHourdlyModelLine'];
+		$UpdateORDREHourdlyModelLine = $_POST['UpdateORDREHourdlyModelLine'];
+		$UpdateTYPEHourdlyModelLine = $_POST['UpdateTYPEHourdlyModelLine'];
+		$UpdateSTARTHourdlyModelLine = $_POST['UpdateSTARTHourdlyModelLine'];
+		$UpdateENDHourdlyModelLine = $_POST['UpdateENDHourdlyModelLine'];
+		
+			$i = 0;
+			foreach ($UpdateIdHourdlyModelLine as $id_generation) {
+		
+				$bdd->GetUpdate('UPDATE '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .' SET  ORDRE = \''. addslashes($UpdateORDREHourdlyModelLine[$i]) .'\',
+																			TYPE = \''. addslashes($UpdateTYPEHourdlyModelLine[$i]) .'\',
+																			START = \''. addslashes($UpdateSTARTHourdlyModelLine[$i]) .'\',
+																			END = \''. addslashes($UpdateENDHourdlyModelLine[$i]) .'\'
+																			WHERE Id IN ('. $id_generation . ')');
+				$i++;
+			}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineMODELtimeNotification')));
+	}
+
+	if(isset($_GET['HourdlyModel']) AND !empty($_GET['HourdlyModel'])){
+		$ParDefautDiv5 = 'id="defaultOpen"';
+	}
+	else{
+		$ParDefautDiv1 = 'id="defaultOpen"';
+	}
 ?>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['timeline']});
       google.charts.setOnLoadCallback(drawChart);
@@ -180,13 +251,28 @@
 		dataTable.addColumn({ type: 'date', id: 'End' });
 		dataTable.addRows([
 		[ 'day', 'day',       new Date(0,0,0,00,0,0),  new Date(0,0,0,24,0,0) ],
-		[ 'Interdite', 'Interdite',       new Date(0,0,0,03,0,0),  new Date(0,0,0,9,0,0) ],
-		[ 'Variable', 'Variable',    new Date(0,0,0,9,0,0),  new Date(0,0,0,9,30,0) ],
-		[ 'Fixe', 'Fixe',        new Date(0,0,0,9,30,0),  new Date(0,0,0,12,30,0) ],
-		[ 'Variable',   'Variable',    new Date(0,0,0,12,30,0), new Date(0,0,0,14,0,0) ],
-		[ 'Fixe',   'Fixe', new Date(0,0,0,14,0,0), new Date(0,0,0,17,0,0) ],
-		[ 'Interdite',   'Interdite',     new Date(0,0,0,17,00,0), new Date(0,0,0,18,0,0) ]]);
+		<?php $query='SELECT '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.id,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.MODEL_ID,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.ORDRE,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.TYPE,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.START,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.END
+									FROM `'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'`
+										WHERE '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.MODEL_ID = \''. 	addslashes($_GET['HourdlyModel']).'\'
+									ORDER BY ORDRE';
 
+		$i = 1;
+		foreach ($bdd->GetQuery($query) as $data){
+			$START=explode(":",$data->START);
+			$END=explode(":",$data->END);
+
+			if($data->TYPE == 1) $TYPE = $langue->show_text('Forbiden');
+			if($data->TYPE == 2) $TYPE = $langue->show_text('Variable');
+			if($data->TYPE == 3) $TYPE = $langue->show_text('Fixed');
+		?>
+		[ '<?= $TYPE ?>', '<?= $TYPE ?>',       new Date(0,0,0,<?=$START[0]?>,<?=$START[1]?>,<?=$START[2]?>),  new Date(0,0,0,<?=$END[0]?>,<?=$END[1]?>,<?=$END[3]?>) ],
+		<?php  $i++; }  ?>
+		]);
 		var options = {
 			timeline: { colorByRowLabel: true },
 			width: 1200,
@@ -199,11 +285,11 @@
       }
     </script>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?= $ParDefautDiv1 ?>><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')" <?= $ParDefautDiv5 ?>><?=$langue->show_text('Title5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<form method="post" name="Section" action="admin.php?page=manage-time" class="content-form" >
@@ -510,21 +596,127 @@
 			</form>
 	</div>
 	<div id="div5" class="tabcontent" >
-		<form method="post" name="Section" action="admin.php?page=manage-time" class="content-form" >
+		<form method="post" name="Section" action="admin.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
+							<th><?= $langue->show_text('TableCODE'); ?></th>
+							<th><?= $langue->show_text('TableLabel'); ?></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
+						<?php
+						// generate list of TimeLine payement
+						$query='SELECT '. TABLE_ERP_DAILY_HOURLY_MODEL .'.id,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL .'.CODE,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL .'.LABEL
+									FROM `'. TABLE_ERP_DAILY_HOURLY_MODEL .'`
+									ORDER BY id';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data): ?>
 						<tr>
-							<td>
-								<div id="timeline" style="height: 300px;"></div>
-							
+							<td><input type="hidden" name="UpdateIdHourdlyModel[]" id="UpdateIdHourdlyModel" value="<?= $data->id ?>"></td>
+							<td><input type="text" name="UpdateCODEHourdlyModel[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="UpdateLABELHourdlyModel[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><a href="admin.php?page=manage-time&HourdlyModel=<?= $data->id ?>">--></a></td>
+						</tr>
+						<?php $i++; endforeach; ?>
+						<tr>
+							<td><?=$langue->show_text('Addtext'); ?></td>
+							<td><input type="text" class="input-moyen-vide" name="CODE"></td>
+							<td><input type="text" class="input-moyen-vide" name="LABEL"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="4" >
+								<br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+								<br/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-		</form>
+			</form>
+			<?php
+			//if user want show timeline detail
+			if(isset($_GET['HourdlyModel']) AND !empty($_GET['HourdlyModel'])){
+
+				//generate liste of detail timeline payement
+			?>
+			
+			<form method="post" name="Section" action="admin.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
+				<table class="content-table-decal">
+					<thead>
+						<tr>
+							<th></th>
+							<th><?= $langue->show_text('TableOrder') ?></th>
+							<th><?= $langue->show_text('TableType') ?></th>
+							<th><?= $langue->show_text('TableStart') ?></th>
+							<th><?= $langue->show_text('TableEnd') ?></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+					//generate list of détail TimeLine payement
+					$query='SELECT '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.id,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.MODEL_ID,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.ORDRE,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.TYPE,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.START,
+									'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.END,
+									TIMEDIFF(END, START) AS TIMEDIFF
+									FROM `'. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'`
+										WHERE '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .'.MODEL_ID = \''. 	addslashes($_GET['HourdlyModel']).'\'
+									ORDER BY ORDRE';
+
+						$i = 1;
+						foreach ($bdd->GetQuery($query) as $data){
+						?>
+						<tr>
+							<td><input type="hidden" name="UpdateIdHourdlyModelLine[]" id="UpdateIdHourdlyModelLine" value="<?= $data->id ?>" required="required"></td>
+							<td><input type="number"  name="UpdateORDREHourdlyModelLine[]" value="<?= $data->ORDRE ?>" required="required"></td>
+							<td>
+								<select name="UpdateTYPEHourdlyModelLine[]">
+									<option value="1" <?= selected($data->TYPE, 1) ?>><?= $langue->show_text('Forbiden') ?></option>
+									<option value="2" <?= selected($data->TYPE, 2) ?>><?= $langue->show_text('Variable') ?></option>
+									<option value="3" <?= selected($data->TYPE, 3) ?>><?= $langue->show_text('Fixed') ?></option>
+								</select>
+							</td>
+							<td><input type="time"  name="UpdateSTARTHourdlyModelLine[]" value="<?= $data->START ?>"  required="required"></td>
+							<td><input type="time" name="UpdateENDHourdlyModelLine[]" value="<?= $data->END ?>" required="required"></td>
+							<td><?=$data->TIMEDIFF?></td>
+						</tr>
+						<?php  $i++; }  ?>
+						<tr>
+							<td><?= $langue->show_text('Addtext') ?></td>
+							<td><input type="number" class="input-moyen-vide" name="AddORDREHourdlyModelLine" ></td>
+							<td>
+								<select name="AddTYPEHourdlyModelLine">
+									<option value="1" ><?= $langue->show_text('Forbiden') ?></option>
+									<option value="2" ><?= $langue->show_text('Variable') ?></option>
+									<option value="3" ><?= $langue->show_text('Fixed') ?></option>
+								</select>
+							</td>
+							<td><input type="time" value="12:00" name="AddSTARTHourdlyModelLine"  ></td>
+							<td><input type="time" value="12:00" max="23:59" name="AddENDHourdlyModelLine" ></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="7" >
+								<br/>
+								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+								<br/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<div id="timeline" style="margin:auto; margin-top:50px; width: 50%;"></div>
+		<?php
+			}
+		?>
 	</div>
