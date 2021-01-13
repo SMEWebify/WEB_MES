@@ -3,6 +3,7 @@
 	use \App\Autoloader;
 	use \App\Form;
 	use \App\Study\Article;
+	use \App\Study\ArticleTreeStructure;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -13,6 +14,7 @@
 	//init form class
 	$Form = new Form($_POST);
 	$Article = new Article();
+	$ArticleTreeStructure = new ArticleTreeStructure();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -43,45 +45,26 @@
 				<div class="column">
 					<div class="tree">
 						<ul>
-							<li><span ><?= $dataFirstRank->CODE ?> - <?= $dataFirstRank->LABEL ?></span>
+							<li><span ><?= $dataFirstRank->CODE ?> - <?= $dataFirstRank->LABEL ?> </span>
 								<ul>
-									<?php
+								<?php
 									// FIRST RANK PART TECHNICAL CUT
 									foreach ($Article->GETTechnicalCut($_GET['id']) as $data){
 										$TpsTotal = $data->TPS_PREP + $data->TPS_PRO;?>
 									<li><?= $TpsTotal ?> hrs - <?= $data->PRESTA_LABEL ?> </li>
 
-									<?php }
-
+								<?php }
 									// FIRST RANK PART NOMENCLATURE
 									foreach ($Article->GETNomenclature($_GET['id']) as $data){ ?>
 									<li> <?= $data->QT ?> <?= $data->UNIT_LABEL ?> - <?= $data->ARTICLE_LABEL ?></li>
 									<?php }
-								
-												//SECONDE LOOP ARTICLE RANK 2
 
-												foreach ($Article->GETSubAssembly($_GET['id']) as $dataPartRank2){  
-												?>
-															<li><span><a href="index.php?page=article&id=<?= $dataPartRank2->ARTICLE_ID ?>"><?= $dataPartRank2->LABEL_ARTICLE ?> </a></span>
-																<ul>
-												<?php
-												// SECOND RANK PART TECHNICAL CUT
-													foreach ($Article->GETTechnicalCut($dataPartRank2->ARTICLE_ID) as $dataTechnicalCutRank2){
-														$TpsTotal = $dataTechnicalCutRank2->TPS_PREP + $dataTechnicalCutRank2->TPS_PRO;  ?>
-																	<li><?= $TpsTotal ?> hrs - <?= $dataTechnicalCutRank2->PRESTA_LABEL ?></li>
-													<?php }
-
-												// SECONDE RANK PART NOMENCLATURE
-							
-												foreach ($Article->GETNomenclature($dataPartRank2->ARTICLE_ID) as $dataNomenclatureRank2){  ?>
-																	<li> <?= $dataNomenclatureRank2->QT  ?> <?= $dataNomenclatureRank2->UNIT_LABEL  ?> - <?= $dataNomenclatureRank2->ARTICLE_LABEL ?></li>
-												<?php }
-
-								echo '</li></ul></li>';
-								}?>
-								</li>
-							</ul>
-					 	 
+									//LOOP ARTICLE
+									$ArticleTreeStructure->GetTreeStructure($_GET['id']);
+								?>
+								</ul>
+							</li>
+						</ul>
 				  </div>
 				</div>
 				<div class="column">

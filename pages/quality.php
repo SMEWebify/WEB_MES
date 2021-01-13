@@ -3,6 +3,7 @@
 	use \App\Autoloader;
 	use \App\Form;
 	use \App\COMPANY\Employees;
+	use \App\COMPANY\Numbering;
 	use \App\Methods\Ressource;
 	use \App\Methods\Section;
 	use \App\Quality\QL_Action;
@@ -22,6 +23,7 @@
 	//init form class
 	$Form = new Form($_POST);
 	$Employees = new Employees();
+	$Numbering = new Numbering();
 	$Ressource = new Ressource();
 	$Section = new Section();
 	$QL_Action = new QL_Action();
@@ -47,6 +49,7 @@
 		}elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){	
 			//insert in DB new FNC
 			$IdQL_FNC = $QL_FNC->NewQL_FNC($_POST['CODE'], $User->idUSER);
+			$Numbering->getIncrementNumbering(11);
 			$CallOutBox->add_notification(array('2',  $langue->show_text('AddFNC')));
 		}else{
 			$IdQL_FNC = $_GET['FNC'];
@@ -85,21 +88,21 @@
 	}
 	elseif(isset($_GET['device']) AND !empty($_GET['device'])){
 		$ParDefautDiv4 = 'id="defaultOpen"';
+		
 		//if picture is updated
-		if(isset($_POST['PICTURE_DEVICES']) AND !empty($_POST['PICTURE_DEVICES'])){	
-			var_dump($_POST);
-			$dossier = PICTURE_FOLDER.QUALITY_DEVICES_FOLDER;
-			$fichier = $_FILES['PICTURE_DEVICES']['name'];
+		if ( isset( $_FILES["PICTURE_DEVICES"] ) && !empty( $_FILES["PICTURE_DEVICES"]["name"] ) ) {	
 
-			If(!empty($_POST)){	
+				$dossier = PICTURE_FOLDER.QUALITY_DEVICES_FOLDER;
+				$fichier = $_FILES['PICTURE_DEVICES']['name'];
+				
 				if (move_uploaded_file($_FILES['PICTURE_DEVICES']['tmp_name'], $dossier . $fichier)){
-					$bdd->GetUpdatePOST(TABLE_ERP_QL_APP_MESURE, $_POST, 'WHERE id='. $_GET['device'] . '');
+
+					$bdd->GetUpdatePOST(TABLE_ERP_QL_APP_MESURE, array("PICTURE_DEVICES" => $fichier ), 'WHERE id='. $_GET['device'] . '');
 					$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDeviceNotification')));
 				}
 				else{
 					$CallOutBox->add_notification(array('3', $langue->show_text('ErrorDeviceNotification')) );
-				}
-			}		
+				}	
 		}
 	}
 	else{
@@ -231,31 +234,22 @@
 				</div>
 			</div>
 		</form>
-		<?php else: 
-			$Data = $bdd->GetQuery('SELECT MAX(id) AS max_id FROM '. TABLE_ERP_NFC .'', true);
-			//make num sequence
-			$CODE = NumDoc('FNC<I>', $Data->max_id, 6);?>
+		<?php else: ?>
 			<div class="column">
 				<form method="POST" action="index.php?page=quality&FNC=new" class="content-form">
 					<table class="content-table">
 						<thead>
 							<tr>
-								<th colspan="5">
-									<br/>
-								</th>
+								<th colspan="2"><br/></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td>
-									<?= $langue->show_text('TableNewFNC') ?>
-								<td>
-								<td>
-									<?= $Form->input('text', 'CODE',  $CODE) ?>
-								<td>
+								<td><?= $langue->show_text('TableNewFNC') ?></td>
+								<td><?= $Form->input('text', 'CODE', $Numbering->getCodeNumbering(11)) ?></td>
 							</tr>
 							<tr>
-								<td colspan="6" >
+								<td colspan="2" >
 									<br/>
 									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonFNC') ?>" /> <br/>
 									<br/>
@@ -273,8 +267,7 @@
 			<ul id="myUL">
 				<?php
 				//generate list for datalist find input
-				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_QL_ACTION ." ORDER BY CODE";
-				foreach ($bdd->GetQuery($query) as $data): ?>
+				foreach ($QL_Action->GETQL_ActionList('',false) as $data): ?>
 				<li><a href="index.php?page=quality&action=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
 				<?php $i++; endforeach; ?>
 			</ul>
@@ -370,30 +363,21 @@
 			</div>
 		</form>
 		<?php else: 
-			$Data = $bdd->GetQuery('SELECT MAX(id) AS max_id FROM '. TABLE_ERP_QL_ACTION .'', true);
 			//make num sequence
-			$CODE = NumDoc('ACT<I>', $Data->max_id, 6);?>
+			$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_QL_ACTION .'', 'ACT<I>' , 6) ?>
 			<div class="column">
 				<form method="POST" action="index.php?page=quality&action=new" class="content-form">
 					<table class="content-table">
 						<thead>
-							<tr>
-								<th colspan="5">
-									<br/>
-								</th>
-							</tr>
+							<tr><th colspan="2"><br/></th></tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td>
-									<?= $langue->show_text('TableNewAct') ?>
-								<td>
-								<td>
-									<?= $Form->input('text', 'CODE',  $CODE) ?>
-								<td>
+								<td><?= $langue->show_text('TableNewAct') ?></td>
+								<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
 							</tr>
 							<tr>
-								<td colspan="6" >
+								<td colspan="2" >
 									<br/>
 									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonAct') ?>" /> <br/>
 									<br/>
@@ -412,7 +396,7 @@
 				<?php
 				//generate list for datalist find input
 				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_DEROGATION ." ORDER BY CODE";
-				foreach ($bdd->GetQuery($query) as $data): ?>
+				foreach ($QL_Derogation->GETQL_DerogationListList('', false) as $data): ?>
 				<li><a href="index.php?page=quality&derogation=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
 				<?php $i++; endforeach; ?>
 			</ul>
@@ -516,30 +500,24 @@
 			</div>
 		</form>
 		<?php else: 
-			$Data = $bdd->GetQuery('SELECT MAX(id) AS max_id FROM '. TABLE_ERP_DEROGATION .'', true);
+
 			//make num sequence
-			$CODE = NumDoc('DER<I>', $Data->max_id, 6);?>
+			$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_DEROGATION .'', 'DER<I>' , 6) ?>
 			<div class="column">
 				<form method="POST" action="index.php?page=quality&derogation=new" class="content-form">
 					<table class="content-table">
 						<thead>
 							<tr>
-								<th colspan="5">
-									<br/>
-								</th>
+								<th colspan="2"><br/></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td>
-									<?= $langue->show_text('TableNewDerog') ?>
-								<td>
-								<td>
-									<?= $Form->input('text', 'CODE',  $CODE) ?>
-								<td>
+								<td><?= $langue->show_text('TableNewDerog') ?></td>
+								<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
 							</tr>
 							<tr>
-								<td colspan="6" >
+								<td colspan="2" >
 									<br/>
 									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonDerog') ?>" /> <br/>
 									<br/>
@@ -557,14 +535,13 @@
 			<ul id="myUL">
 				<?php
 				//generate list for datalist find input
-				$query="SELECT id, CODE, LABEL, SERIAL_NUMBER FROM ". TABLE_ERP_QL_APP_MESURE ." ORDER BY CODE";
-				foreach ($bdd->GetQuery($query) as $data): ?>
+				foreach ($QL_Devices->GETQL_DevicesList('',false) as $data): ?>
 				<li><a href="index.php?page=quality&device=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?> - <?= $data->SERIAL_NUMBER ?></a></li>
 				<?php $i++; endforeach; ?>
 			</ul>
 		</div>
 		<?php if(isset($_GET['device']) AND !empty($_GET['device'])):
-					$Data= $QL_Devices->GETQL_Devices($_GET['device']);?>
+				$Data= $QL_Devices->GETQL_Devices($_GET['device']);?>
 		<div class="column">
 			<div class="card">
 				<h3><?=$langue->show_text('TableCODE'); ?> <?= $Data->CODE ?></h3>
@@ -579,7 +556,7 @@
 			<div class="card">
 				<form method="POST" action="index.php?page=quality&device=<?= $data->id ?>" class="content-form" enctype="multipart/form-data" >
 					<p><img src="<?= PICTURE_FOLDER.QUALITY_DEVICES_FOLDER.$Data->PICTURE_DEVICES ?>" title="Picture quality devices" alt="Picture quality devices" class="Image-Aricle"/></p>
-					<p><input type="file" name="PICTUREDEVICES" id="PICTUREDEVICES"  /></p>
+					<p><input type="file" name="PICTURE_DEVICES" id="PICTURE_DEVICES"  /></p>
 					<p><?= $Form->submit($langue->show_text('TableUpdateButton')) ?><br/><br/></p>
 				</form>
 			</div>

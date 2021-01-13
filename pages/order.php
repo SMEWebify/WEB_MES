@@ -1,7 +1,12 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
+	use \App\COMPANY\Employees;
+	use \App\COMPANY\Numbering;
+	use \App\Companies\Companies;
 	use \App\Form;
+	use \App\Accounting\PaymentMethod;
+	use \App\Accounting\PaymentCondition;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,6 +16,11 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Employees = new Employees();
+	$Numbering = new Numbering();
+	$Companies = new Companies();
+	$PaymentMethod = new PaymentMethod();
+	$PaymentCondition = new PaymentCondition();
 	
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -117,18 +127,8 @@
 	//If add new commande
 	if(isset($_POST['Addcommande']) And !empty($_POST['Addcommande'])){
 
-		//Select NUM MODEL
-		$query='SELECT '. TABLE_ERP_NUM_DOC .'.Id,
-									'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
-									'. TABLE_ERP_NUM_DOC .'.MODEL,
-									'. TABLE_ERP_NUM_DOC .'.DIGIT,
-									'. TABLE_ERP_NUM_DOC .'.COMPTEUR
-									FROM `'. TABLE_ERP_NUM_DOC .'`
-									WHERE DOC_TYPE=4';
-									$data = $bdd->GetQuery($query, true);
-
-		//convert string
-		$CODE = NumDoc($data->MODEL,$data->COMPTEUR, $data->DIGIT);
+		//make num sequence
+		$CODE = $Numbering->getCodeNumbering(4);
 
 		//insert in db
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_COMMANDE ." VALUE ('0',
@@ -153,12 +153,9 @@
 																				'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderNotification')));
 		//update increment number
-		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN (4)');
+		$Numbering->getIncrementNumbering(4);
 
-		//select last code add in db
-		$query="SELECT CODE FROM ". TABLE_ERP_COMMANDE ." ORDER BY id DESC LIMIT 0, 1";
-		$data = $bdd->GetQuery($query, true);
-		$CODEcommandeAjout = $data->CODE;
+		$CODEcommandeAjout = $CODE;
 	}
 
 	//If user want display an order we check id isset GET or POST
@@ -408,7 +405,7 @@
 		$ParDefautDiv1 = 'id="defaultOpen"';
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
 		$ImputButton = $langue->show_text('TablenoOrder');
-		$actionForm = 'index.php?page=order';
+		$actionForm = 'index.php?page=order&order=new';
 	}
 ?>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -499,6 +496,13 @@ $(document).ready(function() {
 									</select>
 								<td>
 							</tr>
+							<tr>
+							<td>
+								<?= $langue->show_text('TableNumberOrder') ?>
+							<td>
+								<td><?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(4)) ?>
+							<td>
+						</tr>
 							<tr>
 								<td colspan="6" >
 									<br/>

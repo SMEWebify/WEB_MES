@@ -37,7 +37,7 @@ class Prestation Extends SQL  {
 
     public function GetPrestationList($IdData=0){
 
-        $this->PrestationList ='<option value="0">Aucune</option>';
+        $this->PrestationList ='';
         $query='SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'';
 		foreach ($this->GetQuery($query) as $data){
            
@@ -50,7 +50,7 @@ class Prestation Extends SQL  {
     public function GetPrestationCheckedList($IdData){
         $IdData = explode(",", $IdData);
         $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_PRESTATION .'  ';
-
+        $this->ProviderCheckedList = '';
 		foreach ($this->GetQuery($query) as $data){
             if(in_array($data->id,$IdData)){
                 $checked = 'checked';

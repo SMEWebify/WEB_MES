@@ -5,7 +5,8 @@
 	width: 100px;
 }
 .Image-Logo{
-	height: 100px;
+  max-height: 400px;
+  max-width: 400px;
 }
 .Image-Aricle{
 	width: 100%;
@@ -18,7 +19,6 @@ body {
 /*-------------CONBEXION--------------*/
 /*--------------------------------------------*/
 
-/* Full-width input fields */
 .container input[type=text], input[type=password] {
 	width: 100%;
 	padding: 12px 20px;
@@ -28,7 +28,6 @@ body {
 	box-sizing: border-box;
 }
 
-/* Set a style for all buttons */
 .container button {
 	background-color: #4CAF50;
 	color: white;
@@ -53,27 +52,24 @@ span.psw {
 	padding-top: 16px;
 }
 
-/* The Modal (background) */
 .modal {
-	position: fixed; /* Stay in place */
-	z-index: 8; /* Sit on top */
+	position: fixed; 
+	z-index: 8; 
 	left: 0;
 	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
+	width: 100%; 
+	height: 100%; 
+	overflow: auto;
 	padding-top: 60px;
 }
 
-/* Modal Content/Box */
 .modal-content {
 	background-color: #fefefe;
-	margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+	margin: 5% auto 15% auto; 
 	border: 1px solid #888;
-	width: 30%; /* Could be more or less, depending on screen size */
+	width: 30%; 
 }
 
-/* Add Zoom Animation */
 .animate {
 	-webkit-animation: animatezoom 0.6s;
 	animation: animatezoom 0.6s
@@ -102,14 +98,12 @@ span.psw {
 /*--------------------------------------------*/
 /*-------------HOME--------------*/
 /*--------------------------------------------*/
-/* The actual timeline (the vertical ruler) */
 .timeline {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* The actual timeline (the vertical ruler) */
 .timeline::after {
   content: '';
   position: absolute;
@@ -123,7 +117,6 @@ span.psw {
   margin-bottom: -50px;
 }
 
-/* Container around content */
 .container-timeline {
   padding: 10px 40px;
   position: relative;
@@ -131,7 +124,6 @@ span.psw {
   width: 43.7%;
 }
 
-/* The circles on the timeline */
 .container-timeline::after {
   content: '';
   position: absolute;
@@ -145,17 +137,14 @@ span.psw {
   z-index: 1;
 }
 
-/* Place the container to the left */
 .left {
   left: 0;
 }
 
-/* Place the container to the right */
 .right {
   left: 50%;
 }
 
-/* Add arrows to the left container (pointing right) */
 .left::before {
   content: " ";
   height: 0;
@@ -169,7 +158,6 @@ span.psw {
   border-color: transparent transparent transparent white;
 }
 
-/* Add arrows to the right container (pointing left) */
 .right::before {
   content: " ";
   height: 0;
@@ -183,12 +171,10 @@ span.psw {
   border-color: transparent white transparent transparent;
 }
 
-/* Fix the circle for containers on the right side */
 .right::after {
   left: -16px;
 }
 
-/* The actual content */
 .content-timeline {
   padding: 20px 30px;
   background-color: white;
@@ -196,7 +182,6 @@ span.psw {
   border-radius: 6px;
 }
 
-/* Media queries - Responsive timeline on screens less than 600px wide */
 @media screen and (max-width: 600px) {
   /* Place the timelime to the left */
   .timeline::after {
@@ -252,17 +237,15 @@ span.psw {
 	text-align: center;
 	background-color: white;;
 }
-/* Remove extra left and right margins, due to padding */
+
 .row {margin: 0 -5px;}
 
-/* Clear floats after the columns */
 .row:after {
 	content: "";
 	display: table;
 	clear: both;
 }
 
-/* Responsive columns */
 @media screen and (max-width: 800px) {
 	.column {
 		width: 100%;
@@ -271,7 +254,6 @@ span.psw {
 	}
 }
 
-/* Style the counter cards */
 .card {
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 	text-align: center;
@@ -294,7 +276,6 @@ span.psw {
 .card button:hover, a:hover {
   opacity: 0.7;
 }
-
 
 ul, #myUL {
 	list-style-type: none;
@@ -428,7 +409,6 @@ ul, #myUL {
 	background-color: #52A19A;
 	display: block;
 	color: black; 
-	width: 100px;
 }
  .jour_vide {
  	border: 1px solid white;

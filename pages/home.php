@@ -1,8 +1,8 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\User;
 	use \App\Companies\Companies;
+	use \App\Quote\Quote;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -13,7 +13,7 @@
 	
 	//init form class
 	$Companies = new Companies();
-	$User = New User();
+	$Quote = new Quote();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){
@@ -68,7 +68,7 @@
 			</div>
 			<div class="dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
+				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>Current month quote</p>
 			</div>
 			<div class="dashboard">

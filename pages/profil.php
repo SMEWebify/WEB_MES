@@ -29,14 +29,13 @@
 	}
 
 	//if picture is updated
-	if(isset($_POST['IMAGE_PROFIL']) AND !empty($_POST['IMAGE_PROFIL'])){	
-		
+	if ( isset( $_FILES["IMAGE_PROFIL"] ) && !empty( $_FILES["IMAGE_PROFIL"]["name"] ) ) {
 		$dossier = PICTURE_FOLDER.PROFIL_FOLDER;
 		$fichier = basename($_FILES['IMAGE_PROFIL']['name']);
 
 		If(!empty($_POST)){		
 			move_uploaded_file($_FILES['IMAGE_PROFIL']['tmp_name'], $dossier . $fichier);
-			$bdd->GetUpdatePOST(TABLE_ERP_EMPLOYEES, $_POST, 'WHERE IdUser='. $User->idUSER . '');
+			$bdd->GetUpdatePOST(TABLE_ERP_EMPLOYEES, array("IMAGE_PROFIL" => $fichier ), 'WHERE IdUser='. $User->idUSER . '');
 		}	
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateProfilNotification')));
 	}

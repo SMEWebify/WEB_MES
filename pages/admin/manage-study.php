@@ -7,6 +7,7 @@
 	use \App\Accounting\Allocations;
 	use \App\Study\Article;
 	use \App\Study\Unit;
+	use \App\Study\SubFamily;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -21,6 +22,8 @@
 	$Allocations = new Allocations();
 	$Article = new Article();
 	$Unit = new Unit();
+	$SubFamily = new SubFamily();
+
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -268,13 +271,6 @@
 		$ArticleImage = $data->IMAGE;
 
 		$actionForm = 'admin.php?page=manage-study&id='. $ArticleId .'';
-	}
-
-	//create familly list select
-	$FamilleListe ='<option value="0">Aucune</option>';
-	$query='SELECT Id, LABEL   FROM '. TABLE_ERP_SOUS_FAMILLE .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$FamilleListe .='<option value="'. $data->Id .'" '. selected($ArticleFamilleId, $data->Id) .'>'. $data->LABEL .'</option>';
 	}
 
 	if(!empty($ArticleCODE)){$DisplayCode = '<input type="hidden" name="CODEArticle" value="'. $ArticleCODE .'">' .$ArticleCODE;}
@@ -563,7 +559,7 @@
 							</td>
 							<td >
 								<select name="FAMILLE_IDArticle">
-									<?= $FamilleListe ?>
+								<?= $SubFamily->GetSubFamilyList($ArticleFamilleId, true) ?>
 								</select>
 							</td>
 							<td>
@@ -711,13 +707,7 @@
 								$TtCout = 0;
 								$TtPrix = 0;
 	
-								foreach ($Article->GETTechnicalCut($ArticleId) as $data){
-	
-									$PrestaListe ='<option value="0">Aucune</option>';
-									$query='SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'';
-									foreach ($bdd->GetQuery($query) as $dataPrest){
-										$PrestaListe .='<option value="'. $dataPrest->Id .'" '. selected($dataPrest->Id,  $data->PRESTA_ID) .' >'. $dataPrest->LABEL .'</option>';
-									}?>
+								foreach ($Article->GETTechnicalCut($ArticleId) as $data){?>
 											<tr>
 												<td></td>
 												<td>
@@ -726,7 +716,7 @@
 												</td>
 												<td>
 													<select name="UpdatePRESTADecoupTech[]">
-														<?= $PrestaListe  ?>
+														<?= $Prestation->GetPrestationList($data->PRESTA_ID) ?>
 													</select>
 												</td>
 												<td><input type="text"  name="UpdateLABELDecoupTech[]" value="<?=  $data->LABEL ?>" required="required"></td>
@@ -925,6 +915,7 @@
 							</tr>
 						</thead>
 						<?php
+						
 						$query='SELECT '. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.Id,
 												'. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.ORDRE,
 												'. TABLE_ERP_IMPUT_COMPTA_LIGNE .'.IMPUTATION_ID,
@@ -1027,17 +1018,10 @@
 					</thead>
 					<tbody>
 						<?php
-							
-						$query='SELECT '. TABLE_ERP_UNIT .'.Id,
-										'. TABLE_ERP_UNIT .'.CODE,
-										'. TABLE_ERP_UNIT .'.LABEL,
-										'. TABLE_ERP_UNIT .'.TYPE
-										FROM `'. TABLE_ERP_UNIT .'`
-										ORDER BY TYPE';
 						$i = 1;
 						foreach ($Unit->GetUnitList('', false) as $data):?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_unit[]" id="id_unit" value="<?= $data->Id ?>"></td>
+							<td><?= $i ?> <input type="hidden" name="id_unit[]" id="id_unit" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="UpdateCODEUnit[]" value="<?= $data->CODE ?>" size="10"></td>
 							<td><input type="text" name="UpdateLABELUnit[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
@@ -1089,20 +1073,10 @@
 					</thead>
 					<tbody>
 						<?php
-						$query='SELECT '. TABLE_ERP_SOUS_FAMILLE .'.Id,
-														'. TABLE_ERP_SOUS_FAMILLE .'.CODE,
-														'. TABLE_ERP_SOUS_FAMILLE .'.LABEL,
-														'. TABLE_ERP_SOUS_FAMILLE .'.PRESTATION_ID,
-														'. TABLE_ERP_PRESTATION .'.CODE AS CODE_PRESTATION,
-														'. TABLE_ERP_PRESTATION .'.LABEL AS LABEL_PRESTATION
-														FROM `'. TABLE_ERP_SOUS_FAMILLE .'`
-														LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_SOUS_FAMILLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-														ORDER BY Id';
-					
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data):?>
+						foreach ($SubFamily->GetSubFamilyList('', false) as $data):?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_sous_famille[]" id="id_sous_famille" value="<?= $data->Id ?>"></td>
+							<td><?= $i ?> <input type="hidden" name="id_sous_famille[]" id="id_sous_famille" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="UpdateCODESousFamille[]" value="<?= $data->CODE ?>" size="10"></td>
 							<td><input type="text" name="UpdateLABELSousFamille[]" value="<?= $data->LABEL ?>" ></td>
 							<td>

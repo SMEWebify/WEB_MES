@@ -42,7 +42,7 @@ class Ressource Extends SQL  {
 
     public function GETRessourcesList($IdData=0){
 
-        $this->RessourcesList ='<option value="0">Aucune</option>';
+        $this->RessourcesList ='';
         $query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
         foreach ( $this->GetQuery($query) as $data){
             $this->RessourcesList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';

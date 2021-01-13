@@ -90,7 +90,7 @@ class Companies Extends SQL  {
 
     public function GetProviderList($IdData=0){
 
-        $this->ProviderList ='<option value="0">Aucune</option>';
+        $this->ProviderList ='';
         $query='SELECT Id, LABEL   FROM '. TABLE_ERP_CLIENT_FOUR .'';
 		foreach ($this->GetQuery($query) as $data){
            
@@ -101,6 +101,7 @@ class Companies Extends SQL  {
     }
 
     public function GetProviderCheckedList($IdData){
+        $this->ProviderCheckedList = '';
         $IdData = explode(",", $IdData);
         $query='SELECT id, CODE, NAME   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_FOUR=1 ';
 
@@ -120,7 +121,7 @@ class Companies Extends SQL  {
 
     public function GetCustomerList(array $IdData = null){
         if($IdData != null){$IdData = explode(",", $IdData);}
-
+        $this->CustomerList = '';
         $query='SELECT id, NAME   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_CLIENT=1 ';
 
 		foreach ($this->GetQuery($query) as $data){

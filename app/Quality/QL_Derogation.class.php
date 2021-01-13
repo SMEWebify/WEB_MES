@@ -67,15 +67,19 @@ class QL_Derogation Extends SQL  {
         return $Derogation;
     }
 
-    public function GETQL_DerogationListList($IdData=0){
+    public function GETQL_DerogationListList($IdData=0, $Select = true){
 
-        $this->QL_DerogationList ='<option value="0">Aucune</option>';
-        $query='SELECT Id, CODE, LABEL   FROM '. TABLE_ERP_DEROGATION .'';
-		foreach ($this->GetQuery($query) as $data){
-           
-			$this->QL_DerogationList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-		}
+        $this->QL_DerogationList ='';
+        $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_DEROGATION .' ORDER BY CODE';
+		if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->QL_DerogationList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->LABEL .'</option>';
+            }
         
-        return  $this->QL_DerogationList;
+            return  $this->QL_DerogationList;
+        }else {
+            return  $this->GetQuery($query);
+        } 
     }
 }

@@ -22,7 +22,7 @@ class Section Extends SQL  {
 
     public function GetSectionList($IdData=0){
 
-        $this->SectionList ='<option value="0">Aucune</option>';
+        $this->SectionList ='';
         $query='SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .'';
 		foreach ($this->GetQuery($query) as $data){
 			$this->SectionList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';

@@ -21,7 +21,7 @@
 	<div class="navbar">
 		<a href="#" id="OpenNav" >&#9783; <?=$langue->show_text('MenuLinkPage') ; ?></a>
 		<a href="<?=$_SERVER['HTTP_REFERER'] ?>">&#8634; <?=  $langue->show_text('ReturnLinkPage') ; ?></a>
-		<a href="index.php?page=home"><?=$Company->CompanyName() ?></a>
+		<a href="index.php?page=home">Home</a>
 		<span class="profil-nav"><a  href="index.php?page=profil"><?=$User->NAME ?>  <img src="<?= PICTURE_FOLDER.PROFIL_FOLDER.$User->IMAGE_PROFIL ?>" title="Photo profil" alt="Photo" style="border-radius: 50%; width: 30px; vertical-align: middle;" /></a></span>
 	</div>
 	<div id="myNav" class="overlay">

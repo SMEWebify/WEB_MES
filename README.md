@@ -27,30 +27,20 @@ Password : KN1
 
 * app
   * Acouting   __class for Acouting data__
-    * Allocations.class.php
-    * PaymentCondition.class.php
-    * PaymentMethod.class.php
   * Companies   __class for customers & providers data__
-    * Companies.class.php
-  * COMPANY   __class for company data__
-    * ActivitySector.class.php
-    * Company.class.php
-    * CompanyManager.class.php
-    * Employees.class.php
+  * Company   __class for company data__
   * Lang __folder for language class__
     * en  __XML folder for En lang__ 
     * fr __XML folder for fr lang__ 
   * Methods __class for methods data__
-    * Prestation.class.php
-    * Ressource.class.php
-    * Section.class.php
   * Quality  __class for quality data__
+  * Quote  __class for quote data__
   * Study __class for study data__
-    * Article.class.php
-    * Unit.class.php
+  ----
   * Auth.class.php   __Authentification user class__
   * Autoload.class.php   __Autoload class__
   * CallOutBox.class.php  __notification class__
+  * Form.class.php
   * language.class.php  __class language__
   * SQL.class.php  __class sql__
   * User.class.php  __User sql__

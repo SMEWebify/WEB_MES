@@ -21,15 +21,23 @@ class QL_Defaut Extends SQL  {
         return $Defaut;
     }
 
-    public function GETQL_DefautList($IdData=0){
+    public function GETQL_DefautList($IdData=0, $Select = true){
 
-        $this->QL_DefautList ='<option value="0">Aucune</option>';
-        $query='SELECT Id, CODE, LABEL   FROM '. TABLE_ERP_DEFAUT .'';
-		foreach ($this->GetQuery($query) as $data){
-           
-			$this->QL_DefautList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-		}
+        $this->QL_DefautList ='';
+        $query='SELECT '. TABLE_ERP_DEFAUT .'.id,
+                        '. TABLE_ERP_DEFAUT .'.CODE,
+                        '. TABLE_ERP_DEFAUT .'.LABEL
+                        FROM `'. TABLE_ERP_DEFAUT .'`
+                        ORDER BY id';
+        if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->QL_DefautList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->LABEL .'</option>';
+            }
         
-        return  $this->QL_DefautList;
+          return  $this->QL_DefautList;
+        }else {
+            return  $this->GetQuery($query);
+        } 
     }
 }

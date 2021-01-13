@@ -21,15 +21,25 @@ class QL_Causes Extends SQL  {
         return $Causes;
     }
 
-    public function GETQL_CausesList($IdData=0){
+    public function GETQL_CausesList($IdData=0,  $Select = true){
 
-        $this->QL_CausesList ='<option value="0">Aucune</option>';
-        $query='SELECT Id, CODE, LABEL   FROM '. TABLE_ERP_QL_CAUSES .'';
-		foreach ($this->GetQuery($query) as $data){
-           
-			$this->QL_CausesList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-		}
-        
-        return  $this->QL_CausesList;
+        $this->QL_CausesList ='';
+        $query='SELECT '. TABLE_ERP_QL_CAUSES .'.id,
+                        '. TABLE_ERP_QL_CAUSES .'.CODE,
+                        '. TABLE_ERP_QL_CAUSES .'.LABEL
+                        FROM `'. TABLE_ERP_QL_CAUSES .'`
+                        ORDER BY CODE';
+        if($Select){
+
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->QL_CausesList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->LABEL .'</option>';
+            }
+            
+            return  $this->QL_CausesList;
+        }else {
+
+            return  $this->GetQuery($query);
+        }  
     }
 }

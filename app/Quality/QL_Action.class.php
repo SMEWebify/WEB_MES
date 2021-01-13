@@ -64,15 +64,20 @@ class QL_Action Extends SQL  {
         return $Action;
     }
 
-    public function GETQL_ActionList($IdData=0){
+    public function GETQL_ActionList($IdData=0,  $Select = true){
 
-        $this->QL_ACTIONList ='<option value="0">Aucune</option>';
-        $query='SELECT Id, CODE, LABEL   FROM '. TABLE_ERP_QL_ACTION .'';
-		foreach ($this->GetQuery($query) as $data){
-           
-			$this->QL_ACTIONList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-		}
+        $this->QL_ACTIONList ='';
+        $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_QL_ACTION .' ORDER BY CODE';
+        if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->QL_ACTIONList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->LABEL .'</option>';
+            }
         
-        return  $this->QL_ACTIONList;
+          return  $this->QL_ACTIONList;
+        }else {
+
+            return  $this->GetQuery($query);
+        }  
     }
 }

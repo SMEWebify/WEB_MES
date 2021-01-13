@@ -2,6 +2,7 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\COMPANY\Numbering;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,7 +12,8 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
-	
+	$Numbering = new Numbering();
+
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -529,7 +531,7 @@
 
 						$i = 1;
 						foreach ($bdd->GetQuery($query) as $data): 
-						$Exemple = NumDoc($data->MODEL,$data->COMPTEUR, $data->DIGIT);
+							$Exemple = $Numbering->getCodeNumbering($type='0', $sql ='', $data->MODEL , $data->DIGIT, $data->COMPTEUR);
 						?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_NumDoc[]" id="id_NumDoc" value="<?= $data->Id ?>"></td>

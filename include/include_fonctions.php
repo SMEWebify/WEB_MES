@@ -88,17 +88,6 @@
 		return $date_client;
 	}
 	
-	function case_OF($valeur){
-		if($valeur == ""){
-			$img = '<img src="image/OF/case.png" title="case" />';
-		}
-		else{
-			$img = '<img src="image/OF/case_noir.png" title="case" />';
-		}
-		
-		return $img;
-	}
-	
 	function modifieValeurArray($tab,$val,$remplace){
 		$cle = array_search($val,$tab);
 		if($cle!==false)
@@ -107,177 +96,7 @@
 			return $tab;
 		}
 	}
-	
-	function PLAN($PLAN, $id_RECURENT){
-		if($id_RECURENT != 0){
-					
-			$PLAN = '<a href="plan.php?ref='. $id_RECURENT .'">'. $PLAN .'</a>';
-		}
-		else{
-			$PLAN =  $PLAN;
-		}
-		return $PLAN;
-	}
-	
-	function NumDoc($NumDoc,$Index, $digit){
-		
-		$Index= $Index+1;
-		$Index = str_pad($Index, $digit, '0', STR_PAD_LEFT);
-		$NumDoc = str_replace('<AAAA>', date("Y") , $NumDoc);
-		$NumDoc = str_replace('<AA>', date("y") , $NumDoc);
-		$NumDoc = str_replace('<MM>', date("m") , $NumDoc);
-		$NumDoc = str_replace('<JJ>', date("d") , $NumDoc);
-		$NumDoc = str_replace('<I>',$Index , $NumDoc);
-		
-		return $NumDoc;
-	}
-	
-	// BBcode
-	function code($texte){
-		$texte = str_replace(':D', '<img src="images/boutons/12.gif" title="heureux" alt="heureux" />', $texte);
-		$texte = str_replace(':mdr:', '<img src="images/boutons/11.gif" title="mdr" alt="mdr" />', $texte);
-		$texte = str_replace(':triste:', '<img src="images/boutons/10.gif" title="triste" alt="triste" />', $texte);
-		$texte = str_replace(':langue:', '<img src="images/boutons/9.gif" title="langue" alt="langue" />', $texte);
-		$texte = str_replace(':rool:', '<img src="images/boutons/8.gif" title="rool" alt="rool" />', $texte);
-		$texte = str_replace(';-:', '<img src="images/boutons/7.gif" title="clein" alt="clein" />', $texte);
-		$texte = str_replace(':|', '<img src="images/boutons/6.gif" title="neutre" alt="neutre" />', $texte);
-		$texte = str_replace(':S', '<img src="images/boutons/5.gif" title="pale" alt="pale" />', $texte);
-		$texte = str_replace('oO', '<img src="images/boutons/4.gif" title="suspect" alt="suspect" />', $texte);
-		$texte = str_replace(':win:', '<img src="images/boutons/3.png" title="win" alt="win" />', $texte);
-		$texte = str_replace(':scratch:', '<img src="images/boutons/2.png" title="scratch" alt="scratch" />', $texte);
-		$texte = str_replace(':study:', '<img src="images/boutons/1.png" title="study" alt="study" />', $texte);
-		$texte = str_replace(':pc:', '<img src="images/boutons/13.gif" title="win" alt="pc" />', $texte);
-		$texte = str_replace(':sos:', '<img src="images/boutons/14.gif" title="scratch" alt="sos" />', $texte);
-		$texte = str_replace(':pingu:', '<img src="images/boutons/15.gif" title="study" alt="pingu" />', $texte);
-		$texte = str_replace(':capt:', '<img src="images/boutons/16.gif" title="win" alt="capt" />', $texte);
-		$texte = str_replace(':incli:', '<img src="images/boutons/17.gif" title="scratch" alt="incli" />', $texte);
-		$texte = str_replace(':hiii:', '<img src="images/boutons/18.gif" title="study" alt="hiii" />', $texte);
-		
-		$texte = str_replace(':hihi:', '<img src="images/boutons/7-1.gif" title="hihi" alt="hihi" />', $texte);
-		$texte = str_replace(':yo:', '<img src="images/boutons/7-2.gif" title="yo" alt="yo" />', $texte);
-		$texte = str_replace(':cyp:', '<img src="images/boutons/7-3.gif" title="Espion" alt="cyp" />', $texte);
-		$texte = str_replace(':na:', '<img src="images/boutons/7-4.gif" title="Na !!" alt="na" />', $texte);
-		$texte = str_replace(':boul:', '<img src="images/boutons/7-5.gif" title="Boulet" alt="boul" />', $texte);
-		$texte = str_replace(':crouik:', '<img src="images/boutons/7-6.gif" title="Crouik" alt="crouik" />', $texte);
-		
-		preg_match('`\[code\](.*)\[/code\]`isU', $texte, $entre_balise);
-		$original_tag = array('#<#', '#>#', '#"#', '#:#', '#\[#', '#\]#', '#\(#', '#\)#', '#\{#', '#\}#');
-		$nouveau_tag = array('&lt;', '&gt;', '&quot;', '&#58;', '&#91;', '&#93;', '&#40;', '&#41;', '&#123;', '&#125;');
-		$entre_balise = preg_replace($original_tag, $nouveau_tag, $entre_balise[1]);
 
-		$texte = preg_replace('`\[code\](.+)\[/code\]`isU', '<span class="code_annonce">Code :</span><div class="code">'. $entre_balise .'</div>', $texte);
-		
-		
-	//	$texte = preg_replace('`\[quote=\](.+)\[/quote\]`isU', '<span class="citation_annonce">Citation :</span><div class="citation">$1</div>', $texte);
-		
-		$texte = preg_replace('`\[quote\]`isU', '<span class="citation_annonce">Citation :</span><div class="citation">', $texte);
-		$texte = preg_replace('`\[quote=\]`isU', '<span class="citation_annonce">Citation : $1</span><div class="citation">', $texte);
-		$texte = preg_replace('`\[quote=(.+)\]`isU', '<span class="citation_annonce">Citation : $1</span><div class="citation">', $texte);
-		$texte = preg_replace('`\[/quote\]`isU', '</div>', $texte);
-		
-		
-		
-		$texte = preg_replace('`\[g\](.+)\[/g\]`isU', '<strong>$1</strong>', $texte);
-		$texte = preg_replace('`\[i\](.+)\[/i\]`isU', '<em>$1</em>', $texte);
-		$texte = preg_replace('`\[s\](.+)\[/s\]`isU', '<span class="souligne">$1</span>', $texte);
-		
-		$texte = preg_replace('`\[float=left\](.+)\[/float\]`isU', '<div class="float_left">$1</div>', $texte);
-		$texte = preg_replace('`\[float=right\](.+)\[/float\]`isU', '<div class="float_right">$1</div>', $texte);
-		
-		$texte = preg_replace('`\[center\](.+)\[/center\]`isU', '<div class="centrer">$1</div>', $texte);
-		$texte = preg_replace('`\[right\](.+)\[/right\]`isU', '<div class="droite-texte">$1</div>', $texte);
-		$texte = preg_replace('`\[left\](.+)\[/left\]`isU', '<div class="gauche-texte">$1</div>', $texte);
-		$texte = preg_replace('`\[justify\](.+)\[/justify\]`isU', '<div class="justify">$1</div>', $texte);
-		
-	//	$texte = preg_replace('`\[list\](.+)\[/list\]`isU', '<ul>$1</ul>', $texte);
-	//	$texte = preg_replace('`\[*\](.+)`isU', '<li>$1</li>', $texte);
-		$texte = preg_replace('`\[img\](.+)\[/img\]`isU', '<img style="margin:5px;" src="$1" alt="Image utilisateur" title="Image utilisateur"/>', $texte);
-		$texte = preg_replace('`\[img=\](.+)\[/img\]`isU', '<img style="margin:5px;" src="$1" alt="Image utilisateur" title="Image utilisateur"/>', $texte);
-		$texte = preg_replace('`\[img=(.+)\](.+)\[/img\]`isU', '<img style="margin:5px;" src="$2" alt="$1" title="$1"/>', $texte);
-		
-		$texte = preg_replace('`\[url\](.+)\[/url\]`isU', '<a href="$1">$1</a>', $texte);
-		$texte = preg_replace('`\[url=(.+)\](.+)\[/url\]`isU', '<a href="$1">$2</a>', $texte);
-		$texte = preg_replace('`\[email\]([a-z0-9&\-_.]+?@[\w\-]+\.([\w\-\.]+\.)?[\w]+)\[/email\]`isU', ' <a href="mailto:$1">$1</a>', $texte);
-		$texte = preg_replace('`\[email=([a-z0-9&\-_.]+?@[\w\-]+\.([\w\-\.]+\.)?[\w]+)\](.+)\[/email\]`isU', ' <a href="mailto:$1">$3</a>', $texte);
-		
-		$texte = preg_replace("#(^|[\n ])([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]*)#is", "\\1<a href=\"\\2\" >\\2</a>", $texte);
-		$texte = preg_replace("#(^|[\n ])((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]+]*)#is", "\\1<a href=\"http://\\2\" >\\2</a>", $texte);
-		$texte = preg_replace("#(^|[\n ])([a-z0-9&\-_.]+?)@([\w\-]+\.([\w\-\.]+\.)*[\w]+)#i", "\\1<a href=\"mailto:\\2@\\3\">\\2@\\3</a>", $texte);
-		
-		$texte = preg_replace('#\[color=(orange|noir|marron|vertf|olive|marine|violet|bleugris|argent|gris|rouge|vertc|jaune|bleu|rose|turquoise|blanc)\](.+)\[/color\]#isU', '<span class="$1">$2</span>', $texte);
-		$texte = preg_replace('#\[size=(minuscule|trespetit|petit|moyen|grand|tresgrand|trestresgrand)\](.+)\[/size\]#isU', '<span class="$1">$2</span>', $texte);
-		$texte = preg_replace('#\[font=(arial|arialb|comic|courier|georgia|impact|times|trebuchet|verdana)\](.+)\[/font\]#isU', '<span class="$1">$2</span>', $texte);
-
-		return $texte;
-	}
-	
-		// BBcode
-	function code_inverse($texte){
-		$texte = str_replace(':D', '', $texte);
-		$texte = str_replace(':mdr:', '', $texte);
-		$texte = str_replace(':triste:', '', $texte);
-		$texte = str_replace(':langue:', '', $texte);
-		$texte = str_replace(':rool:', '', $texte);
-		$texte = str_replace(';-:', '', $texte);
-		$texte = str_replace(':|', '', $texte);
-		$texte = str_replace(':S', '', $texte);
-		$texte = str_replace('oO', '', $texte);
-		$texte = str_replace(':win:', '', $texte);
-		$texte = str_replace(':scratch:', '', $texte);
-		$texte = str_replace(':study:', '', $texte);
-		$texte = str_replace(':pc:', '', $texte);
-		$texte = str_replace(':sos:', '', $texte);
-		$texte = str_replace(':pingu:', '', $texte);
-		$texte = str_replace(':capt:', '', $texte);
-		$texte = str_replace(':incli:', '', $texte);
-		$texte = str_replace(':hiii:', '', $texte);
-		
-		$texte = str_replace(':hiii:', '', $texte);
-		$texte = str_replace(':yo:', '', $texte);
-		$texte = str_replace(':cyp:', '', $texte);
-		$texte = str_replace(':na:', '', $texte);
-		$texte = str_replace(':boul:', '', $texte);
-		$texte = str_replace(':crouik:', '', $texte);
-		
-		preg_match('`\[code\](.*)\[/code\]`isU', $texte, $entre_balise);
-		$original_tag = array('#<#', '#>#', '#"#', '#:#', '#\[#', '#\]#', '#\(#', '#\)#', '#\{#', '#\}#');
-		$nouveau_tag = array('&lt;', '&gt;', '&quot;', '&#58;', '&#91;', '&#93;', '&#40;', '&#41;', '&#123;', '&#125;');
-		$entre_balise = preg_replace($original_tag, $nouveau_tag, $entre_balise[1]);
-
-		$texte = preg_replace('`\[code\](.+)\[/code\]`isU', ''. $entre_balise .'', $texte);
-		
-		$texte = preg_replace('`\[quote\]`isU', 'Citation :', $texte);
-		$texte = preg_replace('`\[quote=(.+)\]`isU', 'Citation :', $texte);
-		$texte = preg_replace('`\[/quote\]`isU', '', $texte);
-		
-		$texte = preg_replace('`\[g\](.+)\[/g\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[i\](.+)\[/i\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[s\](.+)\[/s\]`isU', '$1', $texte);
-		
-		$texte = preg_replace('`\[float=left\](.+)\[/float\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[float=right\](.+)\[/float\]`isU', '$1', $texte);
-		
-		$texte = preg_replace('`\[center\](.+)\[/center\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[right\](.+)\[/right\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[left\](.+)\[/left\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[justify\](.+)\[/justify\]`isU', '$1', $texte);
-		$texte = preg_replace('`\[list\]\[*\](.+)\[/list\]`isU', '$1', $texte);
-		
-		$texte = preg_replace('`\[url\](.+)\[/url\]`isU', '($1)', $texte);
-		$texte = preg_replace('`\[url=\](.+)\[/url\]`isU', '($2)', $texte);
-		$texte = preg_replace('`\[url=(.+)\](.+)\[/url\]`isU', ' $2 ', $texte);
-		$texte = preg_replace('`\[email\]([a-z0-9&\-_.]+?@[\w\-]+\.([\w\-\.]+\.)?[\w]+)\[/email\]`isU', '$1', $texte);
-		
-		$texte = preg_replace('`\[img\](.+)\[/img\]`isU', '', $texte);
-		$texte = preg_replace('`\[img=\](.+)\[/img\]`isU', '', $texte);
-		$texte = preg_replace('`\[img=(.+)\](.+)\[/img\]`isU', '', $texte);
-	
-		$texte = preg_replace('#\[color=(orange|noir|marron|vertf|olive|marine|violet|bleugris|argent|gris|rouge|vertc|jaune|bleu|rose|turquoise|blanc)\](.+)\[/color\]#isU', '$2', $texte);
-		$texte = preg_replace('#\[size=(minuscule|trespetit|petit|moyen|grand|tresgrand|trestresgrand)\](.+)\[/size\]#isU', '$2', $texte);
-		$texte = preg_replace('#\[font=(arial|arialb|comic|courier|georgia|impact|times|trebuchet|verdana)\](.+)\[/font\]#isU', '$2', $texte);
-
-		return $texte;
-	}
 	
 	//remplacer les espace par des %20 pour l'url
 	function espace_url($variable){
@@ -406,46 +225,6 @@
 		$date = str_replace(".", " ", $date);
 		return $date;
 
-	}
-	
-	//detection des robots
-	function robot($ip)
-	{
-		$ip =  substr($ip , 0, 7);
-		if($ip == "66.249." or $ip == "64.68.9" or $ip == "64.233." or $ip == "216.239")
-		{
-			$resulta = "Googlebot";
-		}
-		elseif($ip == "66.196." or $ip == "68.142.")
-		{
-			$resulta = "Yahoo! Slurp";
-		}
-		elseif ($ip == "207.68." or $ip == "65.54.1" or $ip =="65.55.2" or $ip =="65.55.1")
-		{
-			$resulta = "MSNBot";
-		}
-		elseif ($ip == "208.146" or $ip == "209.202")
-		{
-			$resulta = "Lycos";
-		}
-		elseif ($ip == "66.17.1" or $ip == "194.221" or $ip == "204.123")
-		{
-			$resulta = "Alta Vista";
-		}
-		elseif ($ip == "195.101")
-		{
-			$resulta = "Voila";
-		}
-		elseif ($ip == "128.30.")
-		{
-			$resulta = "MassachusettsIT";
-		}
-		else
-		{
-			$resulta = "Anonyme";
-		}
-		
-		return $resulta;
 	}
 	
 	function stop($phrase, $numero, $adresse_redirection){
@@ -654,40 +433,6 @@
 	   }
 	   
 	   return $valeur_a_remplacer_zero;
-	}
-
-	function type_rapport($type_rapport){
-		
-		if($type_rapport == 1){
-			$TYPE = 'NCF Ext';
-		}
-		elseif($type_rapport == 2){
-			$TYPE = 'RC Ext';
-		}
-		elseif($type_rapport == 3){
-			$TYPE = 'NCF Int';
-		}
-		elseif($type_rapport == 4){
-			$TYPE = 'RC Int';
-		}
-		else{
-			$TYPE = 'N/A';
-		}
-		
-		return $TYPE;
-	}
-	
-	function padding_ligne($commandeEnregistrer, $commandeLigne){
-		
-		if($commandeEnregistrer == $commandeLigne){
-				
-			$padding_ligne = '';
-		}
-		else{
-			$padding_ligne = 'style="border-top: 3px solid black; "';
-		}
-		
-		return $padding_ligne;
 	}
 	
 ?>

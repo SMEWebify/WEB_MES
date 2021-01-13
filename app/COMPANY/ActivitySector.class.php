@@ -24,7 +24,7 @@ class ActivitySector Extends SQL  {
 
     public function GETActivitySectorList($IdData=0){
 
-        $this->ActivitySectorList ='<option value="0">Aucune</option>';
+        $this->ActivitySectorList ='';
         $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_ACTIVITY_SECTOR .'';
         foreach ( $this->GetQuery($query) as $data){
             $this->ActivitySectorList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
@@ -35,6 +35,7 @@ class ActivitySector Extends SQL  {
 
     public function GETActivitySectorCheckedList($IdData){
         $IdData = explode(",", $IdData);
+        $this->ActivitySectorCheckedList = '';
         $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_ACTIVITY_SECTOR .' ';
 
 		foreach ($this->GetQuery($query) as $data){

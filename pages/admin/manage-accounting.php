@@ -2,6 +2,11 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\Accounting\Allocations;
+	use \App\Accounting\PaymentMethod;
+	use \App\Accounting\PaymentCondition;
+	use \App\Accounting\Delevery;
+	use \App\Accounting\VAT;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,7 +16,11 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
-	
+	$Allocations = new Allocations();
+	$PaymentMethod = new PaymentMethod();
+	$PaymentCondition = new PaymentCondition();
+	$Delevery = new Delevery();
+	$VAT = new VAT();
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -144,7 +153,7 @@
 	//update list of entry accouting
 	if(isset($_POST['id_IMPUT']) AND !empty($_POST['id_IMPUT'])){
 
-		$UpdateIdTVA = $_POST['id_IMPUT'];
+		$id_IMPUT = $_POST['id_IMPUT'];
 		$UpdateCODEIMPUT = $_POST['UpdateCODEIMPUT'];
 		$UpdateLABELIMPUT = $_POST['UpdateLABELIMPUT'];
 		$UpdateTVAIMPUT = $_POST['UpdateTVAIMPUT'];
@@ -153,7 +162,7 @@
 		$UpdateTYPEIMPUT = $_POST['UpdateTYPEIMPUT'];
 
 		$i = 0;
-		foreach ($UpdateIdTVA as $id_generation) {
+		foreach ($id_IMPUT as $id_generation) {
 
 			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_IMPUT_COMPTA .'` SET  CODE = \''. addslashes($UpdateCODEIMPUT[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELIMPUT[$i]) .'\',
@@ -161,7 +170,7 @@
 																COMPTE_TVA = \''. addslashes($UpdateCOMPTETVAIMPUT[$i]) .'\',
 																CODE_COMPTA = \''. addslashes($UpdateCODECOMPTAIMPUT[$i]) .'\',
 																TYPE_IMPUTATION = \''. addslashes($UpdateTYPEIMPUT[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
+																WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateAccountingNotification')));
@@ -408,22 +417,15 @@
 					</thead>
 					<tbody>
 						<?php
-							//Generate TVA list
-							$query='SELECT '. TABLE_ERP_TVA .'.Id,
-								'. TABLE_ERP_TVA .'.CODE,
-								'. TABLE_ERP_TVA .'.LABEL,
-								'. TABLE_ERP_TVA .'.TAUX
-								FROM `'. TABLE_ERP_TVA .'`
-								ORDER BY Id';
-								$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						//Generate TVA list
+						$i = 1;
+						foreach ($VAT->GETVATList('',False) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_TVA[]" id="id_TVA" value="<?= $data->Id ?>"></td>
 							<td><input type="text" name="UpdateCODETVA[]" value="<?= $data->CODE ?>" required="required"></td>
 							<td><input type="text" name="UpdateLABELTVA[]" value="<?= $data->LABEL ?>" required="required"></td>
 							<td><input type="text" name="UpdateTAUXTVA[]" value="<?= $data->TAUX ?>" required="required"></td>
 						</tr>
-						<?php $TVAListe .='<option value="'. $data->Id .'">'. $data->TAUX .'>% - '. $data->LABEL .'</option>'; ?>
 						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
@@ -459,29 +461,15 @@
 					<tbody>
 					<?php
 						//gererate list of entry accouting
-						$query='SELECT '. TABLE_ERP_IMPUT_COMPTA .'.Id,
-									'. TABLE_ERP_IMPUT_COMPTA .'.CODE,
-									'. TABLE_ERP_IMPUT_COMPTA .'.LABEL,
-									'. TABLE_ERP_IMPUT_COMPTA .'.TVA,
-									'. TABLE_ERP_IMPUT_COMPTA .'.COMPTE_TVA,
-									'. TABLE_ERP_IMPUT_COMPTA .'.CODE_COMPTA,
-									'. TABLE_ERP_IMPUT_COMPTA .'.TYPE_IMPUTATION,
-									'. TABLE_ERP_TVA .'.TAUX,
-									'. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA
-									FROM `'. TABLE_ERP_IMPUT_COMPTA .'`
-										LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_IMPUT_COMPTA .'`.`TVA` = `'. TABLE_ERP_TVA .'`.`id`
-									ORDER BY Id';
-
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($Allocations->GETAllocationsList('', false) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_IMPUT[]" id="id_IMPUT" value="<?= $data->Id ?>"></td>
+							<td><?= $i ?> <input type="hidden" name="id_IMPUT[]" id="id_IMPUT" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="UpdateCODEIMPUT[]" value="<?= $data->CODE ?>" required="required"></td>
 							<td><input type="text" name="UpdateLABELIMPUT[]" value="<?= $data->LABEL ?>" required="required"></td>
 							<td>
 								<select name="UpdateTVAIMPUT[]">
-									<option value="<?= $data->TVA ?>"><?= $data->TAUX ?>% - <?= $data->LABEL_TVA ?></option>
-									<?= $TVAListe ?>
+									<?= $VAT->GETVATList($data->TVA) ?>
 								</select>
 							</td>
 							<td><input type="text" name="UpdateCOMPTETVAIMPUT[]" value="<?= $data->COMPTE_TVA ?>" required="required"></td>
@@ -504,7 +492,7 @@
 							<td><input type="text" class="input-moyen-vide" name="AddLABELIMPUT"></td>
 							<td>
 								<select name="AddTVAIMPUT">
-									<?=$TVAListe ?>
+									<?= $VAT->GETVATList('') ?>
 								</select>
 							</td>
 							<td><input type="number" class="input-moyen-vide" name="AddCOMPTETVAIMPUT" ></td>
@@ -697,16 +685,10 @@
 					<tbody>
 						<?php
 						//generate list of delevery
-						$query='SELECT '. TABLE_ERP_TRANSPORT .'.Id,
-									'. TABLE_ERP_TRANSPORT .'.CODE,
-									'. TABLE_ERP_TRANSPORT .'.LABEL
-									FROM `'. TABLE_ERP_TRANSPORT .'`
-									ORDER BY Id';
-
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($Delevery->GETDeleveryList('', false) as $data): ?>
 						<tr>
-							<td><input type="hidden" name="UpdateIdTransport[]" id="UpdateIdTransport" value="<?= $data->Id ?>" ></td>
+							<td><input type="hidden" name="UpdateIdTransport[]" id="UpdateIdTransport" value="<?= $data->id ?>" ></td>
 							<td><input type="text" name="UpdateCODETransport[]" value="<?= $data->CODE ?>" required="required"></td>
 							<td><input type="text" name="UpdateLABELTransport[]" value="<?= $data->LABEL ?>" required="required"></td>
 						</tr>

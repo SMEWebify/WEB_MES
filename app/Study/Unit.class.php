@@ -12,7 +12,7 @@ class Unit Extends SQL  {
 
     Public $UnitList;
 
-    public function GETPrestation($id_GET){
+    public function GETUnit($id_GET){
 
         $Unit = $this->GetQuery('SELECT '. TABLE_ERP_UNIT .'.id,
                                                 '. TABLE_ERP_UNIT .'.CODE,
@@ -24,7 +24,7 @@ class Unit Extends SQL  {
     }
 
     public function GetUnitList($IdData=0, $Select = true){
-
+        $this->UnitList = '';
           $query='SELECT '. TABLE_ERP_UNIT .'.id,
                             '. TABLE_ERP_UNIT .'.CODE,
                             '. TABLE_ERP_UNIT .'.LABEL,

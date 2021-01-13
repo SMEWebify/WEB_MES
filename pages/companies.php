@@ -4,6 +4,8 @@
 	use \App\Form;
 	use \App\Companies\Companies;
 	use \App\COMPANY\ActivitySector;
+	use \App\Companies\Contact;
+	use \App\Companies\Address;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -15,6 +17,8 @@
 	$Form = new Form($_POST);
 	$Companies = new Companies();
 	$ActivitySector = new ActivitySector();
+	$Contact =  new Contact();
+	$Address = new Address();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_9'] != '1'){
@@ -47,9 +51,7 @@
 			<table class="content-table">
 				<thead>
 					<tr>
-						<th>
-							<?= $Data->CODE ?> - <?= $Data->NAME ?>
-						</th>
+						<th><?= $Data->CODE ?> - <?= $Data->NAME ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -57,53 +59,40 @@
 						<td><?=$langue->show_text('TableDateCreation') .' '. $Data->DATE_CREA ?> </td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->WEBSITE ?>
-						</td>
+						<td><?= $Data->WEBSITE ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->FBSITE ?> <?= $Data->TWITTERSITE ?> <?= $Data->LKDSITE ?>
-						</td>
+						<td><?= $Data->FBSITE ?> <?= $Data->TWITTERSITE ?> <?= $Data->LKDSITE ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->SIREN ?>
-						</td>
+						<td><?= $Data->SIREN ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->APE ?>
-						</td>
+						<td><?= $Data->APE ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->TVA_INTRA ?>
-						</td>
+						<td><?= $Data->TVA_INTRA ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->TVA_LABEL ?>
-						</td>
+						<td><?= $Data->TVA_LABEL ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->STATU_CLIENT ?>
-						</td>
+						<td><?= $Data->STATU_CLIENT ?></td>
 					</tr>
 					<tr>
-						<td>
-							<?= $Data->STATU_FOUR ?>
-						</td>
+						<td><?= $Data->STATU_FOUR ?></td>
 					</tr>
 				</tbody>
 			</table>
 	</div>
+	<?php if(!empty($Data->LOGO)):?>
 	<div class="column">
 		<div class="card">
-			<img src="<?=$Data->LOGO ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/>
+			<img src="<?= PICTURE_FOLDER.COMPANIES_FOLDER.$Data->LOGO ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/>
 		</div>
 	</div>
+	<?php endif;?>
+	<?php if(!empty($Data->COMENT)):?>
 	<div class="column">
 			<table class="content-table">
 				<thead>
@@ -113,13 +102,12 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>
-							<?= $Data->COMENT ?>
-						</td>
+						<td><?= $Data->COMENT ?></td>
 					</tr>
 				</tbody>
 			</table>
 	</div>
+	<?php endif;?>
 	<div class="column">
 			<table class="content-table">
 				<thead>
@@ -136,4 +124,31 @@
 	<?php } ?>
 </div>
 <div id="div2" class="tabcontent" >
+<?php foreach ($Address->GETAddressList('', false, $_GET['id'] ) as $data): ?>
+	<div class="column">
+		<div class="card">
+			<h3><?= $data->LABEL ?></h3>
+			<p><?= $data->ADRESSE ?></p>
+			<p><?= $data->CITY ?> - <?= $data->ZIPCODE ?></p>
+			<p><?= $data->COUNTRY ?></p>
+			<p><?= $data->ADRESSE ?></p>
+			<p>&#9742; <?= $data->NUMBER ?></p>
+			<p><button onClick="location.href=\'mailto:<?= $data->MAIL ?>\'">&#x2709; <?= $langue->show_text('ContactEmployees') ?></button></p>
+		</div>
+	</div>
+<?php $i++; endforeach; ?>
+</div>
+<div id="div3" class="tabcontent" >
+<?php foreach ($Contact->GETContactList('', false, $_GET['id'] ) as $data): ?>
+	<div class="column">
+		<div class="card">
+			<h3><?= $data->PRENOM ?> <?= $data->NOM ?></h3>
+			<p><?= $data->FONCTION ?></p>
+			<p>&#9742; <?= $data->NUMBER ?></p>
+			<p>&#9742; <?= $data->MOBILE ?></p>
+			
+			<p><button onClick="location.href=\'mailto:<?= $data->MAIL ?>\'">&#x2709; <?= $langue->show_text('ContactEmployees') ?></button></p>
+		</div>
+	</div>
+<?php $i++; endforeach; ?>
 </div>

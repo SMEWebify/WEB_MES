@@ -25,7 +25,7 @@ class Employees Extends SQL  {
     Public $EmployeeList;
 
     public function GETEmployeesList($IdData=0){
-
+        $this->EmployeeList = '';
         $query='SELECT '. TABLE_ERP_EMPLOYEES .'.idUSER,
                         '. TABLE_ERP_EMPLOYEES .'.NOM,
                         '. TABLE_ERP_EMPLOYEES .'.PRENOM,

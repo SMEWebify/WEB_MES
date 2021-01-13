@@ -96,7 +96,7 @@
    <AddFNC>Record of non-compliance added</AddFNC>  
  <!-- select -->
    <SelectInternal>Internal</SelectInternal>
-   <SelectExternal>ExtExternalerne</SelectExternal>
+   <SelectExternal>External</SelectExternal>
    
    <SelectInProgess>En cours</SelectInProgess>
    <SelectWaitingCustomerData>Waiting Customer Data</SelectWaitingCustomerData>

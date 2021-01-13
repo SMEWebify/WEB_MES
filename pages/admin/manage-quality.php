@@ -5,6 +5,10 @@
 
 	use \App\Methods\Ressource;
 	use \App\COMPANY\Employees;
+	use \App\Quality\QL_Causes;
+	use \App\Quality\QL_Defaut;
+	use \App\Quality\QL_Corrections;
+	use \App\Quality\QL_Devices;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -16,6 +20,11 @@
 	$Form = new Form($_POST);
 	$Employees = new Employees();
 	$Ressource = new Ressource();
+	$QL_Causes = new QL_Causes();
+	$QL_Defaut = new QL_Defaut();
+	$QL_Corrections = new QL_Corrections();
+	$QL_Devices = new QL_Devices();
+
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -181,37 +190,20 @@
 					</thead>
 					<tbody>
 						<?php
-
 						// Generable Table for device list
 						$i = 1;
-						$query='SELECT '. TABLE_ERP_QL_APP_MESURE .'.Id,
-									'. TABLE_ERP_QL_APP_MESURE .'.CODE,
-									'. TABLE_ERP_QL_APP_MESURE .'.LABEL,
-									'. TABLE_ERP_QL_APP_MESURE .'.RESSOURCE_ID,
-									'. TABLE_ERP_QL_APP_MESURE .'.USER_ID,
-									'. TABLE_ERP_QL_APP_MESURE .'.SERIAL_NUMBER,
-									'. TABLE_ERP_QL_APP_MESURE .'.DATE,
-									'. TABLE_ERP_RESSOURCE .'.LABEL AS LABEL_RESSOURCE,
-									'. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_USER,
-									'. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_USER
-									FROM `'. TABLE_ERP_QL_APP_MESURE .'`
-									LEFT JOIN `'. TABLE_ERP_RESSOURCE .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`RESSOURCE_ID` = `'. TABLE_ERP_RESSOURCE .'`.`id`
-									LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_APP_MESURE .'`.`USER_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser`
-									ORDER BY Id';
-
-						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($QL_Devices->GETQL_DevicesList('',false,false) as $data): ?>
 						<tr>
-							<td><?= $i  ?><input type="hidden" name="id_Appareil[]" id="id_Appareil" value="<?= $data->Id ?>"></td>
+							<td><?= $i  ?><input type="hidden" name="id_Appareil[]" id="id_Appareil" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="UpdateCODEAppareil[]" value="<?= $data->CODE ?>" size="10"></td>
 							<td><input type="text" name="UpdateLABELAppareil[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
-								<select name="UpdateRESSOURCEAppareil">
+								<select name="UpdateRESSOURCEAppareil[]">
 									<?=$Ressource->GETRessourcesList($data->RESSOURCE_ID) ?>
 								</select>
 							</td>
 							<td>
-								<select name="UpdateUSERAppareil">
+								<select name="UpdateUSERAppareil[]">
 									<option value="<?= $data->USER_ID ?>"><?= $data->NOM_USER ?>- <?= $data->PRENOM_USER ?></option>
 									<?=$Employees->GETEmployeesList($data->USER_ID) ?>
 								</select>
@@ -262,14 +254,7 @@
 						<?php
 						// generate table for flaw list
 						$i = 1;
-						$query='SELECT '. TABLE_ERP_DEFAUT .'.Id,
-									 '. TABLE_ERP_DEFAUT .'.CODE,
-									 '. TABLE_ERP_DEFAUT .'.LABEL
-									 FROM `'. TABLE_ERP_DEFAUT .'`
-									 ORDER BY Id';
- 
-						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($QL_Defaut->GETQL_DefautList('',false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_Defaut[]" id="id_Defaut" value="<?= $data->Id ?>"></td>
 							<td><input type="text" name="UpdateCODEDefaut[]" value="<?= $data->CODE ?>" size="10"></td>
@@ -306,14 +291,7 @@
 						<?php
 						//generate origine of flaw list
 						$i = 1;
-						$query='SELECT '. TABLE_ERP_QL_CAUSES .'.Id,
-									'. TABLE_ERP_QL_CAUSES .'.CODE,
-									'. TABLE_ERP_QL_CAUSES .'.LABEL
-									FROM `'. TABLE_ERP_QL_CAUSES .'`
-									ORDER BY Id';
-
-						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($QL_Causes->GETQL_CausesList('',false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_Causes[]" id="id_sector" value="<?= $data->Id ?>"></td>
 							<td><input type="text" name="UpdateCODECauses[]" value="<?= $data->CODE ?>" size="10"></td>
@@ -350,13 +328,7 @@
 						<?php
 						// Generate list of correction
 						$i = 1;
-						$query='SELECT '. TABLE_ERP_QL_CORRECTIONS .'.Id,
-									'. TABLE_ERP_QL_CORRECTIONS .'.CODE,
-									'. TABLE_ERP_QL_CORRECTIONS .'.LABEL
-									FROM `'. TABLE_ERP_QL_CORRECTIONS .'`
-									ORDER BY Id';
-						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($QL_Corrections->GETQL_CorrectionsList('',false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_Correction[]" id="id_Correction" value="<?= $data->Id ?>"></td>
 							<td><input type="text" name="UpdateCODECorrection[]" value="<?= $data->CODE ?>" size="10"></td>

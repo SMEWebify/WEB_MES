@@ -78,6 +78,8 @@ define('PROFIL_FOLDER', 'Profils/');
 define('RESSOURCES_FOLDER', 'Ressources/');
 define('QUALITY_DEVICES_FOLDER', 'Quality/');
 define('STUDY_ARTICLE_FOLDER', 'Articles/');
+define('COMPANIES_FOLDER', 'Clients/');
+
 
 if(MAINTENANCE == 1)
 {

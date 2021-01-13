@@ -34,6 +34,8 @@ class Article Extends SQL  {
 
     Public $ArticleList;
 
+
+
     public function GETArticle($id_GET){
 
         $Article = $this->GetQuery('SELECT '. TABLE_ERP_ARTICLE .'.id,
@@ -68,6 +70,16 @@ class Article Extends SQL  {
                                                 LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id`
                                             WHERE '. TABLE_ERP_ARTICLE .'.ID = \''. 	addslashes($id_GET) .'\'', true, 'App\Study\Article');
         return $Article;
+    }
+
+    public function GETArticleCount($ID = null, $Clause = null){
+        
+        if($ID != null){
+            $Clause = 'WHERE id = \''. $ID .'\'';
+        }
+
+        $ArticleCount = $this->GetCount(TABLE_ERP_ARTICLE,'id', $Clause);
+        return $ArticleCount;
     }
 
     public function GETTechnicalCut($id_GET){
@@ -106,6 +118,7 @@ class Article Extends SQL  {
     }
 
     public function GETSubAssembly($id_GET){
+        
             $GETSubAssembly = $this->GetQuery('SELECT '. TABLE_ERP_SOUS_ENSEMBLE .'.id,
                                                     '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID,
                                                     '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE,
@@ -116,13 +129,14 @@ class Article Extends SQL  {
                                                         LEFT JOIN `'. TABLE_ERP_ARTICLE .'` ON `'. TABLE_ERP_SOUS_ENSEMBLE .'`.`ARTICLE_ID` = `'. TABLE_ERP_ARTICLE .'`.`id`
                                                     WHERE '. TABLE_ERP_SOUS_ENSEMBLE .'.PARENT_ID = \''. addslashes($id_GET) .'\'
                                                         ORDER BY '. TABLE_ERP_SOUS_ENSEMBLE .'.ORDRE');
+
          return $GETSubAssembly;
     }
 
 
     public function GETArticleList($IdData=0){
 
-        $this->ArticleList ='<option value="0">Aucune</option>';
+        $this->ArticleList ='';
         $query='SELECT Id, CODE, LABEL   FROM '. TABLE_ERP_ARTICLE .'';
 		foreach ($this->GetQuery($query) as $data){
            
@@ -130,5 +144,51 @@ class Article Extends SQL  {
 		}
         
         return  $this->ArticleList;
+    }
+}
+
+
+class ArticleTreeStructure Extends Article  {
+
+    Public $level = 1;
+
+    public function GetTreeStructure($parent_id) {
+
+        if(Article::GETSubAssembly($parent_id)!=NULL)
+        {
+            foreach(Article::GETSubAssembly($parent_id) as $data)
+            {
+                echo '<li><span><a href="index.php?page=article&id='. $data->ARTICLE_ID .'">'.  $data->LABEL_ARTICLE .' </a>x '.  $data->QT .'- parent : '. $parent_id .'</span> 
+                             <ul>';
+      
+                    // SECOND RANK PART TECHNICAL CUT
+                    foreach (Article::GETTechnicalCut($data->ARTICLE_ID) as $dataTechnicalCutRank2){
+
+                         $TpsTotal = $dataTechnicalCutRank2->TPS_PREP + $dataTechnicalCutRank2->TPS_PRO; 
+                         echo '<li>'. $TpsTotal .' hrs - '. $dataTechnicalCutRank2->PRESTA_LABEL .'</li>';
+                     }
+
+                    // SECONDE RANK PART NOMENCLATURE
+                    foreach (Article::GETNomenclature($data->ARTICLE_ID) as $dataNomenclatureRank2){  
+
+                          echo '<li> '. $dataNomenclatureRank2->QT  .' '. $dataNomenclatureRank2->UNIT_LABEL  .' - '. $dataNomenclatureRank2->ARTICLE_LABEL .'</li>';
+                    }
+
+                $this->level = $this->level+1;
+
+                //Recursive suite
+                $this->GetTreeStructure($data->ARTICLE_ID);
+              
+            }
+        }
+        else{
+            $Endloop = 1;
+            while ($Endloop < $this->level):
+                    echo '</ul>';
+                echo '</li>';
+                $Endloop++;
+            endwhile;
+            $this->level=1;
+        }  
     }
 }

@@ -132,7 +132,7 @@ class SQL extends PDO{
 			}    
 
 			$statement="UPDATE `".$table."` SET ".implode(',',$maj)."  ". $clauses;
-
+			
 			$req = $this->getPDO()->exec($statement);
 		} catch (PDOException $exc) {
 			$this->GestionException($exc->getMessage(), $statement);

@@ -3,6 +3,8 @@
 	use \App\Autoloader;
 	use \App\Form;
 	use \App\Companies\Companies;
+	use \App\Companies\Contact;
+	use \App\Companies\Address;
 	use \App\COMPANY\Employees;
 	use \App\COMPANY\ActivitySector;
 	use \App\Accounting\PaymentMethod;
@@ -18,6 +20,8 @@
 	$Form = new Form($_POST);
 	$Employees = new Employees();
 	$Companies = new Companies();
+	$Contact =  new Contact();
+	$Address = new Address();
 	$ActivitySector = new ActivitySector();
 	$PaymentMethod = new PaymentMethod();
 	$PaymentCondition = new PaymentCondition();
@@ -40,22 +44,19 @@
 		if(isset($_POST['CODE'])){
 
 			// check if exist
-			$nb = $Companies->GETCompanieCount(addslashes($_POST['id']));
-			if($nb==1){
+			if($Companies->GETCompanieCount(addslashes($_POST['id']))==1){
 
 				//change title tag
 				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
 				//up picture of company and add sql or not
-				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
-				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], $dossier . $fichier);
-				$InsertImage = $dossier.$fichier;
+				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], PICTURE_FOLDER.COMPANIES_FOLDER . $fichier);
 				If(empty($fichier)){
 					$AddSQL = '';
 				}
 				else{
-					$AddSQL = 'LOGO = \''. addslashes($InsertImage) .'\',';
+					$AddSQL = 'LOGO = \''. addslashes($fichier) .'\',';
 				}
 
 				//update database with post
@@ -95,10 +96,8 @@
 
 				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
-				$dossier = 'images/ClientLogo/';
 				$fichier = basename($_FILES['fichier_LOGOSte']['name']);
-				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], $dossier . $fichier);
-				$InsertImage = $dossier.$fichier;
+				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], PICTURE_FOLDER.COMPANIES_FOLDER . $fichier);
 
 				//add to sql db
 				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
@@ -112,7 +111,7 @@
 																				'". addslashes($_POST['APESte']) ."',
 																				'". addslashes($_POST['TVAINTRASte']) ."',
 																				'". addslashes($_POST['TAUXTVASte']) ."',
-																				'". addslashes($InsertImage) ."',
+																				'". addslashes($fichier) ."',
 																				'". addslashes($_POST['StatuSte']) ."',
 																				'". addslashes($_POST['CondiSte']) ."',
 																				'". addslashes($_POST['RegSte']) ."',
@@ -331,7 +330,7 @@
 	}
 	else{
 		$ImputButton = $Form->submit($langue->show_text('TableUpdateButton'));
-		$actionForm = 'admin.php?page=manage-companies&id='. $SteNAME .'';
+		$actionForm = 'admin.php?page=manage-companies&id='. $SteId .'';
 	}
 ?>
 	<div class="tab">
@@ -364,9 +363,7 @@
 				<table class="content-table">
 					<thead>
 						<tr>
-							<th colspan="7">
-								 <br/>
-							</th>
+							<th colspan="7"> <br/></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -387,18 +384,10 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" name="WebSiteSte" value="<?= $SteWEBSITE;?>" size="20">
-							</td>
-							<td>
-								<input type="text" name="FbSiteSte" value="<?= $SteFBSITE;?>" size="20">
-							</td>
-							<td >
-								<input type="text" name="TwitterSte" value="<?= $SteTWITTERSITE;?>" size="20">
-							</td>
-							<td >
-								<input type="text" name="LkdSte" value="<?= $SteLKDSITE;?>" size="20">
-							</td>
+							<td><input type="text" name="WebSiteSte" value="<?= $SteWEBSITE;?>" size="20"></td>
+							<td><input type="text" name="FbSiteSte" value="<?= $SteFBSITE;?>" size="20"></td>
+							<td ><input type="text" name="TwitterSte" value="<?= $SteTWITTERSITE;?>" size="20"></td>
+							<td ><input type="text" name="LkdSte" value="<?= $SteLKDSITE;?>" size="20"></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -413,15 +402,9 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td >
-								<input type="text" name="SIRENSte" value="<?= $SteSIREN;?>" size="10">
-							</td>
-							<td >
-								<input type="text" name="APESte" value="<?= $SteAPE;?>" size="10">
-							</td>
-							<td >
-								<input type="text" name="TVAINTRASte" value="<?= $SteTVA_INTRA;?>" size="10">
-							</td>
+							<td ><input type="text" name="SIRENSte" value="<?= $SteSIREN;?>" size="10"></td>
+							<td ><input type="text" name="APESte" value="<?= $SteAPE;?>" size="10"></td>
+							<td ><input type="text" name="TVAINTRASte" value="<?= $SteTVA_INTRA;?>" size="10"></td>
 							<td >
 
 								<select name="TAUXTVASte">
@@ -437,22 +420,18 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td colspan="5"><img src="<?=$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
+							<td colspan="5"><img src="<?=PICTURE_FOLDER.COMPANIES_FOLDER.$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
 							<td></td>
 						</tr>
 					</tbody>
 					<thead>
 						<tr>
-							<th colspan="7">
-								<?=$langue->show_text('TableGeneralCustomer'); ?>
-							</th>
+							<th colspan="7"><?=$langue->show_text('TableGeneralCustomer'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>
-								<?=$langue->show_text('TableCustomerStatus'); ?>
-							</td>
+							<td><?=$langue->show_text('TableCustomerStatus'); ?></td>
 							<td >
 								<select name="StatuSte">
 									<option value="0"  <?php  echo selected($SteSTATU_CLIENT, 0) ?>><?=$langue->show_text('SelectInactive'); ?></option>
@@ -484,9 +463,7 @@
 									<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_CLIENT_ID); ?>
 								</select>
 							</td>
-							<td >
-								<input type="number" name="RemiseSte" value="<?= $SteREMISE;?>" size="10">
-							</td>
+							<td ><input type="number" name="RemiseSte" value="<?= $SteREMISE;?>" size="10"></td>
 							<td colspan="2">
 								<select name="RepsComSte">
 									<?=$Employees->GETEmployeesList($SteRESP_COM_ID) ?>
@@ -503,12 +480,8 @@
 							<td colspan="2"></td>
 						</tr>
 						<tr>
-							<td>
-								<input type="number" name="CompteGeSte" value="<?= $SteCOMPTE_GEN_CLIENT;?>">
-							</td>
-							<td >
-								<input type="number" name="CompteAuxSte" value="<?= $SteCOMPTE_AUX_CLIENT;?>" >
-							</td>
+							<td><input type="number" name="CompteGeSte" value="<?= $SteCOMPTE_GEN_CLIENT;?>"></td>
+							<td ><input type="number" name="CompteAuxSte" value="<?= $SteCOMPTE_AUX_CLIENT;?>" ></td>
 							<td></td>
 							<td colspan="2">
 								<select name="RespTechSte">
@@ -557,12 +530,8 @@
 									<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_FOUR_ID); ?>
 								</select>
 							</td>
-							<td >
-								<input type="number" name="CompteGeFourSte" value="<?= $SteCOMPTE_GEN_FOUR;?>" >
-							</td>
-							<td >
-								<input type="number" name="CompteAuxFourSte" value="<?= $SteCOMPTE_AUX_FOUR;?>" >
-							</td>
+							<td ><input type="number" name="CompteGeFourSte" value="<?= $SteCOMPTE_GEN_FOUR;?>" ></td>
+							<td ><input type="number" name="CompteAuxFourSte" value="<?= $SteCOMPTE_AUX_FOUR;?>" ></td>
 							<td colspan="2">
 								<select name="ControlFour">
 									<option value="0" <?php  echo selected($SteCONTROLE_FOUR, 0) ?> ><?=$langue->show_text('SelectNoControl'); ?></option>
@@ -608,23 +577,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php 	//display all site on form ligne
-						$query='SELECT '. TABLE_ERP_ADRESSE .'.Id,
-									'. TABLE_ERP_ADRESSE .'.ID_COMPANY,
-									'. TABLE_ERP_ADRESSE .'.ORDRE,
-									'. TABLE_ERP_ADRESSE .'.LABEL,
-									'. TABLE_ERP_ADRESSE .'.ADRESSE,
-									'. TABLE_ERP_ADRESSE .'.ZIPCODE,
-									'. TABLE_ERP_ADRESSE .'.CITY,
-									'. TABLE_ERP_ADRESSE .'.COUNTRY,
-									'. TABLE_ERP_ADRESSE .'.NUMBER,
-									'. TABLE_ERP_ADRESSE .'.MAIL,
-									'. TABLE_ERP_ADRESSE .'.ADRESS_LIV,
-									'. TABLE_ERP_ADRESSE .'.ADRESS_FAC
-									FROM `'. TABLE_ERP_ADRESSE .'`
-									WHERE ID_COMPANY=\''. $SteId .'\'
-									ORDER BY ORDRE';
-				foreach ($bdd->GetQuery($query) as $data): ?>
+					<?php 	//display all site on form ligne
+				foreach ($Address->GETAddressList('', false, $SteId ) as $data): ?>
 				<tr>
 					<td><?= $i ?> <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="<?= $data->Id ?>"></td>
 					<td><input type="number" name="UpdateORDRESite[]" value="<?= $data->ORDRE ?>" id="number"></td>
@@ -649,7 +603,6 @@
 					</td>
 				</tr>
 				<?php
-				$AdresseListe .='<option value="'. $data->Id .'" >'. $data->LABEL .'</option>';
 				 $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?><input type="hidden"  name="AddIdSite" value="<?=$SteId; ?>"></td>
@@ -705,26 +658,9 @@
 					<tbody>
 						<?php	// display all contact of comppany in form line
 						$i = 1;
-						$query='SELECT '. TABLE_ERP_CONTACT .'.Id,
-									'. TABLE_ERP_CONTACT .'.ID_COMPANY,
-									'. TABLE_ERP_CONTACT .'.ORDRE,
-									'. TABLE_ERP_CONTACT .'.CIVILITE,
-									'. TABLE_ERP_CONTACT .'.PRENOM,
-									'. TABLE_ERP_CONTACT .'.NOM,
-									'. TABLE_ERP_CONTACT .'.FONCTION,
-									'. TABLE_ERP_CONTACT .'.ADRESSE_ID,
-									'. TABLE_ERP_CONTACT .'.NUMBER,
-									'. TABLE_ERP_CONTACT .'.MOBILE,
-									'. TABLE_ERP_CONTACT .'.MAIL,
-									'. TABLE_ERP_ADRESSE .'.LABEL
-									FROM `'. TABLE_ERP_CONTACT .'`
-										LEFT JOIN `'. TABLE_ERP_ADRESSE .'` ON `'. TABLE_ERP_CONTACT .'`.`ADRESSE_ID` = `'. TABLE_ERP_ADRESSE .'`.`id`
-									WHERE '. TABLE_ERP_CONTACT .'.ID_COMPANY=\''. $SteId .'\'
-									ORDER BY ORDRE';
-
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($Contact->GETContactList('', false, $SteId ) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="UpdateIdContact[]" id="UpdateIdContact" value="<?= $data->Id ?>"></td>
+							<td><?= $i ?> <input type="hidden" name="UpdateIdContact[]" id="UpdateIdContact" value="<?= $data->id ?>"></td>
 							<td><input type="number"  name="UpdateORDREContact[]"  value="<?= $data->ORDRE ?>" id="number"></td>
 							<td>
 								<select name="UpdateCiviContact[]">
@@ -737,8 +673,7 @@
 							<td><input type="text"  name="UpdateFonctionContact[]"   value="<?= $data->FONCTION ?>"></td>
 							<td>
 								<select name="UpdateAdresseContact[]">
-									<option value="<?= $data->ADRESSE_ID ?>" ><?= $data->LABEL ?></option>
-									<?=  $AdresseListe ?>
+									<?=  $Address->GETAddressList($data->ADRESSE_ID, true, $SteId ) ?>
 								</select>
 							</td>
 							<td><input type="text"  name="UpdateNumberContact[]" value="<?= $data->NUMBER ?>"></td>
@@ -761,7 +696,7 @@
 							<td><input type="text"  name="AddFonctionContact" size="7" <?=$VerrouInput; ?>></td>
 							<td>
 								<select name="AddAdresseContact">
-									<?=$AdresseListe; ?>
+								<?=  $Address->GETAddressList('', true, $SteId ) ?>
 								</select>
 							</td>
 							<td><input type="text"  name="AddNumberContact" size="7" <?=$VerrouInput; ?>></td>
@@ -810,9 +745,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>
-								<textarea class="Comment" name="COMMENT" rows="40" ><?= $SteCOMMENT ?></textarea>
-							</td>
+							<td><textarea class="Comment" name="COMMENT" rows="40" ><?= $SteCOMMENT ?></textarea></td>
 						</tr>
 						<tr>
 							<td >
