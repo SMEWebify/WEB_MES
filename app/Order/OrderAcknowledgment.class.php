@@ -1,0 +1,190 @@
+<?php
+
+namespace App\Order;
+use \App\SQL;
+
+class OrderAcknowledgment Extends SQL  {
+
+    Public $id;
+    Public $CODE;
+    Public $LABEL;
+    Public $CUSTOMER_ID;
+    Public $CONTACT_ID;
+    Public $ADRESSE_ID;
+    Public $FACTURATION_ID;
+    Public $DATE;
+    Public $ETAT;
+    Public $CREATEUR_ID;
+    Public $INCOTERM;
+    Public $COMMENT;
+    Public $CUSTOMER_NAME;
+    Public $NOM;
+    Public $PRENOM;
+
+    Public $OrderAcknowledgment;
+
+    public function NewOrderAcknowledgment($CODE, $CUSTOMER_ID, $CONTACT_ID, $ADRESSE_ID, $FACTURATION_ID, $UserID){
+
+        $NewOrderAcknowledgment = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_ACKNOWLEGMENT ." VALUE ('0',
+                                                                                    '". $CODE ."',
+                                                                                    '',
+                                                                                    '". addslashes($CUSTOMER_ID) ."',
+                                                                                    '". addslashes($CONTACT_ID) ."',
+                                                                                    '". addslashes($ADRESSE_ID) ."',
+                                                                                    '". addslashes($FACTURATION_ID) ."',
+                                                                                    NOW(),
+                                                                                    '1',
+                                                                                    '". $UserID ."',
+                                                                                    '1',
+                                                                                    '')");
+        return $NewOrderAcknowledgment;
+    }
+
+    public function GETOrderAcknowledgment($id_GET){
+
+        $OrderAcknowledgment = $this->GetQuery('SELECT '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CUSTOMER_ID,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CONTACT_ID,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ADRESSE_ID,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.FACTURATION_ID,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.DATE,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ETAT,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CREATEUR_ID,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.INCOTERM,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.COMENT,
+                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
+                                        '. TABLE_ERP_EMPLOYEES .'.NOM,
+                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM
+                                        FROM `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`
+                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                        WHERE '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id = \''. $id_GET.'\' ', true, 'App\Order\OrderAcknowledgment');
+        return $OrderAcknowledgment;
+    }
+
+    public function GETOrderAcknowledgmentCount($ID = null, $Clause = null){
+        
+        if($ID != null){
+            $Clause = 'WHERE id = \''. $ID .'\'';
+        }
+
+        $OrderAcknowledgmentCount =  $this->GetCount(TABLE_ERP_ORDER_ACKNOWLEGMENT,'id', $Clause);
+        return $OrderAcknowledgmentCount;
+    }
+
+    public function GETOrderAcknowledgmentList($IdData=0, $Select = true){
+
+        $this->OrderAcknowledgmentList ='';
+        $query='SELECT '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL,
+                        '. TABLE_ERP_CLIENT_FOUR .'.NAME
+                FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'
+                LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                ORDER BY  '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id DESC';
+        if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->OrderAcknowledgmentList .='<option value="'. $data->Id .'" '. selected($IdData, $data->id) .'>'. $data->CODE .'</option>';
+            }
+
+            return  $this->OrderAcknowledgmentList;
+
+        }else {
+            return  $this->GetQuery($query);
+        }  
+    }
+}
+
+class OrderAcknowledgmentLines Extends OrderAcknowledgment  {
+
+    Public $id;
+    Public $ORDER_ACKNOWLEGMENT_ID;
+    Public $ORDER_ID;
+    Public $ORDRE;
+    Public $ORDER_LINE_ID;
+    Public $ARTICLE_CODE;
+    Public $LABEL;
+    Public $QT;
+    Public $UNIT_ID;
+    Public $PRIX_U;
+    Public $REMISE;
+    Public $TVA_ID;
+    Public $DELAIS;
+    Public $ORDER_ACKNOWLEGMENT_CODE;
+    Public $ORDER_CODE;
+    Public $TAUX;
+    Public $LABEL_TVA;
+    Public $LABEL_UNIT;
+
+    Public $OrderAcknowledgmentLines;
+
+    public function NewOrderacknowledgmentlines($IdOrderAcknowledgment, $OrderID, $Order, $orderLineId){
+
+        $NewOrderacknowledgmentlines = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." VALUE ('0',
+                                                                                        '". $IdOrderAcknowledgment ."',
+                                                                                        '". addslashes($OrderID) ."',
+                                                                                        '". addslashes($Order) ."',
+                                                                                        '". addslashes($orderLineId) ."')");
+
+
+        return $NewOrderacknowledgmentlines;
+    }
+
+    public function UpdateOrderacknowledgmentlines($id, $ORDRE){
+
+        $UpdateOrderacknowledgmentlines = $this->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." SET 	ORDRE='". addslashes($ORDRE) ."' WHERE id='". addslashes($id)."'");
+
+        return $UpdateOrderacknowledgmentlines;
+    }
+
+    public function GETOrderacknowledgmentlinesList($IdData=0, $Select = true, $IdOrderAcknowledgment=0){
+
+        $this->OrderacknowledgmentlinesList ='';
+        $Clause = 'WHERE '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_ACKNOWLEGMENT_ID = \''. $IdOrderAcknowledgment.'\'';
+        if($IdOrderAcknowledgment===0){
+            $Clause = '';
+        }
+        $query='SELECT  '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.id,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_ACKNOWLEGMENT_ID,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_ID,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDRE,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_LINE_ID,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.ARTICLE_CODE,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.LABEL,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.QT,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.UNIT_ID,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.PRIX_U,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.REMISE,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.TVA_ID,
+                        '. TABLE_ERP_COMMANDE_LIGNE .'.DELAIS,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE AS ORDER_ACKNOWLEGMENT_CODE,
+                        '. TABLE_ERP_COMMANDE .'.CODE AS ORDER_CODE,
+                        '. TABLE_ERP_TVA .'.TAUX,
+                        '. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA,
+                        '. TABLE_ERP_UNIT .'.LABEL AS LABEL_UNIT
+                        FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'
+                            LEFT JOIN `'. TABLE_ERP_COMMANDE .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_ID` = `'. TABLE_ERP_COMMANDE .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_COMMANDE_LIGNE .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_LINE_ID` = `'. TABLE_ERP_COMMANDE_LIGNE .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_ACKNOWLEGMENT_ID` = `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`id` 
+                            '. $Clause.'
+                        ORDER BY '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDRE ';
+          
+        if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->OrderacknowledgmentlinesList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->ORDER_ACKNOWLEGMENT_CODE .' - '. $data->CODE .'</option>';
+            }
+
+            return  $this->OrderacknowledgmentlinesList;
+
+        }else {
+            
+            return  $this->GetQuery($query);
+        }  
+    }
+}

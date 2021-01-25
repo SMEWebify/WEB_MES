@@ -49,11 +49,13 @@
     <Title1>Home</Title1> 
     <Title2>Order</Title2>
     <Title3>Order detail</Title3>
-    <Title4>General</Title4>
-    <Title5>Customer detail</Title5>
-    <Title6>Commercial information</Title6>
-    <Title7>Comment</Title7>
-    <Title8>Document</Title8>
+    <Title4>Document</Title4>
+
+    <Title5>Order Lines</Title5>
+    <Title6>Order Acknowledgment</Title6>
+
+    <Title7>Order Acknowledgment detail</Title7>
+    
     <Title9>Order assistant</Title9>
 <!-- table content --> 
     <TableNameUser>Name :</TableNameUser>
@@ -68,7 +70,7 @@
     <TableOrder>Order</TableOrder>
     <Addline>Add line</Addline>
     <Deleteline>Delete line</Deleteline>
-    <UpdateOrderLine>Update Order lines</UpdateOrderLine>
+    <UpdateLine>Update Order lines</UpdateLine>
     <TableCondiList>Payment condition</TableCondiList>
     <TableMethodList>Payment choice</TableMethodList>
     <TableUpdateButton>Update</TableUpdateButton>
@@ -79,6 +81,7 @@
     <TableAdresseDelevery>Adresse Delevery</TableAdresseDelevery>
     <TableDeleveryMode>Delevery mode :</TableDeleveryMode> 
     <TableCustomerReference>Customer reference:</TableCustomerReference> 
+    <TableCustomer>Customer :</TableCustomer> 
     <TableDeleveryDate>Delay :</TableDeleveryDate>
     <TableNumberCustomerOrder>Customer order number</TableNumberCustomerOrder>
     <TableCreateOrder>Create new order</TableCreateOrder>
@@ -110,12 +113,13 @@
     <TableContact>Contacts</TableContact>
     <TableUserCreate>Creator</TableUserCreate>
     <TableCodeLabel>Code and wording of the Order:</TableCodeLabel> 
-    <TableLabelOrder>Label of Order:</TableLabelOrder>      
-    <TableIndexLabel>Version index and label:</TableIndexLabel> 
-    <TableLabelIndexOrder>Label index  :</TableLabelIndexOrder>  
+    <TableLabelplaceholder>Label of Order:</TableLabelplaceholder>      
+    <TableLabelIndexplaceholder>Version index and label:</TableLabelIndexplaceholder> 
+    <TableIndexLabel>Label index  :</TableIndexLabel>  
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
-    <TableOrderStatu>Order statu :</TableOrderStatu>     
+    <TableOrderStatu>Order statu :</TableOrderStatu>  
+    <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>    
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
     <UpdateLineNotification> line(s) updated</UpdateLineNotification>
@@ -127,13 +131,15 @@
     <AddOrderNotification>Order created</AddOrderNotification>
     <AddOrderLineNotification> Line add to Order</AddOrderLineNotification>
     <DeleteOrderLineNotification> line delete to Order</DeleteOrderLineNotification>
+    <AddOrderAcknowledgmentNotificationNotification>Order Acknowledgment added</AddOrderAcknowledgmentNotificationNotification>
+    <AddOrderAcknowledgmentLinesNotificationNotification> Order Acknowledgment lines added</AddOrderAcknowledgmentLinesNotificationNotification>
 <!-- Select-->
-    <SelectOpen>Open</SelectOpen>
-    <SelectRefuse>Refuse</SelectRefuse>
-    <SelectSend>Send</SelectSend>
-    <SelectDecline>Decline</SelectDecline>
-    <SelectClosed>Closed</SelectClosed>
-    <SelectObsolete>Obsolete</SelectObsolete>
+    <SelectOpen>Created</SelectOpen>
+    <SelectRun>Run</SelectRun>
+    <SelectStop>Stop</SelectStop>
+    <SelecPartialDelivery>Partial Delivery</SelecPartialDelivery>
+    <SelectDelivered>Delivered</SelectDelivered>
+    <SelectInvoice>Invoice</SelectInvoice>
 
     <Yes>Oui</Yes>
     <No>Non</No>

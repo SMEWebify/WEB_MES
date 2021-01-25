@@ -64,7 +64,7 @@ class Contact Extends SQL  {
 
         if($Select){
             foreach ( $this->GetQuery($query) as $data){
-                $this->ContactList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->CODE .' - '. $data->LABEL .'</option>';
+                $this->ContactList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->PRENOM .' - '. $data->NOM .'</option>';
             }
     
             return  $this->ContactList;

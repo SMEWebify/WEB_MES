@@ -68,7 +68,7 @@
     <TableOrder>Ordre</TableOrder>
     <Addline>Ajout de ligne</Addline>
     <Deleteline>Suprimer ligne(s)</Deleteline>
-    <UpdateQuoteLine>Mettre à jours les lignes du devis</UpdateQuoteLine>
+    <UpdateLine>Mettre à jours les lignes du devis</UpdateLine>
     <TableCondiList>Condition de réglement</TableCondiList>
     <TableMethodList>Mode de réglement</TableMethodList>
     <TableUpdateButton>Mettre à jours</TableUpdateButton>
@@ -78,7 +78,8 @@
     <TableAdresseInvoice>Adresse de facturation</TableAdresseInvoice>
     <TableAdresseDelevery>Adresse de livraison</TableAdresseDelevery>
     <TableDeleveryMode>Mode de livraison :</TableDeleveryMode> 
-    <TableCustomerReference>Référence client :</TableCustomerReference> 
+    <TableCustomerReference>Référence client</TableCustomerReference> 
+    <TableCustomer>Client :</TableCustomer> 
     <TableDeleveryDate>Délais de livraison :</TableDeleveryDate>
     <TableNumberCustomerOrder>N° de commande client</TableNumberCustomerOrder>
     <TableCreateOrder>Créer commandes</TableCreateOrder>
@@ -110,9 +111,9 @@
     <TableContact>Contacts</TableContact>
     <TableUserCreate>Créateur</TableUserCreate>
     <TableCodeLabel>Code et libellé du devis :</TableCodeLabel>  
-    <TableLabelquote>Libellé du devis:</TableLabelquote>   
-    <TableIndexLabel>Indice et libellé de version  :</TableIndexLabel>  
-    <TableLabelIndexquote>Libellé de version  :</TableLabelIndexquote>  
+    <TableLabelplaceholder>Libellé du devis:</TableLabelplaceholder>   
+    <TableLabelIndexplaceholder>Indice et libellé de version  :</TableLabelIndexplaceholder>  
+    <TableIndexLabel>Libellé de version  :</TableIndexLabel>  
     <TableCreationDate>Date de création :</TableCreationDate>  
     <TableValidityDate>Date de validité :</TableValidityDate>  
     <TableQuoteStatu>Etat du devis :</TableQuoteStatu>     

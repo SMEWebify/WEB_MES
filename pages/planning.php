@@ -67,10 +67,10 @@
 	$correspondancejouren=array(1 => 'mo', 2 => 'tu', 3 => 'we', 4 => 'th', 5 => 'fr', 6 => 'sa', 7 => 'su') ;
 
 	if($mois!=01)	{
-		echo '<a href="index.php?page=calendar&mois='.($mois-1).'&amp;annee='.$annee.'">«</a> ';
+		echo '<a href="index.php?page=planning&mois='.($mois-1).'&amp;annee='.$annee.'">«</a> ';
 	}
 	else	{
-		echo '<a href="index.php?page=calendar&mois=12&amp;annee='.($annee-1).'">«</a> ';
+		echo '<a href="index.php?page=planning&mois=12&amp;annee='.($annee-1).'">«</a> ';
 	}
 
 	if(setlocale(LC_ALL, 'fr_FR.utf-8', 'fr_FR','fr','fr','fra','fr_FR@euro'))	{
@@ -94,12 +94,12 @@
 	}
 
 	if($mois!=12)	{
-								echo '<a href="index.php?page=calendar&mois='.($mois+1).'&amp;annee='.$annee.'">»</a>
+								echo '<a href="index.php?page=planning&mois='.($mois+1).'&amp;annee='.$annee.'">»</a>
 									<br/>
 									<br/>';
 	}
 	else{
-								echo '<a href="index.php?page=calendar&mois=01&amp;annee='.($annee+1).'">»</a>
+								echo '<a href="index.php?page=planning&mois=01&amp;annee='.($annee+1).'">»</a>
 									<br/>
 									<br/>';
 	}
@@ -114,12 +114,19 @@
 						<tbody>
 							<tr>';
 
-	$query='SELECT id, LABEL
-						FROM `'. TABLE_ERP_COMMANDE_LIGNE .'`
-						WHERE DELAIS_INTERNE
+	$query='SELECT '. TABLE_ERP_COMMANDE_LIGNE .'.id,
+					'. TABLE_ERP_COMMANDE_LIGNE .'.ARTICLE_CODE,
+					'. TABLE_ERP_COMMANDE_LIGNE .'.DELAIS_INTERNE,
+					'. TABLE_ERP_COMMANDE .'.CODE
+					FROM '. TABLE_ERP_COMMANDE_LIGNE .'
+						LEFT JOIN `'. TABLE_ERP_COMMANDE .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`ORDER_ID` = `'. TABLE_ERP_COMMANDE .'`.`id`
+					WHERE DELAIS_INTERNE
 							BETWEEN "'.$annee.'-'.$mois.'-01 00:00:00"
 							AND "'.$annee.'-'.$mois.'-'.$nombrejours.' 23:59:59"
+					GROUP BY ORDER_ID, DELAIS_INTERNE
 						ORDER BY id ASC';
+
+
 
 	unset($cles) ;
 	$id=array() ;
@@ -130,24 +137,24 @@
 	$heuresfin=array() ;
 	$nombreresultat=0 ;
 
-	foreach ($bdd->GetQuery($query, false) as $data):
-		$debut=explode(' ', $data->debut) ;
+	foreach ($bdd->GetQuery($query, false) as $data){
+		$debut=explode(' ', $data->DELAIS_INTERNE) ;
 
-		if(!empty($data['fin'])){
-			$fin=explode(' ', $data->fin) ;
+		if(!empty($data->DELAIS_INTERNE)){
+			$fin=explode(' ', $data->DELAIS_INTERNE) ;
 		}
 		$id[$nombreresultat]=$data->id ;
-		$titres[$nombreresultat]=htmlspecialchars($data->titre) ;
+		$titres[$nombreresultat]=htmlspecialchars($data->CODE) ;
 		$datesdebut[$nombreresultat]=$debut[0] ;
 		$heuresdebut[$nombreresultat]=substr($debut[1], 0, 5) ;
 
-		if(!empty($data->fin)){
+		if(!empty($data->DELAIS_INTERNE)){
 			$datesfin[$nombreresultat]=$fin[0] ;
 			$heuresfin[$nombreresultat]=substr($fin[1], 0, 5) ;
 		}
 
 		$nombreresultat++ ;
-	endforeach;
+	}
 
 	while($iterations<35)	{
 		$iterations++ ;

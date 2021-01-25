@@ -34,7 +34,7 @@
 	///////////////////////////////
 	//if update comment article
 	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ARTICLE ." SET 	COMMENT='". addslashes($_POST['Comment']) ."'
+		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_STANDARD_ARTICLE ." SET 	COMMENT='". addslashes($_POST['Comment']) ."'
 																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));			
 	}
@@ -44,7 +44,8 @@
 	////////////////////
 
 	$titleOnglet1 = $langue->show_text('TableAddArticleButton');
-	$actionForm = 'admin.php?page=manage-study&id='. $_POST['id'];
+	$actionForm = 'admin.php?page=manage-study&id='. $_GET['id'];
+	$id = preg_replace('#-+#',' ', addslashes($_GET['id']));
 
 	//if add or update Article
 	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id'])){
@@ -53,7 +54,7 @@
 		if(isset($_POST['CODEArticle'])){
 
 			//Check if is existe
-			$data=$bdd->GetQuery("SELECT COUNT(ID) as nb FROM ". TABLE_ERP_ARTICLE ." WHERE id = '". addslashes($_POST['IDArticle'])."'", true);
+			$data=$bdd->GetQuery("SELECT COUNT(ID) as nb FROM ". TABLE_ERP_STANDARD_ARTICLE ." WHERE id = '". $id ."'", true);
 			$nb = $data->nb;
 
 			//if exist
@@ -74,7 +75,7 @@
 				}
 
 				//update article value
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ARTICLE ." SET 	LABEL='". addslashes($_POST['LABELAtricle']) ."',
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_STANDARD_ARTICLE ." SET 	LABEL='". addslashes($_POST['LABELAtricle']) ."',
 																			IND='". addslashes($_POST['INDArticle']) ."',
 																			PRESTATION_ID='". addslashes($_POST['PRESTA_IDAtricle']) ."',
 																			FAMILLE_ID='". addslashes($_POST['FAMILLE_IDArticle']) ."',
@@ -93,41 +94,9 @@
 																			SUR_Y='". addslashes($_POST['SURDIMYArticle']) ."',
 																			SUR_Z='". addslashes($_POST['SURDIMZArticle']) ."'
 																			". $AddSQL ."
-																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
+																		WHERE id='". $id ."'");
 
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateArticleNotification')));
-
-				//select new values													
-				$query='SELECT '. TABLE_ERP_ARTICLE .'.ID,
-									'. TABLE_ERP_ARTICLE .'.CODE,
-									'. TABLE_ERP_ARTICLE .'.LABEL,
-									'. TABLE_ERP_ARTICLE .'.IND,
-									'. TABLE_ERP_ARTICLE .'.PRESTATION_ID,
-									'. TABLE_ERP_ARTICLE .'.FAMILLE_ID,
-									'. TABLE_ERP_ARTICLE .'.ACHETER,
-									'. TABLE_ERP_ARTICLE .'.PRIX_ACHETER,
-									'. TABLE_ERP_ARTICLE .'.VENDU,
-									'. TABLE_ERP_ARTICLE .'.PRIX_VENDU,
-									'. TABLE_ERP_ARTICLE .'.UNITE_ID,
-									'. TABLE_ERP_ARTICLE .'.MATIERE,
-									'. TABLE_ERP_ARTICLE .'.EP,
-									'. TABLE_ERP_ARTICLE .'.DIM_X,
-									'. TABLE_ERP_ARTICLE .'.DIM_Y,
-									'. TABLE_ERP_ARTICLE .'.DIM_Z,
-									'. TABLE_ERP_ARTICLE .'.POIDS,
-									'. TABLE_ERP_ARTICLE .'.SUR_X,
-									'. TABLE_ERP_ARTICLE .'.SUR_Y,
-									'. TABLE_ERP_ARTICLE .'.SUR_Z,
-									'. TABLE_ERP_ARTICLE .'.COMMENT,
-									'. TABLE_ERP_ARTICLE .'.IMAGE,
-									'. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL,
-									'. TABLE_ERP_PRESTATION .'.LABEL AS PRESTATION_LABEL,
-									'. TABLE_ERP_SOUS_FAMILLE .'.LABEL AS FAMILLE_LABEL
-									FROM '. TABLE_ERP_ARTICLE .'
-										LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_ARTICLE .'`.`UNITE_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_ARTICLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id`
-									WHERE '. TABLE_ERP_ARTICLE .'.id = '. addslashes($_POST['IDArticle']).'';
 			}
 			else{
 
@@ -135,13 +104,12 @@
 
 				$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
-
 				$dossier = PICTURE_FOLDER.STUDY_ARTICLE_FOLDER;
 				$fichier = basename($_FILES['FichierImageArticle']['name']);
 				move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
 
 				//insert in db
-				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ARTICLE ." VALUE ('0',
+				$id = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_ARTICLE ." VALUE ('0',
 																				'". addslashes($_POST['CODEArticle']) ."',
 																				'". addslashes($_POST['LABELAtricle']) ."',
 																				'". addslashes($_POST['INDArticle']) ."',
@@ -165,85 +133,17 @@
 																				'". addslashes($fichier) ."')");
 
 				$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddArticleNotification')));
-
-				//select new values	
-				$query='SELECT '. TABLE_ERP_ARTICLE .'.ID,
-									'. TABLE_ERP_ARTICLE .'.CODE,
-									'. TABLE_ERP_ARTICLE .'.LABEL,
-									'. TABLE_ERP_ARTICLE .'.IND,
-									'. TABLE_ERP_ARTICLE .'.PRESTATION_ID,
-									'. TABLE_ERP_ARTICLE .'.FAMILLE_ID,
-									'. TABLE_ERP_ARTICLE .'.ACHETER,
-									'. TABLE_ERP_ARTICLE .'.PRIX_ACHETER,
-									'. TABLE_ERP_ARTICLE .'.VENDU,
-									'. TABLE_ERP_ARTICLE .'.PRIX_VENDU,
-									'. TABLE_ERP_ARTICLE .'.UNITE_ID,
-									'. TABLE_ERP_ARTICLE .'.MATIERE,
-									'. TABLE_ERP_ARTICLE .'.EP,
-									'. TABLE_ERP_ARTICLE .'.DIM_X,
-									'. TABLE_ERP_ARTICLE .'.DIM_Y,
-									'. TABLE_ERP_ARTICLE .'.DIM_Z,
-									'. TABLE_ERP_ARTICLE .'.POIDS,
-									'. TABLE_ERP_ARTICLE .'.SUR_X,
-									'. TABLE_ERP_ARTICLE .'.SUR_Y,
-									'. TABLE_ERP_ARTICLE .'.SUR_Z,
-									'. TABLE_ERP_ARTICLE .'.COMMENT,
-									'. TABLE_ERP_ARTICLE .'.IMAGE,
-									'. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL,
-									'. TABLE_ERP_PRESTATION .'.LABEL AS PRESTATION_LABEL,
-									'. TABLE_ERP_SOUS_FAMILLE .'.LABEL AS FAMILLE_LABEL
-									FROM '. TABLE_ERP_ARTICLE .'
-										LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_ARTICLE .'`.`UNITE_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_ARTICLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id`
-									ORDER BY '. TABLE_ERP_ARTICLE .'.id DESC LIMIT 0, 1';
 			}
 		}
 		else{
-
 			//if is get value article
-			$Name = preg_replace('#-+#',' ', addslashes($_GET['id']));
-
 			$titleOnglet1 =  $langue->show_text('TableUpdateButton');
-
-			//select  values	
-			$query='SELECT '. TABLE_ERP_ARTICLE .'.ID,
-									'. TABLE_ERP_ARTICLE .'.CODE,
-									'. TABLE_ERP_ARTICLE .'.LABEL,
-									'. TABLE_ERP_ARTICLE .'.IND,
-									'. TABLE_ERP_ARTICLE .'.PRESTATION_ID,
-									'. TABLE_ERP_ARTICLE .'.FAMILLE_ID,
-									'. TABLE_ERP_ARTICLE .'.ACHETER,
-									'. TABLE_ERP_ARTICLE .'.PRIX_ACHETER,
-									'. TABLE_ERP_ARTICLE .'.VENDU,
-									'. TABLE_ERP_ARTICLE .'.PRIX_VENDU,
-									'. TABLE_ERP_ARTICLE .'.UNITE_ID,
-									'. TABLE_ERP_ARTICLE .'.MATIERE,
-									'. TABLE_ERP_ARTICLE .'.EP,
-									'. TABLE_ERP_ARTICLE .'.DIM_X,
-									'. TABLE_ERP_ARTICLE .'.DIM_Y,
-									'. TABLE_ERP_ARTICLE .'.DIM_Z,
-									'. TABLE_ERP_ARTICLE .'.POIDS,
-									'. TABLE_ERP_ARTICLE .'.SUR_X,
-									'. TABLE_ERP_ARTICLE .'.SUR_Y,
-									'. TABLE_ERP_ARTICLE .'.SUR_Z,
-									'. TABLE_ERP_ARTICLE .'.COMMENT,
-									'. TABLE_ERP_ARTICLE .'.IMAGE,
-									'. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL,
-									'. TABLE_ERP_PRESTATION .'.LABEL AS PRESTATION_LABEL,
-									'. TABLE_ERP_PRESTATION .'.TYPE,
-									'. TABLE_ERP_SOUS_FAMILLE .'.LABEL AS FAMILLE_LABEL
-									FROM '. TABLE_ERP_ARTICLE .'
-										LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_ARTICLE .'`.`UNITE_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_ARTICLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_SOUS_FAMILLE .'` ON `'. TABLE_ERP_ARTICLE .'`.`FAMILLE_ID` = `'. TABLE_ERP_SOUS_FAMILLE .'`.`id`
-									WHERE '. TABLE_ERP_ARTICLE .'.id = \''. $Name.'\'';
 		}
 
 		//Assign  values	
-		$data = $bdd->GetQuery($query, true);
+		$data = $Article->GETArticle($id);
 
-		$ArticleId = $data->ID;
+		$ArticleId = $data->id;
 		$ArticleCODE = $data->CODE;
 		$ArticleLabel = $data->LABEL;
 		$ArticleInd = $data->IND;
@@ -283,7 +183,7 @@
 	//if add new technical cut
 	if(isset($_POST['AddORDREDecoupTech']) AND !empty($_POST['AddORDREDecoupTech'])){
 
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DEC_TECH ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_TECH_CUT ." VALUE ('0',
 																		'". addslashes($ArticleId) ."',
 																		'". addslashes($_POST['AddORDREDecoupTech']) ."',
 																		'". addslashes($_POST['AddPRESTADecoupTech']) ."',
@@ -310,7 +210,7 @@
 		$i = 0;
 		foreach ($UpdateIdDecoupTech as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_DEC_TECH .'` SET  ORDRE = \''. addslashes($UpdateORDREDecoupTech[$i]) .'\',
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_STANDARD_TECH_CUT .'` SET  ORDRE = \''. addslashes($UpdateORDREDecoupTech[$i]) .'\',
 																PRESTA_ID = \''. addslashes($UpdatePRESTADecoupTech[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELDecoupTech[$i]) .'\',
 																TPS_PREP = \''. addslashes($UpdateTPSPREPDecoupTech[$i]) .'\',
@@ -329,7 +229,7 @@
 
 	if(isset($_POST['AddORDRENomencl']) AND !empty($_POST['AddORDRENomencl'])){
 
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_NOMENCLATURE ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_NOMENCLATURE ." VALUE ('0',
 																		'". addslashes($_POST['AddORDRENomencl']) ."',
 																		'". addslashes($ArticleId) ."',
 																		'". addslashes($_POST['AddARTICLENomencl']) ."',
@@ -355,7 +255,7 @@
 		$i = 0;
 		foreach ($UpdateIdNomencl as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_NOMENCLATURE .'` SET  ORDRE = \''. addslashes($UpdateORDRENomencl[$i]) .'\',
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_STANDARD_NOMENCLATURE .' SET  ORDRE = \''. addslashes($UpdateORDRENomencl[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELNomencl[$i]) .'\',
 																QT = \''. addslashes($UpdateQTNomencl[$i]) .'\',
 																UNIT_ID = \''. addslashes($UpdateUNITNomencl[$i]) .'\',
@@ -373,7 +273,7 @@
 
 	if(isset($_POST['AddORDRESousEns']) AND !empty($_POST['AddORDRESousEns'])){
 
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_SOUS_ENSEMBLE ." VALUE ('0',
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_SUB_ASSEMBLY ." VALUE ('0',
 																		'". addslashes($ArticleId) ."',
 																		'". addslashes($_POST['AddORDRESousEns']) ."',
 																		'". addslashes($_POST['AddARTICLESousEns']) ."',
@@ -391,7 +291,7 @@
 		$i = 0;
 		foreach ($UpdateIdSousEns as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SOUS_ENSEMBLE .'` SET  ORDRE = \''. addslashes($UpdateORDRESousEns[$i]) .'\',
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_STANDARD_SUB_ASSEMBLY .' SET  ORDRE = \''. addslashes($UpdateORDRESousEns[$i]) .'\',
 																	ARTICLE_ID = \''. addslashes($UpdateARTICLESousEns[$i]) .'\',
 																	QT = \''. addslashes($UpdateQTSousEns[$i]) .'\'
 																	WHERE Id IN ('. $id_generation . ')');
@@ -517,7 +417,7 @@
 			<ul id="myUL">
 				<?php
 				//generate list for datalist find input
-				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_ARTICLE ." ORDER BY LABEL";
+				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_STANDARD_ARTICLE ." ORDER BY LABEL";
 				foreach ($bdd->GetQuery($query) as $data): ?>
 				<li><a href="admin.php?page=manage-study&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
 				<?php $i++; endforeach; ?>

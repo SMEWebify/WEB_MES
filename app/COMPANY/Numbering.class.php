@@ -10,13 +10,16 @@ class Numbering Extends SQL {
 
   public function getCodeNumbering($type='0', $sql ='', $model ='' , $digit = 0, $index = 0)
   {
+    
       if(!empty($sql)){
+       
             $data=$this->GetQuery($sql, true);
             $Index= $data->max_id+1;
             $Digit = $digit;
             $Model = $model;
       }
       elseif(!empty($type)){
+       
             //we find num sequence for number quoting
             $query='SELECT '. TABLE_ERP_NUM_DOC .'.id,
                         '. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
@@ -26,6 +29,7 @@ class Numbering Extends SQL {
                         FROM `'. TABLE_ERP_NUM_DOC .'`
                         WHERE '. TABLE_ERP_NUM_DOC .'.DOC_TYPE=\''. $type  .'\'';
             $data = $this->GetQuery($query, true);
+           
             $Index= $data->COMPTEUR+1;
             $Digit = $data->DIGIT;
             $Model = $data->MODEL;

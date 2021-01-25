@@ -7,48 +7,35 @@ define('DB_USER', 'root');
 define('DB_PASSWORD', '');
 
 
-//DATA BASE TABLE
-define('TABLE_ERP_ACTIVITY_SECTOR', 'activity_sector');
-define('TABLE_ERP_ARTICLE', 'article');
-define('TABLE_ERP_ADRESSE', 'adresses');
-define('TABLE_ERP_CLIENT_FOUR', 'client_fourniseur');
-
-//ORDER
-define('TABLE_ERP_COMMANDE', 'commande');
-define('TABLE_ERP_COMMANDE_LIGNE', 'commande_ligne');
-
+//DATA BASE ACCOUTING
+define('TABLE_ERP_TRANSPORT', 'ac_delivery');
+define('TABLE_ERP_CONDI_REG', 'ac_payment_condition');
+define('TABLE_ERP_MODE_REG', 'ac_payment_method');
+define('TABLE_ERP_TVA', 'ac_VAT');
+define('TABLE_ERP_IMPUT_COMPTA', 'ac_accounting_allocation');
+define('TABLE_ERP_IMPUT_COMPTA_LIGNE', 'ac_accounting_allocation_lines');
+define('TABLE_ERP_IMPUT_COMPTA_PRESTATION', 'ac_accounting_allocation_services');
+define('TABLE_ERP_ECHEANCIER_TYPE', 'ac_timeline_paiement');
+define('TABLE_ERP_ECHEANCIER_TYPE_LIGNE', 'ac_timeline_paiement_lines');
+//DATA BASE COMPANIES
+define('TABLE_ERP_CLIENT_FOUR', 'companies');
+define('TABLE_ERP_ADRESSE', 'companies_addresses');
+define('TABLE_ERP_CONTACT', 'companies_contact');
+//DATA BASE COMPANY
+define('TABLE_ERP_ACTIVITY_SECTOR', 'company_activity_sector');
 define('TABLE_ERP_COMPANY', 'company_setting');
-define('TABLE_ERP_CONDI_REG', 'condition_reg');
-define('TABLE_ERP_CONTACT', 'contact');
-define('TABLE_ERP_DAILY_HOURLY_MODEL', 'daily_hourly_model');
-define('TABLE_ERP_DAILY_HOURLY_MODEL_LINES', 'daily_hourly_model_line');
-
-
-define('TABLE_ERP_DEC_TECH', 'decoupage_tech');
-
-//QUOTE
-define('TABLE_ERP_DEVIS', 'devis');
-define('TABLE_ERP_DEVIS_LIGNE', 'devis_lignes');
-
-define('TABLE_ERP_ECHEANCIER_TYPE', 'echeancier_type');
-define('TABLE_ERP_ECHEANCIER_TYPE_LIGNE', 'echeancier_type_ligne');
-define('TABLE_ERP_EMAIL', 'email');
-define('TABLE_ERP_EVENT_MACHINE', 'evenement_machine');
-define('TABLE_ERP_EVENT_IMPRODUC_TIME', 'improductive_activity');
-
-//ACOUTING
-define('TABLE_ERP_IMPUT_COMPTA', 'imputation_comptables');
-define('TABLE_ERP_IMPUT_COMPTA_LIGNE', 'imputation_comptables_ligne');
-define('TABLE_ERP_IMPUT_COMPTA_PRESTATION', 'imputation_comptables_prestations');
-
-define('TABLE_ERP_INFO_GENERAL', 'infos_generales'); 
-define('TABLE_ERP_FERIER', 'jours_feries');
-define('TABLE_ERP_MODE_REG', 'mode_reglement');
-define('TABLE_ERP_NOMENCLATURE', 'nomenclature');
-define('TABLE_ERP_NUM_DOC', 'num_doc');
-define('TABLE_ERP_PRESTATION', 'prestations');
-
-  //QUALITY
+define('TABLE_ERP_RIGHTS', 'company_rights');
+define('TABLE_ERP_EMPLOYEES', 'company_user');
+define('TABLE_ERP_EMAIL', 'company_email_type');
+define('TABLE_ERP_INFO_GENERAL', 'company_timeline'); 
+define('TABLE_ERP_NUM_DOC', 'company_document_numbering');
+//DATA BASE ORDER
+define('TABLE_ERP_COMMANDE', 'orders');
+define('TABLE_ERP_COMMANDE_LIGNE', 'orders_lines');
+//DATA BASE ORDER ACKNOWLEGMENT
+define('TABLE_ERP_ORDER_ACKNOWLEGMENT', 'order_acknowledgment');
+define('TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES', 'order_acknowledgment_lines');
+//DATA BASE QUALITY
 define('TABLE_ERP_QL_ACTION', 'ql_action');
 define('TABLE_ERP_QL_APP_MESURE', 'ql_appareil_mesure');
 define('TABLE_ERP_QL_CAUSES', 'ql_causes');
@@ -56,18 +43,29 @@ define('TABLE_ERP_QL_CORRECTIONS', 'ql_corrections');
 define('TABLE_ERP_DEFAUT', 'ql_defaut');
 define('TABLE_ERP_DEROGATION', 'ql_derogation');
 define('TABLE_ERP_NFC', 'ql_nfc');
+//DATA BASE QUOTE
+define('TABLE_ERP_DEVIS', 'quote');
+define('TABLE_ERP_DEVIS_LIGNE', 'quote_lines');
+//DATA BASE STUDY
+define('TABLE_ERP_UNIT', 'study_unit');
+define('TABLE_ERP_SOUS_FAMILLE', 'study_sub_familly');
+define('TABLE_ERP_STANDARD_ARTICLE', 'study_standard_article');
+define('TABLE_ERP_STANDARD_TECH_CUT', 'study_standard_technical_cut');
+define('TABLE_ERP_STANDARD_SUB_ASSEMBLY', 'study_standard_sub_assembly');
+define('TABLE_ERP_STANDARD_NOMENCLATURE', 'study_standard_nomenclature');
+//DATA BASE METHODS
+define('TABLE_ERP_SECTION', 'methods_section');
+define('TABLE_ERP_RESSOURCE', 'methods_resource');
+define('TABLE_ERP_STOCK_ZONE', 'methods_stock_zone');
+define('TABLE_ERP_PRESTATION', 'methods_services');
+//DATA BASE TIME
+define('TABLE_ERP_DAILY_HOURLY_MODEL', 'time_daily_hourly_model');
+define('TABLE_ERP_DAILY_HOURLY_MODEL_LINES', 'time_daily_hourly_model_line');
+define('TABLE_ERP_TYPE_ABS', 'time_absence_type');
+define('TABLE_ERP_FERIER', 'time_bank_holiday');
+define('TABLE_ERP_EVENT_MACHINE', 'time_event_machine');
+define('TABLE_ERP_EVENT_IMPRODUC_TIME', 'time_improductive_activity');
 
-define('TABLE_ERP_RESSOURCE', 'ressource');
-define('TABLE_ERP_RIGHTS', 'rights');
-define('TABLE_ERP_SECTION', 'section');
-define('TABLE_ERP_SOUS_ENSEMBLE', 'sous_ensemble');
-define('TABLE_ERP_SOUS_FAMILLE', 'sous_famille');
-define('TABLE_ERP_STOCK_ZONE', 'stock_zone');
-define('TABLE_ERP_TVA', 'tva');
-define('TABLE_ERP_TYPE_ABS', 'type_absence');
-define('TABLE_ERP_TRANSPORT', 'transport');
-define('TABLE_ERP_UNIT', 'unit');
-define('TABLE_ERP_EMPLOYEES', 'user');
 
 //if turn off web site
 define ('MAINTENANCE', 0);

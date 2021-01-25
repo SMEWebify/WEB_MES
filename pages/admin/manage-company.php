@@ -537,7 +537,6 @@
 							<td><?= $i ?> <input type="hidden" name="id_NumDoc[]" id="id_NumDoc" value="<?= $data->Id ?>"></td>
 							<td>
 								<select name="UpdateDOCNum[]">
-									<option value="0" <?= selected($data->DOC_TYPE, 0) ?>><?= $langue->show_text('SelectAR') ?></option>
 									<option value="1" <?= selected($data->DOC_TYPE, 1) ?>><?= $langue->show_text('SelectBLS') ?></option>
 									<option value="2" <?= selected($data->DOC_TYPE, 2) ?>><?= $langue->show_text('SelectBLC') ?></option>
 									<option value="3" <?= selected($data->DOC_TYPE, 3) ?>><?= $langue->show_text('SelectBL') ?></option>
@@ -549,6 +548,7 @@
 									<option value="9" <?= selected($data->DOC_TYPE, 9) ?>><?= $langue->show_text('SelectINVOICE') ?></option>
 									<option value="10" <?= selected($data->DOC_TYPE, 10) ?>><?= $langue->show_text('SelectINVOICESUP') ?></option>
 									<option value="11" <?= selected($data->DOC_TYPE, 11) ?>><?= $langue->show_text('SelectNONCONF') ?></option>
+									<option value="12" <?= selected($data->DOC_TYPE, 12) ?>><?= $langue->show_text('SelectAR') ?></option>
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="UpddateModeleNum[]" value="<?= $data->MODEL ?>" ></td>

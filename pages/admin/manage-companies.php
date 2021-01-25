@@ -301,15 +301,13 @@
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateContactNotification')));
 	}
-
-	// if udpdate comment 
-	if(isset($_POST['COMMENT']) && !empty($_POST['COMMENT'])){
+	elseif(isset($_POST['COMMENT']) && !empty($_POST['COMMENT'])){
+		// if udpdate comment 
 		$bdd->GetUpdatePOST(TABLE_ERP_CLIENT_FOUR, $_POST, 'WHERE id IN ('. $_GET['id'] . ')');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 	}
-
-	//if update data from sector activity list
-	if(isset($_POST['SECTOR_ID']) && !empty($_POST['SECTOR_ID'])){
+	elseif(isset($_POST['SECTOR_ID']) && !empty($_POST['SECTOR_ID'])){
+		//if update data from sector activity list
 		foreach($_POST['SECTOR_ID'] as $POST => $Value){
 			$SECTOR_ID .= $Value .',';
 		}
@@ -580,7 +578,7 @@
 					<?php 	//display all site on form ligne
 				foreach ($Address->GETAddressList('', false, $SteId ) as $data): ?>
 				<tr>
-					<td><?= $i ?> <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="<?= $data->Id ?>"></td>
+					<td><?= $i ?> <input type="hidden" name="UpdateIdSite[]" id="UpdateIdSite" value="<?= $data->id ?>"></td>
 					<td><input type="number" name="UpdateORDRESite[]" value="<?= $data->ORDRE ?>" id="number"></td>
 					<td><input type="text" name="UpdateLABELSite[]" value="<?= $data->LABEL ?>" ></td>
 					<td><input type="text" name="UpdateADRESSESite[]" value="<?= $data->ADRESSE ?>" ></td>

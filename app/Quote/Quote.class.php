@@ -10,7 +10,7 @@ class Quote Extends SQL  {
     Public $INDICE;
     Public $LABEL;
     Public $LABEL_INDICE;
-    Public $CLIENT_ID;
+    Public $CUSTOMER_ID;
     Public $CONTACT_ID;
     Public $ADRESSE_ID;
     Public $FACTURATION_ID;
@@ -21,11 +21,14 @@ class Quote Extends SQL  {
     Public $RESP_COM_ID;
     Public $RESP_TECH_ID;
     Public $REFERENCE;
-    Public $COND_REG_CLIENT_ID;
-    Public $MODE_REG_CLIENT_ID;
+    Public $COND_REG_CUSTOMER_ID;
+    Public $MODE_REG_CUSTOMER_ID;
     Public $ECHEANCIER_ID;
     Public $TRANSPORT_ID;
     Public $COMMENT;
+    Public $CUSTOMER_NAME;
+    Public $NOM;
+    Public $PRENOM;
 
     Public $Quote;
 
@@ -62,7 +65,7 @@ class Quote Extends SQL  {
                                         '. TABLE_ERP_DEVIS .'.INDICE,
                                         '. TABLE_ERP_DEVIS .'.LABEL,
                                         '. TABLE_ERP_DEVIS .'.LABEL_INDICE,
-                                        '. TABLE_ERP_DEVIS .'.CLIENT_ID,
+                                        '. TABLE_ERP_DEVIS .'.CUSTOMER_ID,
                                         '. TABLE_ERP_DEVIS .'.CONTACT_ID,
                                         '. TABLE_ERP_DEVIS .'.ADRESSE_ID,
                                         '. TABLE_ERP_DEVIS .'.FACTURATION_ID,
@@ -73,16 +76,16 @@ class Quote Extends SQL  {
                                         '. TABLE_ERP_DEVIS .'.RESP_COM_ID,
                                         '. TABLE_ERP_DEVIS .'.RESP_TECH_ID,
                                         '. TABLE_ERP_DEVIS .'.REFERENCE,
-                                        '. TABLE_ERP_DEVIS .'.COND_REG_CLIENT_ID,
-                                        '. TABLE_ERP_DEVIS .'.MODE_REG_CLIENT_ID,
+                                        '. TABLE_ERP_DEVIS .'.COND_REG_CUSTOMER_ID,
+                                        '. TABLE_ERP_DEVIS .'.MODE_REG_CUSTOMER_ID,
                                         '. TABLE_ERP_DEVIS .'.ECHEANCIER_ID,
                                         '. TABLE_ERP_DEVIS .'.TRANSPORT_ID,
                                         '. TABLE_ERP_DEVIS .'.COMENT,
-                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME,
+                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM,
                                         '. TABLE_ERP_EMPLOYEES .'.PRENOM
                                         FROM `'. TABLE_ERP_DEVIS .'`
-                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_DEVIS .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
                                         WHERE '. TABLE_ERP_DEVIS .'.id = \''. $id_GET.'\' ', true, 'App\Quote\Quote');
         return $Quote;
@@ -106,7 +109,7 @@ class Quote Extends SQL  {
                         '. TABLE_ERP_DEVIS .'.LABEL,
                         '. TABLE_ERP_CLIENT_FOUR .'.NAME
                 FROM '. TABLE_ERP_DEVIS .'
-                LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                 ORDER BY  '. TABLE_ERP_DEVIS .'.id DESC';
         if($Select){
             foreach ($this->GetQuery($query) as $data){
@@ -142,7 +145,7 @@ class QuoteLines Extends Quote  {
 
     public function NewQuoteLine($IdQuote, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $REMISE, $TVA_ID, $DELAIS){
 
-        $NewQuoteLine = $this->GetUpdate("INSERT INTO ". TABLE_ERP_DEVIS_LIGNE ." VALUE ('0',
+        $NewQuoteLine = $this->GetInsert("INSERT INTO ". TABLE_ERP_DEVIS_LIGNE ." VALUE ('0',
                                                                                         '". $IdQuote ."',
                                                                                         '". addslashes($ORDRE) ."',
                                                                                         '". addslashes($ARTICLE_CODE) ."',
@@ -194,12 +197,14 @@ class QuoteLines Extends Quote  {
                         '. TABLE_ERP_DEVIS_LIGNE .'.TVA_ID,
                         '. TABLE_ERP_DEVIS_LIGNE .'.DELAIS,
                         '. TABLE_ERP_DEVIS_LIGNE .'.ETAT,
+                        '. TABLE_ERP_DEVIS .'.CODE AS QUOTE_CODE,
                         '. TABLE_ERP_TVA .'.TAUX,
                         '. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA,
                         '. TABLE_ERP_UNIT .'.LABEL AS LABEL_UNIT
                         FROM '. TABLE_ERP_DEVIS_LIGNE .'
                             LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
                             LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_DEVIS .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`DEVIS_ID` = `'. TABLE_ERP_DEVIS .'`.`id`
                             '. $Clause.'
                         ORDER BY '. TABLE_ERP_DEVIS_LIGNE .'.ORDRE ';
         if($Select){

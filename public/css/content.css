@@ -229,6 +229,20 @@ span.psw {
 	padding: 0 10px;
 	margin-bottom:30px;
 }
+.box {
+  display: grid;
+  grid-template-columns:  auto auto auto;
+  grid-gap: 10px;
+  padding: 10px;
+}
+.box > div {
+  padding: 20px 0;
+
+}
+.item1 {
+  grid-area: 2 / 1 / span 1 / span 2;
+}
+
 .dashboard{
   float: left;
   width: 30%;

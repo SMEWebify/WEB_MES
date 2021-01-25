@@ -9,11 +9,11 @@ class Form {
         $this->data = $data;
     }
 
-    public function input($type, $name, $value){
-        return '<input type="'. $type .'" name="'. $name .'" value="'. $value .'">';
+    public function input($type, $name, $value='', $placeholder=''){
+        return '<input type="'. $type .'" name="'. $name .'" value="'. $value .'" placeholder="'. $placeholder .'">';
     }
 
     public function submit($text){
-        return '<input type="submit" value="'. $text .'" />';
+        return '<input class="input-moyen" type="submit" value="'. $text .'" />';
     }
 }

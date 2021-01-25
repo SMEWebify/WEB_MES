@@ -46,13 +46,16 @@
 <!-- title page --> 
 	<TiltePage>Commande</TiltePage>
     <Title1>Accueil</Title1> 
+
     <Title2>Commande</Title2>
     <Title3>Détail de la commande</Title3>
-    <Title4>Général</Title4>
-    <Title5>Détail client</Title5>
-    <Title6>Détail commerciales</Title6>
-    <Title7>Commentaire</Title7>
-    <Title8>Document</Title8>
+    <Title4>Document</Title4>
+
+    <Title5>Lignes de commande</Title5>
+    <Title6>Accusés de reception</Title6>
+
+    <Title7>Détail de l'AR</Title7>
+    
     <Title9>Assistant de passage en commande</Title9>
 <!-- table content --> 
     <TableNameUser>Nom :</TableNameUser>
@@ -78,6 +81,7 @@
     <TableAdresseDelevery>Adresse de livraison</TableAdresseDelevery>
     <TableDeleveryMode>Mode de livraison :</TableDeleveryMode> 
     <TableCustomerReference>Référence client :</TableCustomerReference> 
+    <TableCustomer>Client :</TableCustomer> 
     <TableDeleveryDate>Délais de livraison :</TableDeleveryDate>
     <TableNumberCustomerOrder>N° de la commande client</TableNumberCustomerOrder>
     <TableCreateOrder>Créer commande</TableCreateOrder>
@@ -109,12 +113,14 @@
     <TableContact>Contacts</TableContact>
     <TableUserCreate>Créateur</TableUserCreate>
     <TableCodeLabel>Code et libellé de la commande :</TableCodeLabel>  
-    <TableLabelOrder>Libellé de la commande:</TableLabelOrder>   
-    <TableIndexLabel>Indice et libellé de version  :</TableIndexLabel>  
-    <TableLabelIndexOrder>Libellé de version  :</TableLabelIndexOrder>  
+    <TableLabelplaceholder>Libellé de la commande:</TableLabelplaceholder>   
+    <TableLabelIndexplaceholder>Indice et libellé de version  :</TableLabelIndexplaceholder>  
+    <TableIndexLabel>Libellé de version  :</TableIndexLabel>  
     <TableCreationDate>Date de création :</TableCreationDate>  
     <TableValidityDate>Date de validité :</TableValidityDate>  
-    <TableOrderStatu>Etat de la commande :</TableOrderStatu>     
+    <TableOrderStatu>Etat de la commande :</TableOrderStatu>  
+    <TableNewOrderAcknowledgment>Nouvel AR :</TableNewOrderAcknowledgment> 
+       
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
     <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>
@@ -126,13 +132,16 @@
     <AddOrderNotification>Commande créée</AddOrderNotification>
     <AddOrderLineNotification> ligne(s) ajoutée(s) a la Commande</AddOrderLineNotification>
     <DeleteOrderLineNotification> ligne(s) suprimée(s) de la commande</DeleteOrderLineNotification>
+    <AddOrderAcknowledgmentNotificationNotification>Accusé de reception créer</AddOrderAcknowledgmentNotificationNotification>
+    <AddOrderAcknowledgmentLinesNotificationNotification> ligne(s) d'AR crée(s)</AddOrderAcknowledgmentLinesNotificationNotification>
+    
 <!-- Select-->
-    <SelectOpen>En cours</SelectOpen>
-    <SelectRefuse>Refusé</SelectRefuse>
-    <SelectSend>Envoyé</SelectSend>
-    <SelectDecline>Décliné</SelectDecline>
-    <SelectClosed>Fermé</SelectClosed>
-    <SelectObsolete>Obselète</SelectObsolete>
+    <SelectOpen>Crée</SelectOpen>
+    <SelectRun>Lancée</SelectRun>
+    <SelectStop>Suspendu</SelectStop>
+    <SelecPartialDelivery>Livrée partiellement</SelecPartialDelivery>
+    <SelectDelivered>Livrée</SelectDelivered>
+    <SelectInvoice>Facturé</SelectInvoice>
 
 
     <Yes>Oui</Yes>

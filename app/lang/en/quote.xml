@@ -69,7 +69,7 @@
     <TableOrder>Order</TableOrder>
     <Addline>Add line</Addline>
     <Deleteline>Delete line</Deleteline>
-    <UpdateQuoteLine>Update quote lines</UpdateQuoteLine>
+    <UpdateLine>Update quote lines</UpdateLine>
     <TableCondiList>Payment condition</TableCondiList>
     <TableMethodList>Payment choice</TableMethodList>
     <TableUpdateButton>Update</TableUpdateButton>
@@ -80,7 +80,8 @@
     <TableAdresseDelevery>Adresse Delevery</TableAdresseDelevery>
     <TableDeleveryMode>Delevery mode :</TableDeleveryMode> 
     <TableCustomerReference>Customer reference:</TableCustomerReference> 
-    <TableDeleveryDate>Delay :</TableDeleveryDate>
+    <TableCustomer>Customer :</TableCustomer> 
+    <TableDeleveryDate>Delay</TableDeleveryDate>
     <TableNumberCustomerOrder>Customer order number</TableNumberCustomerOrder>
     <TableCreateOrder>Create new order</TableCreateOrder>
     <TableNewOrder>New order</TableNewOrder> 
@@ -111,9 +112,9 @@
     <TableContact>Contacts</TableContact>
     <TableUserCreate>Creator</TableUserCreate>
     <TableCodeLabel>Code and wording of the quote:</TableCodeLabel> 
-    <TableLabelquote>Label of quote:</TableLabelquote>      
-    <TableIndexLabel>Version index and label:</TableIndexLabel> 
-    <TableLabelIndexquote>Label index  :</TableLabelIndexquote>  
+    <TableLabelplaceholder>Label of quote:</TableLabelplaceholder>      
+    <TableLabelIndexplaceholder>Version index and label:</TableLabelIndexplaceholder> 
+    <TableIndexLabel>Label index  :</TableIndexLabel>  
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
     <TableQuoteStatu>Quote statu :</TableQuoteStatu>     
