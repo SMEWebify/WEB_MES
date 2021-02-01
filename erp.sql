@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 28 déc. 2020 à 22:36
+-- Généré le : lun. 01 fév. 2021 à 22:17
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -24,37 +24,498 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `activity_sector`
+-- Structure de la table `ac_accounting_allocation`
 --
 
-DROP TABLE IF EXISTS `activity_sector`;
-CREATE TABLE IF NOT EXISTS `activity_sector` (
+DROP TABLE IF EXISTS `ac_accounting_allocation`;
+CREATE TABLE IF NOT EXISTS `ac_accounting_allocation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TVA` int(11) NOT NULL,
+  `COMPTE_TVA` int(11) NOT NULL,
+  `CODE_COMPTA` int(11) NOT NULL,
+  `TYPE_IMPUTATION` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `activity_sector`
+-- Déchargement des données de la table `ac_accounting_allocation`
 --
 
-INSERT INTO `activity_sector` (`id`, `CODE`, `LABEL`) VALUES
-(1, 'AERO', 'AERONAUTIQUE'),
-(7, 'MEDIC', 'MEDICALE'),
-(6, 'BAT', 'BATIMENT'),
-(5, 'AUTO', 'AUTOMOBILE'),
-(8, 'AGRI', 'AGRICOLE'),
-(9, 'PARTI', 'PARTICULIER');
+INSERT INTO `ac_accounting_allocation` (`id`, `CODE`, `LABEL`, `TVA`, `COMPTE_TVA`, `CODE_COMPTA`, `TYPE_IMPUTATION`) VALUES
+(1, '419100', 'ACOMPTE SUR COMMANDE', 4, 0, 419100, 6),
+(2, '445661', 'TVA ACHAT FRANCE', 4, 0, 445661, 6),
+(3, '445710', 'TVA VENTE FRANCE', 4, 0, 445710, 6),
+(4, '601000', 'ACHAT FRANCE', 4, 445661, 601000, 1),
+(5, '602000', 'ACHAT UK', 5, 0, 602000, 1),
+(6, '701000', 'VENTE PRODUIT FRANCE', 4, 445710, 701000, 1);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `adresses`
+-- Structure de la table `ac_accounting_allocation_lines`
 --
 
-DROP TABLE IF EXISTS `adresses`;
-CREATE TABLE IF NOT EXISTS `adresses` (
+DROP TABLE IF EXISTS `ac_accounting_allocation_lines`;
+CREATE TABLE IF NOT EXISTS `ac_accounting_allocation_lines` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `IMPUTATION_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_accounting_allocation_lines`
+--
+
+INSERT INTO `ac_accounting_allocation_lines` (`ID`, `ARTICLE_ID`, `ORDRE`, `IMPUTATION_ID`) VALUES
+(1, 24, 10, 6);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_accounting_allocation_services`
+--
+
+DROP TABLE IF EXISTS `ac_accounting_allocation_services`;
+CREATE TABLE IF NOT EXISTS `ac_accounting_allocation_services` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `PRESTATION_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `IMPUTATION_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_accounting_allocation_services`
+--
+
+INSERT INTO `ac_accounting_allocation_services` (`ID`, `PRESTATION_ID`, `ORDRE`, `IMPUTATION_ID`) VALUES
+(1, 4, 10, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_delivery`
+--
+
+DROP TABLE IF EXISTS `ac_delivery`;
+CREATE TABLE IF NOT EXISTS `ac_delivery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_delivery`
+--
+
+INSERT INTO `ac_delivery` (`id`, `CODE`, `LABEL`) VALUES
+(1, 'FRANCO', 'Franco de port et d\'emballage'),
+(2, 'DEPART', 'Prix départ'),
+(0, 'AUCUN', 'Aucun transport');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_payment_condition`
+--
+
+DROP TABLE IF EXISTS `ac_payment_condition`;
+CREATE TABLE IF NOT EXISTS `ac_payment_condition` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NBR_MOIS` int(11) NOT NULL,
+  `NBR_JOURS` int(11) NOT NULL,
+  `FIN_MOIS` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_payment_condition`
+--
+
+INSERT INTO `ac_payment_condition` (`id`, `CODE`, `LABEL`, `NBR_MOIS`, `NBR_JOURS`, `FIN_MOIS`) VALUES
+(8, '45FDM', '45 jours fin du mois', 0, 45, '1'),
+(3, 'REC_FAC', 'A la réception de la facture', 0, 0, '0'),
+(4, '30NET', '30 jours net', 0, 30, '0'),
+(5, '30FDM', '30 jours fin de mois', 0, 30, '1'),
+(6, '30FDM15', '30 jours fin de mois le 15', 1, 15, '1'),
+(9, 'NONDEF', 'Non Définit', 0, 0, '1');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_payment_method`
+--
+
+DROP TABLE IF EXISTS `ac_payment_method`;
+CREATE TABLE IF NOT EXISTS `ac_payment_method` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `CODE_COMPTABLE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_payment_method`
+--
+
+INSERT INTO `ac_payment_method` (`id`, `CODE`, `LABEL`, `CODE_COMPTABLE`) VALUES
+(1, 'VIR', 'VIREMENT', ''),
+(2, 'CHQ', 'CHEQUE', ''),
+(3, 'CB', 'CARTE BANCAIRE', ''),
+(4, 'CMPT', 'COMPTANT', ''),
+(5, 'NONDEF', 'Non définit', '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_timeline_paiement`
+--
+
+DROP TABLE IF EXISTS `ac_timeline_paiement`;
+CREATE TABLE IF NOT EXISTS `ac_timeline_paiement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_timeline_paiement`
+--
+
+INSERT INTO `ac_timeline_paiement` (`id`, `CODE`, `LABEL`) VALUES
+(1, '12MOIS', 'Échéancier sur 12 mois'),
+(2, '3MOIS', 'Échéancier sur 3 mois'),
+(0, 'AUCUN', 'Aucun');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_timeline_paiement_lines`
+--
+
+DROP TABLE IF EXISTS `ac_timeline_paiement_lines`;
+CREATE TABLE IF NOT EXISTS `ac_timeline_paiement_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ECHEANCIER_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `POURC_MONTANT` decimal(10,3) NOT NULL,
+  `POURC_TVA` decimal(10,3) NOT NULL,
+  `CONDI_REG_ID` int(11) NOT NULL,
+  `MODE_REG_ID` int(11) NOT NULL,
+  `DELAI` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_timeline_paiement_lines`
+--
+
+INSERT INTO `ac_timeline_paiement_lines` (`id`, `ECHEANCIER_ID`, `LABEL`, `POURC_MONTANT`, `POURC_TVA`, `CONDI_REG_ID`, `MODE_REG_ID`, `DELAI`) VALUES
+(1, 2, '3MOIS1', '33.333', '33.333', 8, 1, 0),
+(2, 2, '3MOIS2', '33.333', '33.333', 8, 1, 0),
+(3, 2, '3MOIS3', '33.330', '33.334', 8, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ac_vat`
+--
+
+DROP TABLE IF EXISTS `ac_vat`;
+CREATE TABLE IF NOT EXISTS `ac_vat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TAUX` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `ac_vat`
+--
+
+INSERT INTO `ac_vat` (`id`, `CODE`, `LABEL`, `TAUX`) VALUES
+(1, '0%EX', 'TVA Exonérée', '0.000'),
+(2, '5%', 'TVA France réduite', '5.000'),
+(3, '10%', 'TVA France réduite', '10.000'),
+(4, '20%', 'TVA France', '20.000'),
+(5, 'NULL', 'Aucune', '0.000');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `companies`
+--
+
+DROP TABLE IF EXISTS `companies`;
+CREATE TABLE IF NOT EXISTS `companies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `WEBSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `FBSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TWITTERSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LKDSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `SIREN` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `APE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TVA_INTRA` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TVA_ID` int(11) NOT NULL,
+  `LOGO` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `STATU_CLIENT` int(11) NOT NULL,
+  `COND_REG_CLIENT_ID` int(11) DEFAULT NULL,
+  `MODE_REG_CLIENT_ID` int(11) DEFAULT NULL,
+  `REMISE` int(11) NOT NULL,
+  `RESP_COM_ID` int(11) NOT NULL,
+  `RESP_TECH_ID` int(11) NOT NULL,
+  `COMPTE_GEN_CLIENT` int(11) DEFAULT '0',
+  `COMPTE_AUX_CLIENT` int(11) DEFAULT '0',
+  `STATU_FOUR` int(11) NOT NULL,
+  `COND_REG_FOUR_ID` int(11) NOT NULL,
+  `MODE_REG_FOUR_ID` int(11) NOT NULL,
+  `COMPTE_GEN_FOUR` int(11) NOT NULL DEFAULT '0',
+  `COMPTE_AUX_FOUR` int(11) NOT NULL DEFAULT '0',
+  `CONTROLE_FOUR` int(11) NOT NULL,
+  `DATE_CREA` date NOT NULL,
+  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `SECTOR_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=213 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `companies`
+--
+
+INSERT INTO `companies` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE`, `LKDSITE`, `SIREN`, `APE`, `TVA_INTRA`, `TVA_ID`, `LOGO`, `STATU_CLIENT`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `REMISE`, `RESP_COM_ID`, `RESP_TECH_ID`, `COMPTE_GEN_CLIENT`, `COMPTE_AUX_CLIENT`, `STATU_FOUR`, `COND_REG_FOUR_ID`, `MODE_REG_FOUR_ID`, `COMPTE_GEN_FOUR`, `COMPTE_AUX_FOUR`, `CONTROLE_FOUR`, `DATE_CREA`, `COMMENT`, `SECTOR_ID`) VALUES
+(1, 'METALI', 'METALERIE GRENOBLE ALPE', 'https://www.site.com/', '', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 8, 1, 0, 2, 1, 401000, 400000, 0, 8, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(2, 'LASERDEC ', 'LASER DECOUPE', 'https://www.decoupe.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 2, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(3, 'METALJ', 'METAL JOLI', 'https://www.jolie.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, '', 2, 1, 1, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(4, 'GLOB1', 'GLOBAL METAL1', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(5, 'GLOB', 'GLOBAL METAL', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(6, 'GLOB4', 'GLOBAL METAL4', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(7, 'GLOB3', 'GLOBAL METAL3', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(8, 'GLOB2', 'GLOBAL METAL2', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(9, 'ADM1', 'ARCELOR MITAL 1', 'https://e-steel.arcelormittal.com/FR/fr/', '', '', '', '46950096100641', '', '', 4, 'images/ClientLogo/1200px-Logo_ArcelorMittal.svg.png', 0, 8, 1, 0, 1, 2, 0, 0, 1, 8, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(10, 'SVDPM', 'KDI SVDMP', 'https://www.kloecknermetals.fr/fr.html', 'https://www.facebook.com/KloecknerFrance/', 'https://twitter.com/KloecknerFrance', 'https://www.linkedin.com/company/klockner-distribution-industrielle/?originalSubdomain=fr', '54208635000411', '350', '', 4, 'images/ClientLogo/téléchargement.png', 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
+(11, 'ADM2', 'ARCELOR MITAL 2', 'https://e-steel.arcelormittal.com/FR/fr/', '', '', '', '46950096100641', '', '', 4, 'images/ClientLogo/', 0, 8, 1, 0, 1, 2, 0, 0, 1, 8, 1, 401000, 400000, 1, '2020-11-08', '', ''),
+(12, 'ADM3', 'ARCELOR MITAL3', 'https://e-steel.arcelormittal.com/FR/fr/', '', '', '', '46950096100641', '', '', 4, 'images/ClientLogo/', 0, 8, 1, 0, 1, 2, 0, 0, 1, 8, 1, 401000, 400000, 1, '2020-11-08', '', ''),
+(13, '26', 'Mollis Non Cursus Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '996837720', '9300', '8', 5, 'logo.png', 1, 3, 1, 7, 8, 8, 0, 0, 1, 3, 4, 0, 0, 0, '2020-02-29', 'Aucun', ''),
+(14, '713', 'Sodales Mauris Blandit PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '213093578', '6604', '6', 3, 'logo.png', 0, 4, 3, 6, 4, 5, 0, 0, 0, 3, 1, 0, 0, 0, '2021-06-14', 'Aucun', ''),
+(15, '829', 'Id LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '151314267', '5898', '7', 2, 'logo.png', 0, 3, 3, 3, 4, 9, 0, 0, 0, 6, 4, 0, 0, 0, '2021-10-27', 'Aucun', ''),
+(16, '589', 'Aliquam Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '360811111', '2757', '8', 3, 'logo.png', 2, 3, 4, 2, 3, 3, 0, 0, 0, 5, 3, 0, 0, 1, '2020-01-06', 'Aucun', ''),
+(17, '795', 'Mattis Ornare Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '920568607', '6086', '9', 3, 'logo.png', 0, 4, 1, 7, 4, 4, 0, 0, 1, 5, 2, 0, 0, 1, '2020-07-15', 'Aucun', ''),
+(18, '998', 'Suspendisse Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '301799656', '5713', '7', 5, 'logo.png', 2, 6, 1, 7, 7, 8, 0, 0, 0, 6, 2, 0, 0, 2, '2020-02-16', 'Aucun', ''),
+(19, '783', 'Enim Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '472291376', '5257', '2', 2, 'logo.png', 0, 5, 5, 3, 10, 10, 0, 0, 0, 3, 5, 0, 0, 2, '2021-01-23', 'Aucun', ''),
+(20, '164', 'Volutpat Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '099014433', '8689', '8', 4, 'logo.png', 1, 5, 4, 1, 8, 9, 0, 0, 1, 3, 1, 0, 0, 2, '2021-06-16', 'Aucun', ''),
+(21, '38', 'Tristique Senectus Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '390321727', '9384', '6', 1, 'logo.png', 0, 5, 4, 9, 2, 2, 0, 0, 0, 4, 1, 0, 0, 2, '2020-05-26', 'Aucun', ''),
+(22, '955', 'Morbi Quis Urna Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '490746997', '6107', '2', 4, 'logo.png', 0, 4, 2, 5, 4, 9, 0, 0, 0, 4, 1, 0, 0, 1, '2021-10-26', 'Aucun', ''),
+(23, '292', 'Convallis Ligula Donec Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '227881661', '4114', '9', 4, 'logo.png', 0, 4, 2, 3, 5, 5, 0, 0, 0, 5, 1, 0, 0, 2, '2020-12-07', 'Aucun', ''),
+(24, '257', 'Ipsum Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '937444065', '4587', '3', 1, 'logo.png', 1, 5, 1, 8, 7, 6, 0, 0, 1, 3, 3, 0, 0, 1, '2021-01-26', 'Aucun', ''),
+(25, '76', 'Lacus PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '759309198', '9555', '4', 3, 'logo.png', 1, 4, 5, 8, 9, 8, 0, 0, 0, 4, 2, 0, 0, 1, '2020-04-06', 'Aucun', ''),
+(26, '961', 'Dapibus Ligula Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '823922695', '6462', '7', 5, 'logo.png', 2, 4, 4, 6, 5, 8, 0, 0, 0, 5, 3, 0, 0, 1, '2020-07-09', 'Aucun', ''),
+(27, '304', 'Ut Pellentesque Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '348794504', '1336', '5', 1, 'logo.png', 2, 5, 3, 1, 1, 2, 0, 0, 1, 3, 5, 0, 0, 0, '2020-08-01', 'Aucun', ''),
+(28, '792', 'At Iaculis Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '811462357', '3281', '1', 3, 'logo.png', 1, 3, 5, 4, 2, 8, 0, 0, 1, 3, 5, 0, 0, 0, '2021-08-12', 'Aucun', ''),
+(29, '410', 'Arcu Vestibulum LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '263482853', '9919', '9', 4, 'logo.png', 2, 5, 2, 9, 7, 3, 0, 0, 0, 6, 4, 0, 0, 2, '2020-11-06', 'Aucun', ''),
+(30, '731', 'A Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '238969661', '5878', '8', 5, 'logo.png', 2, 5, 5, 6, 1, 1, 0, 0, 1, 5, 4, 0, 0, 0, '2021-03-24', 'test', '1,6'),
+(31, '479', 'Ac Company', 'www.website.com', '', 'www.website.com', 'www.website.com', '556396091', '4436', '7', 5, 'logo.png', 2, 4, 5, 9, 1, 1, 0, 0, 1, 5, 3, 0, 0, 0, '2020-10-05', 'Aucun', '1'),
+(32, '77', 'Non Justo LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '415853209', '3688', '8', 3, 'logo.png', 1, 6, 3, 8, 8, 2, 0, 0, 1, 4, 1, 0, 0, 2, '2020-05-31', 'Aucun', ''),
+(33, '173', 'Eu Eros Nam Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '198682940', '8106', '3', 4, 'logo.png', 2, 3, 2, 1, 8, 1, 0, 0, 1, 3, 3, 0, 0, 1, '2021-04-11', 'Aucun', ''),
+(34, '337', 'Auctor Odio A Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '982341794', '3934', '8', 1, 'logo.png', 1, 5, 3, 7, 2, 8, 0, 0, 0, 4, 5, 0, 0, 1, '2020-07-26', 'Aucun', ''),
+(35, '885', 'Mauris Quis Turpis Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '252679501', '4066', '1', 3, 'logo.png', 1, 6, 5, 10, 8, 10, 0, 0, 0, 6, 1, 0, 0, 1, '2021-03-07', 'Aucun', ''),
+(36, '620', 'Urna Nullam Lobortis Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '540482585', '8328', '5', 3, 'logo.png', 1, 5, 2, 3, 4, 6, 0, 0, 1, 4, 2, 0, 0, 0, '2021-09-09', 'Aucun', ''),
+(37, '899', 'Scelerisque Sed Sapien Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '418854915', '9822', '5', 4, 'logo.png', 0, 4, 3, 7, 7, 3, 0, 0, 1, 3, 4, 0, 0, 1, '2020-05-19', 'Aucun', ''),
+(38, '69', 'Convallis Ante Lectus Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '602456238', '7386', '2', 2, 'logo.png', 0, 4, 5, 10, 6, 5, 0, 0, 1, 6, 1, 0, 0, 1, '2021-03-01', 'Aucun', ''),
+(39, '714', 'Cum Sociis Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '581089901', '2349', '2', 1, 'logo.png', 0, 3, 5, 7, 2, 2, 0, 0, 1, 3, 3, 0, 0, 0, '2020-03-21', 'Aucun', ''),
+(40, '523', 'Tincidunt Tempus Risus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '590848925', '1360', '5', 5, 'logo.png', 2, 6, 2, 9, 1, 6, 0, 0, 1, 4, 1, 0, 0, 2, '2020-09-30', 'Aucun', ''),
+(41, '689', 'Bibendum Fermentum LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '986289585', '6361', '9', 3, 'logo.png', 1, 5, 1, 1, 1, 9, 0, 0, 0, 4, 3, 0, 0, 0, '2021-03-28', 'Aucun', ''),
+(42, '550', 'Gravida Sit Amet Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '481375988', '4232', '5', 2, 'logo.png', 0, 3, 1, 9, 9, 6, 0, 0, 0, 4, 5, 0, 0, 1, '2020-02-12', 'Aucun', ''),
+(43, '608', 'Tristique Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '542723002', '8489', '1', 4, 'logo.png', 2, 4, 2, 4, 7, 6, 0, 0, 1, 3, 5, 0, 0, 0, '2021-03-03', 'Aucun', ''),
+(44, '118', 'Cursus Et Magna Limited', 'www.website.com', '', 'www.website.com', 'www.website.com', '446283863', '4841', '4', 1, 'logo.png', 2, 8, 4, 5, 36, 1, 0, 0, 0, 3, 1, 0, 0, 0, '2020-06-07', 'Aucun', ''),
+(45, '399', 'Consectetuer Adipiscing Elit PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '510510746', '8271', '5', 5, 'logo.png', 0, 6, 4, 10, 4, 4, 0, 0, 1, 4, 2, 0, 0, 2, '2020-05-22', 'Aucun', ''),
+(46, '529', 'Aliquam Enim Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '501604375', '5355', '1', 5, 'logo.png', 0, 6, 1, 1, 9, 9, 0, 0, 1, 5, 3, 0, 0, 2, '2021-08-08', 'Aucun', ''),
+(47, '583', 'Tincidunt Nibh Phasellus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '139412423', '5653', '1', 1, 'logo.png', 1, 3, 3, 9, 6, 8, 0, 0, 0, 4, 2, 0, 0, 2, '2020-09-17', 'Aucun', ''),
+(48, '772', 'Et Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '819689530', '8070', '8', 4, 'logo.png', 0, 6, 1, 9, 10, 8, 0, 0, 0, 5, 5, 0, 0, 0, '2021-05-07', 'Aucun', ''),
+(49, '967', 'Pellentesque PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '338270606', '4996', '7', 2, 'logo.png', 0, 5, 5, 2, 10, 2, 0, 0, 1, 4, 2, 0, 0, 0, '2021-03-19', 'Aucun', ''),
+(50, '460', 'Maecenas Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '451839419', '1161', '8', 4, 'logo.png', 2, 6, 1, 10, 9, 4, 0, 0, 1, 5, 3, 0, 0, 2, '2021-08-06', 'Aucun', ''),
+(51, '522', 'Nisl Nulla Eu Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '890440613', '7412', '2', 3, 'logo.png', 2, 3, 4, 9, 3, 8, 0, 0, 0, 3, 5, 0, 0, 0, '2020-02-01', 'Aucun', ''),
+(52, '421', 'Orci Sem Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '337135404', '9763', '6', 5, 'logo.png', 1, 4, 4, 6, 5, 7, 0, 0, 1, 6, 5, 0, 0, 2, '2021-02-10', 'Aucun', ''),
+(53, '760', 'Risus Nulla PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '548229855', '5644', '2', 5, 'logo.png', 0, 4, 1, 5, 2, 7, 0, 0, 1, 3, 5, 0, 0, 2, '2020-05-10', 'Aucun', ''),
+(54, '189', 'Laoreet Ipsum Curabitur Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '139229983', '9093', '3', 4, 'logo.png', 1, 4, 1, 10, 10, 8, 0, 0, 1, 4, 1, 0, 0, 0, '2020-05-25', 'Aucun', ''),
+(55, '618', 'Elit Fermentum Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '170310635', '8685', '4', 2, 'logo.png', 2, 5, 3, 5, 3, 1, 0, 0, 1, 4, 4, 0, 0, 1, '2020-07-21', 'Aucun', ''),
+(56, '680', 'Pellentesque Massa Lobortis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '054945258', '9027', '4', 2, 'logo.png', 2, 3, 1, 5, 3, 6, 0, 0, 1, 6, 2, 0, 0, 2, '2020-01-30', 'Aucun', ''),
+(57, '625', 'Donec Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '560856015', '5111', '8', 1, 'logo.png', 1, 4, 1, 1, 2, 6, 0, 0, 1, 3, 5, 0, 0, 0, '2021-11-24', 'Aucun', ''),
+(58, '980', 'Orci Lacus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '006362560', '3328', '7', 1, 'logo.png', 1, 4, 4, 3, 1, 3, 0, 0, 0, 6, 2, 0, 0, 0, '2020-05-07', 'Aucun', ''),
+(59, '75', 'Ipsum Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '413896754', '2169', '9', 3, 'logo.png', 1, 6, 4, 7, 8, 5, 0, 0, 0, 5, 2, 0, 0, 1, '2021-04-16', 'Aucun', ''),
+(60, '415', 'Purus In Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '723579363', '8391', '5', 3, 'logo.png', 1, 3, 5, 2, 2, 6, 0, 0, 0, 4, 2, 0, 0, 1, '2020-05-02', 'Aucun', ''),
+(61, '563', 'Pellentesque Habitant LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '522826320', '3190', '1', 2, 'logo.png', 0, 3, 5, 4, 8, 6, 0, 0, 0, 5, 4, 0, 0, 1, '2020-10-08', 'Aucun', ''),
+(62, '433', 'Donec PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '398039693', '8159', '8', 2, 'logo.png', 0, 6, 1, 9, 2, 5, 0, 0, 0, 6, 5, 0, 0, 0, '2021-11-08', 'Aucun', ''),
+(63, '810', 'Amet Ornare Lectus Inc.', 'www.website.com', '', 'www.website.com', 'www.website.com', '456230846', '8027', '2', 3, 'logo.png', 0, 5, 2, 10, 1, 1, 0, 0, 0, 3, 2, 0, 0, 2, '2021-05-07', 'Aucun', ''),
+(64, '980', 'Vitae Diam Proin Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '321563710', '3188', '5', 1, 'logo.png', 2, 3, 4, 2, 7, 2, 0, 0, 0, 3, 5, 0, 0, 0, '2020-09-08', 'Aucun', ''),
+(65, '299', 'Fermentum Vel Mauris Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '002362101', '5084', '9', 3, 'logo.png', 2, 3, 5, 9, 6, 1, 0, 0, 0, 3, 2, 0, 0, 2, '2021-10-18', 'Aucun', ''),
+(66, '787', 'Mauris Rhoncus Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '377580311', '7613', '5', 3, 'logo.png', 0, 4, 3, 10, 10, 7, 0, 0, 0, 6, 1, 0, 0, 1, '2020-09-11', 'Aucun', ''),
+(67, '82', 'Vestibulum Massa Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '484488630', '9454', '2', 5, 'logo.png', 1, 5, 4, 4, 5, 9, 0, 0, 0, 4, 1, 0, 0, 0, '2020-05-30', 'Aucun', ''),
+(68, '93', 'Curabitur Dictum Phasellus Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '627643844', '9229', '2', 4, 'logo.png', 1, 4, 1, 6, 8, 5, 0, 0, 0, 3, 3, 0, 0, 2, '2020-12-02', 'Aucun', ''),
+(69, '4', 'Consectetuer Euismod Est Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '209472554', '1225', '9', 3, 'logo.png', 0, 4, 5, 10, 5, 6, 0, 0, 0, 4, 3, 0, 0, 1, '2021-06-28', 'Aucun', ''),
+(70, '7', 'Urna LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '303752265', '3297', '9', 2, 'logo.png', 0, 4, 1, 3, 5, 6, 0, 0, 0, 6, 1, 0, 0, 0, '2021-05-18', 'Aucun', ''),
+(71, '451', 'Elementum Dui Quis Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '133271668', '6462', '6', 1, 'logo.png', 0, 6, 5, 7, 1, 2, 0, 0, 1, 5, 4, 0, 0, 2, '2020-01-01', 'Aucun', ''),
+(72, '204', 'Erat Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '715741674', '7875', '7', 4, 'logo.png', 0, 6, 4, 9, 10, 5, 0, 0, 0, 3, 1, 0, 0, 1, '2020-11-30', 'Aucun', ''),
+(73, '965', 'Molestie Tellus Aenean Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '855099875', '9250', '7', 5, 'logo.png', 2, 3, 4, 4, 10, 10, 0, 0, 0, 4, 2, 0, 0, 1, '2019-12-26', 'Aucun', ''),
+(74, '913', 'Ullamcorper Velit In Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '722923703', '3836', '9', 3, 'logo.png', 0, 4, 3, 9, 7, 3, 0, 0, 0, 3, 4, 0, 0, 2, '2021-02-26', 'Aucun', ''),
+(75, '885', 'Aliquam Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '773623889', '5145', '5', 2, 'logo.png', 0, 5, 2, 2, 7, 8, 0, 0, 1, 6, 4, 0, 0, 2, '2020-03-28', 'Aucun', ''),
+(76, '518', 'Laoreet Lectus Quis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '195126735', '3260', '1', 4, 'logo.png', 1, 3, 5, 1, 5, 4, 0, 0, 0, 6, 1, 0, 0, 1, '2020-02-07', 'Aucun', ''),
+(77, '830', 'Feugiat Lorem Ipsum Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '385791785', '6650', '7', 3, 'logo.png', 0, 4, 3, 2, 1, 7, 0, 0, 0, 5, 2, 0, 0, 2, '2021-01-06', 'Aucun', ''),
+(78, '59', 'Luctus Ipsum Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '231546581', '3862', '6', 1, 'logo.png', 1, 6, 5, 3, 10, 2, 0, 0, 1, 3, 4, 0, 0, 1, '2021-08-14', 'Aucun', ''),
+(79, '78', 'Nunc Ac LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '279167035', '6715', '5', 1, 'logo.png', 2, 3, 2, 1, 10, 9, 0, 0, 0, 3, 5, 0, 0, 1, '2021-12-24', 'Aucun', ''),
+(80, '568', 'Malesuada Integer Id Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '023018575', '1183', '9', 2, 'logo.png', 2, 6, 2, 6, 8, 9, 0, 0, 0, 6, 1, 0, 0, 2, '2021-03-08', 'Aucun', ''),
+(81, '355', 'Velit Cras Lorem Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '620181792', '3385', '9', 2, 'logo.png', 0, 3, 1, 8, 4, 5, 0, 0, 1, 4, 2, 0, 0, 1, '2021-04-06', 'Aucun', ''),
+(82, '964', 'Risus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '373114925', '4025', '8', 1, 'logo.png', 2, 6, 1, 7, 2, 7, 0, 0, 1, 5, 3, 0, 0, 2, '2020-12-08', 'Aucun', ''),
+(83, '252', 'Libero Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '420846305', '7308', '4', 4, 'logo.png', 2, 3, 4, 4, 5, 2, 0, 0, 0, 4, 3, 0, 0, 0, '2020-11-20', 'Aucun', ''),
+(84, '613', 'Dolor Sit LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '934873639', '7942', '3', 2, 'logo.png', 0, 6, 5, 10, 4, 3, 0, 0, 1, 3, 2, 0, 0, 0, '2021-04-03', 'Aucun', ''),
+(85, '329', 'Interdum PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '296203532', '7155', '1', 4, 'logo.png', 1, 3, 3, 4, 9, 6, 0, 0, 1, 5, 5, 0, 0, 1, '2019-12-28', 'Aucun', ''),
+(86, '805', 'Ipsum Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '648292472', '5015', '7', 2, 'logo.png', 1, 6, 5, 6, 3, 2, 0, 0, 1, 6, 4, 0, 0, 0, '2021-11-03', 'Aucun', ''),
+(87, '655', 'Nullam Enim Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '088912100', '1188', '3', 1, 'logo.png', 0, 6, 1, 5, 3, 4, 0, 0, 0, 4, 2, 0, 0, 1, '2020-05-11', 'Aucun', ''),
+(88, '218', 'Egestas LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '598953966', '9238', '5', 3, 'logo.png', 2, 6, 2, 5, 8, 8, 0, 0, 1, 5, 2, 0, 0, 2, '2021-11-29', 'Aucun', ''),
+(89, '958', 'Sit Amet Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '526145354', '9828', '9', 4, 'logo.png', 1, 4, 4, 9, 5, 5, 0, 0, 1, 5, 2, 0, 0, 1, '2020-02-25', 'Aucun', ''),
+(90, '947', 'Nunc Sollicitudin Commodo PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '957131428', '7337', '6', 2, 'logo.png', 1, 4, 4, 6, 3, 4, 0, 0, 0, 4, 1, 0, 0, 2, '2020-01-28', 'Aucun', ''),
+(91, '513', 'Molestie Tellus Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '928141886', '2687', '9', 2, 'logo.png', 1, 6, 2, 8, 1, 3, 0, 0, 1, 3, 1, 0, 0, 1, '2020-09-04', 'Aucun', ''),
+(92, '354', 'Vel Vulputate Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '597729540', '7912', '8', 5, 'logo.png', 0, 4, 4, 2, 7, 2, 0, 0, 1, 5, 4, 0, 0, 1, '2021-06-22', 'Aucun', ''),
+(93, '46', 'Mauris Magna Duis PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '770749687', '3094', '2', 5, 'logo.png', 1, 4, 4, 4, 5, 5, 0, 0, 0, 4, 5, 0, 0, 2, '2020-09-28', 'Aucun', ''),
+(94, '685', 'In Lobortis Tellus Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '174894170', '2457', '6', 4, 'logo.png', 0, 3, 1, 8, 2, 3, 0, 0, 0, 6, 3, 0, 0, 0, '2020-11-29', 'Aucun', ''),
+(95, '834', 'Augue Eu Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '878724434', '8065', '1', 2, 'logo.png', 0, 5, 4, 9, 7, 2, 0, 0, 0, 5, 4, 0, 0, 1, '2020-03-24', 'Aucun', ''),
+(96, '449', 'Lectus Convallis Est Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '674808746', '4631', '4', 2, 'logo.png', 1, 4, 3, 9, 4, 5, 0, 0, 0, 4, 2, 0, 0, 0, '2021-12-18', 'Aucun', ''),
+(97, '663', 'Phasellus In Felis Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '820970143', '5805', '3', 4, 'logo.png', 1, 6, 4, 3, 3, 3, 0, 0, 0, 6, 4, 0, 0, 1, '2021-05-17', 'Aucun', ''),
+(98, '386', 'Erat Eget Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '540691599', '2613', '4', 4, 'logo.png', 2, 5, 1, 9, 1, 9, 0, 0, 0, 5, 3, 0, 0, 2, '2021-01-08', 'Aucun', ''),
+(99, '156', 'Gravida Praesent Eu PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '563657576', '2046', '2', 5, 'logo.png', 2, 6, 1, 1, 10, 5, 0, 0, 0, 6, 5, 0, 0, 1, '2020-09-02', 'Aucun', ''),
+(100, '966', 'Dolor Nulla Semper Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '442249991', '1713', '1', 1, 'logo.png', 1, 3, 3, 1, 5, 4, 0, 0, 1, 5, 3, 0, 0, 0, '2021-06-27', 'Aucun', ''),
+(101, '438', 'Nullam Ut Nisi LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '041208687', '2121', '2', 5, 'logo.png', 2, 6, 5, 7, 9, 5, 0, 0, 1, 5, 1, 0, 0, 0, '2020-01-03', 'Aucun', ''),
+(102, '588', 'Ipsum Dolor Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '882379811', '3722', '2', 5, 'logo.png', 2, 3, 1, 3, 5, 8, 0, 0, 1, 4, 5, 0, 0, 2, '2020-02-01', 'Aucun', ''),
+(103, '207', 'Est Nunc Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '222474272', '5904', '9', 3, 'logo.png', 0, 4, 4, 4, 2, 7, 0, 0, 0, 5, 1, 0, 0, 0, '2020-11-30', 'Aucun', ''),
+(104, '752', 'Ultrices Vivamus Rhoncus Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '143753812', '9589', '6', 1, 'logo.png', 1, 6, 1, 8, 3, 6, 0, 0, 1, 5, 2, 0, 0, 2, '2021-05-29', 'Aucun', ''),
+(105, '861', 'Eu Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '534956750', '1817', '1', 1, 'logo.png', 1, 3, 2, 5, 6, 4, 0, 0, 0, 4, 1, 0, 0, 0, '2021-06-21', 'Aucun', ''),
+(106, '892', 'Vehicula Pellentesque Tincidunt Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '932464688', '8687', '9', 3, 'logo.png', 2, 5, 3, 3, 10, 1, 0, 0, 1, 5, 4, 0, 0, 2, '2021-02-14', 'Aucun', ''),
+(107, '895', 'Sociis PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '987977980', '2763', '9', 5, 'logo.png', 2, 3, 4, 1, 2, 4, 0, 0, 0, 3, 3, 0, 0, 0, '2021-12-15', 'Aucun', ''),
+(108, '121', 'Nunc Ullamcorper Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '601212350', '5603', '9', 4, 'logo.png', 2, 3, 2, 2, 9, 6, 0, 0, 0, 6, 4, 0, 0, 2, '2020-06-21', 'Aucun', ''),
+(109, '838', 'Duis Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '777611674', '1767', '9', 1, 'logo.png', 0, 5, 2, 1, 10, 2, 0, 0, 1, 5, 5, 0, 0, 2, '2021-04-13', 'Aucun', ''),
+(110, '982', 'Ligula Nullam Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '118316892', '6276', '2', 3, 'logo.png', 2, 3, 5, 3, 9, 3, 0, 0, 0, 6, 3, 0, 0, 1, '2020-04-05', 'Aucun', ''),
+(111, '734', 'Amet Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '969760206', '5848', '6', 2, 'logo.png', 0, 4, 1, 8, 7, 1, 0, 0, 1, 5, 1, 0, 0, 2, '2020-11-22', 'Aucun', ''),
+(112, '533', 'At Velit Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '850856402', '3527', '7', 1, 'logo.png', 0, 6, 4, 5, 9, 7, 0, 0, 0, 4, 4, 0, 0, 2, '2020-07-04', 'Aucun', ''),
+(113, '350', 'Feugiat Metus PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '264218264', '9920', '7', 4, 'logo.png', 2, 6, 5, 1, 9, 4, 0, 0, 0, 4, 5, 0, 0, 2, '2021-08-23', 'Aucun', ''),
+(114, '844', 'Molestie Tellus Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '894760073', '7003', '2', 2, 'logo.png', 0, 4, 2, 6, 6, 5, 0, 0, 1, 6, 4, 0, 0, 2, '2020-02-03', 'Aucun', ''),
+(115, '922', 'Nec Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '618675094', '6669', '9', 1, 'logo.png', 1, 6, 5, 6, 5, 10, 0, 0, 0, 5, 1, 0, 0, 0, '2021-06-20', 'Aucun', ''),
+(116, '558', 'Sit LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '186119954', '6358', '5', 1, 'logo.png', 0, 3, 4, 1, 8, 6, 0, 0, 1, 3, 5, 0, 0, 2, '2021-05-14', 'Aucun', ''),
+(117, '900', 'Non Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '621668060', '6905', '8', 4, 'logo.png', 0, 4, 1, 2, 1, 9, 0, 0, 0, 5, 2, 0, 0, 0, '2021-09-16', 'Aucun', ''),
+(118, '273', 'Vel Lectus LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '523763746', '4750', '4', 3, 'logo.png', 2, 4, 2, 4, 8, 10, 0, 0, 0, 4, 3, 0, 0, 2, '2021-11-16', 'Aucun', ''),
+(119, '345', 'Aliquam Iaculis Lacus Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '631600855', '2315', '8', 3, 'logo.png', 0, 3, 2, 7, 9, 2, 0, 0, 1, 5, 5, 0, 0, 1, '2020-02-29', 'Aucun', ''),
+(120, '167', 'Risus Quis Diam PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '560931594', '8873', '3', 5, 'logo.png', 2, 6, 1, 10, 6, 10, 0, 0, 1, 6, 4, 0, 0, 0, '2021-10-02', 'Aucun', ''),
+(121, '6', 'Tincidunt Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '573737020', '9918', '5', 3, 'logo.png', 0, 6, 5, 6, 1, 4, 0, 0, 0, 3, 4, 0, 0, 2, '2021-05-27', 'Aucun', ''),
+(122, '262', 'Felis Eget PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '330464553', '2518', '7', 4, 'logo.png', 2, 5, 4, 7, 9, 7, 0, 0, 1, 6, 5, 0, 0, 0, '2020-02-01', 'Aucun', ''),
+(123, '503', 'Eleifend Nunc Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '294057823', '9347', '5', 5, 'logo.png', 1, 5, 3, 8, 5, 5, 0, 0, 1, 3, 2, 0, 0, 0, '2021-04-22', 'Aucun', ''),
+(124, '128', 'Id Enim Curabitur Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '145088795', '6930', '7', 1, 'logo.png', 2, 5, 4, 5, 3, 8, 0, 0, 0, 4, 1, 0, 0, 1, '2021-03-02', 'Aucun', ''),
+(125, '81', 'Libero Et Tristique Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '549348340', '9030', '2', 1, 'logo.png', 1, 6, 4, 7, 7, 1, 0, 0, 0, 5, 2, 0, 0, 1, '2021-06-30', 'Aucun', ''),
+(126, '927', 'Accumsan Laoreet Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '810020685', '9642', '9', 5, 'logo.png', 0, 5, 2, 8, 4, 4, 0, 0, 0, 4, 4, 0, 0, 2, '2021-09-28', 'Aucun', ''),
+(127, '473', 'Tincidunt Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '764945382', '4070', '1', 1, 'logo.png', 0, 5, 4, 6, 3, 4, 0, 0, 0, 3, 5, 0, 0, 2, '2021-12-26', 'Aucun', ''),
+(128, '585', 'Duis Cursus Diam LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '394881569', '6090', '5', 3, 'logo.png', 1, 6, 5, 5, 7, 3, 0, 0, 0, 6, 5, 0, 0, 1, '2020-01-31', 'Aucun', ''),
+(129, '422', 'Sapien Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '966665341', '3188', '2', 2, 'logo.png', 2, 3, 3, 4, 8, 3, 0, 0, 0, 5, 2, 0, 0, 1, '2021-12-08', 'Aucun', ''),
+(130, '781', 'Dapibus Id Blandit Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '133086371', '1626', '7', 3, 'logo.png', 2, 3, 2, 5, 7, 3, 0, 0, 1, 4, 2, 0, 0, 1, '2019-12-29', 'Aucun', ''),
+(131, '415', 'Consectetuer Rhoncus Nullam Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '979650330', '1347', '5', 4, 'logo.png', 2, 3, 3, 7, 10, 1, 0, 0, 0, 6, 3, 0, 0, 1, '2020-01-10', 'Aucun', ''),
+(132, '889', 'Quis Pede PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '255898892', '4002', '1', 4, 'logo.png', 2, 4, 2, 6, 9, 10, 0, 0, 0, 3, 3, 0, 0, 2, '2021-10-20', 'Aucun', ''),
+(133, '485', 'Interdum Curabitur Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '423813286', '4993', '3', 5, 'logo.png', 1, 4, 1, 9, 9, 3, 0, 0, 0, 3, 4, 0, 0, 2, '2021-03-13', 'Aucun', ''),
+(134, '379', 'Mi Tempor Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '976439307', '2988', '7', 5, 'logo.png', 1, 5, 4, 8, 1, 4, 0, 0, 1, 4, 5, 0, 0, 2, '2020-05-08', 'Aucun', ''),
+(135, '479', 'Hendrerit LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '280297813', '3900', '9', 3, 'logo.png', 1, 5, 4, 2, 3, 5, 0, 0, 1, 5, 1, 0, 0, 0, '2021-05-04', 'Aucun', ''),
+(136, '700', 'Lectus Ante Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '584760466', '1636', '4', 2, 'logo.png', 2, 5, 3, 2, 10, 2, 0, 0, 0, 4, 3, 0, 0, 2, '2020-10-20', 'Aucun', ''),
+(137, '532', 'Molestie Arcu Sed Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '193730983', '2266', '1', 2, 'logo.png', 0, 3, 3, 5, 2, 7, 0, 0, 1, 6, 1, 0, 0, 0, '2021-06-05', 'Aucun', ''),
+(138, '651', 'Justo Sit LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '469574057', '6308', '9', 4, 'logo.png', 0, 6, 3, 6, 8, 9, 0, 0, 0, 5, 3, 0, 0, 0, '2020-11-28', 'Aucun', ''),
+(139, '305', 'Quam A Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '378512750', '9260', '4', 4, 'logo.png', 0, 4, 3, 6, 2, 2, 0, 0, 1, 4, 4, 0, 0, 2, '2021-11-27', 'Aucun', ''),
+(140, '259', 'Nibh LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '058487174', '9184', '5', 5, 'logo.png', 2, 3, 1, 3, 9, 3, 0, 0, 0, 3, 3, 0, 0, 0, '2021-07-31', 'Aucun', ''),
+(141, '639', 'Natoque Penatibus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '037875515', '7100', '4', 5, 'logo.png', 0, 6, 4, 4, 6, 8, 0, 0, 0, 5, 1, 0, 0, 2, '2021-07-01', 'Aucun', ''),
+(142, '392', 'Pellentesque Massa Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '849207485', '2353', '5', 2, 'logo.png', 1, 3, 4, 9, 9, 1, 0, 0, 0, 3, 5, 0, 0, 2, '2019-12-29', 'Aucun', ''),
+(143, '604', 'Nullam LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '401137278', '3204', '7', 4, 'logo.png', 0, 4, 4, 1, 2, 7, 0, 0, 1, 3, 3, 0, 0, 1, '2021-10-12', 'Aucun', ''),
+(144, '464', 'Libero At Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '304716590', '4851', '3', 2, 'logo.png', 2, 3, 4, 8, 4, 1, 0, 0, 1, 3, 2, 0, 0, 0, '2019-12-26', 'Aucun', ''),
+(145, '383', 'A PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '595316571', '4799', '8', 2, 'logo.png', 1, 4, 3, 6, 1, 3, 0, 0, 1, 3, 1, 0, 0, 1, '2021-07-23', 'Aucun', '1'),
+(146, '847', 'Vitae Semper Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '848165163', '9513', '4', 1, 'logo.png', 0, 3, 5, 5, 1, 7, 0, 0, 0, 4, 1, 0, 0, 2, '2020-03-25', 'Aucun', ''),
+(147, '156', 'Risus Donec Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '323158493', '9623', '4', 3, 'logo.png', 1, 6, 3, 8, 1, 3, 0, 0, 1, 6, 3, 0, 0, 1, '2020-04-27', 'Aucun', ''),
+(148, '863', 'Scelerisque Scelerisque Dui Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '115258907', '5312', '2', 3, 'logo.png', 2, 5, 3, 5, 10, 10, 0, 0, 0, 4, 2, 0, 0, 0, '2020-11-12', 'Aucun', ''),
+(149, '472', 'Donec Consectetuer Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '335078184', '8133', '6', 5, 'logo.png', 0, 5, 5, 9, 6, 3, 0, 0, 1, 6, 1, 0, 0, 0, '2020-08-27', 'Aucun', ''),
+(150, '880', 'Gravida Nunc LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '784837866', '6165', '1', 5, 'logo.png', 0, 4, 5, 5, 6, 4, 0, 0, 1, 3, 2, 0, 0, 0, '2020-12-22', 'Aucun', ''),
+(151, '200', 'Arcu Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '940226376', '8246', '7', 1, 'logo.png', 1, 5, 1, 10, 10, 9, 0, 0, 1, 6, 1, 0, 0, 1, '2020-09-16', 'Aucun', ''),
+(152, '850', 'Ultricies Adipiscing Enim Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '892635897', '8303', '4', 1, 'logo.png', 2, 5, 3, 7, 3, 5, 0, 0, 1, 5, 2, 0, 0, 2, '2021-04-07', 'Aucun', ''),
+(153, '885', 'Odio Phasellus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '319729760', '9393', '1', 2, 'logo.png', 0, 4, 1, 8, 10, 10, 0, 0, 0, 3, 2, 0, 0, 1, '2020-07-29', 'Aucun', ''),
+(154, '727', 'In Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '084615798', '1816', '1', 5, 'logo.png', 1, 3, 4, 3, 3, 6, 0, 0, 1, 5, 2, 0, 0, 0, '2021-02-23', 'Aucun', ''),
+(155, '835', 'Nec Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '839520160', '4310', '4', 4, 'logo.png', 0, 4, 1, 7, 9, 3, 0, 0, 1, 3, 3, 0, 0, 0, '2021-04-20', 'Aucun', ''),
+(156, '604', 'Turpis Nec Mauris Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '119446094', '7593', '8', 1, 'logo.png', 1, 6, 4, 8, 8, 9, 0, 0, 0, 4, 3, 0, 0, 1, '2020-02-06', 'Aucun', ''),
+(157, '763', 'Feugiat Metus Sit Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '049139199', '8616', '4', 2, 'logo.png', 1, 6, 1, 8, 3, 4, 0, 0, 0, 4, 1, 0, 0, 0, '2021-08-08', 'Aucun', ''),
+(158, '841', 'Quisque LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '266070630', '7584', '7', 2, 'logo.png', 2, 6, 4, 4, 6, 1, 0, 0, 0, 5, 2, 0, 0, 2, '2020-11-01', 'Aucun', ''),
+(159, '848', 'Fermentum Convallis Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '644727513', '6391', '9', 3, 'logo.png', 0, 4, 4, 7, 9, 1, 0, 0, 0, 6, 1, 0, 0, 2, '2021-07-15', 'Aucun', ''),
+(160, '338', 'Quisque LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '794605063', '3180', '7', 5, 'logo.png', 0, 6, 4, 3, 8, 1, 0, 0, 1, 4, 1, 0, 0, 0, '2020-09-28', 'Aucun', ''),
+(161, '398', 'Pellentesque Sed Dictum Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '674493341', '9174', '2', 5, 'logo.png', 2, 6, 1, 10, 9, 2, 0, 0, 1, 4, 4, 0, 0, 0, '2021-03-25', 'Aucun', ''),
+(162, '335', 'Tempor Est Ac Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '718195332', '2457', '5', 3, 'logo.png', 1, 4, 5, 1, 2, 8, 0, 0, 0, 5, 4, 0, 0, 1, '2020-01-20', 'Aucun', ''),
+(163, '565', 'Enim Sed Nulla Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '196293013', '1774', '8', 3, 'logo.png', 1, 6, 3, 7, 5, 10, 0, 0, 0, 6, 1, 0, 0, 1, '2020-12-31', 'Aucun', ''),
+(164, '755', 'Primis In Faucibus Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '769618604', '6271', '9', 4, 'logo.png', 0, 3, 3, 4, 2, 8, 0, 0, 1, 4, 5, 0, 0, 2, '2020-01-18', 'Aucun', ''),
+(165, '283', 'Cursus Purus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '307779785', '6665', '1', 5, 'logo.png', 0, 5, 5, 3, 2, 2, 0, 0, 0, 3, 1, 0, 0, 0, '2020-02-26', 'Aucun', ''),
+(166, '961', 'Mauris Vestibulum Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '156788564', '1913', '4', 5, 'logo.png', 1, 4, 5, 10, 2, 8, 0, 0, 0, 6, 5, 0, 0, 2, '2021-09-18', 'Aucun', ''),
+(167, '768', 'Tempus Lorem Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '965183783', '8880', '3', 1, 'logo.png', 0, 3, 4, 9, 4, 2, 0, 0, 1, 5, 4, 0, 0, 2, '2020-01-30', 'Aucun', ''),
+(168, '385', 'Nec Diam Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '217748938', '3010', '2', 3, 'logo.png', 0, 3, 3, 4, 9, 8, 0, 0, 1, 5, 1, 0, 0, 0, '2021-08-26', 'Aucun', ''),
+(169, '795', 'Donec Non Justo Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '551311244', '3923', '3', 2, 'logo.png', 1, 4, 5, 10, 10, 10, 0, 0, 1, 5, 4, 0, 0, 2, '2021-11-13', 'Aucun', ''),
+(170, '567', 'Venenatis Vel Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '244089827', '7114', '6', 5, 'logo.png', 1, 6, 5, 3, 1, 6, 0, 0, 0, 4, 3, 0, 0, 2, '2020-05-12', 'Aucun', ''),
+(171, '836', 'Commodo Hendrerit Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '604561175', '6818', '3', 2, 'logo.png', 1, 3, 1, 1, 10, 5, 0, 0, 0, 4, 1, 0, 0, 1, '2021-05-31', 'Aucun', ''),
+(172, '891', 'Adipiscing Inc.', 'www.website.com', '', 'www.website.com', 'www.website.com', '255021495', '4939', '7', 3, 'logo.png', 2, 4, 2, 6, 1, 1, 0, 0, 0, 8, 4, 0, 0, 2, '2021-01-13', 'Aucun', '7'),
+(173, '140', 'Amet Diam Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '576234710', '8422', '3', 1, 'logo.png', 2, 6, 3, 8, 4, 9, 0, 0, 0, 5, 3, 0, 0, 1, '2021-05-13', 'Aucun', ''),
+(174, '199', 'Pede Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '313994477', '2398', '5', 5, 'logo.png', 1, 5, 2, 4, 9, 5, 0, 0, 1, 5, 3, 0, 0, 0, '2021-04-15', 'Aucun', ''),
+(175, '672', 'Venenatis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '404507881', '1381', '5', 1, 'logo.png', 0, 5, 5, 9, 8, 1, 0, 0, 0, 3, 4, 0, 0, 0, '2020-09-13', 'Aucun', ''),
+(176, '913', 'Nunc Pulvinar Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '959111550', '3412', '6', 1, 'logo.png', 1, 4, 2, 4, 8, 3, 0, 0, 1, 4, 4, 0, 0, 2, '2020-09-28', 'Aucun', ''),
+(177, '810', 'Enim Diam Vel Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '604919084', '7926', '6', 4, 'logo.png', 0, 4, 4, 8, 1, 1, 0, 0, 1, 6, 1, 0, 0, 0, '2020-05-09', 'Aucun', ''),
+(178, '990', 'Aliquet Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '787182039', '5140', '4', 5, 'logo.png', 2, 5, 2, 10, 5, 2, 0, 0, 1, 5, 4, 0, 0, 1, '2020-11-27', 'Aucun', ''),
+(179, '498', 'Convallis Est Vitae Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '426516878', '5925', '9', 2, 'logo.png', 0, 6, 4, 7, 5, 8, 0, 0, 1, 4, 4, 0, 0, 0, '2021-06-04', 'Aucun', ''),
+(180, '348', 'Lorem Ac Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '483119467', '4962', '8', 2, 'logo.png', 0, 3, 4, 2, 5, 4, 0, 0, 1, 4, 5, 0, 0, 0, '2020-02-19', 'Aucun', ''),
+(181, '667', 'Morbi Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '198361933', '2208', '5', 2, 'logo.png', 0, 6, 1, 7, 1, 10, 0, 0, 1, 6, 3, 0, 0, 0, '2021-01-24', 'Aucun', ''),
+(182, '302', 'Nascetur Ridiculus Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '873263305', '5200', '3', 4, 'logo.png', 0, 3, 2, 6, 3, 6, 0, 0, 0, 3, 3, 0, 0, 2, '2020-06-12', 'Aucun', ''),
+(183, '629', 'Odio Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '556641660', '7565', '2', 3, 'logo.png', 1, 6, 4, 1, 4, 6, 0, 0, 0, 4, 2, 0, 0, 1, '2020-10-16', 'Aucun', ''),
+(184, '821', 'Molestie Orci Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '407451582', '4600', '9', 4, 'logo.png', 2, 3, 2, 10, 5, 7, 0, 0, 0, 5, 1, 0, 0, 2, '2020-05-23', 'Aucun', ''),
+(185, '582', 'Vulputate Dui Nec Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '071940324', '5696', '1', 5, 'logo.png', 1, 5, 2, 2, 4, 9, 0, 0, 0, 3, 4, 0, 0, 2, '2021-08-12', 'Aucun', ''),
+(186, '88', 'Sollicitudin Adipiscing Ligula Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '936845593', '9562', '9', 1, 'logo.png', 0, 3, 2, 10, 4, 8, 0, 0, 0, 5, 2, 0, 0, 2, '2021-06-18', 'Aucun', ''),
+(187, '1', 'Scelerisque Mollis Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '716729777', '6187', '8', 3, 'logo.png', 1, 5, 4, 9, 8, 10, 0, 0, 1, 3, 1, 0, 0, 0, '2021-03-12', 'Aucun', ''),
+(188, '888', 'Luctus Curabitur Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '713771061', '1751', '9', 2, 'logo.png', 2, 4, 2, 10, 2, 5, 0, 0, 1, 4, 1, 0, 0, 1, '2020-01-20', 'Aucun', ''),
+(189, '529', 'Consectetuer Euismod Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '257102673', '4423', '6', 4, 'logo.png', 1, 5, 2, 1, 1, 10, 0, 0, 0, 4, 5, 0, 0, 2, '2021-12-04', 'Aucun', ''),
+(190, '670', 'Sed Et Libero Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '317128056', '1938', '2', 1, 'logo.png', 0, 3, 3, 9, 5, 10, 0, 0, 0, 4, 4, 0, 0, 1, '2021-12-16', 'Aucun', ''),
+(191, '625', 'Enim Commodo Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '268299260', '6500', '1', 4, 'logo.png', 1, 4, 4, 7, 6, 8, 0, 0, 0, 3, 5, 0, 0, 2, '2020-11-09', 'Aucun', ''),
+(192, '731', 'Justo Praesent Luctus Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '672724770', '5211', '1', 2, 'logo.png', 1, 4, 2, 4, 4, 4, 0, 0, 1, 3, 4, 0, 0, 0, '2021-04-07', 'Aucun', ''),
+(193, '267', 'Et Netus LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '237424973', '7322', '7', 4, 'logo.png', 1, 5, 1, 5, 6, 1, 0, 0, 1, 4, 1, 0, 0, 0, '2021-04-16', 'Aucun', ''),
+(194, '612', 'Ligula Elit Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '081547275', '1610', '7', 2, 'logo.png', 0, 6, 5, 1, 3, 5, 0, 0, 0, 4, 4, 0, 0, 0, '2021-08-12', 'Aucun', ''),
+(195, '309', 'Duis Cursus Diam Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '191427889', '6736', '1', 2, 'logo.png', 0, 4, 2, 5, 8, 3, 0, 0, 1, 4, 5, 0, 0, 1, '2020-05-04', 'Aucun', ''),
+(196, '903', 'Mi Felis LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '159690635', '1670', '3', 1, 'logo.png', 0, 5, 1, 1, 7, 1, 0, 0, 0, 6, 2, 0, 0, 2, '2020-01-16', 'Aucun', ''),
+(197, '72', 'Dolor Sit Amet Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '166582304', '6460', '3', 2, 'logo.png', 2, 6, 4, 2, 4, 1, 0, 0, 0, 4, 3, 0, 0, 1, '2020-07-29', 'Aucun', ''),
+(198, '861', 'Non Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '833831019', '2448', '9', 3, 'logo.png', 1, 4, 4, 4, 8, 7, 0, 0, 1, 3, 5, 0, 0, 2, '2020-08-30', 'Aucun', ''),
+(199, '709', 'Placerat Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '698691540', '1510', '3', 1, 'logo.png', 1, 5, 2, 7, 7, 1, 0, 0, 0, 5, 4, 0, 0, 0, '2020-04-24', 'Aucun', ''),
+(200, '439', 'Aliquam Eu Accumsan Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '948284005', '3674', '3', 2, 'logo.png', 0, 3, 3, 5, 1, 9, 0, 0, 1, 3, 2, 0, 0, 0, '2020-09-23', 'Aucun', ''),
+(201, '574', 'Sed Dui Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '583829502', '8817', '3', 2, 'logo.png', 1, 5, 5, 9, 8, 6, 0, 0, 0, 5, 4, 0, 0, 1, '2020-01-21', 'Aucun', ''),
+(202, '158', 'Ligula Tortor Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '649814449', '2437', '5', 1, 'logo.png', 0, 6, 2, 5, 4, 1, 0, 0, 1, 5, 5, 0, 0, 2, '2020-11-25', 'Aucun', ''),
+(203, '513', 'Suspendisse Ac Metus Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '104915657', '5935', '1', 2, 'logo.png', 2, 5, 1, 9, 10, 8, 0, 0, 0, 3, 2, 0, 0, 2, '2021-02-28', 'Aucun', ''),
+(204, '59', 'Metus Facilisis Lorem Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '126144575', '4696', '6', 1, 'logo.png', 0, 6, 1, 5, 7, 2, 0, 0, 1, 4, 2, 0, 0, 1, '2020-09-03', 'Aucun', ''),
+(205, '561', 'Venenatis Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '620827246', '5637', '5', 2, 'logo.png', 1, 5, 5, 5, 9, 3, 0, 0, 1, 6, 5, 0, 0, 0, '2021-01-28', 'Aucun', ''),
+(206, '64', 'Nam Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '605350099', '6491', '7', 4, 'logo.png', 1, 4, 4, 2, 8, 8, 0, 0, 0, 3, 5, 0, 0, 1, '2021-03-15', 'Aucun', ''),
+(207, '883', 'Aliquet Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '184341618', '6102', '3', 5, 'logo.png', 1, 4, 2, 3, 3, 9, 0, 0, 0, 3, 2, 0, 0, 1, '2021-07-04', 'Aucun', ''),
+(208, '604', 'Amet Consectetuer Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '234191153', '3032', '3', 3, 'logo.png', 1, 3, 5, 3, 4, 2, 0, 0, 0, 6, 5, 0, 0, 2, '2021-10-14', 'Aucun', ''),
+(209, '232', 'Rutrum Non Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '160769543', '6404', '6', 1, 'logo.png', 0, 4, 2, 9, 3, 5, 0, 0, 0, 6, 1, 0, 0, 1, '2020-12-08', 'Aucun', ''),
+(210, '966', 'Blandit Congue In LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '496180308', '4230', '3', 4, 'logo.png', 1, 6, 3, 8, 9, 1, 0, 0, 0, 4, 5, 0, 0, 1, '2020-11-04', 'Aucun', ''),
+(211, '328', 'Turpis Aliquam Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '179157789', '6388', '2', 1, 'logo.png', 2, 4, 5, 8, 7, 9, 0, 0, 0, 3, 1, 0, 0, 2, '2020-09-20', 'Aucun', ''),
+(212, '285', 'Nunc Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '087347431', '3438', '2', 2, 'logo.png', 1, 5, 2, 2, 2, 4, 0, 0, 0, 3, 5, 0, 0, 1, '2021-06-24', 'Aucun', '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `companies_addresses`
+--
+
+DROP TABLE IF EXISTS `companies_addresses`;
+CREATE TABLE IF NOT EXISTS `companies_addresses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ID_COMPANY` int(11) NOT NULL,
   `ORDRE` int(11) NOT NULL,
@@ -71,12 +532,12 @@ CREATE TABLE IF NOT EXISTS `adresses` (
 ) ENGINE=MyISAM AUTO_INCREMENT=305 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `adresses`
+-- Déchargement des données de la table `companies_addresses`
 --
 
-INSERT INTO `adresses` (`id`, `ID_COMPANY`, `ORDRE`, `LABEL`, `ADRESSE`, `ZIPCODE`, `CITY`, `COUNTRY`, `NUMBER`, `MAIL`, `ADRESS_LIV`, `ADRESS_FAC`) VALUES
-(1, 9, 2, 'LYON', '1 rue arcelor du mital', '69300', 'LYON', 'FRANCE', '02.64.354.546', 'lyon.arcelor@arcelor.com', 0, 1),
-(2, 9, 1, 'Grenoble', '2 rue mital du arcelor', '38100', 'GRENOBLE', 'FRANCE', '02.64.354.546', 'alienbackflip@gmail.com', 0, 1),
+INSERT INTO `companies_addresses` (`id`, `ID_COMPANY`, `ORDRE`, `LABEL`, `ADRESSE`, `ZIPCODE`, `CITY`, `COUNTRY`, `NUMBER`, `MAIL`, `ADRESS_LIV`, `ADRESS_FAC`) VALUES
+(1, 9, 2, 'LYON', '1 rue arcelor du mital', '69300', 'LYON', 'FRANCE', '02.64.354.546', 'lyon.arcelor@arcelor.com', 1, 1),
+(2, 9, 1, 'Grenoble', '2 rue mital du arcelor', '38100', 'GRENOBLE', 'FRANCE', '02.64.354.546', 'alienbackflip@gmail.com', 1, 1),
 (3, 1, 1, 'GRENOBLE', '1 rue de grenoble', '38100', 'Grenoble', 'France', '02.99.54.65.35', 'metalerie-grenoble@gmail.com', 1, 1),
 (5, 83, 40, '5534 Vestibulum Impasse', 'CP 389, 9116 Tempus Rd.', '10200', 'Perth', 'Malta', '07 54 91 38 05', 'Phasellus.dolor.elit@tempus.edu', 1, 1),
 (6, 108, 70, 'Appartement 240-2918 Purus Rd.', 'Appartement 110-7825 Nec Chemin', '23366-79737', 'Rosolini', 'Netherlands', '01 87 15 25 19', 'semper@aliquetmolestie.net', 0, 1),
@@ -382,417 +843,149 @@ INSERT INTO `adresses` (`id`, `ID_COMPANY`, `ORDRE`, `LABEL`, `ADRESSE`, `ZIPCOD
 -- --------------------------------------------------------
 
 --
--- Structure de la table `article`
+-- Structure de la table `companies_contact`
 --
 
-DROP TABLE IF EXISTS `article`;
-CREATE TABLE IF NOT EXISTS `article` (
+DROP TABLE IF EXISTS `companies_contact`;
+CREATE TABLE IF NOT EXISTS `companies_contact` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `IND` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `PRESTATION_ID` int(11) NOT NULL,
-  `FAMILLE_ID` int(11) NOT NULL,
-  `ACHETER` int(11) NOT NULL,
-  `PRIX_ACHETER` decimal(10,3) NOT NULL,
-  `VENDU` int(11) NOT NULL,
-  `PRIX_VENDU` decimal(10,3) NOT NULL,
-  `UNITE_ID` int(11) NOT NULL,
-  `MATIERE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `EP` decimal(10,3) NOT NULL,
-  `DIM_X` decimal(10,3) NOT NULL,
-  `DIM_Y` decimal(10,3) NOT NULL,
-  `DIM_Z` decimal(10,3) NOT NULL,
-  `POIDS` decimal(10,3) NOT NULL,
-  `SUR_X` decimal(10,3) NOT NULL,
-  `SUR_Y` decimal(10,3) NOT NULL,
-  `SUR_Z` decimal(10,3) NOT NULL,
-  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
-  `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `article`
---
-
-INSERT INTO `article` (`id`, `CODE`, `LABEL`, `IND`, `PRESTATION_ID`, `FAMILLE_ID`, `ACHETER`, `PRIX_ACHETER`, `VENDU`, `PRIX_VENDU`, `UNITE_ID`, `MATIERE`, `EP`, `DIM_X`, `DIM_Y`, `DIM_Z`, `POIDS`, `SUR_X`, `SUR_Y`, `SUR_Z`, `COMMENT`, `IMAGE`) VALUES
-(1, 'TOLE_S235_EP2', 'Tôle acier s235 ep 2', '1', 1, 0, 1, '0.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(3, 'TOLE_S235_EP3', 'Tôle acier s235 ep 3', '1', 0, 0, 1, '1.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(4, 'TOLE_S235_EP1', 'Tôle acier s235 ep 1', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(22, 'TOLE_S235_EP8', 'Tôle acier s235 ep 8', '1', 1, 0, 1, '1.000', 0, '1.000', 5, 'ACIER', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(23, 'PLATINE1', 'Platine 100x100 4 trou', '1', 4, 0, 0, '0.000', 1, '10.000', 5, 'ACIER', '8.000', '100.000', '100.000', '8.000', '0.000', '10.000', '10.000', '10.000', '', 'images/ArticlesImage/platine.jpg'),
-(24, 'POTEAU_1M', 'Poteau acier de 1 mètre', '1', 4, 0, 0, '0.000', 1, '50.000', 8, 'ACIER', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', 'Peinture anthracite', 'images/ArticlesImage/platine-pour-poteau-rond-gris-P-545747-2004687_1.webp'),
-(25, 'TUBE_ACIER_ROND_60_2', 'Tube acier s235 rond 60 ep 2 mm', '1', 3, 2, 1, '1.000', 0, '0.000', 6, 'ACIER', '2.000', '60.000', '60.000', '990.000', '1.000', '0.000', '0.000', '5.000', '', 'images/ArticlesImage/'),
-(21, 'TOLE_S235_EP6', 'Tôle acier s235 ep 6', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(20, 'TOLE_S235_EP5', 'Tôle acier s235 ep 5', '1', 0, 0, 0, '1.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(16, 'TOLE_S235_EP4', 'Tôle acier s235 ep 4', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(17, 'TOLE_304_EP1', 'Tôle inox 304L ep 1', '1', 0, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/'),
-(26, 'VIS_ACIER_H_M10_LG100', 'Vis ACIER H M10 longueur 100mm', '1', 14, 3, 1, '0.001', 0, '0.000', 8, 'ACIER', '0.000', '10.000', '10.000', '100.000', '0.001', '0.000', '0.000', '0.000', '', 'images/ArticlesImage/vis-metaux-tete-hexagonale-th-classe-109-10x35-filetage-total-p12as5-acier.jpg'),
-(27, 'TOLE_304_EP2', 'Tôle inox 304L ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(28, 'TOLE_304_EP2', 'Tôle inox 304L ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(29, 'TOLE_304_EP2.5', 'Tôle inox 304L ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(30, 'TOLE_304_EP3', 'Tôle inox 304L ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(31, 'TOLE_304_EP4', 'Tôle inox 304L ep 4', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '4.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(32, 'TOLE_304_EP5', 'Tôle inox 304L ep 5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '5.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(33, 'TOLE_304_EP6', 'Tôle inox 304L ep 6', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(34, 'TOLE_304_EP8', 'Tôle inox 304L ep 8', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(35, 'TOLE_304_EP10', 'Tôle inox 304L ep 10', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '10.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(36, 'TOLE_304_EP12', 'Tôle inox 304L ep 12', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '12.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(37, 'TOLE_304_EP15', 'Tôle inox 304L ep 15', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '15.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(38, 'TOLE_304_EP20', 'Tôle inox 304L ep 20', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '20.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(39, 'TOLE_304_EP25', 'Tôle inox 304L ep 25', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '25.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(40, 'TOLE_304_EP30', 'Tôle inox 304L ep 30', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '30.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(41, 'TOLE_DD11_EP1', 'Tôle inox DD11 ep 1', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(42, 'TOLE_DD11_EP2', 'Tôle inox DD11 ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(43, 'TOLE_DD11_EP2.5', 'Tôle inox DD11 ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(44, 'TOLE_DD11_EP3', 'Tôle inox DD11 ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(45, 'TOLE_DD11_EP4', 'Tôle inox DD11 ep 4', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '4.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(46, 'TOLE_DD11_EP5', 'Tôle inox DD11 ep 5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '5.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(47, 'TOLE_DD11_EP6', 'Tôle inox DD11 ep 6', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(48, 'TOLE_DD11_EP8', 'Tôle inox DD11 ep 8', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(49, 'TOLE_DD11_EP10', 'Tôle inox DD11 ep 10', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '10.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(50, 'TOLE_DD11_EP12', 'Tôle inox DD11 ep 12', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '12.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(51, 'TOLE_DD11_EP15', 'Tôle inox DD11 ep 15', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '15.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(52, 'TOLE_DD11_EP20', 'Tôle inox DD11 ep 20', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '20.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(53, 'TOLE_DD11_EP25', 'Tôle inox DD11 ep 25', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '25.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(54, 'TOLE_DD11_EP30', 'Tôle inox DD11 ep 30', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '30.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(55, 'TOLE_S355_EP3', 'Tôle inox S355 ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(56, 'TOLE_S355_EP4', 'Tôle inox S355 ep 4', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '4.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(57, 'TOLE_S355_EP5', 'Tôle inox S355 ep 5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '5.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(58, 'TOLE_S355_EP6', 'Tôle inox S355 ep 6', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(59, 'TOLE_S355_EP8', 'Tôle inox S355 ep 8', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(60, 'TOLE_S355_EP10', 'Tôle inox S355 ep 10', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '10.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(61, 'TOLE_S355_EP12', 'Tôle inox S355 ep 12', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '12.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(62, 'TOLE_S355_EP15', 'Tôle inox S355 ep 15', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '15.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(63, 'TOLE_S355_EP20', 'Tôle inox S355 ep 20', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '20.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(64, 'TOLE_S355_EP25', 'Tôle inox S355 ep 25', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '25.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(65, 'TOLE_S355_EP30', 'Tôle inox S355 ep 30', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '30.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(66, 'TOLE_GALVA_EP0.5', 'Tôle inox GALVA ep 0.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '0.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(67, 'TOLE_GALVA_EP1', 'Tôle inox GALVA ep 1', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(68, 'TOLE_GALVA_EP2', 'Tôle inox GALVA ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(69, 'TOLE_GALVA_EP2.5', 'Tôle inox GALVA ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
-(70, 'TOLE_GALVA_EP3', 'Tôle inox GALVA ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', '');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `client_fourniseur`
---
-
-DROP TABLE IF EXISTS `client_fourniseur`;
-CREATE TABLE IF NOT EXISTS `client_fourniseur` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `WEBSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `FBSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TWITTERSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LKDSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `SIREN` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `APE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TVA_INTRA` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TVA_ID` int(11) NOT NULL,
-  `LOGO` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `STATU_CLIENT` int(11) NOT NULL,
-  `COND_REG_CLIENT_ID` int(11) DEFAULT NULL,
-  `MODE_REG_CLIENT_ID` int(11) DEFAULT NULL,
-  `REMISE` int(11) NOT NULL,
-  `RESP_COM_ID` int(11) NOT NULL,
-  `RESP_TECH_ID` int(11) NOT NULL,
-  `COMPTE_GEN_CLIENT` int(11) DEFAULT '0',
-  `COMPTE_AUX_CLIENT` int(11) DEFAULT '0',
-  `STATU_FOUR` int(11) NOT NULL,
-  `COND_REG_FOUR_ID` int(11) NOT NULL,
-  `MODE_REG_FOUR_ID` int(11) NOT NULL,
-  `COMPTE_GEN_FOUR` int(11) NOT NULL DEFAULT '0',
-  `COMPTE_AUX_FOUR` int(11) NOT NULL DEFAULT '0',
-  `CONTROLE_FOUR` int(11) NOT NULL,
-  `DATE_CREA` date NOT NULL,
-  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
-  `SECTOR_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=213 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `client_fourniseur`
---
-
-INSERT INTO `client_fourniseur` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE`, `LKDSITE`, `SIREN`, `APE`, `TVA_INTRA`, `TVA_ID`, `LOGO`, `STATU_CLIENT`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `REMISE`, `RESP_COM_ID`, `RESP_TECH_ID`, `COMPTE_GEN_CLIENT`, `COMPTE_AUX_CLIENT`, `STATU_FOUR`, `COND_REG_FOUR_ID`, `MODE_REG_FOUR_ID`, `COMPTE_GEN_FOUR`, `COMPTE_AUX_FOUR`, `CONTROLE_FOUR`, `DATE_CREA`, `COMMENT`, `SECTOR_ID`) VALUES
-(1, 'METALI', 'METALERIE GRENOBLE ALPE', 'https://www.site.com/', '', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 8, 1, 0, 2, 1, 401000, 400000, 0, 8, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(2, 'LASERDEC ', 'LASER DECOUPE', 'https://www.decoupe.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 2, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(3, 'METALJ', 'METAL JOLI', 'https://www.jolie.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(4, 'GLOB1', 'GLOBAL METAL1', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(5, 'GLOB', 'GLOBAL METAL', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(6, 'GLOB4', 'GLOBAL METAL4', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(7, 'GLOB3', 'GLOBAL METAL3', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(8, 'GLOB2', 'GLOBAL METAL2', 'https://www.site.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 1, 1, 10, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(9, 'ADM1', 'ARCELOR MITAL 1', 'https://e-steel.arcelormittal.com/FR/fr/', '', '', '', '46950096100641', '', '', 4, 'images/ClientLogo/1200px-Logo_ArcelorMittal.svg.png', 0, 8, 1, 0, 1, 2, 0, 0, 1, 8, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(10, 'SVDPM', 'KDI SVDMP', 'https://www.kloecknermetals.fr/fr.html', 'https://www.facebook.com/KloecknerFrance/', 'https://twitter.com/KloecknerFrance', 'https://www.linkedin.com/company/klockner-distribution-industrielle/?originalSubdomain=fr', '54208635000411', '350', '', 4, 'images/ClientLogo/téléchargement.png', 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
-(11, 'ADM2', 'ARCELOR MITAL 2', 'https://e-steel.arcelormittal.com/FR/fr/', '', '', '', '46950096100641', '', '', 4, 'images/ClientLogo/', 0, 8, 1, 0, 1, 2, 0, 0, 1, 8, 1, 401000, 400000, 1, '2020-11-08', '', ''),
-(12, 'ADM3', 'ARCELOR MITAL3', 'https://e-steel.arcelormittal.com/FR/fr/', '', '', '', '46950096100641', '', '', 4, 'images/ClientLogo/', 0, 8, 1, 0, 1, 2, 0, 0, 1, 8, 1, 401000, 400000, 1, '2020-11-08', '', ''),
-(13, '26', 'Mollis Non Cursus Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '996837720', '9300', '8', 5, 'logo.png', 1, 3, 1, 7, 8, 8, 0, 0, 1, 3, 4, 0, 0, 0, '2020-02-29', 'Aucun', ''),
-(14, '713', 'Sodales Mauris Blandit PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '213093578', '6604', '6', 3, 'logo.png', 0, 4, 3, 6, 4, 5, 0, 0, 0, 3, 1, 0, 0, 0, '2021-06-14', 'Aucun', ''),
-(15, '829', 'Id LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '151314267', '5898', '7', 2, 'logo.png', 0, 3, 3, 3, 4, 9, 0, 0, 0, 6, 4, 0, 0, 0, '2021-10-27', 'Aucun', ''),
-(16, '589', 'Aliquam Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '360811111', '2757', '8', 3, 'logo.png', 2, 3, 4, 2, 3, 3, 0, 0, 0, 5, 3, 0, 0, 1, '2020-01-06', 'Aucun', ''),
-(17, '795', 'Mattis Ornare Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '920568607', '6086', '9', 3, 'logo.png', 0, 4, 1, 7, 4, 4, 0, 0, 1, 5, 2, 0, 0, 1, '2020-07-15', 'Aucun', ''),
-(18, '998', 'Suspendisse Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '301799656', '5713', '7', 5, 'logo.png', 2, 6, 1, 7, 7, 8, 0, 0, 0, 6, 2, 0, 0, 2, '2020-02-16', 'Aucun', ''),
-(19, '783', 'Enim Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '472291376', '5257', '2', 2, 'logo.png', 0, 5, 5, 3, 10, 10, 0, 0, 0, 3, 5, 0, 0, 2, '2021-01-23', 'Aucun', ''),
-(20, '164', 'Volutpat Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '099014433', '8689', '8', 4, 'logo.png', 1, 5, 4, 1, 8, 9, 0, 0, 1, 3, 1, 0, 0, 2, '2021-06-16', 'Aucun', ''),
-(21, '38', 'Tristique Senectus Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '390321727', '9384', '6', 1, 'logo.png', 0, 5, 4, 9, 2, 2, 0, 0, 0, 4, 1, 0, 0, 2, '2020-05-26', 'Aucun', ''),
-(22, '955', 'Morbi Quis Urna Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '490746997', '6107', '2', 4, 'logo.png', 0, 4, 2, 5, 4, 9, 0, 0, 0, 4, 1, 0, 0, 1, '2021-10-26', 'Aucun', ''),
-(23, '292', 'Convallis Ligula Donec Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '227881661', '4114', '9', 4, 'logo.png', 0, 4, 2, 3, 5, 5, 0, 0, 0, 5, 1, 0, 0, 2, '2020-12-07', 'Aucun', ''),
-(24, '257', 'Ipsum Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '937444065', '4587', '3', 1, 'logo.png', 1, 5, 1, 8, 7, 6, 0, 0, 1, 3, 3, 0, 0, 1, '2021-01-26', 'Aucun', ''),
-(25, '76', 'Lacus PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '759309198', '9555', '4', 3, 'logo.png', 1, 4, 5, 8, 9, 8, 0, 0, 0, 4, 2, 0, 0, 1, '2020-04-06', 'Aucun', ''),
-(26, '961', 'Dapibus Ligula Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '823922695', '6462', '7', 5, 'logo.png', 2, 4, 4, 6, 5, 8, 0, 0, 0, 5, 3, 0, 0, 1, '2020-07-09', 'Aucun', ''),
-(27, '304', 'Ut Pellentesque Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '348794504', '1336', '5', 1, 'logo.png', 2, 5, 3, 1, 1, 2, 0, 0, 1, 3, 5, 0, 0, 0, '2020-08-01', 'Aucun', ''),
-(28, '792', 'At Iaculis Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '811462357', '3281', '1', 3, 'logo.png', 1, 3, 5, 4, 2, 8, 0, 0, 1, 3, 5, 0, 0, 0, '2021-08-12', 'Aucun', ''),
-(29, '410', 'Arcu Vestibulum LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '263482853', '9919', '9', 4, 'logo.png', 2, 5, 2, 9, 7, 3, 0, 0, 0, 6, 4, 0, 0, 2, '2020-11-06', 'Aucun', ''),
-(30, '731', 'A Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '238969661', '5878', '8', 5, 'logo.png', 2, 5, 5, 6, 1, 1, 0, 0, 1, 5, 4, 0, 0, 0, '2021-03-24', 'test', '1,6'),
-(31, '479', 'Ac Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '556396091', '4436', '7', 5, 'logo.png', 2, 4, 5, 9, 7, 6, 0, 0, 1, 5, 3, 0, 0, 0, '2020-10-05', 'Aucun', ''),
-(32, '77', 'Non Justo LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '415853209', '3688', '8', 3, 'logo.png', 1, 6, 3, 8, 8, 2, 0, 0, 1, 4, 1, 0, 0, 2, '2020-05-31', 'Aucun', ''),
-(33, '173', 'Eu Eros Nam Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '198682940', '8106', '3', 4, 'logo.png', 2, 3, 2, 1, 8, 1, 0, 0, 1, 3, 3, 0, 0, 1, '2021-04-11', 'Aucun', ''),
-(34, '337', 'Auctor Odio A Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '982341794', '3934', '8', 1, 'logo.png', 1, 5, 3, 7, 2, 8, 0, 0, 0, 4, 5, 0, 0, 1, '2020-07-26', 'Aucun', ''),
-(35, '885', 'Mauris Quis Turpis Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '252679501', '4066', '1', 3, 'logo.png', 1, 6, 5, 10, 8, 10, 0, 0, 0, 6, 1, 0, 0, 1, '2021-03-07', 'Aucun', ''),
-(36, '620', 'Urna Nullam Lobortis Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '540482585', '8328', '5', 3, 'logo.png', 1, 5, 2, 3, 4, 6, 0, 0, 1, 4, 2, 0, 0, 0, '2021-09-09', 'Aucun', ''),
-(37, '899', 'Scelerisque Sed Sapien Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '418854915', '9822', '5', 4, 'logo.png', 0, 4, 3, 7, 7, 3, 0, 0, 1, 3, 4, 0, 0, 1, '2020-05-19', 'Aucun', ''),
-(38, '69', 'Convallis Ante Lectus Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '602456238', '7386', '2', 2, 'logo.png', 0, 4, 5, 10, 6, 5, 0, 0, 1, 6, 1, 0, 0, 1, '2021-03-01', 'Aucun', ''),
-(39, '714', 'Cum Sociis Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '581089901', '2349', '2', 1, 'logo.png', 0, 3, 5, 7, 2, 2, 0, 0, 1, 3, 3, 0, 0, 0, '2020-03-21', 'Aucun', ''),
-(40, '523', 'Tincidunt Tempus Risus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '590848925', '1360', '5', 5, 'logo.png', 2, 6, 2, 9, 1, 6, 0, 0, 1, 4, 1, 0, 0, 2, '2020-09-30', 'Aucun', ''),
-(41, '689', 'Bibendum Fermentum LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '986289585', '6361', '9', 3, 'logo.png', 1, 5, 1, 1, 1, 9, 0, 0, 0, 4, 3, 0, 0, 0, '2021-03-28', 'Aucun', ''),
-(42, '550', 'Gravida Sit Amet Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '481375988', '4232', '5', 2, 'logo.png', 0, 3, 1, 9, 9, 6, 0, 0, 0, 4, 5, 0, 0, 1, '2020-02-12', 'Aucun', ''),
-(43, '608', 'Tristique Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '542723002', '8489', '1', 4, 'logo.png', 2, 4, 2, 4, 7, 6, 0, 0, 1, 3, 5, 0, 0, 0, '2021-03-03', 'Aucun', ''),
-(44, '118', 'Cursus Et Magna Limited', 'www.website.com', '', 'www.website.com', 'www.website.com', '446283863', '4841', '4', 1, 'logo.png', 2, 8, 4, 5, 36, 1, 0, 0, 0, 3, 1, 0, 0, 0, '2020-06-07', 'Aucun', ''),
-(45, '399', 'Consectetuer Adipiscing Elit PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '510510746', '8271', '5', 5, 'logo.png', 0, 6, 4, 10, 4, 4, 0, 0, 1, 4, 2, 0, 0, 2, '2020-05-22', 'Aucun', ''),
-(46, '529', 'Aliquam Enim Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '501604375', '5355', '1', 5, 'logo.png', 0, 6, 1, 1, 9, 9, 0, 0, 1, 5, 3, 0, 0, 2, '2021-08-08', 'Aucun', ''),
-(47, '583', 'Tincidunt Nibh Phasellus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '139412423', '5653', '1', 1, 'logo.png', 1, 3, 3, 9, 6, 8, 0, 0, 0, 4, 2, 0, 0, 2, '2020-09-17', 'Aucun', ''),
-(48, '772', 'Et Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '819689530', '8070', '8', 4, 'logo.png', 0, 6, 1, 9, 10, 8, 0, 0, 0, 5, 5, 0, 0, 0, '2021-05-07', 'Aucun', ''),
-(49, '967', 'Pellentesque PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '338270606', '4996', '7', 2, 'logo.png', 0, 5, 5, 2, 10, 2, 0, 0, 1, 4, 2, 0, 0, 0, '2021-03-19', 'Aucun', ''),
-(50, '460', 'Maecenas Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '451839419', '1161', '8', 4, 'logo.png', 2, 6, 1, 10, 9, 4, 0, 0, 1, 5, 3, 0, 0, 2, '2021-08-06', 'Aucun', ''),
-(51, '522', 'Nisl Nulla Eu Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '890440613', '7412', '2', 3, 'logo.png', 2, 3, 4, 9, 3, 8, 0, 0, 0, 3, 5, 0, 0, 0, '2020-02-01', 'Aucun', ''),
-(52, '421', 'Orci Sem Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '337135404', '9763', '6', 5, 'logo.png', 1, 4, 4, 6, 5, 7, 0, 0, 1, 6, 5, 0, 0, 2, '2021-02-10', 'Aucun', ''),
-(53, '760', 'Risus Nulla PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '548229855', '5644', '2', 5, 'logo.png', 0, 4, 1, 5, 2, 7, 0, 0, 1, 3, 5, 0, 0, 2, '2020-05-10', 'Aucun', ''),
-(54, '189', 'Laoreet Ipsum Curabitur Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '139229983', '9093', '3', 4, 'logo.png', 1, 4, 1, 10, 10, 8, 0, 0, 1, 4, 1, 0, 0, 0, '2020-05-25', 'Aucun', ''),
-(55, '618', 'Elit Fermentum Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '170310635', '8685', '4', 2, 'logo.png', 2, 5, 3, 5, 3, 1, 0, 0, 1, 4, 4, 0, 0, 1, '2020-07-21', 'Aucun', ''),
-(56, '680', 'Pellentesque Massa Lobortis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '054945258', '9027', '4', 2, 'logo.png', 2, 3, 1, 5, 3, 6, 0, 0, 1, 6, 2, 0, 0, 2, '2020-01-30', 'Aucun', ''),
-(57, '625', 'Donec Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '560856015', '5111', '8', 1, 'logo.png', 1, 4, 1, 1, 2, 6, 0, 0, 1, 3, 5, 0, 0, 0, '2021-11-24', 'Aucun', ''),
-(58, '980', 'Orci Lacus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '006362560', '3328', '7', 1, 'logo.png', 1, 4, 4, 3, 1, 3, 0, 0, 0, 6, 2, 0, 0, 0, '2020-05-07', 'Aucun', ''),
-(59, '75', 'Ipsum Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '413896754', '2169', '9', 3, 'logo.png', 1, 6, 4, 7, 8, 5, 0, 0, 0, 5, 2, 0, 0, 1, '2021-04-16', 'Aucun', ''),
-(60, '415', 'Purus In Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '723579363', '8391', '5', 3, 'logo.png', 1, 3, 5, 2, 2, 6, 0, 0, 0, 4, 2, 0, 0, 1, '2020-05-02', 'Aucun', ''),
-(61, '563', 'Pellentesque Habitant LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '522826320', '3190', '1', 2, 'logo.png', 0, 3, 5, 4, 8, 6, 0, 0, 0, 5, 4, 0, 0, 1, '2020-10-08', 'Aucun', ''),
-(62, '433', 'Donec PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '398039693', '8159', '8', 2, 'logo.png', 0, 6, 1, 9, 2, 5, 0, 0, 0, 6, 5, 0, 0, 0, '2021-11-08', 'Aucun', ''),
-(63, '810', 'Amet Ornare Lectus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '456230846', '8027', '2', 3, 'logo.png', 0, 5, 2, 10, 4, 4, 0, 0, 0, 3, 2, 0, 0, 2, '2021-05-07', 'Aucun', ''),
-(64, '980', 'Vitae Diam Proin Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '321563710', '3188', '5', 1, 'logo.png', 2, 3, 4, 2, 7, 2, 0, 0, 0, 3, 5, 0, 0, 0, '2020-09-08', 'Aucun', ''),
-(65, '299', 'Fermentum Vel Mauris Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '002362101', '5084', '9', 3, 'logo.png', 2, 3, 5, 9, 6, 1, 0, 0, 0, 3, 2, 0, 0, 2, '2021-10-18', 'Aucun', ''),
-(66, '787', 'Mauris Rhoncus Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '377580311', '7613', '5', 3, 'logo.png', 0, 4, 3, 10, 10, 7, 0, 0, 0, 6, 1, 0, 0, 1, '2020-09-11', 'Aucun', ''),
-(67, '82', 'Vestibulum Massa Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '484488630', '9454', '2', 5, 'logo.png', 1, 5, 4, 4, 5, 9, 0, 0, 0, 4, 1, 0, 0, 0, '2020-05-30', 'Aucun', ''),
-(68, '93', 'Curabitur Dictum Phasellus Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '627643844', '9229', '2', 4, 'logo.png', 1, 4, 1, 6, 8, 5, 0, 0, 0, 3, 3, 0, 0, 2, '2020-12-02', 'Aucun', ''),
-(69, '4', 'Consectetuer Euismod Est Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '209472554', '1225', '9', 3, 'logo.png', 0, 4, 5, 10, 5, 6, 0, 0, 0, 4, 3, 0, 0, 1, '2021-06-28', 'Aucun', ''),
-(70, '7', 'Urna LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '303752265', '3297', '9', 2, 'logo.png', 0, 4, 1, 3, 5, 6, 0, 0, 0, 6, 1, 0, 0, 0, '2021-05-18', 'Aucun', ''),
-(71, '451', 'Elementum Dui Quis Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '133271668', '6462', '6', 1, 'logo.png', 0, 6, 5, 7, 1, 2, 0, 0, 1, 5, 4, 0, 0, 2, '2020-01-01', 'Aucun', ''),
-(72, '204', 'Erat Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '715741674', '7875', '7', 4, 'logo.png', 0, 6, 4, 9, 10, 5, 0, 0, 0, 3, 1, 0, 0, 1, '2020-11-30', 'Aucun', ''),
-(73, '965', 'Molestie Tellus Aenean Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '855099875', '9250', '7', 5, 'logo.png', 2, 3, 4, 4, 10, 10, 0, 0, 0, 4, 2, 0, 0, 1, '2019-12-26', 'Aucun', ''),
-(74, '913', 'Ullamcorper Velit In Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '722923703', '3836', '9', 3, 'logo.png', 0, 4, 3, 9, 7, 3, 0, 0, 0, 3, 4, 0, 0, 2, '2021-02-26', 'Aucun', ''),
-(75, '885', 'Aliquam Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '773623889', '5145', '5', 2, 'logo.png', 0, 5, 2, 2, 7, 8, 0, 0, 1, 6, 4, 0, 0, 2, '2020-03-28', 'Aucun', ''),
-(76, '518', 'Laoreet Lectus Quis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '195126735', '3260', '1', 4, 'logo.png', 1, 3, 5, 1, 5, 4, 0, 0, 0, 6, 1, 0, 0, 1, '2020-02-07', 'Aucun', ''),
-(77, '830', 'Feugiat Lorem Ipsum Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '385791785', '6650', '7', 3, 'logo.png', 0, 4, 3, 2, 1, 7, 0, 0, 0, 5, 2, 0, 0, 2, '2021-01-06', 'Aucun', ''),
-(78, '59', 'Luctus Ipsum Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '231546581', '3862', '6', 1, 'logo.png', 1, 6, 5, 3, 10, 2, 0, 0, 1, 3, 4, 0, 0, 1, '2021-08-14', 'Aucun', ''),
-(79, '78', 'Nunc Ac LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '279167035', '6715', '5', 1, 'logo.png', 2, 3, 2, 1, 10, 9, 0, 0, 0, 3, 5, 0, 0, 1, '2021-12-24', 'Aucun', ''),
-(80, '568', 'Malesuada Integer Id Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '023018575', '1183', '9', 2, 'logo.png', 2, 6, 2, 6, 8, 9, 0, 0, 0, 6, 1, 0, 0, 2, '2021-03-08', 'Aucun', ''),
-(81, '355', 'Velit Cras Lorem Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '620181792', '3385', '9', 2, 'logo.png', 0, 3, 1, 8, 4, 5, 0, 0, 1, 4, 2, 0, 0, 1, '2021-04-06', 'Aucun', ''),
-(82, '964', 'Risus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '373114925', '4025', '8', 1, 'logo.png', 2, 6, 1, 7, 2, 7, 0, 0, 1, 5, 3, 0, 0, 2, '2020-12-08', 'Aucun', ''),
-(83, '252', 'Libero Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '420846305', '7308', '4', 4, 'logo.png', 2, 3, 4, 4, 5, 2, 0, 0, 0, 4, 3, 0, 0, 0, '2020-11-20', 'Aucun', ''),
-(84, '613', 'Dolor Sit LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '934873639', '7942', '3', 2, 'logo.png', 0, 6, 5, 10, 4, 3, 0, 0, 1, 3, 2, 0, 0, 0, '2021-04-03', 'Aucun', ''),
-(85, '329', 'Interdum PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '296203532', '7155', '1', 4, 'logo.png', 1, 3, 3, 4, 9, 6, 0, 0, 1, 5, 5, 0, 0, 1, '2019-12-28', 'Aucun', ''),
-(86, '805', 'Ipsum Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '648292472', '5015', '7', 2, 'logo.png', 1, 6, 5, 6, 3, 2, 0, 0, 1, 6, 4, 0, 0, 0, '2021-11-03', 'Aucun', ''),
-(87, '655', 'Nullam Enim Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '088912100', '1188', '3', 1, 'logo.png', 0, 6, 1, 5, 3, 4, 0, 0, 0, 4, 2, 0, 0, 1, '2020-05-11', 'Aucun', ''),
-(88, '218', 'Egestas LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '598953966', '9238', '5', 3, 'logo.png', 2, 6, 2, 5, 8, 8, 0, 0, 1, 5, 2, 0, 0, 2, '2021-11-29', 'Aucun', ''),
-(89, '958', 'Sit Amet Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '526145354', '9828', '9', 4, 'logo.png', 1, 4, 4, 9, 5, 5, 0, 0, 1, 5, 2, 0, 0, 1, '2020-02-25', 'Aucun', ''),
-(90, '947', 'Nunc Sollicitudin Commodo PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '957131428', '7337', '6', 2, 'logo.png', 1, 4, 4, 6, 3, 4, 0, 0, 0, 4, 1, 0, 0, 2, '2020-01-28', 'Aucun', ''),
-(91, '513', 'Molestie Tellus Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '928141886', '2687', '9', 2, 'logo.png', 1, 6, 2, 8, 1, 3, 0, 0, 1, 3, 1, 0, 0, 1, '2020-09-04', 'Aucun', ''),
-(92, '354', 'Vel Vulputate Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '597729540', '7912', '8', 5, 'logo.png', 0, 4, 4, 2, 7, 2, 0, 0, 1, 5, 4, 0, 0, 1, '2021-06-22', 'Aucun', ''),
-(93, '46', 'Mauris Magna Duis PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '770749687', '3094', '2', 5, 'logo.png', 1, 4, 4, 4, 5, 5, 0, 0, 0, 4, 5, 0, 0, 2, '2020-09-28', 'Aucun', ''),
-(94, '685', 'In Lobortis Tellus Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '174894170', '2457', '6', 4, 'logo.png', 0, 3, 1, 8, 2, 3, 0, 0, 0, 6, 3, 0, 0, 0, '2020-11-29', 'Aucun', ''),
-(95, '834', 'Augue Eu Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '878724434', '8065', '1', 2, 'logo.png', 0, 5, 4, 9, 7, 2, 0, 0, 0, 5, 4, 0, 0, 1, '2020-03-24', 'Aucun', ''),
-(96, '449', 'Lectus Convallis Est Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '674808746', '4631', '4', 2, 'logo.png', 1, 4, 3, 9, 4, 5, 0, 0, 0, 4, 2, 0, 0, 0, '2021-12-18', 'Aucun', ''),
-(97, '663', 'Phasellus In Felis Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '820970143', '5805', '3', 4, 'logo.png', 1, 6, 4, 3, 3, 3, 0, 0, 0, 6, 4, 0, 0, 1, '2021-05-17', 'Aucun', ''),
-(98, '386', 'Erat Eget Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '540691599', '2613', '4', 4, 'logo.png', 2, 5, 1, 9, 1, 9, 0, 0, 0, 5, 3, 0, 0, 2, '2021-01-08', 'Aucun', ''),
-(99, '156', 'Gravida Praesent Eu PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '563657576', '2046', '2', 5, 'logo.png', 2, 6, 1, 1, 10, 5, 0, 0, 0, 6, 5, 0, 0, 1, '2020-09-02', 'Aucun', ''),
-(100, '966', 'Dolor Nulla Semper Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '442249991', '1713', '1', 1, 'logo.png', 1, 3, 3, 1, 5, 4, 0, 0, 1, 5, 3, 0, 0, 0, '2021-06-27', 'Aucun', ''),
-(101, '438', 'Nullam Ut Nisi LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '041208687', '2121', '2', 5, 'logo.png', 2, 6, 5, 7, 9, 5, 0, 0, 1, 5, 1, 0, 0, 0, '2020-01-03', 'Aucun', ''),
-(102, '588', 'Ipsum Dolor Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '882379811', '3722', '2', 5, 'logo.png', 2, 3, 1, 3, 5, 8, 0, 0, 1, 4, 5, 0, 0, 2, '2020-02-01', 'Aucun', ''),
-(103, '207', 'Est Nunc Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '222474272', '5904', '9', 3, 'logo.png', 0, 4, 4, 4, 2, 7, 0, 0, 0, 5, 1, 0, 0, 0, '2020-11-30', 'Aucun', ''),
-(104, '752', 'Ultrices Vivamus Rhoncus Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '143753812', '9589', '6', 1, 'logo.png', 1, 6, 1, 8, 3, 6, 0, 0, 1, 5, 2, 0, 0, 2, '2021-05-29', 'Aucun', ''),
-(105, '861', 'Eu Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '534956750', '1817', '1', 1, 'logo.png', 1, 3, 2, 5, 6, 4, 0, 0, 0, 4, 1, 0, 0, 0, '2021-06-21', 'Aucun', ''),
-(106, '892', 'Vehicula Pellentesque Tincidunt Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '932464688', '8687', '9', 3, 'logo.png', 2, 5, 3, 3, 10, 1, 0, 0, 1, 5, 4, 0, 0, 2, '2021-02-14', 'Aucun', ''),
-(107, '895', 'Sociis PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '987977980', '2763', '9', 5, 'logo.png', 2, 3, 4, 1, 2, 4, 0, 0, 0, 3, 3, 0, 0, 0, '2021-12-15', 'Aucun', ''),
-(108, '121', 'Nunc Ullamcorper Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '601212350', '5603', '9', 4, 'logo.png', 2, 3, 2, 2, 9, 6, 0, 0, 0, 6, 4, 0, 0, 2, '2020-06-21', 'Aucun', ''),
-(109, '838', 'Duis Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '777611674', '1767', '9', 1, 'logo.png', 0, 5, 2, 1, 10, 2, 0, 0, 1, 5, 5, 0, 0, 2, '2021-04-13', 'Aucun', ''),
-(110, '982', 'Ligula Nullam Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '118316892', '6276', '2', 3, 'logo.png', 2, 3, 5, 3, 9, 3, 0, 0, 0, 6, 3, 0, 0, 1, '2020-04-05', 'Aucun', ''),
-(111, '734', 'Amet Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '969760206', '5848', '6', 2, 'logo.png', 0, 4, 1, 8, 7, 1, 0, 0, 1, 5, 1, 0, 0, 2, '2020-11-22', 'Aucun', ''),
-(112, '533', 'At Velit Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '850856402', '3527', '7', 1, 'logo.png', 0, 6, 4, 5, 9, 7, 0, 0, 0, 4, 4, 0, 0, 2, '2020-07-04', 'Aucun', ''),
-(113, '350', 'Feugiat Metus PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '264218264', '9920', '7', 4, 'logo.png', 2, 6, 5, 1, 9, 4, 0, 0, 0, 4, 5, 0, 0, 2, '2021-08-23', 'Aucun', ''),
-(114, '844', 'Molestie Tellus Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '894760073', '7003', '2', 2, 'logo.png', 0, 4, 2, 6, 6, 5, 0, 0, 1, 6, 4, 0, 0, 2, '2020-02-03', 'Aucun', ''),
-(115, '922', 'Nec Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '618675094', '6669', '9', 1, 'logo.png', 1, 6, 5, 6, 5, 10, 0, 0, 0, 5, 1, 0, 0, 0, '2021-06-20', 'Aucun', ''),
-(116, '558', 'Sit LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '186119954', '6358', '5', 1, 'logo.png', 0, 3, 4, 1, 8, 6, 0, 0, 1, 3, 5, 0, 0, 2, '2021-05-14', 'Aucun', ''),
-(117, '900', 'Non Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '621668060', '6905', '8', 4, 'logo.png', 0, 4, 1, 2, 1, 9, 0, 0, 0, 5, 2, 0, 0, 0, '2021-09-16', 'Aucun', ''),
-(118, '273', 'Vel Lectus LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '523763746', '4750', '4', 3, 'logo.png', 2, 4, 2, 4, 8, 10, 0, 0, 0, 4, 3, 0, 0, 2, '2021-11-16', 'Aucun', ''),
-(119, '345', 'Aliquam Iaculis Lacus Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '631600855', '2315', '8', 3, 'logo.png', 0, 3, 2, 7, 9, 2, 0, 0, 1, 5, 5, 0, 0, 1, '2020-02-29', 'Aucun', ''),
-(120, '167', 'Risus Quis Diam PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '560931594', '8873', '3', 5, 'logo.png', 2, 6, 1, 10, 6, 10, 0, 0, 1, 6, 4, 0, 0, 0, '2021-10-02', 'Aucun', ''),
-(121, '6', 'Tincidunt Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '573737020', '9918', '5', 3, 'logo.png', 0, 6, 5, 6, 1, 4, 0, 0, 0, 3, 4, 0, 0, 2, '2021-05-27', 'Aucun', ''),
-(122, '262', 'Felis Eget PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '330464553', '2518', '7', 4, 'logo.png', 2, 5, 4, 7, 9, 7, 0, 0, 1, 6, 5, 0, 0, 0, '2020-02-01', 'Aucun', ''),
-(123, '503', 'Eleifend Nunc Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '294057823', '9347', '5', 5, 'logo.png', 1, 5, 3, 8, 5, 5, 0, 0, 1, 3, 2, 0, 0, 0, '2021-04-22', 'Aucun', ''),
-(124, '128', 'Id Enim Curabitur Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '145088795', '6930', '7', 1, 'logo.png', 2, 5, 4, 5, 3, 8, 0, 0, 0, 4, 1, 0, 0, 1, '2021-03-02', 'Aucun', ''),
-(125, '81', 'Libero Et Tristique Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '549348340', '9030', '2', 1, 'logo.png', 1, 6, 4, 7, 7, 1, 0, 0, 0, 5, 2, 0, 0, 1, '2021-06-30', 'Aucun', ''),
-(126, '927', 'Accumsan Laoreet Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '810020685', '9642', '9', 5, 'logo.png', 0, 5, 2, 8, 4, 4, 0, 0, 0, 4, 4, 0, 0, 2, '2021-09-28', 'Aucun', ''),
-(127, '473', 'Tincidunt Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '764945382', '4070', '1', 1, 'logo.png', 0, 5, 4, 6, 3, 4, 0, 0, 0, 3, 5, 0, 0, 2, '2021-12-26', 'Aucun', ''),
-(128, '585', 'Duis Cursus Diam LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '394881569', '6090', '5', 3, 'logo.png', 1, 6, 5, 5, 7, 3, 0, 0, 0, 6, 5, 0, 0, 1, '2020-01-31', 'Aucun', ''),
-(129, '422', 'Sapien Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '966665341', '3188', '2', 2, 'logo.png', 2, 3, 3, 4, 8, 3, 0, 0, 0, 5, 2, 0, 0, 1, '2021-12-08', 'Aucun', ''),
-(130, '781', 'Dapibus Id Blandit Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '133086371', '1626', '7', 3, 'logo.png', 2, 3, 2, 5, 7, 3, 0, 0, 1, 4, 2, 0, 0, 1, '2019-12-29', 'Aucun', ''),
-(131, '415', 'Consectetuer Rhoncus Nullam Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '979650330', '1347', '5', 4, 'logo.png', 2, 3, 3, 7, 10, 1, 0, 0, 0, 6, 3, 0, 0, 1, '2020-01-10', 'Aucun', ''),
-(132, '889', 'Quis Pede PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '255898892', '4002', '1', 4, 'logo.png', 2, 4, 2, 6, 9, 10, 0, 0, 0, 3, 3, 0, 0, 2, '2021-10-20', 'Aucun', ''),
-(133, '485', 'Interdum Curabitur Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '423813286', '4993', '3', 5, 'logo.png', 1, 4, 1, 9, 9, 3, 0, 0, 0, 3, 4, 0, 0, 2, '2021-03-13', 'Aucun', ''),
-(134, '379', 'Mi Tempor Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '976439307', '2988', '7', 5, 'logo.png', 1, 5, 4, 8, 1, 4, 0, 0, 1, 4, 5, 0, 0, 2, '2020-05-08', 'Aucun', ''),
-(135, '479', 'Hendrerit LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '280297813', '3900', '9', 3, 'logo.png', 1, 5, 4, 2, 3, 5, 0, 0, 1, 5, 1, 0, 0, 0, '2021-05-04', 'Aucun', ''),
-(136, '700', 'Lectus Ante Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '584760466', '1636', '4', 2, 'logo.png', 2, 5, 3, 2, 10, 2, 0, 0, 0, 4, 3, 0, 0, 2, '2020-10-20', 'Aucun', ''),
-(137, '532', 'Molestie Arcu Sed Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '193730983', '2266', '1', 2, 'logo.png', 0, 3, 3, 5, 2, 7, 0, 0, 1, 6, 1, 0, 0, 0, '2021-06-05', 'Aucun', ''),
-(138, '651', 'Justo Sit LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '469574057', '6308', '9', 4, 'logo.png', 0, 6, 3, 6, 8, 9, 0, 0, 0, 5, 3, 0, 0, 0, '2020-11-28', 'Aucun', ''),
-(139, '305', 'Quam A Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '378512750', '9260', '4', 4, 'logo.png', 0, 4, 3, 6, 2, 2, 0, 0, 1, 4, 4, 0, 0, 2, '2021-11-27', 'Aucun', ''),
-(140, '259', 'Nibh LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '058487174', '9184', '5', 5, 'logo.png', 2, 3, 1, 3, 9, 3, 0, 0, 0, 3, 3, 0, 0, 0, '2021-07-31', 'Aucun', ''),
-(141, '639', 'Natoque Penatibus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '037875515', '7100', '4', 5, 'logo.png', 0, 6, 4, 4, 6, 8, 0, 0, 0, 5, 1, 0, 0, 2, '2021-07-01', 'Aucun', ''),
-(142, '392', 'Pellentesque Massa Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '849207485', '2353', '5', 2, 'logo.png', 1, 3, 4, 9, 9, 1, 0, 0, 0, 3, 5, 0, 0, 2, '2019-12-29', 'Aucun', ''),
-(143, '604', 'Nullam LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '401137278', '3204', '7', 4, 'logo.png', 0, 4, 4, 1, 2, 7, 0, 0, 1, 3, 3, 0, 0, 1, '2021-10-12', 'Aucun', ''),
-(144, '464', 'Libero At Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '304716590', '4851', '3', 2, 'logo.png', 2, 3, 4, 8, 4, 1, 0, 0, 1, 3, 2, 0, 0, 0, '2019-12-26', 'Aucun', ''),
-(145, '383', 'A PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '595316571', '4799', '8', 2, 'logo.png', 1, 4, 3, 6, 1, 3, 0, 0, 1, 3, 1, 0, 0, 1, '2021-07-23', 'Aucun', ''),
-(146, '847', 'Vitae Semper Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '848165163', '9513', '4', 1, 'logo.png', 0, 3, 5, 5, 1, 7, 0, 0, 0, 4, 1, 0, 0, 2, '2020-03-25', 'Aucun', ''),
-(147, '156', 'Risus Donec Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '323158493', '9623', '4', 3, 'logo.png', 1, 6, 3, 8, 1, 3, 0, 0, 1, 6, 3, 0, 0, 1, '2020-04-27', 'Aucun', ''),
-(148, '863', 'Scelerisque Scelerisque Dui Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '115258907', '5312', '2', 3, 'logo.png', 2, 5, 3, 5, 10, 10, 0, 0, 0, 4, 2, 0, 0, 0, '2020-11-12', 'Aucun', ''),
-(149, '472', 'Donec Consectetuer Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '335078184', '8133', '6', 5, 'logo.png', 0, 5, 5, 9, 6, 3, 0, 0, 1, 6, 1, 0, 0, 0, '2020-08-27', 'Aucun', ''),
-(150, '880', 'Gravida Nunc LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '784837866', '6165', '1', 5, 'logo.png', 0, 4, 5, 5, 6, 4, 0, 0, 1, 3, 2, 0, 0, 0, '2020-12-22', 'Aucun', ''),
-(151, '200', 'Arcu Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '940226376', '8246', '7', 1, 'logo.png', 1, 5, 1, 10, 10, 9, 0, 0, 1, 6, 1, 0, 0, 1, '2020-09-16', 'Aucun', ''),
-(152, '850', 'Ultricies Adipiscing Enim Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '892635897', '8303', '4', 1, 'logo.png', 2, 5, 3, 7, 3, 5, 0, 0, 1, 5, 2, 0, 0, 2, '2021-04-07', 'Aucun', ''),
-(153, '885', 'Odio Phasellus LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '319729760', '9393', '1', 2, 'logo.png', 0, 4, 1, 8, 10, 10, 0, 0, 0, 3, 2, 0, 0, 1, '2020-07-29', 'Aucun', ''),
-(154, '727', 'In Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '084615798', '1816', '1', 5, 'logo.png', 1, 3, 4, 3, 3, 6, 0, 0, 1, 5, 2, 0, 0, 0, '2021-02-23', 'Aucun', ''),
-(155, '835', 'Nec Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '839520160', '4310', '4', 4, 'logo.png', 0, 4, 1, 7, 9, 3, 0, 0, 1, 3, 3, 0, 0, 0, '2021-04-20', 'Aucun', ''),
-(156, '604', 'Turpis Nec Mauris Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '119446094', '7593', '8', 1, 'logo.png', 1, 6, 4, 8, 8, 9, 0, 0, 0, 4, 3, 0, 0, 1, '2020-02-06', 'Aucun', ''),
-(157, '763', 'Feugiat Metus Sit Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '049139199', '8616', '4', 2, 'logo.png', 1, 6, 1, 8, 3, 4, 0, 0, 0, 4, 1, 0, 0, 0, '2021-08-08', 'Aucun', ''),
-(158, '841', 'Quisque LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '266070630', '7584', '7', 2, 'logo.png', 2, 6, 4, 4, 6, 1, 0, 0, 0, 5, 2, 0, 0, 2, '2020-11-01', 'Aucun', ''),
-(159, '848', 'Fermentum Convallis Corp.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '644727513', '6391', '9', 3, 'logo.png', 0, 4, 4, 7, 9, 1, 0, 0, 0, 6, 1, 0, 0, 2, '2021-07-15', 'Aucun', ''),
-(160, '338', 'Quisque LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '794605063', '3180', '7', 5, 'logo.png', 0, 6, 4, 3, 8, 1, 0, 0, 1, 4, 1, 0, 0, 0, '2020-09-28', 'Aucun', ''),
-(161, '398', 'Pellentesque Sed Dictum Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '674493341', '9174', '2', 5, 'logo.png', 2, 6, 1, 10, 9, 2, 0, 0, 1, 4, 4, 0, 0, 0, '2021-03-25', 'Aucun', ''),
-(162, '335', 'Tempor Est Ac Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '718195332', '2457', '5', 3, 'logo.png', 1, 4, 5, 1, 2, 8, 0, 0, 0, 5, 4, 0, 0, 1, '2020-01-20', 'Aucun', ''),
-(163, '565', 'Enim Sed Nulla Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '196293013', '1774', '8', 3, 'logo.png', 1, 6, 3, 7, 5, 10, 0, 0, 0, 6, 1, 0, 0, 1, '2020-12-31', 'Aucun', ''),
-(164, '755', 'Primis In Faucibus Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '769618604', '6271', '9', 4, 'logo.png', 0, 3, 3, 4, 2, 8, 0, 0, 1, 4, 5, 0, 0, 2, '2020-01-18', 'Aucun', ''),
-(165, '283', 'Cursus Purus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '307779785', '6665', '1', 5, 'logo.png', 0, 5, 5, 3, 2, 2, 0, 0, 0, 3, 1, 0, 0, 0, '2020-02-26', 'Aucun', ''),
-(166, '961', 'Mauris Vestibulum Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '156788564', '1913', '4', 5, 'logo.png', 1, 4, 5, 10, 2, 8, 0, 0, 0, 6, 5, 0, 0, 2, '2021-09-18', 'Aucun', ''),
-(167, '768', 'Tempus Lorem Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '965183783', '8880', '3', 1, 'logo.png', 0, 3, 4, 9, 4, 2, 0, 0, 1, 5, 4, 0, 0, 2, '2020-01-30', 'Aucun', ''),
-(168, '385', 'Nec Diam Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '217748938', '3010', '2', 3, 'logo.png', 0, 3, 3, 4, 9, 8, 0, 0, 1, 5, 1, 0, 0, 0, '2021-08-26', 'Aucun', ''),
-(169, '795', 'Donec Non Justo Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '551311244', '3923', '3', 2, 'logo.png', 1, 4, 5, 10, 10, 10, 0, 0, 1, 5, 4, 0, 0, 2, '2021-11-13', 'Aucun', ''),
-(170, '567', 'Venenatis Vel Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '244089827', '7114', '6', 5, 'logo.png', 1, 6, 5, 3, 1, 6, 0, 0, 0, 4, 3, 0, 0, 2, '2020-05-12', 'Aucun', ''),
-(171, '836', 'Commodo Hendrerit Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '604561175', '6818', '3', 2, 'logo.png', 1, 3, 1, 1, 10, 5, 0, 0, 0, 4, 1, 0, 0, 1, '2021-05-31', 'Aucun', ''),
-(172, '891', 'Adipiscing Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '255021495', '4939', '7', 3, 'logo.png', 2, 6, 1, 6, 10, 2, 0, 0, 0, 6, 1, 0, 0, 2, '2021-01-13', 'Aucun', ''),
-(173, '140', 'Amet Diam Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '576234710', '8422', '3', 1, 'logo.png', 2, 6, 3, 8, 4, 9, 0, 0, 0, 5, 3, 0, 0, 1, '2021-05-13', 'Aucun', ''),
-(174, '199', 'Pede Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '313994477', '2398', '5', 5, 'logo.png', 1, 5, 2, 4, 9, 5, 0, 0, 1, 5, 3, 0, 0, 0, '2021-04-15', 'Aucun', ''),
-(175, '672', 'Venenatis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '404507881', '1381', '5', 1, 'logo.png', 0, 5, 5, 9, 8, 1, 0, 0, 0, 3, 4, 0, 0, 0, '2020-09-13', 'Aucun', ''),
-(176, '913', 'Nunc Pulvinar Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '959111550', '3412', '6', 1, 'logo.png', 1, 4, 2, 4, 8, 3, 0, 0, 1, 4, 4, 0, 0, 2, '2020-09-28', 'Aucun', ''),
-(177, '810', 'Enim Diam Vel Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '604919084', '7926', '6', 4, 'logo.png', 0, 4, 4, 8, 1, 1, 0, 0, 1, 6, 1, 0, 0, 0, '2020-05-09', 'Aucun', ''),
-(178, '990', 'Aliquet Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '787182039', '5140', '4', 5, 'logo.png', 2, 5, 2, 10, 5, 2, 0, 0, 1, 5, 4, 0, 0, 1, '2020-11-27', 'Aucun', ''),
-(179, '498', 'Convallis Est Vitae Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '426516878', '5925', '9', 2, 'logo.png', 0, 6, 4, 7, 5, 8, 0, 0, 1, 4, 4, 0, 0, 0, '2021-06-04', 'Aucun', ''),
-(180, '348', 'Lorem Ac Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '483119467', '4962', '8', 2, 'logo.png', 0, 3, 4, 2, 5, 4, 0, 0, 1, 4, 5, 0, 0, 0, '2020-02-19', 'Aucun', ''),
-(181, '667', 'Morbi Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '198361933', '2208', '5', 2, 'logo.png', 0, 6, 1, 7, 1, 10, 0, 0, 1, 6, 3, 0, 0, 0, '2021-01-24', 'Aucun', ''),
-(182, '302', 'Nascetur Ridiculus Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '873263305', '5200', '3', 4, 'logo.png', 0, 3, 2, 6, 3, 6, 0, 0, 0, 3, 3, 0, 0, 2, '2020-06-12', 'Aucun', ''),
-(183, '629', 'Odio Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '556641660', '7565', '2', 3, 'logo.png', 1, 6, 4, 1, 4, 6, 0, 0, 0, 4, 2, 0, 0, 1, '2020-10-16', 'Aucun', ''),
-(184, '821', 'Molestie Orci Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '407451582', '4600', '9', 4, 'logo.png', 2, 3, 2, 10, 5, 7, 0, 0, 0, 5, 1, 0, 0, 2, '2020-05-23', 'Aucun', ''),
-(185, '582', 'Vulputate Dui Nec Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '071940324', '5696', '1', 5, 'logo.png', 1, 5, 2, 2, 4, 9, 0, 0, 0, 3, 4, 0, 0, 2, '2021-08-12', 'Aucun', ''),
-(186, '88', 'Sollicitudin Adipiscing Ligula Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '936845593', '9562', '9', 1, 'logo.png', 0, 3, 2, 10, 4, 8, 0, 0, 0, 5, 2, 0, 0, 2, '2021-06-18', 'Aucun', ''),
-(187, '1', 'Scelerisque Mollis Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '716729777', '6187', '8', 3, 'logo.png', 1, 5, 4, 9, 8, 10, 0, 0, 1, 3, 1, 0, 0, 0, '2021-03-12', 'Aucun', ''),
-(188, '888', 'Luctus Curabitur Foundation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '713771061', '1751', '9', 2, 'logo.png', 2, 4, 2, 10, 2, 5, 0, 0, 1, 4, 1, 0, 0, 1, '2020-01-20', 'Aucun', ''),
-(189, '529', 'Consectetuer Euismod Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '257102673', '4423', '6', 4, 'logo.png', 1, 5, 2, 1, 1, 10, 0, 0, 0, 4, 5, 0, 0, 2, '2021-12-04', 'Aucun', ''),
-(190, '670', 'Sed Et Libero Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '317128056', '1938', '2', 1, 'logo.png', 0, 3, 3, 9, 5, 10, 0, 0, 0, 4, 4, 0, 0, 1, '2021-12-16', 'Aucun', ''),
-(191, '625', 'Enim Commodo Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '268299260', '6500', '1', 4, 'logo.png', 1, 4, 4, 7, 6, 8, 0, 0, 0, 3, 5, 0, 0, 2, '2020-11-09', 'Aucun', ''),
-(192, '731', 'Justo Praesent Luctus Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '672724770', '5211', '1', 2, 'logo.png', 1, 4, 2, 4, 4, 4, 0, 0, 1, 3, 4, 0, 0, 0, '2021-04-07', 'Aucun', ''),
-(193, '267', 'Et Netus LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '237424973', '7322', '7', 4, 'logo.png', 1, 5, 1, 5, 6, 1, 0, 0, 1, 4, 1, 0, 0, 0, '2021-04-16', 'Aucun', ''),
-(194, '612', 'Ligula Elit Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '081547275', '1610', '7', 2, 'logo.png', 0, 6, 5, 1, 3, 5, 0, 0, 0, 4, 4, 0, 0, 0, '2021-08-12', 'Aucun', ''),
-(195, '309', 'Duis Cursus Diam Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '191427889', '6736', '1', 2, 'logo.png', 0, 4, 2, 5, 8, 3, 0, 0, 1, 4, 5, 0, 0, 1, '2020-05-04', 'Aucun', ''),
-(196, '903', 'Mi Felis LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '159690635', '1670', '3', 1, 'logo.png', 0, 5, 1, 1, 7, 1, 0, 0, 0, 6, 2, 0, 0, 2, '2020-01-16', 'Aucun', ''),
-(197, '72', 'Dolor Sit Amet Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '166582304', '6460', '3', 2, 'logo.png', 2, 6, 4, 2, 4, 1, 0, 0, 0, 4, 3, 0, 0, 1, '2020-07-29', 'Aucun', ''),
-(198, '861', 'Non Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '833831019', '2448', '9', 3, 'logo.png', 1, 4, 4, 4, 8, 7, 0, 0, 1, 3, 5, 0, 0, 2, '2020-08-30', 'Aucun', ''),
-(199, '709', 'Placerat Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '698691540', '1510', '3', 1, 'logo.png', 1, 5, 2, 7, 7, 1, 0, 0, 0, 5, 4, 0, 0, 0, '2020-04-24', 'Aucun', ''),
-(200, '439', 'Aliquam Eu Accumsan Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '948284005', '3674', '3', 2, 'logo.png', 0, 3, 3, 5, 1, 9, 0, 0, 1, 3, 2, 0, 0, 0, '2020-09-23', 'Aucun', ''),
-(201, '574', 'Sed Dui Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '583829502', '8817', '3', 2, 'logo.png', 1, 5, 5, 9, 8, 6, 0, 0, 0, 5, 4, 0, 0, 1, '2020-01-21', 'Aucun', ''),
-(202, '158', 'Ligula Tortor Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '649814449', '2437', '5', 1, 'logo.png', 0, 6, 2, 5, 4, 1, 0, 0, 1, 5, 5, 0, 0, 2, '2020-11-25', 'Aucun', ''),
-(203, '513', 'Suspendisse Ac Metus Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '104915657', '5935', '1', 2, 'logo.png', 2, 5, 1, 9, 10, 8, 0, 0, 0, 3, 2, 0, 0, 2, '2021-02-28', 'Aucun', ''),
-(204, '59', 'Metus Facilisis Lorem Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '126144575', '4696', '6', 1, 'logo.png', 0, 6, 1, 5, 7, 2, 0, 0, 1, 4, 2, 0, 0, 1, '2020-09-03', 'Aucun', ''),
-(205, '561', 'Venenatis Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '620827246', '5637', '5', 2, 'logo.png', 1, 5, 5, 5, 9, 3, 0, 0, 1, 6, 5, 0, 0, 0, '2021-01-28', 'Aucun', ''),
-(206, '64', 'Nam Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '605350099', '6491', '7', 4, 'logo.png', 1, 4, 4, 2, 8, 8, 0, 0, 0, 3, 5, 0, 0, 1, '2021-03-15', 'Aucun', ''),
-(207, '883', 'Aliquet Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '184341618', '6102', '3', 5, 'logo.png', 1, 4, 2, 3, 3, 9, 0, 0, 0, 3, 2, 0, 0, 1, '2021-07-04', 'Aucun', ''),
-(208, '604', 'Amet Consectetuer Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '234191153', '3032', '3', 3, 'logo.png', 1, 3, 5, 3, 4, 2, 0, 0, 0, 6, 5, 0, 0, 2, '2021-10-14', 'Aucun', ''),
-(209, '232', 'Rutrum Non Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '160769543', '6404', '6', 1, 'logo.png', 0, 4, 2, 9, 3, 5, 0, 0, 0, 6, 1, 0, 0, 1, '2020-12-08', 'Aucun', ''),
-(210, '966', 'Blandit Congue In LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '496180308', '4230', '3', 4, 'logo.png', 1, 6, 3, 8, 9, 1, 0, 0, 0, 4, 5, 0, 0, 1, '2020-11-04', 'Aucun', ''),
-(211, '328', 'Turpis Aliquam Industries', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '179157789', '6388', '2', 1, 'logo.png', 2, 4, 5, 8, 7, 9, 0, 0, 0, 3, 1, 0, 0, 2, '2020-09-20', 'Aucun', ''),
-(212, '285', 'Nunc Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '087347431', '3438', '2', 2, 'logo.png', 1, 5, 2, 2, 2, 4, 0, 0, 0, 3, 5, 0, 0, 1, '2021-06-24', 'Aucun', '');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `commande`
---
-
-DROP TABLE IF EXISTS `commande`;
-CREATE TABLE IF NOT EXISTS `commande` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `CLIENT_ID` int(11) NOT NULL,
-  `CONTACT_ID` int(11) NOT NULL,
+  `ID_COMPANY` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `CIVILITE` int(11) NOT NULL,
+  `PRENOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `FONCTION` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ADRESSE_ID` int(11) NOT NULL,
-  `FACTURATION_ID` int(11) NOT NULL,
-  `DATE` date NOT NULL,
-  `ETAT` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
-  `RESP_COM_ID` int(11) NOT NULL,
-  `RESP_TECH_ID` int(11) NOT NULL,
-  `REFERENCE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COND_REG_CLIENT_ID` int(11) NOT NULL,
-  `MODE_REG_CLIENT_ID` int(11) NOT NULL,
-  `ECHEANCIER_ID` int(11) NOT NULL,
-  `TRANSPORT_ID` int(11) NOT NULL,
-  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `NUMBER` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `MOBILE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `commande`
+-- Déchargement des données de la table `companies_contact`
 --
 
-INSERT INTO `commande` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CLIENT_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`) VALUES
-(1, 'CDE201205-002', '1', '', '', 9, 1, 0, 0, '2020-12-05', 1, 1, 2, 0, '', 9, 5, 0, 0, '');
+INSERT INTO `companies_contact` (`id`, `ID_COMPANY`, `ORDRE`, `CIVILITE`, `PRENOM`, `NOM`, `FONCTION`, `ADRESSE_ID`, `NUMBER`, `MOBILE`, `MAIL`) VALUES
+(1, 9, 1, 0, 'Gérad', 'Normand', 'Acheteur', 1, '026497345', '', ''),
+(2, 9, 2, 2, 'Geraldine', 'Le marchand', 'Direction', 2, '0654976', '', ''),
+(3, 1, 1, 1, 'Julie', 'SOUCHIER', 'Acheteuse', 3, '02.64.25.25', '', ''),
+(4, 44, 10, 0, 'Romain', 'Le normand', 'Directeur', 173, '', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commande_ligne`
+-- Structure de la table `company_activity_sector`
 --
 
-DROP TABLE IF EXISTS `commande_ligne`;
-CREATE TABLE IF NOT EXISTS `commande_ligne` (
+DROP TABLE IF EXISTS `company_activity_sector`;
+CREATE TABLE IF NOT EXISTS `company_activity_sector` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `COMMANDE_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `ARTICLE_CODE` int(11) NOT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `QT` int(11) NOT NULL,
-  `UNIT_ID` int(11) NOT NULL,
-  `PRIX_U` decimal(10,3) NOT NULL,
-  `REMISE` decimal(10,3) NOT NULL,
-  `TVA_ID` int(11) NOT NULL,
-  `DELAIS_INTERNE` date NOT NULL,
-  `DELAIS` date NOT NULL,
-  `ETAT` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `company_activity_sector`
+--
+
+INSERT INTO `company_activity_sector` (`id`, `CODE`, `LABEL`) VALUES
+(1, 'AERO', 'AERONAUTIQUE'),
+(7, 'MEDIC', 'MEDICALE'),
+(6, 'BAT', 'BATIMENT'),
+(5, 'AUTO', 'AUTOMOBILE'),
+(8, 'AGRI', 'AGRICOLE'),
+(9, 'PARTI', 'PARTICULIER');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `company_document_numbering`
+--
+
+DROP TABLE IF EXISTS `company_document_numbering`;
+CREATE TABLE IF NOT EXISTS `company_document_numbering` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `DOC_TYPE` int(11) NOT NULL,
+  `MODEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `DIGIT` int(11) NOT NULL,
+  `COMPTEUR` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `company_document_numbering`
+--
+
+INSERT INTO `company_document_numbering` (`id`, `DOC_TYPE`, `MODEL`, `DIGIT`, `COMPTEUR`) VALUES
+(1, 4, 'CDE<AA><MM><JJ>-<I>', 3, 11),
+(2, 12, 'AR<AA><MM><JJ>-<I>', 3, 1),
+(3, 3, 'BL<AA><MM><JJ>-<I>', 3, 0),
+(4, 5, 'ST<AA><MM><JJ>-<I>', 3, 0),
+(5, 8, 'DV<AA><MM><JJ>-<I>', 2, 12),
+(6, 11, 'FNC<I>', 6, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `company_email_type`
+--
+
+DROP TABLE IF EXISTS `company_email_type`;
+CREATE TABLE IF NOT EXISTS `company_email_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `OBJET` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TEXT` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `company_email_type`
+--
+
+INSERT INTO `company_email_type` (`id`, `CODE`, `LABEL`, `OBJET`, `TEXT`) VALUES
+(1, 'ARC', 'Accusé réception de commande', 'Accusé récéption de commande numéro <05>', 'Bonjour <02> <03>;\r\n\r\nVous trouverez ci joint notre accusé de réception de commande pour votre commande <05>\r\n\r\nRestant à votre disposition\r\n\r\nCordialement'),
+(2, 'BL', 'Bon de livraison', 'Bon de livraison <05>', 'Bonjour <02> <03>;\r\n\r\nVous trouverez ci joint notre bon de livraison pour votre commande <05> en date du <07>\r\n\r\nRestant à votre disposition\r\n\r\nCordialement'),
+(3, 'DEV', 'Offre de prix', 'Offre de prix <05>', 'Bonjour <02> <03>;\r\n\r\nVeuillez trouver en pièce jointe notre offre de prix <05>\r\n\r\nCordialement\r\n\r\n');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `company_rights`
+--
+
+DROP TABLE IF EXISTS `company_rights`;
+CREATE TABLE IF NOT EXISTS `company_rights` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `RIGHT_NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `page_1` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_2` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_3` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_4` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_5` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_6` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_7` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_8` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_9` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `page_10` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `company_rights`
+--
+
+INSERT INTO `company_rights` (`id`, `RIGHT_NAME`, `page_1`, `page_2`, `page_3`, `page_4`, `page_5`, `page_6`, `page_7`, `page_8`, `page_9`, `page_10`) VALUES
+(1, 'Admin', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'),
+(3, 'Reponsable de site', '1', '0', '1', '1', '1', '1', '1', '1', '1', '1'),
+(4, 'Ordonnancement', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'),
+(5, 'Deviseur', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'),
+(6, 'Programmeur', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'),
+(7, 'Opérateur', '1', '1', '1', '0', '1', '1', '1', '0', '1', '0'),
+(8, 'Responsable commercial', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1');
 
 -- --------------------------------------------------------
 
@@ -830,525 +1023,166 @@ CREATE TABLE IF NOT EXISTS `company_setting` (
 --
 
 INSERT INTO `company_setting` (`id`, `NAME`, `ADDRESS`, `CITY`, `ZIPCODE`, `REGION`, `COUNTRY`, `PHONE_NUMBER`, `MAIL`, `WEB_SITE`, `FACEBOOK_SITE`, `TWITTER_SITE`, `LKD_SITE`, `LOGO`, `SIREN`, `APE`, `TVA_INTRA`, `TAUX_TVA`, `CAPITAL`, `RCS`) VALUES
-(1, '0', '2', '0', '4000', '0', '0', '679214987', '0', '0', '0', '0', '0', 'images/unnamed.jpg', '362', '12347', '0', 20, '0', '400');
+(1, 'DEMO', 'Better street', 'Better City', '4000', 'Your Region', 'Best Country', '679214987', 'mail@erp.com', '0', '0', '0', '0', 'images/unnamed.jpg', '362', '12347', '0', 20, '0', '400');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `condition_reg`
+-- Structure de la table `company_timeline`
 --
 
-DROP TABLE IF EXISTS `condition_reg`;
-CREATE TABLE IF NOT EXISTS `condition_reg` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NBR_MOIS` int(11) NOT NULL,
-  `NBR_JOURS` int(11) NOT NULL,
-  `FIN_MOIS` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `condition_reg`
---
-
-INSERT INTO `condition_reg` (`id`, `CODE`, `LABEL`, `NBR_MOIS`, `NBR_JOURS`, `FIN_MOIS`) VALUES
-(8, '45FDM', '45 jours fin du mois', 0, 45, '1'),
-(3, 'REC_FAC', 'A la réception de la facture', 0, 0, '0'),
-(4, '30NET', '30 jours net', 0, 30, '0'),
-(5, '30FDM', '30 jours fin de mois', 0, 30, '1'),
-(6, '30FDM15', '30 jours fin de mois le 15', 1, 15, '1'),
-(9, 'NONDEF', 'Non Définit', 0, 0, '1');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `contact`
---
-
-DROP TABLE IF EXISTS `contact`;
-CREATE TABLE IF NOT EXISTS `contact` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_COMPANY` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `CIVILITE` int(11) NOT NULL,
-  `PRENOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `FONCTION` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `ADRESSE_ID` int(11) NOT NULL,
-  `NUMBER` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MOBILE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `contact`
---
-
-INSERT INTO `contact` (`id`, `ID_COMPANY`, `ORDRE`, `CIVILITE`, `PRENOM`, `NOM`, `FONCTION`, `ADRESSE_ID`, `NUMBER`, `MOBILE`, `MAIL`) VALUES
-(1, 9, 1, 0, 'Gérad', 'Normand', 'Acheteur', 1, '026497345', '0654976', 'robert@arcelor.com'),
-(2, 9, 2, 2, 'Geraldine', 'Le marchand', 'Direction', 2, '026497345', '065497', ''),
-(3, 1, 1, 1, 'Julie', 'SOUCHIER', 'Acheteuse', 3, '02.64.25.25', '', '');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `decoupage_tech`
---
-
-DROP TABLE IF EXISTS `decoupage_tech`;
-CREATE TABLE IF NOT EXISTS `decoupage_tech` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `PRESTA_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TPS_PREP` decimal(10,3) NOT NULL,
-  `TPS_PRO` decimal(10,3) NOT NULL,
-  `COUT` decimal(10,3) NOT NULL,
-  `PRIX` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `decoupage_tech`
---
-
-INSERT INTO `decoupage_tech` (`id`, `ARTICLE_ID`, `ORDRE`, `PRESTA_ID`, `LABEL`, `TPS_PREP`, `TPS_PRO`, `COUT`, `PRIX`) VALUES
-(1, 23, 10, 7, 'Etude', '0.100', '0.100', '0.000', '1.000'),
-(3, 23, 20, 2, 'Laser', '0.100', '0.200', '0.000', '1.000'),
-(4, 24, 10, 9, 'Soudure MIG', '0.500', '0.250', '5.000', '5.000'),
-(5, 24, 20, 13, 'Peinture RAL 9010', '0.000', '0.000', '0.000', '5.000'),
-(6, 24, 30, 12, 'FRET', '0.250', '0.050', '0.000', '1.000');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `devis`
---
-
-DROP TABLE IF EXISTS `devis`;
-CREATE TABLE IF NOT EXISTS `devis` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `CLIENT_ID` int(11) NOT NULL,
-  `CONTACT_ID` int(11) NOT NULL,
-  `ADRESSE_ID` int(11) NOT NULL,
-  `FACTURATION_ID` int(11) NOT NULL,
-  `DATE` date NOT NULL,
-  `DATE_VALIDITE` date NOT NULL,
-  `ETAT` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
-  `RESP_COM_ID` int(11) NOT NULL,
-  `RESP_TECH_ID` int(11) NOT NULL,
-  `REFERENCE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COND_REG_CLIENT_ID` int(11) NOT NULL,
-  `MODE_REG_CLIENT_ID` int(11) NOT NULL,
-  `ECHEANCIER_ID` int(11) NOT NULL,
-  `TRANSPORT_ID` int(11) NOT NULL,
-  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `devis`
---
-
-INSERT INTO `devis` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CLIENT_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `DATE_VALIDITE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`) VALUES
-(3, 'DV201118-01', '1', '', '', 1, 3, 3, 3, '2020-11-18', '2020-11-21', 3, 1, 2, 2, '1er demande de metalerie', 8, 1, 2, 1, 'test\r\naar'),
-(5, 'DV201128-03', '1', '', '', 3, 0, 0, 0, '2020-11-29', '2020-11-29', 1, 1, 1, 1, '', 9, 5, 0, 0, ''),
-(6, 'DV201205-04', '1', '', '', 2, 0, 0, 0, '2020-12-05', '2020-12-05', 1, 1, 0, 0, '', 9, 5, 0, 0, '');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `devis_lignes`
---
-
-DROP TABLE IF EXISTS `devis_lignes`;
-CREATE TABLE IF NOT EXISTS `devis_lignes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `DEVIS_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `ARTICLE_CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `QT` int(11) NOT NULL,
-  `UNIT_ID` int(11) NOT NULL,
-  `PRIX_U` decimal(10,3) NOT NULL,
-  `REMISE` decimal(10,3) NOT NULL,
-  `TVA_ID` int(11) NOT NULL,
-  `DELAIS` date NOT NULL,
-  `ETAT` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `devis_lignes`
---
-
-INSERT INTO `devis_lignes` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS`, `ETAT`) VALUES
-(1, 3, 10, 'PLATINE1', '', 2, 8, '100.000', '100.000', 1, '2020-10-29', 3),
-(2, 3, 20, 'super ligne', '', 2, 2, '100.000', '100.000', 1, '2020-11-20', 3),
-(3, 3, 30, 'super ligne3', '', 2, 4, '100.000', '0.000', 2, '2020-11-20', 3),
-(9, 5, 10, '', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', 1),
-(10, 5, 10, 'PLATINE1', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', 1),
-(11, 5, 10, '', '', 1, 0, '0.000', '0.000', 4, '2020-11-05', 1),
-(12, 5, 10, '', '', 1, 0, '0.000', '0.000', 4, '2020-11-05', 1);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `echeancier_type`
---
-
-DROP TABLE IF EXISTS `echeancier_type`;
-CREATE TABLE IF NOT EXISTS `echeancier_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `echeancier_type`
---
-
-INSERT INTO `echeancier_type` (`id`, `CODE`, `LABEL`) VALUES
-(1, '12MOIS', 'Échéancier sur 12 mois'),
-(2, '3MOIS', 'Échéancier sur 3 mois'),
-(0, 'AUCUN', 'Aucun');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `echeancier_type_ligne`
---
-
-DROP TABLE IF EXISTS `echeancier_type_ligne`;
-CREATE TABLE IF NOT EXISTS `echeancier_type_ligne` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ECHEANCIER_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `POURC_MONTANT` decimal(10,3) NOT NULL,
-  `POURC_TVA` decimal(10,3) NOT NULL,
-  `CONDI_REG_ID` int(11) NOT NULL,
-  `MODE_REG_ID` int(11) NOT NULL,
-  `DELAI` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `echeancier_type_ligne`
---
-
-INSERT INTO `echeancier_type_ligne` (`id`, `ECHEANCIER_ID`, `LABEL`, `POURC_MONTANT`, `POURC_TVA`, `CONDI_REG_ID`, `MODE_REG_ID`, `DELAI`) VALUES
-(1, 2, '3MOIS1', '33.333', '33.333', 8, 1, 0),
-(2, 2, '3MOIS2', '33.333', '33.333', 8, 1, 0),
-(3, 2, '3MOIS3', '33.330', '33.334', 8, 1, 0);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `email`
---
-
-DROP TABLE IF EXISTS `email`;
-CREATE TABLE IF NOT EXISTS `email` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `OBJET` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TEXT` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `email`
---
-
-INSERT INTO `email` (`id`, `CODE`, `LABEL`, `OBJET`, `TEXT`) VALUES
-(1, 'ARC', 'Accusé réception de commande', 'Accusé récéption de commande numéro <05>', 'Bonjour <02> <03>;\r\n\r\nVous trouverez ci joint notre accusé de réception de commande pour votre commande <05>\r\n\r\nRestant à votre disposition\r\n\r\nCordialement'),
-(2, 'BL', 'Bon de livraison', 'Bon de livraison <05>', 'Bonjour <02> <03>;\r\n\r\nVous trouverez ci joint notre bon de livraison pour votre commande <05> en date du <07>\r\n\r\nRestant à votre disposition\r\n\r\nCordialement'),
-(3, 'DEV', 'Offre de prix', 'Offre de prix <05>', 'Bonjour <02> <03>;\r\n\r\nVeuillez trouver en pièce jointe notre offre de prix <05>\r\n\r\nCordialement\r\n\r\n');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `evenement_machine`
---
-
-DROP TABLE IF EXISTS `evenement_machine`;
-CREATE TABLE IF NOT EXISTS `evenement_machine` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MASK_TIME` int(11) NOT NULL,
-  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `ETAT` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `evenement_machine`
---
-
-INSERT INTO `evenement_machine` (`id`, `CODE`, `ORDRE`, `LABEL`, `MASK_TIME`, `COLOR`, `ETAT`) VALUES
-(1, 'STOP', 10, 'Machine arrêtée', 0, '#ff0000', 4),
-(2, 'PREP', 20, 'Machine en préparation', 0, '#ff6f00', 2),
-(3, 'RUN', 30, 'Machine en fonctionnement', 0, '#37ff00', 3),
-(4, 'OUT', 40, 'Machine en panne', 0, '#ff0000', 4);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `improductive_activity`
---
-
-DROP TABLE IF EXISTS `improductive_activity`;
-CREATE TABLE IF NOT EXISTS `improductive_activity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `ETAT_MACHINE` int(11) NOT NULL,
-  `RESSOURCE_NEC` int(11) NOT NULL,
-  `MASK_TIME` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `improductive_activity`
---
-
-INSERT INTO `improductive_activity` (`id`, `LABEL`, `ETAT_MACHINE`, `RESSOURCE_NEC`, `MASK_TIME`) VALUES
-(1, 'Attente tâche / Préparation travail', 1, 0, 0),
-(2, 'Entretien / Nettoyage / Rangement', 1, 0, 0),
-(3, 'Réunion', 1, 0, 0),
-(4, 'Formation administrative', 1, 0, 0),
-(5, 'Formation machine', 1, 1, 0),
-(6, 'Activité interne', 1, 0, 0),
-(7, 'Panne', 1, 0, 0);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `imputation_comptables`
---
-
-DROP TABLE IF EXISTS `imputation_comptables`;
-CREATE TABLE IF NOT EXISTS `imputation_comptables` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TVA` int(11) NOT NULL,
-  `COMPTE_TVA` int(11) NOT NULL,
-  `CODE_COMPTA` int(11) NOT NULL,
-  `TYPE_IMPUTATION` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `imputation_comptables`
---
-
-INSERT INTO `imputation_comptables` (`id`, `CODE`, `LABEL`, `TVA`, `COMPTE_TVA`, `CODE_COMPTA`, `TYPE_IMPUTATION`) VALUES
-(1, '419100', 'ACOMPTE SUR COMMANDE', 4, 0, 419100, 6),
-(2, '445661', 'TVA ACHAT FRANCE', 4, 0, 445661, 6),
-(3, '445710', 'TVA VENTE FRANCE', 4, 0, 445710, 6),
-(4, '601000', 'ACHAT FRANCE', 4, 445661, 601000, 1),
-(5, '602000', 'ACHAT UK', 5, 0, 602000, 1),
-(6, '701000', 'VENTE PRODUIT FRANCE', 4, 445710, 701000, 1);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `imputation_comptables_ligne`
---
-
-DROP TABLE IF EXISTS `imputation_comptables_ligne`;
-CREATE TABLE IF NOT EXISTS `imputation_comptables_ligne` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `IMPUTATION_ID` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `imputation_comptables_ligne`
---
-
-INSERT INTO `imputation_comptables_ligne` (`ID`, `ARTICLE_ID`, `ORDRE`, `IMPUTATION_ID`) VALUES
-(1, 24, 10, 6);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `imputation_comptables_prestations`
---
-
-DROP TABLE IF EXISTS `imputation_comptables_prestations`;
-CREATE TABLE IF NOT EXISTS `imputation_comptables_prestations` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `PRESTATION_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `IMPUTATION_ID` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `imputation_comptables_prestations`
---
-
-INSERT INTO `imputation_comptables_prestations` (`ID`, `PRESTATION_ID`, `ORDRE`, `IMPUTATION_ID`) VALUES
-(1, 4, 10, 1);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `infos_generales`
---
-
-DROP TABLE IF EXISTS `infos_generales`;
-CREATE TABLE IF NOT EXISTS `infos_generales` (
+DROP TABLE IF EXISTS `company_timeline`;
+CREATE TABLE IF NOT EXISTS `company_timeline` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ETAT` int(11) NOT NULL,
   `TIMESTAMP` int(11) NOT NULL,
   `TEXT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `infos_generales`
+-- Déchargement des données de la table `company_timeline`
 --
 
-INSERT INTO `infos_generales` (`id`, `ETAT`, `TIMESTAMP`, `TEXT`) VALUES
+INSERT INTO `company_timeline` (`id`, `ETAT`, `TIMESTAMP`, `TEXT`) VALUES
 (1, 1, 1607188734, 'Fermeture semaine 52 et 53\r\n\r\n...___.._____\r\n....\'/,-Y\".............\"~-.\r\n..l.Y.......................^.\r\n./\\............................_\\_\r\ni.................... ___/\"....\"\\\r\n|.................../\"....\"\\ .....o !\r\nl..................].......o !__../\r\n.\\..._..._.........\\..___./...... \"~\\\r\n..X...\\/...\\.....................___./\r\n.(. \\.___......_.....--~~\".......~`-.\r\n....`.Z,--........./...........................\\\r\n.......\\__....(......../..........______)\r\n...........\\.........l......../-----~~\" /\r\n............Y.......\\...................../\r\n............|........\"x______.^\r\n............|........................\\\r\n............j..........................Y'),
-(2, 1, 1607189659, 'Joyeuses Fêtes de fin d\'année');
+(2, 1, 1607189659, 'Joyeuses Fêtes de fin d\'année'),
+(3, 1, 1609519538, 'Happy new year !!');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `jours_feries`
+-- Structure de la table `company_user`
 --
 
-DROP TABLE IF EXISTS `jours_feries`;
-CREATE TABLE IF NOT EXISTS `jours_feries` (
+DROP TABLE IF EXISTS `company_user`;
+CREATE TABLE IF NOT EXISTS `company_user` (
+  `idUSER` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `PRENOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `DATE_NAISSANCE` date NOT NULL,
+  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NUMERO_PERSO` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NUMERO_INTERNE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `IMAGE_PROFIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `STATU` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `CONNEXION` int(45) DEFAULT NULL,
+  `NAME` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `PASSWORD` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `FONCTION` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `SECTION_ID` int(11) NOT NULL,
+  `LANGUAGE` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`idUSER`)
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `company_user`
+--
+
+INSERT INTO `company_user` (`idUSER`, `CODE`, `NOM`, `PRENOM`, `DATE_NAISSANCE`, `MAIL`, `NUMERO_PERSO`, `NUMERO_INTERNE`, `IMAGE_PROFIL`, `STATU`, `CONNEXION`, `NAME`, `PASSWORD`, `FONCTION`, `SECTION_ID`, `LANGUAGE`) VALUES
+(1, 'U33', 'Kévin', 'Duchamp', '2020-11-18', 'kevin.duchamps@mail.fr', '0697764654', '553', 'img_avatar.png', '1', 1608917003, 'Admin', '$2y$10$CBHGKypfWZTXZjxI7lafN.M4cjDcDiNP6mWqMd8Jt3ojzA0JQgmb2', '1', 1, 'en'),
+(35, 'GH', 'Gareth', 'Head', '1990-05-11', 'tempus@odio.ca', '06 97 67 67 53', '08 38 54 38 04', 'img_avatar.png', '1', 1637099054, 'Gareth', 'a', '4', 1, 'fr'),
+(36, 'Z3', 'Elton', 'Stephens', '1977-01-18', 'sem.Nulla.interdum@odioPhasellusat.com', '06 42 10 41 36', '09 86 09 50 06', 'img_avatar.png', '1', 1591554783, 'Elton', 'a', '6', 1, 'fr'),
+(37, 'V4', 'Sean', 'Conway', '1979-02-12', 'ultricies.adipiscing@temporest.org', '06 02 61 47 58', '05 32 23 72 50', 'img_avatar.png', '1', 1618408924, 'Sean', 'a', '5', 6, 'fr'),
+(38, 'O5', 'Raphael', 'Combs', '1985-07-20', 'lectus.Nullam.suscipit@lorem.org', '06 59 72 42 60', '04 45 04 97 22', 'img_avatar.png', '1', 1599887950, 'Raphael', 'a', '6', 6, 'fr'),
+(39, 'K6', 'Courtney', 'Fox', '1983-11-04', 'at@Aeneangravidanunc.org', '06 08 31 53 49', '08 79 25 82 98', 'img_avatar.png', '1', 1588754342, 'Courtney', 'a', '4', 1, 'fr'),
+(40, 'Y7', 'Aquila', 'Browning', '1987-02-18', 'vitae.sodales@dolor.org', '06 80 75 94 40', '03 99 60 94 56', 'img_avatar.png', '1', 1582903784, 'Aquila', 'a', '6', 6, 'fr'),
+(41, '77', 'Kane', 'Tanner', '1977-02-27', 'aliquam.eu@acmi.edu', '06 00 30 68 52', '08 11 80 68 48', 'img_avatar.png', '1', 1625204548, 'Kane', 'a', '7', 5, 'fr'),
+(42, 'W9', 'Dakota', 'Leonard', '2003-12-27', 'non@velitCraslorem.org', '06 50 07 07 62', '06 19 10 79 16', 'img_avatar.png', '1', 1601519187, 'Dakota', 'a', '4', 4, 'fr'),
+(43, 'W10', 'Aileen', 'Gilbert', '1982-06-28', 'magna.et@mattisornare.net', '06 63 60 24 78', '09 58 67 68 99', 'img_avatar.png', '1', 1598730055, 'Aileen', 'a', '4', 5, 'fr'),
+(44, 'S11', 'Mariam', 'Lott', '1999-01-19', 'risus.Nulla@ategestasa.com', '06 37 50 45 08', '01 75 67 69 85', 'img_avatar.png', '1', 1601834644, 'Mariam', 'a', '7', 8, 'fr'),
+(45, 'M12', 'Brendan', 'Durham', '1990-05-17', 'eget.massa@ipsumnuncid.com', '06 79 71 67 80', '01 78 38 39 77', 'img_avatar.png', '1', 1632393766, 'Brendan', 'a', '3', 5, 'fr'),
+(46, 'T13', 'Alexis', 'Turner', '1990-08-17', 'orci.luctus@sitametnulla.org', '06 30 47 94 89', '01 62 89 98 51', 'img_avatar.png', '1', 1636375338, 'Alexis', 'a', '8', 6, 'fr'),
+(47, 'O14', 'Ramona', 'Haynes', '1992-06-13', 'dolor.Nulla.semper@imperdietornare.com', '06 51 10 42 55', '08 13 34 50 52', 'img_avatar.png', '1', 1639447768, 'Ramona', 'a', '4', 7, 'fr'),
+(48, 'H15', 'Jocelyn', 'Gamble', '1976-12-31', 'vulputate@vitae.net', '06 43 91 64 28', '09 72 41 72 72', 'img_avatar.png', '1', 1628135097, 'Jocelyn', 'a', '6', 7, 'fr'),
+(49, 'L16', 'Hanae', 'Butler', '2003-05-14', 'at@consequat.com', '06 58 49 70 01', '09 43 10 30 40', 'img_avatar.png', '1', 1640067051, 'Hanae', 'a', '7', 1, 'fr'),
+(50, 'T17', 'Tamara', 'Delaney', '1999-05-28', 'Quisque.purus@PhasellusornareFusce.co.uk', '06 57 34 27 78', '01 64 04 32 91', 'img_avatar.png', '1', 1590625230, 'Tamara', 'a', '4', 8, 'fr'),
+(51, 'J1', 'Xaviera', 'Howe', '1986-07-06', 'sagittis.semper.Nam@interdumenim.org', '06 39 17 73 87', '05 23 93 20 52', 'img_avatar.png', '1', 1589910201, 'Xaviera', 'a', '8', 6, 'fr'),
+(52, 'X19', 'Ishmael', 'Jackson', '1993-02-01', 'mollis.dui.in@venenatislacusEtiam.org', '06 68 35 87 90', '04 33 78 88 46', 'img_avatar.png', '1', 1579745037, 'Ishmael', 'a', '5', 6, 'fr'),
+(53, 'H20', 'Tamara', 'Burt', '1993-06-11', 'pellentesque@quamelementum.co.uk', '06 39 32 54 96', '08 62 38 53 80', 'img_avatar.png', '1', 1591654846, 'Tamara', 'a', '8', 4, 'fr'),
+(54, 'I21', 'Tara', 'Winters', '2002-08-09', 'Etiam.imperdiet@nequetellus.net', '06 69 27 64 79', '06 18 32 27 26', 'img_avatar.png', '1', 1622676729, 'Tara', 'a', '4', 5, 'fr'),
+(55, 'X22', 'Rina', 'Solomon', '2000-05-05', 'Duis@Cum.edu', '06 93 99 04 50', '04 33 31 96 76', 'img_avatar.png', '1', 1632504578, 'Rina', 'a', '4', 5, 'fr'),
+(56, 'P23', 'Gary', 'Curry', '2001-07-05', 'ipsum@neque.net', '06 68 67 15 57', '05 46 51 19 16', 'img_avatar.png', '1', 1589907785, 'Gary', 'a', '6', 8, 'fr'),
+(57, 'W24', 'Hope', 'Joseph', '1981-04-29', 'mollis.lectus.pede@nunc.edu', '06 09 31 53 27', '03 92 26 55 52', 'img_avatar.png', '1', 1622761314, 'Hope', 'a', '3', 8, 'fr'),
+(58, 'X25', 'Aristotle', 'Reese', '1980-08-23', 'vestibulum@non.ca', '06 55 94 74 38', '07 66 10 19 23', 'img_avatar.png', '1', 1619436547, 'Aristotle', 'a', '4', 6, 'fr'),
+(211, 'X26', 'Aristotl', 'Rees', '2020-12-27', '', '', '', '', '1', 1609024106, 'Aristotle', '', '5', 1, '1');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `methods_resource`
+--
+
+DROP TABLE IF EXISTS `methods_resource`;
+CREATE TABLE IF NOT EXISTS `methods_resource` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `FIXE` int(11) NOT NULL,
-  `DATE` date NOT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `MASK_TIME` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `CAPACITY` decimal(11,0) NOT NULL,
+  `SECTION_ID` int(11) NOT NULL,
+  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `PRESTATION_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `methods_resource`
+--
+
+INSERT INTO `methods_resource` (`id`, `CODE`, `LABEL`, `IMAGE`, `MASK_TIME`, `ORDRE`, `CAPACITY`, `SECTION_ID`, `COLOR`, `PRESTATION_ID`, `COMMENT`) VALUES
+(1, 'LASER1', 'Laser trumpf', 'images/Ressources/TruLaser-3030-L20.jpg', 0, 10, '71', 4, '#d01616', '2', 'test'),
+(2, 'LASER2', 'Laser Bystronic', 'images/Ressources/téléchargement (1).jpg', 0, 20, '70', 4, '#dd4b4b', '2', ''),
+(3, 'PLIEUSE1', 'PLieuse Perrot', 'images/Ressources/téléchargement.jpg', 0, 30, '35', 5, '#39a923', '6', ''),
+(4, 'PLIEUSE2', 'Plieuse Amada', 'images/Ressources/527.jpg', 0, 40, '35', 5, '#000000', '', ''),
+(5, 'POINC', 'Poinçonneuse Primat', 'images/Ressources/7222.jpg', 0, 25, '30', 4, '#b56e2c', '', ''),
+(7, 'USI', 'Centre d\'usinage Mazak', 'images/Ressources/téléchargement (2).jpg', 0, 50, '25', 7, '#4ba7be', '', ''),
+(8, 'SOUD', 'Soudure MIG', 'images/Ressources/soudure-jpg5d405386fe9b670001920b04.jpg', 0, 60, '30', 6, '#db8814', '', ''),
+(9, 'SOUD2', 'Soudure TIG', 'images/Ressources/téléchargement (3).jpg', 0, 65, '30', 6, '#7c4c27', '8', ''),
+(10, 'EMB', 'Emballage', 'images/Ressources/product_9722964b.jpg', 0, 70, '32', 8, '#e9cd16', '11', '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `methods_section`
+--
+
+DROP TABLE IF EXISTS `methods_section`;
+CREATE TABLE IF NOT EXISTS `methods_section` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ORDRE` int(11) NOT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `COUT_H` int(11) NOT NULL,
+  `RESPONSABLE` int(11) NOT NULL,
+  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `jours_feries`
+-- Déchargement des données de la table `methods_section`
 --
 
-INSERT INTO `jours_feries` (`id`, `FIXE`, `DATE`, `LABEL`) VALUES
-(1, 1, '2020-01-01', 'Jour de l\'an'),
-(2, 1, '2020-05-01', 'Fête du travail'),
-(3, 1, '2020-05-05', '8 Mai 1945'),
-(4, 1, '2020-07-14', 'Fête national'),
-(5, 1, '2020-08-15', 'Assomption'),
-(6, 1, '2020-11-01', 'La Toussaint'),
-(7, 1, '2020-11-11', 'Armistice 1918'),
-(8, 1, '2020-12-25', 'Noël');
+INSERT INTO `methods_section` (`id`, `ORDRE`, `CODE`, `LABEL`, `COUT_H`, `RESPONSABLE`, `COLOR`) VALUES
+(1, 10, 'ADM', 'Administratif', 90, 1, '#cf1717'),
+(4, 20, 'LAS', 'Atelier Découpe laser', 110, 1, '#249c1c'),
+(5, 30, 'PLI', 'Atelier Pliage', 50, 1, '#40b5ad'),
+(6, 40, 'SOUD', 'Atelier Soudure', 60, 1, '#ac2bb6'),
+(7, 25, 'MECA', 'Atelier Mécanique', 45, 1, '#a45913'),
+(8, 70, 'EXPE', 'Expedition', 50, 1, '#d3ed0c');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `mode_reglement`
+-- Structure de la table `methods_services`
 --
 
-DROP TABLE IF EXISTS `mode_reglement`;
-CREATE TABLE IF NOT EXISTS `mode_reglement` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `CODE_COMPTABLE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `mode_reglement`
---
-
-INSERT INTO `mode_reglement` (`id`, `CODE`, `LABEL`, `CODE_COMPTABLE`) VALUES
-(1, 'VIR', 'VIREMENT', ''),
-(2, 'CHQ', 'CHEQUE', ''),
-(3, 'CB', 'CARTE BANCAIRE', ''),
-(4, 'CMPT', 'COMPTANT', ''),
-(5, 'NONDEF', 'Non définit', '');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `nomenclature`
---
-
-DROP TABLE IF EXISTS `nomenclature`;
-CREATE TABLE IF NOT EXISTS `nomenclature` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ORDRE` int(11) NOT NULL,
-  `PARENT_ID` int(11) NOT NULL,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `QT` decimal(10,3) NOT NULL,
-  `UNIT_ID` int(11) NOT NULL,
-  `PRIX_U` decimal(10,3) NOT NULL,
-  `PRIX_ACHAT` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `nomenclature`
---
-
-INSERT INTO `nomenclature` (`id`, `ORDRE`, `PARENT_ID`, `ARTICLE_ID`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `PRIX_ACHAT`) VALUES
-(1, 10, 23, 22, 'Tole', '1.000', 5, '2.000', '2.000'),
-(2, 10, 24, 25, 'Tube', '1.000', 1, '0.000', '1.000'),
-(3, 20, 24, 26, 'Vis', '4.000', 1, '0.000', '0.500');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `num_doc`
---
-
-DROP TABLE IF EXISTS `num_doc`;
-CREATE TABLE IF NOT EXISTS `num_doc` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `DOC_TYPE` int(11) NOT NULL,
-  `MODEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `DIGIT` int(11) NOT NULL,
-  `COMPTEUR` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `num_doc`
---
-
-INSERT INTO `num_doc` (`id`, `DOC_TYPE`, `MODEL`, `DIGIT`, `COMPTEUR`) VALUES
-(1, 4, 'CDE<AA><MM><JJ>-<I>', 3, 5),
-(2, 0, 'AR<AA><MM><JJ>-<I>', 3, 0),
-(3, 3, 'BL<AA><MM><JJ>-<I>', 3, 0),
-(4, 0, 'ST<AA><MM><JJ>-<I>', 3, 0),
-(5, 0, 'DV<AA><MM><JJ>-<I>', 2, 4);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `prestations`
---
-
-DROP TABLE IF EXISTS `prestations`;
-CREATE TABLE IF NOT EXISTS `prestations` (
+DROP TABLE IF EXISTS `methods_services`;
+CREATE TABLE IF NOT EXISTS `methods_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ORDRE` int(11) NOT NULL,
@@ -1360,13 +1194,13 @@ CREATE TABLE IF NOT EXISTS `prestations` (
   `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `PROVIDER_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `prestations`
+-- Déchargement des données de la table `methods_services`
 --
 
-INSERT INTO `prestations` (`id`, `CODE`, `ORDRE`, `LABEL`, `TYPE`, `TAUX_H`, `MARGE`, `COLOR`, `IMAGE`, `PROVIDER_ID`) VALUES
+INSERT INTO `methods_services` (`id`, `CODE`, `ORDRE`, `LABEL`, `TYPE`, `TAUX_H`, `MARGE`, `COLOR`, `IMAGE`, `PROVIDER_ID`) VALUES
 (1, 'MAT', 2, 'Tôle', 3, 0, 20, '#8fd548', '', '9,11,12'),
 (2, 'LAS', 20, 'laser', 1, 110, 0, '#da1010', '', '0'),
 (3, 'PROFILE', 3, 'Profilé', 4, 0, 0, '#39c926', '', '0'),
@@ -1379,7 +1213,279 @@ INSERT INTO `prestations` (`id`, `CODE`, `ORDRE`, `LABEL`, `TYPE`, `TAUX_H`, `MA
 (11, 'EMB', 90, 'Emballage', 1, 50, 0, '#0818f7', '', '0'),
 (12, 'TRANSEXT', 110, 'Transport externe', 7, 0, 0, '#0afbff', '', '0'),
 (13, 'PAINT', 100, 'Peinture', 7, 0, 0, '#f019a1', '', '0'),
-(14, 'ACHAT', 4, 'Consomables', 6, 0, 0, '#f20202', '', '9');
+(14, 'ACHAT', 4, 'Consomables', 6, 0, 0, '#f20202', '', '9'),
+(15, 'PFBOIS', 1, 'Produis fini bois', 8, 0, 10, '#3a8092', '', ''),
+(16, 'SUBC', 105, 'Sub-Contracting', 7, 0, 0, '#000000', '', '13,17,20,24,27,28');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `methods_stock_zone`
+--
+
+DROP TABLE IF EXISTS `methods_stock_zone`;
+CREATE TABLE IF NOT EXISTS `methods_stock_zone` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `RESSOURCE_ID` int(11) NOT NULL,
+  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `methods_stock_zone`
+--
+
+INSERT INTO `methods_stock_zone` (`id`, `CODE`, `LABEL`, `RESSOURCE_ID`, `COLOR`) VALUES
+(1, 'Expe', 'Expédition Transport', 10, '#fff700'),
+(3, 'Laser1', 'Laser Trumpf', 1, '#ff0000'),
+(4, 'Laser2', 'Laser Bystronic', 2, '#f21818'),
+(5, 'Zone1', 'Zone inter 1', 0, '#8861f5'),
+(6, 'Zone2', 'Zone inter 2', 0, '#8367ad'),
+(7, 'Zone3', 'Zone inter 3', 0, '#9a73c9'),
+(8, 'Pliage', 'Plieuses', 3, '#28864c');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `CUSTOMER_ID` int(11) NOT NULL,
+  `CONTACT_ID` int(11) NOT NULL,
+  `ADRESSE_ID` int(11) NOT NULL,
+  `FACTURATION_ID` int(11) NOT NULL,
+  `DATE` date NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  `CREATEUR_ID` int(11) NOT NULL,
+  `RESP_COM_ID` int(11) NOT NULL,
+  `RESP_TECH_ID` int(11) NOT NULL,
+  `REFERENCE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `COND_REG_CUSTOMER_ID` int(11) NOT NULL,
+  `MODE_REG_CUSTOMER_ID` int(11) NOT NULL,
+  `ECHEANCIER_ID` int(11) NOT NULL,
+  `TRANSPORT_ID` int(11) NOT NULL,
+  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `QUOTE_ID` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `orders`
+--
+
+INSERT INTO `orders` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CUSTOMER_ID`, `MODE_REG_CUSTOMER_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`, `QUOTE_ID`) VALUES
+(1, 'CDE201205-002', '1', '', '', 9, 2, 2, 1, '2020-12-05', 1, 1, 2, 0, '', 5, 3, 2, 0, 'test', 0),
+(5, 'CDE210116-006', '1', '', '', 57, 0, 0, 0, '2021-01-16', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
+(6, 'CDE210119-007', '1', '', '', 13, 0, 0, 0, '2021-01-20', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
+(7, 'CDE210119-008', '1', '', '', 20, 0, 0, 0, '2021-01-20', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
+(8, 'CDE210119-009', '1', '', '', 24, 0, 0, 0, '2021-01-20', 1, 1, 52, 1, '', 9, 5, 1, 0, '', 0),
+(12, 'CDE210123-012', '1', 'test', '1', 1, 0, 0, 0, '2021-01-23', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
+(13, 'CDE210123-012', '1', '', '', 52, 0, 0, 0, '2021-01-23', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `orders_lines`
+--
+
+DROP TABLE IF EXISTS `orders_lines`;
+CREATE TABLE IF NOT EXISTS `orders_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ORDER_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ARTICLE_CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `QT` int(11) NOT NULL,
+  `UNIT_ID` int(11) NOT NULL,
+  `PRIX_U` decimal(10,3) NOT NULL,
+  `REMISE` decimal(10,3) NOT NULL,
+  `TVA_ID` int(11) NOT NULL,
+  `DELAIS_INTERNE` date NOT NULL,
+  `DELAIS` date NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  `AR` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `orders_lines`
+--
+
+INSERT INTO `orders_lines` (`id`, `ORDER_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS_INTERNE`, `DELAIS`, `ETAT`, `AR`) VALUES
+(4, 1, 10, 'MARCHEBOIS', 'ararar', 1, 1, '10.000', '0.000', 4, '2021-03-31', '2021-03-30', 1, 1),
+(5, 1, 10, 'MARCHEBOIS', 'rzqr', 1, 1, '10.000', '0.000', 2, '2021-03-31', '2021-03-31', 1, 1),
+(8, 8, 10, 'TEST', '', 1, 4, '0.000', '0.000', 1, '2021-02-25', '2021-02-25', 1, 0),
+(10, 12, 10, 'PLATINE1', '', 4, 5, '100.000', '20.000', 3, '2020-10-29', '2020-10-29', 2, 0),
+(11, 12, 20, 'super ligne', '', 5, 5, '100.000', '20.000', 4, '2020-11-20', '2020-11-20', 2, 0),
+(12, 7, 10, '3', '3', 3, 5, '3.000', '3.000', 4, '2021-01-09', '2021-02-18', 1, 0),
+(13, 7, 11, '2', '2', 2, 2, '2.000', '2.000', 3, '2021-01-11', '2021-02-26', 1, 0),
+(14, 7, 12, '1', '1', 1, 6, '1.000', '1.000', 2, '2021-01-10', '2021-02-14', 1, 0),
+(15, 7, 10, 'Platine 2', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', '2021-02-25', 1, 0),
+(16, 7, 10, 'PLATINE1', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', '2021-02-23', 1, 0),
+(17, 7, 10, 'Platine 3', '', 1, 4, '0.000', '0.000', 4, '2020-11-05', '2021-02-24', 1, 0),
+(18, 7, 10, 'Platine 4', '', 1, 4, '0.000', '0.000', 4, '2020-11-05', '2021-03-17', 1, 0),
+(19, 13, 10, '3', '3', 3, 5, '3.000', '3.000', 4, '2021-01-09', '2021-01-09', 1, 0),
+(20, 13, 11, '2', '2', 2, 2, '2.000', '2.000', 3, '2021-01-11', '2021-01-11', 1, 0),
+(21, 13, 12, '1', '1', 1, 6, '1.000', '1.000', 2, '2021-01-10', '2021-01-10', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_acknowledgment`
+--
+
+DROP TABLE IF EXISTS `order_acknowledgment`;
+CREATE TABLE IF NOT EXISTS `order_acknowledgment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `CUSTOMER_ID` int(11) NOT NULL,
+  `CONTACT_ID` int(11) NOT NULL,
+  `ADRESSE_ID` int(11) NOT NULL,
+  `FACTURATION_ID` int(11) NOT NULL,
+  `DATE` date NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  `CREATEUR_ID` int(11) NOT NULL,
+  `INCOTERM` int(11) NOT NULL,
+  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `order_acknowledgment`
+--
+
+INSERT INTO `order_acknowledgment` (`id`, `CODE`, `LABEL`, `CUSTOMER_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATEUR_ID`, `INCOTERM`, `COMENT`) VALUES
+(6, 'AR210120-001', '', 9, 1, 0, 1, '2021-01-20', 1, 1, 1, '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_acknowledgment_lines`
+--
+
+DROP TABLE IF EXISTS `order_acknowledgment_lines`;
+CREATE TABLE IF NOT EXISTS `order_acknowledgment_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ORDER_ACKNOWLEGMENT_ID` int(11) NOT NULL,
+  `ORDER_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ORDER_LINE_ID` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `order_acknowledgment_lines`
+--
+
+INSERT INTO `order_acknowledgment_lines` (`id`, `ORDER_ACKNOWLEGMENT_ID`, `ORDER_ID`, `ORDRE`, `ORDER_LINE_ID`) VALUES
+(16, 6, 1, 13, 5),
+(15, 6, 1, 12, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_nomenclature`
+--
+
+DROP TABLE IF EXISTS `order_nomenclature`;
+CREATE TABLE IF NOT EXISTS `order_nomenclature` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ORDRE` int(11) NOT NULL,
+  `PARENT_ID` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `QT` decimal(10,3) NOT NULL,
+  `UNIT_ID` int(11) NOT NULL,
+  `PRIX_U` decimal(10,3) NOT NULL,
+  `PRIX_ACHAT` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_sub_assembly`
+--
+
+DROP TABLE IF EXISTS `order_sub_assembly`;
+CREATE TABLE IF NOT EXISTS `order_sub_assembly` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `PARENT_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `QT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_technical_cut`
+--
+
+DROP TABLE IF EXISTS `order_technical_cut`;
+CREATE TABLE IF NOT EXISTS `order_technical_cut` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `PRESTA_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TPS_PREP` decimal(10,3) NOT NULL,
+  `TPS_PRO` decimal(10,3) NOT NULL,
+  `COUT` decimal(10,3) NOT NULL,
+  `PRIX` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `purchase_request`
+--
+
+DROP TABLE IF EXISTS `purchase_request`;
+CREATE TABLE IF NOT EXISTS `purchase_request` (
+  `id` int(11) NOT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `DATE` date NOT NULL,
+  `DATE_REQUIREMENT` date NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  `CREATEUR_ID` int(11) NOT NULL,
+  `COMENT` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `purchase_request_lines`
+--
+
+DROP TABLE IF EXISTS `purchase_request_lines`;
+CREATE TABLE IF NOT EXISTS `purchase_request_lines` (
+  `id` int(11) NOT NULL,
+  `PURCHASE_REQUEST_ID` int(11) NOT NULL,
+  `TASK_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `QT` int(11) NOT NULL,
+  `UNIT_ID` int(11) NOT NULL,
+  `PRIX_U` decimal(10,3) NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  `ORDER_ID` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1437,8 +1543,8 @@ CREATE TABLE IF NOT EXISTS `ql_appareil_mesure` (
 --
 
 INSERT INTO `ql_appareil_mesure` (`id`, `CODE`, `LABEL`, `RESSOURCE_ID`, `USER_ID`, `SERIAL_NUMBER`, `DATE`, `PICTURE_DEVICES`) VALUES
-(1, 'PIED', 'pied à coulisse', 1, 1, '1235467', '2020-10-31', '45921.jpg'),
-(2, 'PILCAL14', 'Pige de calage 14 x 125', 2, 36, '165477', '2021-02-28', '');
+(1, 'PIED', 'pied à coulisse', 2, 36, '1235467', '2020-10-31', '45921.jpg'),
+(2, 'PILCAL14', 'Pige de calage 14 x 125', 2, 47, '165477', '2021-02-28', 'pige-de-calage-14-x-125-micrometrique.jpg');
 
 -- --------------------------------------------------------
 
@@ -1473,14 +1579,15 @@ CREATE TABLE IF NOT EXISTS `ql_corrections` (
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `ql_corrections`
 --
 
 INSERT INTO `ql_corrections` (`id`, `CODE`, `LABEL`) VALUES
-(2, 'REMPLA', 'Remplacement de l\'appareil de mesure');
+(2, 'REMPLA', 'Remplacement de l\'appareil de mesure'),
+(4, 'REPA', 'Réparation');
 
 -- --------------------------------------------------------
 
@@ -1563,149 +1670,372 @@ CREATE TABLE IF NOT EXISTS `ql_nfc` (
   `CORRECTION_COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
   `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `ql_nfc`
 --
 
 INSERT INTO `ql_nfc` (`ID`, `CODE`, `LABEL`, `ETAT`, `DATE`, `TYPE`, `CREATEUR_ID`, `CAUSED_BY_ID`, `SECTION_ID`, `RESSOURCE_ID`, `DEFAUT_ID`, `DEFAUT_COMMENT`, `CAUSE_ID`, `CAUSE_COMMENT`, `CORRECTION_ID`, `CORRECTION_COMMENT`, `COMMENT`) VALUES
-(1, 'FNC000001', 'test', 1, '2020-12-27', 1, 1, 1, 7, 3, 1, 'test', 1, 'test', 2, 'test', 'test'),
-(2, 'FNC000002', 'test', 1, '2020-12-28', 2, 1, 1, 0, 0, 0, '', 0, '', 0, '', '');
+(1, 'FNC000001', 'test', 1, '2020-12-27', 1, 1, 1, 7, 3, 1, 'test', 1, 'test', 4, 'test', 'test'),
+(2, 'FNC000002', 'test', 4, '2020-12-28', 2, 1, 1, 0, 0, 1, '', 1, '', 2, '', ''),
+(3, 'FNC000003', 'test numbering', 1, '2021-01-07', 1, 1, 1, 0, 0, 0, '', 0, '', 0, '', ''),
+(4, 'FNC000004', 'test numbering', 1, '2021-01-07', 1, 1, 1, 0, 0, 0, '', 0, '', 0, '', ''),
+(6, 'FNC000005', 'home test', 1, '2021-01-25', 1, 1, 1, 1, 1, 1, '', 1, '', 2, '', '');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `ressource`
+-- Structure de la table `quote`
 --
 
-DROP TABLE IF EXISTS `ressource`;
-CREATE TABLE IF NOT EXISTS `ressource` (
+DROP TABLE IF EXISTS `quote`;
+CREATE TABLE IF NOT EXISTS `quote` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `CUSTOMER_ID` int(11) NOT NULL,
+  `CONTACT_ID` int(11) NOT NULL,
+  `ADRESSE_ID` int(11) NOT NULL,
+  `FACTURATION_ID` int(11) NOT NULL,
+  `DATE` date NOT NULL,
+  `DATE_VALIDITE` date NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  `CREATEUR_ID` int(11) NOT NULL,
+  `RESP_COM_ID` int(11) NOT NULL,
+  `RESP_TECH_ID` int(11) NOT NULL,
+  `REFERENCE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `COND_REG_CUSTOMER_ID` int(11) NOT NULL,
+  `MODE_REG_CUSTOMER_ID` int(11) NOT NULL,
+  `ECHEANCIER_ID` int(11) NOT NULL,
+  `TRANSPORT_ID` int(11) NOT NULL,
+  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `quote`
+--
+
+INSERT INTO `quote` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `DATE_VALIDITE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CUSTOMER_ID`, `MODE_REG_CUSTOMER_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`) VALUES
+(3, 'DV201118-01', '1', '', '', 1, 3, 3, 3, '2020-11-18', '2020-11-21', 1, 1, 38, 1, '1er demande de metalerie', 8, 1, 2, 2, 'test\r\ntaettatt222'),
+(5, 'DV201128-03', '1', '', '', 3, 0, 0, 0, '2020-11-29', '2020-11-29', 1, 1, 1, 1, '', 9, 5, 0, 0, ''),
+(6, 'DV201205-04', '1', 'tzetzet', 'zetzet', 2, 0, 196, 0, '2020-12-05', '2020-12-18', 3, 1, 37, 1, 'zetzet', 9, 5, 2, 0, ''),
+(7, 'DV201229-07', '1', '', '', 13, 0, 182, 89, '2020-12-29', '2020-12-29', 2, 1, 0, 0, '', 9, 5, 0, 0, ''),
+(8, 'DV210108-08', '1', '', '', 52, 0, 0, 0, '2021-01-08', '2021-01-08', 1, 1, 1, 1, '', 9, 5, 0, 0, ''),
+(9, 'DV210109-09', '1', '', '', 199, 0, 0, 0, '2021-01-09', '2021-01-09', 1, 1, 0, 0, '', 9, 1, 1, 0, ''),
+(10, 'DV210109-10', '1', '', '1', 201, 0, 0, 0, '2021-01-10', '2021-01-10', 1, 1, 0, 0, '', 3, 2, 0, 0, ''),
+(11, 'DV210117-11', '1', '', '', 198, 0, 0, 0, '2021-01-17', '2021-01-17', 1, 1, 0, 0, '', 9, 5, 0, 0, ''),
+(12, 'DV210119-12', '1', '', '', 20, 0, 0, 0, '2021-01-20', '2021-01-20', 1, 1, 0, 0, '', 9, 5, 0, 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `quote_lines`
+--
+
+DROP TABLE IF EXISTS `quote_lines`;
+CREATE TABLE IF NOT EXISTS `quote_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `DEVIS_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ARTICLE_CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `QT` int(11) NOT NULL,
+  `UNIT_ID` int(11) NOT NULL,
+  `PRIX_U` decimal(10,3) NOT NULL,
+  `REMISE` decimal(10,3) NOT NULL,
+  `TVA_ID` int(11) NOT NULL,
+  `DELAIS` date NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `quote_lines`
+--
+
+INSERT INTO `quote_lines` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS`, `ETAT`) VALUES
+(1, 3, 10, 'PLATINE1', '', 4, 5, '100.000', '20.000', 3, '2020-10-29', 3),
+(2, 3, 20, 'super ligne', '', 5, 5, '100.000', '20.000', 4, '2020-11-20', 3),
+(13, 6, 10, 'POTEAU_1M', '', 10, 1, '115.000', '10.000', 4, '2020-12-30', 1),
+(14, 6, 10, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(15, 6, 20, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(16, 6, 30, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(10, 5, 10, 'PLATINE1', '', 1, 1, '10.000', '0.000', 4, '2020-12-31', 1),
+(11, 5, 10, 'Platine 3', '', 1, 4, '0.000', '0.000', 4, '2020-11-05', 1),
+(12, 5, 10, 'Platine 4', '', 1, 4, '0.000', '0.000', 4, '2020-11-05', 1),
+(17, 6, 40, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(18, 6, 50, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(19, 6, 60, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(20, 6, 70, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(21, 6, 90, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 3, '2021-01-09', 1),
+(22, 6, 100, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(23, 6, 110, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(24, 6, 120, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(25, 6, 130, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(26, 6, 140, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(27, 6, 150, 'MARCHEBOIS', '', 1, 7, '25.000', '0.000', 4, '2021-01-09', 1),
+(42, 12, 10, 'CHASSIS', '', 1, 7, '10000.000', '0.000', 4, '2021-03-31', 1),
+(41, 8, 11, '2', '2', 2, 2, '2.000', '2.000', 3, '2021-01-11', 1),
+(40, 8, 12, '1', '1', 1, 6, '1.000', '1.000', 2, '2021-01-10', 1),
+(39, 8, 10, '3', '3', 3, 5, '3.000', '3.000', 4, '2021-01-09', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `quote_nomenclature`
+--
+
+DROP TABLE IF EXISTS `quote_nomenclature`;
+CREATE TABLE IF NOT EXISTS `quote_nomenclature` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ORDRE` int(11) NOT NULL,
+  `PARENT_ID` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `QT` decimal(10,3) NOT NULL,
+  `UNIT_ID` int(11) NOT NULL,
+  `PRIX_U` decimal(10,3) NOT NULL,
+  `PRIX_ACHAT` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `quote_sub_assembly`
+--
+
+DROP TABLE IF EXISTS `quote_sub_assembly`;
+CREATE TABLE IF NOT EXISTS `quote_sub_assembly` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `PARENT_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `QT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `quote_technical_cut`
+--
+
+DROP TABLE IF EXISTS `quote_technical_cut`;
+CREATE TABLE IF NOT EXISTS `quote_technical_cut` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `PRESTA_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TPS_PREP` decimal(10,3) NOT NULL,
+  `TPS_PRO` decimal(10,3) NOT NULL,
+  `COUT` decimal(10,3) NOT NULL,
+  `PRIX` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `study_standard_article`
+--
+
+DROP TABLE IF EXISTS `study_standard_article`;
+CREATE TABLE IF NOT EXISTS `study_standard_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MASK_TIME` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `CAPACITY` decimal(11,0) NOT NULL,
-  `SECTION_ID` int(11) NOT NULL,
-  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `PRESTATION_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `IND` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `PRESTATION_ID` int(11) NOT NULL,
+  `FAMILLE_ID` int(11) NOT NULL,
+  `ACHETER` int(11) NOT NULL,
+  `PRIX_ACHETER` decimal(10,3) NOT NULL,
+  `VENDU` int(11) NOT NULL,
+  `PRIX_VENDU` decimal(10,3) NOT NULL,
+  `UNITE_ID` int(11) NOT NULL,
+  `MATIERE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `EP` decimal(10,3) NOT NULL,
+  `DIM_X` decimal(10,3) NOT NULL,
+  `DIM_Y` decimal(10,3) NOT NULL,
+  `DIM_Z` decimal(10,3) NOT NULL,
+  `POIDS` decimal(10,3) NOT NULL,
+  `SUR_X` decimal(10,3) NOT NULL,
+  `SUR_Y` decimal(10,3) NOT NULL,
+  `SUR_Z` decimal(10,3) NOT NULL,
   `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=75 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `ressource`
+-- Déchargement des données de la table `study_standard_article`
 --
 
-INSERT INTO `ressource` (`id`, `CODE`, `LABEL`, `IMAGE`, `MASK_TIME`, `ORDRE`, `CAPACITY`, `SECTION_ID`, `COLOR`, `PRESTATION_ID`, `COMMENT`) VALUES
-(1, 'LASER1', 'Laser trumpf', 'images/Ressources/TruLaser-3030-L20.jpg', 0, 10, '71', 4, '#d01616', '2', 'test'),
-(2, 'LASER2', 'Laser Bystronic', 'images/Ressources/téléchargement (1).jpg', 0, 20, '70', 4, '#dd4b4b', '2', ''),
-(3, 'PLIEUSE1', 'PLieuse Perrot', 'images/Ressources/téléchargement.jpg', 0, 30, '35', 5, '#39a923', '6', ''),
-(4, 'PLIEUSE2', 'Plieuse Amada', 'images/Ressources/527.jpg', 0, 40, '35', 5, '#000000', '', ''),
-(5, 'POINC', 'Poinçonneuse Primat', 'images/Ressources/7222.jpg', 0, 25, '30', 4, '#b56e2c', '', ''),
-(7, 'USI', 'Centre d\'usinage Mazak', 'images/Ressources/téléchargement (2).jpg', 0, 50, '25', 7, '#4ba7be', '', ''),
-(8, 'SOUD', 'Soudure MIG', 'images/Ressources/soudure-jpg5d405386fe9b670001920b04.jpg', 0, 60, '30', 6, '#db8814', '', ''),
-(9, 'SOUD2', 'Soudure TIG', 'images/Ressources/téléchargement (3).jpg', 0, 65, '30', 6, '#7c4c27', '8', ''),
-(10, 'EMB', 'Emballage', 'images/Ressources/product_9722964b.jpg', 0, 70, '32', 8, '#e9cd16', '11', '');
+INSERT INTO `study_standard_article` (`id`, `CODE`, `LABEL`, `IND`, `PRESTATION_ID`, `FAMILLE_ID`, `ACHETER`, `PRIX_ACHETER`, `VENDU`, `PRIX_VENDU`, `UNITE_ID`, `MATIERE`, `EP`, `DIM_X`, `DIM_Y`, `DIM_Z`, `POIDS`, `SUR_X`, `SUR_Y`, `SUR_Z`, `COMMENT`, `IMAGE`) VALUES
+(1, 'TOLE_S235_EP2', 'Tôle acier s235 ep 2', '1', 1, 0, 1, '0.000', 0, '0.000', 5, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(3, 'TOLE_S235_EP3', 'Tôle acier s235 ep 3', '1', 0, 0, 1, '1.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(4, 'TOLE_S235_EP1', 'Tôle acier s235 ep 1', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(22, 'TOLE_S235_EP8', 'Tôle acier s235 ep 8', '1', 1, 0, 1, '1.000', 0, '1.000', 5, 'ACIER', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(23, 'PLATINE1', 'Platine 100x100 4 trou', '1', 4, 6, 0, '0.000', 1, '10.000', 5, 'ACIER', '8.000', '100.000', '100.000', '8.000', '0.000', '10.000', '10.000', '10.000', '', 'platine.jpg'),
+(24, 'POTEAU_1M', 'Poteau acier de 1 mètre', '1', 4, 6, 0, '0.000', 1, '50.000', 8, 'ACIER', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', 'Peinture anthracite', 'platine-pour-poteau-rond-gris-P-545747-2004687_1.webp'),
+(25, 'TUBE_ACIER_ROND_60_2', 'Tube acier s235 rond 60 ep 2 mm', '1', 3, 2, 1, '1.000', 0, '0.000', 6, 'ACIER', '2.000', '60.000', '60.000', '990.000', '1.000', '0.000', '0.000', '5.000', '', ''),
+(21, 'TOLE_S235_EP6', 'Tôle acier s235 ep 6', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(20, 'TOLE_S235_EP5', 'Tôle acier s235 ep 5', '1', 0, 0, 0, '1.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(16, 'TOLE_S235_EP4', 'Tôle acier s235 ep 4', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
+(17, 'TOLE_304_EP1', 'Tôle inox 304L ep 1', '1', 0, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(26, 'VIS_ACIER_H_M10_LG100', 'Vis ACIER H M10 longueur 100mm', '1', 14, 3, 1, '0.001', 0, '0.000', 8, 'ACIER', '0.000', '10.000', '10.000', '100.000', '0.001', '0.000', '0.000', '0.000', '', 'vis-metaux-tete-hexagonale-th-classe-109-10x35-filetage-total-p12as5-acier.jpg'),
+(71, 'MARCHEBOIS', 'Marche bois chêne', '2', 15, 6, 1, '25.000', 1, '0.000', 1, 'BOIS', '0.000', '500.000', '50.000', '200.000', '0.000', '0.000', '0.000', '0.000', '', 'marche.PNG'),
+(27, 'TOLE_304_EP2', 'Tôle inox 304L ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(28, 'TOLE_304_EP2', 'Tôle inox 304L ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(29, 'TOLE_304_EP2.5', 'Tôle inox 304L ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(30, 'TOLE_304_EP3', 'Tôle inox 304L ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(31, 'TOLE_304_EP4', 'Tôle inox 304L ep 4', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '4.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(32, 'TOLE_304_EP5', 'Tôle inox 304L ep 5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '5.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(33, 'TOLE_304_EP6', 'Tôle inox 304L ep 6', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(34, 'TOLE_304_EP8', 'Tôle inox 304L ep 8', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(35, 'TOLE_304_EP10', 'Tôle inox 304L ep 10', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '10.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(36, 'TOLE_304_EP12', 'Tôle inox 304L ep 12', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '12.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(37, 'TOLE_304_EP15', 'Tôle inox 304L ep 15', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '15.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(38, 'TOLE_304_EP20', 'Tôle inox 304L ep 20', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '20.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(39, 'TOLE_304_EP25', 'Tôle inox 304L ep 25', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '25.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(40, 'TOLE_304_EP30', 'Tôle inox 304L ep 30', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '30.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(41, 'TOLE_DD11_EP1', 'Tôle acier DD11 ep 1', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(42, 'TOLE_DD11_EP2', 'Tôle acier DD11 ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(43, 'TOLE_DD11_EP2.5', 'Tôle acier DD11 ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(44, 'TOLE_DD11_EP3', 'Tôle acier DD11 ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(45, 'TOLE_DD11_EP4', 'Tôle acier DD11 ep 4', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '4.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(46, 'TOLE_DD11_EP5', 'Tôle acier DD11 ep 5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '5.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(47, 'TOLE_DD11_EP6', 'Tôle acier DD11 ep 6', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(48, 'TOLE_DD11_EP8', 'Tôle acier DD11 ep 8', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(49, 'TOLE_DD11_EP10', 'Tôle acier DD11 ep 10', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '10.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(50, 'TOLE_DD11_EP12', 'Tôle acier DD11 ep 12', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '12.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(51, 'TOLE_DD11_EP15', 'Tôle acier DD11 ep 15', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '15.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(52, 'TOLE_DD11_EP20', 'Tôle acier DD11 ep 20', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '20.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(53, 'TOLE_DD11_EP25', 'Tôle acier DD11 ep 25', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '25.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(54, 'TOLE_DD11_EP30', 'Tôle acier DD11 ep 30', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '30.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(55, 'TOLE_S355_EP3', 'Tôle acier S355 ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(56, 'TOLE_S355_EP4', 'Tôle acier S355 ep 4', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '4.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(57, 'TOLE_S355_EP5', 'Tôle acier S355 ep 5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '5.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(58, 'TOLE_S355_EP6', 'Tôle acier S355 ep 6', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '6.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(59, 'TOLE_S355_EP8', 'Tôle acier S355 ep 8', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '8.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(60, 'TOLE_S355_EP10', 'Tôle acier S355 ep 10', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '10.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(61, 'TOLE_S355_EP12', 'Tôle acier S355 ep 12', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '12.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(62, 'TOLE_S355_EP15', 'Tôle acier S355 ep 15', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '15.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(63, 'TOLE_S355_EP20', 'Tôle acier S355 ep 20', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '20.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(64, 'TOLE_S355_EP25', 'Tôle acier S355 ep 25', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '25.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(65, 'TOLE_S355_EP30', 'Tôle acier  S355 ep 30', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '30.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(66, 'TOLE_GALVA_EP0.5', 'Tôle acier GALVA ep 0.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '0.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(67, 'TOLE_GALVA_EP1', 'Tôle acier GALVA ep 1', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(68, 'TOLE_GALVA_EP2', 'Tôle acier GALVA ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(69, 'TOLE_GALVA_EP2.5', 'Tôle acier  GALVA ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(70, 'TOLE_GALVA_EP3', 'Tôle acier GALVA ep 3', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'ACIER', '3.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
+(72, 'ESCALIER', 'Escalier metal/bois', '1', 4, 6, 0, '0.000', 1, '2500.000', 0, 'ACIER', '0.000', '0.000', '0.000', '0.000', '200.000', '0.000', '0.000', '0.000', '', 'escalierPNG.PNG'),
+(73, 'POTEAU_CENTRAL', 'Poteau central acier', '', 3, 2, 1, '99.200', 0, '0.000', 1, 'ACIER', '0.000', '60.000', '60.000', '3000.000', '0.000', '0.000', '0.000', '0.000', '', 'element-fer-forge-tube-central-pour-lescalier-en-colimacon-hauteur-3000-mm-tube-rond-60-ref-tubecentral.jpg'),
+(74, 'PAL_EURO', 'Palettes europe bois 1200 x 800 x 144 cm.', '', 14, 1, 1, '14.000', 1, '22.000', 1, 'BOIS', '144.000', '1200.000', '800.000', '144.000', '25.000', '0.000', '0.000', '0.000', '', '41YPxf2VBgL._AC_SX425_.jpg');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `rights`
+-- Structure de la table `study_standard_nomenclature`
 --
 
-DROP TABLE IF EXISTS `rights`;
-CREATE TABLE IF NOT EXISTS `rights` (
+DROP TABLE IF EXISTS `study_standard_nomenclature`;
+CREATE TABLE IF NOT EXISTS `study_standard_nomenclature` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `RIGHT_NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `page_1` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_2` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_3` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_4` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_5` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_6` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_7` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_8` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_9` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `page_10` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `PARENT_ID` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `QT` decimal(10,3) NOT NULL,
+  `UNIT_ID` int(11) NOT NULL,
+  `PRIX_U` decimal(10,3) NOT NULL,
+  `PRIX_ACHAT` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `study_standard_nomenclature`
+--
+
+INSERT INTO `study_standard_nomenclature` (`id`, `ORDRE`, `PARENT_ID`, `ARTICLE_ID`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `PRIX_ACHAT`) VALUES
+(1, 10, 23, 22, 'Tole', '1.000', 5, '2.000', '2.000'),
+(2, 10, 24, 25, 'Tube', '1.000', 1, '0.000', '1.000'),
+(3, 20, 24, 26, 'Vis', '4.000', 1, '0.000', '0.500');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `study_standard_sub_assembly`
+--
+
+DROP TABLE IF EXISTS `study_standard_sub_assembly`;
+CREATE TABLE IF NOT EXISTS `study_standard_sub_assembly` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `PARENT_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `QT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `study_standard_sub_assembly`
+--
+
+INSERT INTO `study_standard_sub_assembly` (`id`, `PARENT_ID`, `ORDRE`, `ARTICLE_ID`, `QT`) VALUES
+(1, 24, 10, 23, 1),
+(2, 72, 10, 24, 14),
+(3, 72, 20, 71, 14),
+(4, 72, 30, 73, 1),
+(5, 72, 40, 74, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `study_standard_technical_cut`
+--
+
+DROP TABLE IF EXISTS `study_standard_technical_cut`;
+CREATE TABLE IF NOT EXISTS `study_standard_technical_cut` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ARTICLE_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `PRESTA_ID` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TPS_PREP` decimal(10,3) NOT NULL,
+  `TPS_PRO` decimal(10,3) NOT NULL,
+  `COUT` decimal(10,3) NOT NULL,
+  `PRIX` decimal(10,3) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `rights`
+-- Déchargement des données de la table `study_standard_technical_cut`
 --
 
-INSERT INTO `rights` (`id`, `RIGHT_NAME`, `page_1`, `page_2`, `page_3`, `page_4`, `page_5`, `page_6`, `page_7`, `page_8`, `page_9`, `page_10`) VALUES
-(1, 'Admin', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'),
-(3, 'Reponsable de site', '1', '0', '1', '1', '1', '1', '1', '1', '1', '1'),
-(4, 'Ordonnancement', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'),
-(5, 'Deviseur', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'),
-(6, 'Programmeur', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'),
-(7, 'Opérateur', '1', '1', '1', '0', '1', '1', '1', '0', '1', '0'),
-(8, 'Responsable commercial', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1');
+INSERT INTO `study_standard_technical_cut` (`id`, `ARTICLE_ID`, `ORDRE`, `PRESTA_ID`, `LABEL`, `TPS_PREP`, `TPS_PRO`, `COUT`, `PRIX`) VALUES
+(1, 23, 10, 7, 'Etude', '0.100', '0.100', '0.000', '1.000'),
+(3, 23, 20, 2, 'Laser', '0.100', '0.200', '0.000', '1.000'),
+(4, 24, 10, 9, 'Soudure MIG', '0.500', '0.250', '5.000', '5.000'),
+(5, 24, 20, 13, 'Peinture RAL 9010', '0.000', '0.000', '0.000', '5.000'),
+(6, 24, 30, 12, 'FRET', '0.250', '0.050', '0.000', '1.000'),
+(7, 71, 10, 16, 'Buy procduct', '0.000', '0.000', '15.000', '25.000'),
+(8, 72, 10, 11, 'emballage', '0.000', '30.000', '0.000', '0.000'),
+(9, 72, 20, 12, 'Transport fret', '0.000', '0.000', '50.000', '110.000');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `section`
+-- Structure de la table `study_sub_familly`
 --
 
-DROP TABLE IF EXISTS `section`;
-CREATE TABLE IF NOT EXISTS `section` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ORDRE` int(11) NOT NULL,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COUT_H` int(11) NOT NULL,
-  `RESPONSABLE` int(11) NOT NULL,
-  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `section`
---
-
-INSERT INTO `section` (`id`, `ORDRE`, `CODE`, `LABEL`, `COUT_H`, `RESPONSABLE`, `COLOR`) VALUES
-(1, 10, 'ADM', 'Administratif', 90, 1, '#cf1717'),
-(4, 20, 'LAS', 'Atelier Découpe laser', 110, 1, '#249c1c'),
-(5, 30, 'PLI', 'Atelier Pliage', 50, 1, '#40b5ad'),
-(6, 40, 'SOUD', 'Atelier Soudure', 60, 1, '#ac2bb6'),
-(7, 25, 'MECA', 'Atelier Mécanique', 45, 1, '#a45913'),
-(8, 70, 'EXPE', 'Expedition', 50, 1, '#d3ed0c');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `sous_ensemble`
---
-
-DROP TABLE IF EXISTS `sous_ensemble`;
-CREATE TABLE IF NOT EXISTS `sous_ensemble` (
-  `id` int(11) NOT NULL,
-  `PARENT_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `QT` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `sous_ensemble`
---
-
-INSERT INTO `sous_ensemble` (`id`, `PARENT_ID`, `ORDRE`, `ARTICLE_ID`, `QT`) VALUES
-(0, 24, 10, 23, 1);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `sous_famille`
---
-
-DROP TABLE IF EXISTS `sous_famille`;
-CREATE TABLE IF NOT EXISTS `sous_famille` (
+DROP TABLE IF EXISTS `study_sub_familly`;
+CREATE TABLE IF NOT EXISTS `study_sub_familly` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1714,10 +2044,10 @@ CREATE TABLE IF NOT EXISTS `sous_famille` (
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `sous_famille`
+-- Déchargement des données de la table `study_sub_familly`
 --
 
-INSERT INTO `sous_famille` (`id`, `CODE`, `LABEL`, `PRESTATION_ID`) VALUES
+INSERT INTO `study_sub_familly` (`id`, `CODE`, `LABEL`, `PRESTATION_ID`) VALUES
 (1, 'CARRE', 'Profilé carré', 3),
 (2, 'ROND', 'Profilé rond', 3),
 (3, 'Vis', 'Visserie', 14),
@@ -1728,89 +2058,40 @@ INSERT INTO `sous_famille` (`id`, `CODE`, `LABEL`, `PRESTATION_ID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `stock_zone`
+-- Structure de la table `study_unit`
 --
 
-DROP TABLE IF EXISTS `stock_zone`;
-CREATE TABLE IF NOT EXISTS `stock_zone` (
+DROP TABLE IF EXISTS `study_unit`;
+CREATE TABLE IF NOT EXISTS `study_unit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `RESSOURCE_ID` int(11) NOT NULL,
-  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TYPE` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `stock_zone`
+-- Déchargement des données de la table `study_unit`
 --
 
-INSERT INTO `stock_zone` (`id`, `CODE`, `LABEL`, `RESSOURCE_ID`, `COLOR`) VALUES
-(1, 'Expe', 'Expédition Transport', 10, '#fff700'),
-(3, 'Laser1', 'Laser Trumpf', 1, '#ff0000'),
-(4, 'Laser2', 'Laser Bystronic', 2, '#f21818'),
-(5, 'Zone1', 'Zone inter 1', 0, '#8861f5'),
-(6, 'Zone2', 'Zone inter 2', 0, '#8367ad'),
-(7, 'Zone3', 'Zone inter 3', 0, '#9a73c9'),
-(8, 'Pliage', 'Plieuses', 3, '#28864c');
+INSERT INTO `study_unit` (`id`, `CODE`, `LABEL`, `TYPE`) VALUES
+(8, 'BTE', 'Boite', 5),
+(2, 'CM', 'Centimètre', 2),
+(4, 'GRA', 'Gramme', 1),
+(5, 'KG', 'Kilogramme', 1),
+(6, 'M', 'Mètre', 2),
+(7, 'PCE', 'Pièce', 5),
+(1, 'UNI', 'Unité', 5),
+(9, 'MM', 'Milimètre', 2);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `transport`
+-- Structure de la table `time_absence_type`
 --
 
-DROP TABLE IF EXISTS `transport`;
-CREATE TABLE IF NOT EXISTS `transport` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `transport`
---
-
-INSERT INTO `transport` (`id`, `CODE`, `LABEL`) VALUES
-(1, 'FRANCO', 'Franco de port et d\'emballage'),
-(2, 'DEPART', 'Prix départ'),
-(0, 'AUCUN', 'Aucun transport');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `tva`
---
-
-DROP TABLE IF EXISTS `tva`;
-CREATE TABLE IF NOT EXISTS `tva` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TAUX` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `tva`
---
-
-INSERT INTO `tva` (`id`, `CODE`, `LABEL`, `TAUX`) VALUES
-(1, '0%EX', 'TVA Exonérée', '0.000'),
-(2, '5%', 'TVA France réduite', '5.000'),
-(3, '10%', 'TVA France réduite', '10.000'),
-(4, '20%', 'TVA France', '20.000'),
-(5, 'NULL', 'Aucune', '0.000');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `type_absence`
---
-
-DROP TABLE IF EXISTS `type_absence`;
-CREATE TABLE IF NOT EXISTS `type_absence` (
+DROP TABLE IF EXISTS `time_absence_type`;
+CREATE TABLE IF NOT EXISTS `time_absence_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1821,10 +2102,10 @@ CREATE TABLE IF NOT EXISTS `type_absence` (
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `type_absence`
+-- Déchargement des données de la table `time_absence_type`
 --
 
-INSERT INTO `type_absence` (`id`, `CODE`, `LABEL`, `PAYE`, `COLOR`, `TYPE_JOUR`) VALUES
+INSERT INTO `time_absence_type` (`id`, `CODE`, `LABEL`, `PAYE`, `COLOR`, `TYPE_JOUR`) VALUES
 (1, 'ABSBR', 'Absence non rémunéré', 1, '#000000', 0),
 (2, 'ABSR', 'Absence rémunéré', 1, '#1dff1a', 0),
 (3, 'ACCT', 'Accident de travail', 0, '#c10606', 0),
@@ -1838,90 +2119,147 @@ INSERT INTO `type_absence` (`id`, `CODE`, `LABEL`, `PAYE`, `COLOR`, `TYPE_JOUR`)
 -- --------------------------------------------------------
 
 --
--- Structure de la table `unit`
+-- Structure de la table `time_bank_holiday`
 --
 
-DROP TABLE IF EXISTS `unit`;
-CREATE TABLE IF NOT EXISTS `unit` (
+DROP TABLE IF EXISTS `time_bank_holiday`;
+CREATE TABLE IF NOT EXISTS `time_bank_holiday` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `FIXE` int(11) NOT NULL,
+  `DATE` date NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TYPE` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `unit`
+-- Déchargement des données de la table `time_bank_holiday`
 --
 
-INSERT INTO `unit` (`id`, `CODE`, `LABEL`, `TYPE`) VALUES
-(8, 'BTE', 'Boite', 5),
-(2, 'CM', 'Centimètre', 2),
-(4, 'GRA', 'Gramme', 1),
-(5, 'KG', 'Kilogramme', 1),
-(6, 'M', 'Mètre', 2),
-(7, 'PCE', 'Pièce', 5),
-(1, 'UNI', 'Unité', 5),
-(9, 'MM', 'Milimètre', 2);
+INSERT INTO `time_bank_holiday` (`id`, `FIXE`, `DATE`, `LABEL`) VALUES
+(1, 1, '2020-01-01', 'Jour de l\'an'),
+(2, 1, '2020-05-01', 'Fête du travail'),
+(3, 1, '2020-05-05', '8 Mai 1945'),
+(4, 1, '2020-07-14', 'Fête national'),
+(5, 1, '2020-08-15', 'Assomption'),
+(6, 1, '2020-11-01', 'La Toussaint'),
+(7, 1, '2020-11-11', 'Armistice 1918'),
+(8, 1, '2020-12-25', 'Noël');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user`
+-- Structure de la table `time_daily_hourly_model`
 --
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
-  `idUSER` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `time_daily_hourly_model`;
+CREATE TABLE IF NOT EXISTS `time_daily_hourly_model` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `PRENOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `DATE_NAISSANCE` date NOT NULL,
-  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NUMERO_PERSO` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NUMERO_INTERNE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `IMAGE_PROFIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `STATU` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `CONNEXION` int(45) DEFAULT NULL,
-  `NAME` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `PASSWORD` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `FONCTION` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `SECTION_ID` int(11) NOT NULL,
-  `LANGUAGE` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`idUSER`)
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `user`
+-- Déchargement des données de la table `time_daily_hourly_model`
 --
 
-INSERT INTO `user` (`idUSER`, `CODE`, `NOM`, `PRENOM`, `DATE_NAISSANCE`, `MAIL`, `NUMERO_PERSO`, `NUMERO_INTERNE`, `IMAGE_PROFIL`, `STATU`, `CONNEXION`, `NAME`, `PASSWORD`, `FONCTION`, `SECTION_ID`, `LANGUAGE`) VALUES
-(1, 'U33', 'Kévin', 'Duchamp', '2020-11-18', 'kevin.duchamps@mail.fr', '0697764654', '553', 'img_avatar.png', '1', 1608917003, 'Billy', '$2y$10$6t9BuSEAJp.KYZxobYRqdOdTicOIFBudoRC2OW0seV/MujJ5jDugq', '1', 1, 'en'),
-(35, 'GH', 'Gareth', 'Head', '1990-05-11', 'tempus@odio.ca', '06 97 67 67 53', '08 38 54 38 04', 'img_avatar.png', '1', 1637099054, 'Gareth', 'a', '4', 0, 'fr'),
-(36, 'Z', 'Elton', 'Stephens', '1977-01-18', 'sem.Nulla.interdum@odioPhasellusat.com', '06 42 10 41 36', '09 86 09 50 06', 'img_avatar.png', '1', 1591554783, 'Elton', 'a', '6', 1, 'fr'),
-(37, 'V', 'Sean', 'Conway', '1979-02-12', 'ultricies.adipiscing@temporest.org', '06 02 61 47 58', '05 32 23 72 50', 'img_avatar.png', '1', 1618408924, 'Sean', 'a', '5', 6, 'fr'),
-(38, 'O', 'Raphael', 'Combs', '1985-07-20', 'lectus.Nullam.suscipit@lorem.org', '06 59 72 42 60', '04 45 04 97 22', 'img_avatar.png', '1', 1599887950, 'Raphael', 'a', '6', 6, 'fr'),
-(39, 'K', 'Courtney', 'Fox', '1983-11-04', 'at@Aeneangravidanunc.org', '06 08 31 53 49', '08 79 25 82 98', 'img_avatar.png', '1', 1588754342, 'Courtney', 'a', '4', 1, 'fr'),
-(40, 'Y', 'Aquila', 'Browning', '1987-02-18', 'vitae.sodales@dolor.org', '06 80 75 94 40', '03 99 60 94 56', 'img_avatar.png', '1', 1582903784, 'Aquila', 'a', '6', 6, 'fr'),
-(41, 'I', 'Kane', 'Tanner', '1977-02-27', 'aliquam.eu@acmi.edu', '06 00 30 68 52', '08 11 80 68 48', 'img_avatar.png', '1', 1625204548, 'Kane', 'a', '7', 5, 'fr'),
-(42, 'W', 'Dakota', 'Leonard', '2003-12-27', 'non@velitCraslorem.org', '06 50 07 07 62', '06 19 10 79 16', 'img_avatar.png', '1', 1601519187, 'Dakota', 'a', '4', 4, 'fr'),
-(43, 'W', 'Aileen', 'Gilbert', '1982-06-28', 'magna.et@mattisornare.net', '06 63 60 24 78', '09 58 67 68 99', 'img_avatar.png', '1', 1598730055, 'Aileen', 'a', '4', 5, 'fr'),
-(44, 'S', 'Mariam', 'Lott', '1999-01-19', 'risus.Nulla@ategestasa.com', '06 37 50 45 08', '01 75 67 69 85', 'img_avatar.png', '1', 1601834644, 'Mariam', 'a', '7', 8, 'fr'),
-(45, 'M', 'Brendan', 'Durham', '1990-05-17', 'eget.massa@ipsumnuncid.com', '06 79 71 67 80', '01 78 38 39 77', 'img_avatar.png', '1', 1632393766, 'Brendan', 'a', '3', 5, 'fr'),
-(46, 'T', 'Alexis', 'Turner', '1990-08-17', 'orci.luctus@sitametnulla.org', '06 30 47 94 89', '01 62 89 98 51', 'img_avatar.png', '1', 1636375338, 'Alexis', 'a', '8', 6, 'fr'),
-(47, 'O', 'Ramona', 'Haynes', '1992-06-13', 'dolor.Nulla.semper@imperdietornare.com', '06 51 10 42 55', '08 13 34 50 52', 'img_avatar.png', '1', 1639447768, 'Ramona', 'a', '4', 7, 'fr'),
-(48, 'H', 'Jocelyn', 'Gamble', '1976-12-31', 'vulputate@vitae.net', '06 43 91 64 28', '09 72 41 72 72', 'img_avatar.png', '1', 1628135097, 'Jocelyn', 'a', '6', 7, 'fr'),
-(49, 'L', 'Hanae', 'Butler', '2003-05-14', 'at@consequat.com', '06 58 49 70 01', '09 43 10 30 40', 'img_avatar.png', '1', 1640067051, 'Hanae', 'a', '7', 1, 'fr'),
-(50, 'T', 'Tamara', 'Delaney', '1999-05-28', 'Quisque.purus@PhasellusornareFusce.co.uk', '06 57 34 27 78', '01 64 04 32 91', 'img_avatar.png', '1', 1590625230, 'Tamara', 'a', '4', 8, 'fr'),
-(51, 'J', 'Xaviera', 'Howe', '1986-07-06', 'sagittis.semper.Nam@interdumenim.org', '06 39 17 73 87', '05 23 93 20 52', 'img_avatar.png', '1', 1589910201, 'Xaviera', 'a', '8', 6, 'fr'),
-(52, 'X', 'Ishmael', 'Jackson', '1993-02-01', 'mollis.dui.in@venenatislacusEtiam.org', '06 68 35 87 90', '04 33 78 88 46', 'img_avatar.png', '1', 1579745037, 'Ishmael', 'a', '5', 6, 'fr'),
-(53, 'H', 'Tamara', 'Burt', '1993-06-11', 'pellentesque@quamelementum.co.uk', '06 39 32 54 96', '08 62 38 53 80', 'img_avatar.png', '1', 1591654846, 'Tamara', 'a', '8', 4, 'fr'),
-(54, 'I', 'Tara', 'Winters', '2002-08-09', 'Etiam.imperdiet@nequetellus.net', '06 69 27 64 79', '06 18 32 27 26', 'img_avatar.png', '1', 1622676729, 'Tara', 'a', '4', 5, 'fr'),
-(55, 'X', 'Rina', 'Solomon', '2000-05-05', 'Duis@Cum.edu', '06 93 99 04 50', '04 33 31 96 76', 'img_avatar.png', '1', 1632504578, 'Rina', 'a', '4', 5, 'fr'),
-(56, 'P', 'Gary', 'Curry', '2001-07-05', 'ipsum@neque.net', '06 68 67 15 57', '05 46 51 19 16', 'img_avatar.png', '1', 1589907785, 'Gary', 'a', '6', 8, 'fr'),
-(57, 'W', 'Hope', 'Joseph', '1981-04-29', 'mollis.lectus.pede@nunc.edu', '06 09 31 53 27', '03 92 26 55 52', 'img_avatar.png', '1', 1622761314, 'Hope', 'a', '3', 8, 'fr'),
-(58, 'X', 'Aristotle', 'Reese', '1980-08-23', 'vestibulum@non.ca', '06 55 94 74 38', '07 66 10 19 23', 'img_avatar.png', '1', 1619436547, 'Aristotle', 'a', '4', 6, 'fr'),
-(211, 'X', 'Aristotl', 'Rees', '2020-12-27', '', '', '', '', '1', 1609024106, 'Aristotle', '', '5', 0, '1');
+INSERT INTO `time_daily_hourly_model` (`id`, `CODE`, `LABEL`) VALUES
+(1, 'JOUR_APMIDI', 'Modèle horaire après-midi'),
+(2, 'JOUR_MATIN', 'Modèle matin journalier');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `time_daily_hourly_model_line`
+--
+
+DROP TABLE IF EXISTS `time_daily_hourly_model_line`;
+CREATE TABLE IF NOT EXISTS `time_daily_hourly_model_line` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `MODEL_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `TYPE` int(11) NOT NULL,
+  `START` time NOT NULL,
+  `END` time NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `time_daily_hourly_model_line`
+--
+
+INSERT INTO `time_daily_hourly_model_line` (`id`, `MODEL_ID`, `ORDRE`, `TYPE`, `START`, `END`) VALUES
+(2, 1, 10, 1, '00:00:00', '06:00:00'),
+(3, 1, 20, 2, '06:00:00', '08:00:00'),
+(4, 1, 30, 3, '08:00:00', '12:00:00'),
+(5, 1, 40, 2, '12:00:00', '14:00:00'),
+(6, 1, 50, 3, '14:00:00', '18:00:00'),
+(7, 1, 60, 2, '18:00:00', '20:00:00'),
+(8, 1, 70, 1, '20:00:00', '23:59:00'),
+(9, 2, 10, 1, '00:00:00', '04:30:00'),
+(10, 2, 20, 2, '04:30:00', '05:00:00'),
+(11, 2, 30, 3, '05:00:00', '08:00:00'),
+(12, 2, 40, 2, '08:00:00', '08:30:00'),
+(13, 2, 50, 3, '08:30:00', '13:00:00'),
+(14, 2, 60, 2, '13:00:00', '16:00:00'),
+(15, 2, 70, 1, '16:00:00', '23:59:00');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `time_event_machine`
+--
+
+DROP TABLE IF EXISTS `time_event_machine`;
+CREATE TABLE IF NOT EXISTS `time_event_machine` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `MASK_TIME` int(11) NOT NULL,
+  `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `time_event_machine`
+--
+
+INSERT INTO `time_event_machine` (`id`, `CODE`, `ORDRE`, `LABEL`, `MASK_TIME`, `COLOR`, `ETAT`) VALUES
+(1, 'STOP', 10, 'Machine arrêtée', 0, '#ff0000', 4),
+(2, 'PREP', 20, 'Machine en préparation', 0, '#ff6f00', 2),
+(3, 'RUN', 30, 'Machine en fonctionnement', 0, '#37ff00', 3),
+(4, 'OUT', 40, 'Machine en panne', 0, '#ff0000', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `time_improductive_activity`
+--
+
+DROP TABLE IF EXISTS `time_improductive_activity`;
+CREATE TABLE IF NOT EXISTS `time_improductive_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ETAT_MACHINE` int(11) NOT NULL,
+  `RESSOURCE_NEC` int(11) NOT NULL,
+  `MASK_TIME` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `time_improductive_activity`
+--
+
+INSERT INTO `time_improductive_activity` (`id`, `LABEL`, `ETAT_MACHINE`, `RESSOURCE_NEC`, `MASK_TIME`) VALUES
+(1, 'Attente tâche / Préparation travail', 1, 0, 0),
+(2, 'Entretien / Nettoyage / Rangement', 1, 0, 0),
+(3, 'Réunion', 1, 0, 0),
+(4, 'Formation administrative', 1, 0, 0),
+(5, 'Formation machine', 1, 1, 0),
+(6, 'Activité interne', 1, 0, 0),
+(7, 'Panne', 1, 0, 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

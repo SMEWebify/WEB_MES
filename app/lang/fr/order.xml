@@ -48,15 +48,16 @@
     <Title1>Accueil</Title1> 
 
     <Title2>Commande</Title2>
-    <Title3>Détail de la commande</Title3>
-    <Title4>Document</Title4>
-
     <Title5>Lignes de commande</Title5>
-    <Title6>Accusés de reception</Title6>
-
-    <Title7>Détail de l'AR</Title7>
+    <Title3>Détail de la commande</Title3>
     
-    <Title9>Assistant de passage en commande</Title9>
+    <Title6>Accusés de reception</Title6>
+    <Title7>Détail de l'AR</Title7>
+
+    <Title8>Bon de livraison</Title8>
+    <Title9>Facture</Title9>
+
+    <Title4>Document</Title4>
 <!-- table content --> 
     <TableNameUser>Nom :</TableNameUser>
     <TableNameCompany>Nom :</TableNameCompany>
@@ -132,6 +133,7 @@
     <AddOrderNotification>Commande créée</AddOrderNotification>
     <AddOrderLineNotification> ligne(s) ajoutée(s) a la Commande</AddOrderLineNotification>
     <DeleteOrderLineNotification> ligne(s) suprimée(s) de la commande</DeleteOrderLineNotification>
+    <DeleteOrderAcknowledgmentLinesNotificationNotification> ligne(s) AR commande suprimée(s)</DeleteOrderAcknowledgmentLinesNotificationNotification>
     <AddOrderAcknowledgmentNotificationNotification>Accusé de reception créer</AddOrderAcknowledgmentNotificationNotification>
     <AddOrderAcknowledgmentLinesNotificationNotification> ligne(s) d'AR crée(s)</AddOrderAcknowledgmentLinesNotificationNotification>
     

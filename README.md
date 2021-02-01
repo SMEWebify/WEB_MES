@@ -17,8 +17,8 @@ git clone git@gitlab.com:billy_boy/ERP.git
 http://localhost/erp/public/
 
 # Log acces to user pages
-Login : Billy
-Password : KN1
+Login : Admin
+Password : password
 
 -----------------
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Menu.PNG)

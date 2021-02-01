@@ -32,8 +32,7 @@
 		<ul id="myUL">
 			<?php
 			//generate list for datalist find input
-			$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_STANDARD_ARTICLE ." ORDER BY LABEL";
-			foreach ($bdd->GetQuery($query) as $data): ?>
+			foreach ($Article->GETArticleList('',false) as $data): ?>
 			<li><a href="index.php?page=article&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
 			<?php $i++; endforeach; ?>
 		</ul>

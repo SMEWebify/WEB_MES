@@ -80,7 +80,7 @@
 		}
 		elseif(isset($_POST['COMENT']) AND !empty($_POST['COMENT'])){
 			//// COMMMENT ////
-			$bdd->GetUpdatePOST(TABLE_ERP_COMMANDE, $_POST, 'WHERE id=\''. $Id .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));
 		}
 		elseif(isset($_POST['RESP_COM_ID']) AND !empty($_POST['RESP_COM_ID'])){
@@ -91,7 +91,7 @@
 			if($_POST['RESP_COM_ID'] == 'null'){ $PostRESP_COM_ID = 0; }
 			if($_POST['RESP_TECH_ID'] == 'null'){ $PostRESP_TECH_ID = 0; }
 
-			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
+			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
 																	RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
 																			WHERE id='". $Id ."'");
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
@@ -101,12 +101,12 @@
 			
 			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
 	
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_COMMANDE_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'
 																WHERE 	ORDER_ID='". $Id ."'");
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
 			unset($_POST['MajLigne']);
-			$bdd->GetUpdatePOST(TABLE_ERP_COMMANDE, $_POST, 'WHERE id=\''. $Id .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
 		}
 		elseif(isset($_POST['CONTACT_ID']) AND !empty($_POST['CONTACT_ID'])){
@@ -120,7 +120,7 @@
 			if($_POST['ADRESSE_ID'] == 'null'){ $PostADRESSE_ID = 0; }
 			if($_POST['FACTURATION_ID'] == 'null'){ $PostFACTURATION_ID = 0; }
 
-			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_COMMANDE ." SET 	CONTACT_ID='". addslashes($PostCONTACT_ID) ."',
+			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER ." SET 	CONTACT_ID='". addslashes($PostCONTACT_ID) ."',
 																	ADRESSE_ID='". addslashes($PostADRESSE_ID) ."',
 																	FACTURATION_ID='". addslashes($PostFACTURATION_ID) ."'
 																WHERE id='". $Id ."'");
@@ -128,13 +128,15 @@
 		}
 		elseif(isset($_POST['COND_REG_CUSTOMER_ID']) AND !empty($_POST['COND_REG_CUSTOMER_ID'])){
 			//// COMMERCIAL UPDATE ////
-			$bdd->GetUpdatePOST(TABLE_ERP_COMMANDE, $_POST, 'WHERE id=\''. $Id .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
 		}
 		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			//// DELETE LIGNE ////
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_COMMANDE_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." WHERE ORDER_LINE_ID='". addslashes($_GET['delete'])."'");
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderLineNotification')));
+			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderAcknowledgmentLinesNotificationNotification')));
 		}
 		elseif(isset($_POST['AddORDRELigne']) AND !empty($_POST['AddORDRELigne'])){
 			//// AJOUT DE LIGNE  ////
@@ -206,7 +208,7 @@
 				//Create OA line
 				$OrderAcknowledgmentLines->NewOrderacknowledgmentlines($Id, $_POST['ORDER_ID'], $data->ORDRE, $data->id);
 				//update order line
-				$bdd->GetUpdatePOST(TABLE_ERP_COMMANDE_LIGNE, array("AR"=>1), 'WHERE id=\''. $data->id .'\'');
+				$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("AR"=>1), 'WHERE id=\''. $data->id .'\'');
 				$i++;
 			}
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderAcknowledgmentLinesNotificationNotification')));
@@ -224,9 +226,14 @@
 	$ListeArticleJava  .='"';
 
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
+		$reqList = $Order->GETOrderList('',false);
+		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
+		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
+		$GET = 'order';
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
+		$GET = 'order';
 		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'index.php?page=order&order='. $_GET['order'] .'';
 
@@ -234,7 +241,7 @@
 	elseif(isset($_GET['order']) AND !empty($_GET['order'])){
 		$reqList = $Order->GETOrderList('',false);
 		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
-		$MakeAR = $bdd->GetCount(TABLE_ERP_COMMANDE_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
+		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
 		$GET = 'order';
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
@@ -319,6 +326,8 @@ $(document).ready(function() {
 	<?php }else{ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title5'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title8'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title9'); ?></button>	
 	<?php } ?>
 	</div>
 	<?php
@@ -339,12 +348,36 @@ $(document).ready(function() {
 		</div>
 		<div id="div3" class="tabcontent">
 			<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindQuote') ?>">
+					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindOrder') ?>">
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input
 						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): ?>
 						<li><a href="index.php?page=order&OrderAcknowledgment=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+						<?php $i++; endforeach; ?>
+					</ul>
+			</div>
+		</div>
+		<div id="div4" class="tabcontent">
+			<div class="column">
+					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindDeliveryNotes') ?>">
+					<ul id="myUL">
+						<?php
+						//generate list for datalist find input
+						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): ?>
+						<li><a href="index.php?page=order&DeliveryNotes=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+						<?php $i++; endforeach; ?>
+					</ul>
+			</div>
+		</div>
+		<div id="div5" class="tabcontent">
+			<div class="column">
+					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindInvoice') ?>">
+					<ul id="myUL">
+						<?php
+						//generate list for datalist find input
+						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): ?>
+						<li><a href="index.php?page=order&Invoice=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
 						<?php $i++; endforeach; ?>
 					</ul>
 			</div>

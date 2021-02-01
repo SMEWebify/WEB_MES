@@ -42,6 +42,8 @@ class Companies Extends SQL  {
 
     public function GETCompanie($id_GET_Companie){
 
+        if($this-> GETCompanieCount($id_GET_Companie) == 0){ header('Location: index.php?page=companies'); }
+
         $GETCompanie = $this->GetQuery('SELECT  '. TABLE_ERP_CLIENT_FOUR .'.id,
                                                 '. TABLE_ERP_CLIENT_FOUR .'.CODE,
                                                 '. TABLE_ERP_CLIENT_FOUR .'.NAME,

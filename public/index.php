@@ -9,7 +9,6 @@
     use \App\Language;
     use \App\CallOutBox;
 	use \App\COMPANY\Company;
-    use \App\COMPANY\CompanyManager;
 
 	//auto load class
 	require '../app/Autoload.class.php';
@@ -20,9 +19,8 @@
     //init call out box for notification
     $CallOutBox = new CallOutBox();
     //load company vairiable
-	$CompanyManager = new CompanyManager($bdd);
-	$donneesCompany = $CompanyManager->getDb($bdd);
-    $Company = new Company($donneesCompany);
+    $Company = new Company();
+	$Company= $Company->GETCompany();
     
 	//session checking  user
 	$auth = New Auth($bdd);

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 <head>
-	<title><?=$Company->CompanyName() ?> - <?=$langue->show_text('TiltePage') ?></title>
+	<title><?=$Company->NAME ?> - <?=$langue->show_text('TiltePage') ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/ui.css" />
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/content.css" />
@@ -49,7 +49,7 @@
 			if($_SESSION['page_10'] == '1') {
 				echo '
 			</div>
-			<div style=" margin-left:400px; border-left:1px solid #ccc;">
+			<div style=" margin-left:500px; border-left:1px solid #ccc;">
 				<a class="" href="admin.php?page=manage-company">'. $langue->show_text('GeneralSettingLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubGeneralSettingLinkPage') .'</i>
 				<a class="" href="admin.php?page=manage-companies">'. $langue->show_text('CustoProvidLinkPage') .'</a><br/>

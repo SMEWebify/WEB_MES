@@ -76,6 +76,16 @@ class QL_NFC Extends SQL  {
         return $FNC;
     }
 
+    public function GETQNFCCount($ID = null, $Clause = null){
+        
+        if($ID != null){
+            $Clause = 'WHERE id = \''. $ID .'\'';
+        }
+
+        $QuoteCount =  $this->GetCount(TABLE_ERP_NFC,'id', $Clause);
+        return $QuoteCount;
+    }
+
     public function GETQL_NFCList($IdData=0){
 
         $this->QL_NFC ='<option value="0">Aucune</option>';

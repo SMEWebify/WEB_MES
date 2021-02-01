@@ -40,14 +40,32 @@ class Ressource Extends SQL  {
         return $Ressource;
     }
 
-    public function GETRessourcesList($IdData=0){
+    public function GETRessourcesList($IdData=0, $Select = true){
 
         $this->RessourcesList ='';
-        $query='SELECT Id, LABEL   FROM '. TABLE_ERP_RESSOURCE .'';
-        foreach ( $this->GetQuery($query) as $data){
-            $this->RessourcesList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-        }
-        
-        return  $this->RessourcesList;
+
+        $query='SELECT '. TABLE_ERP_RESSOURCE .'.Id,
+                        '. TABLE_ERP_RESSOURCE .'.CODE,
+                        '. TABLE_ERP_RESSOURCE .'.LABEL,
+                        '. TABLE_ERP_RESSOURCE .'.IMAGE,
+                        '. TABLE_ERP_RESSOURCE .'.MASK_TIME,
+                        '. TABLE_ERP_RESSOURCE .'.ORDRE,
+                        '. TABLE_ERP_RESSOURCE .'.CAPACITY,
+                        '. TABLE_ERP_RESSOURCE .'.SECTION_ID,
+                        '. TABLE_ERP_RESSOURCE .'.COLOR,
+                        '. TABLE_ERP_SECTION .'.LABEL AS LABEL_SECTOR
+                FROM `'. TABLE_ERP_RESSOURCE .'`
+                LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_RESSOURCE .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`
+                ORDER BY ORDRE';
+
+        if($Select){
+            foreach ( $this->GetQuery($query) as $data){
+                $this->RessourcesList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
+            }
+
+            return  $this->RessourcesList;
+        }else {
+            return  $this->GetQuery($query);
+        } 
     }
 }

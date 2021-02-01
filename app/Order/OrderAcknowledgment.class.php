@@ -42,6 +42,8 @@ class OrderAcknowledgment Extends SQL  {
 
     public function GETOrderAcknowledgment($id_GET){
 
+        if($this-> GETOrderAcknowledgmentCount($id_GET) == 0){ header('Location: index.php?page=order'); }
+
         $OrderAcknowledgment = $this->GetQuery('SELECT '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL,
@@ -152,24 +154,24 @@ class OrderAcknowledgmentLines Extends OrderAcknowledgment  {
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_ID,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDRE,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_LINE_ID,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.ARTICLE_CODE,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.LABEL,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.QT,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.UNIT_ID,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.PRIX_U,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.REMISE,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.TVA_ID,
-                        '. TABLE_ERP_COMMANDE_LIGNE .'.DELAIS,
+                        '. TABLE_ERP_ORDER_LIGNE .'.ARTICLE_CODE,
+                        '. TABLE_ERP_ORDER_LIGNE .'.LABEL,
+                        '. TABLE_ERP_ORDER_LIGNE .'.QT,
+                        '. TABLE_ERP_ORDER_LIGNE .'.UNIT_ID,
+                        '. TABLE_ERP_ORDER_LIGNE .'.PRIX_U,
+                        '. TABLE_ERP_ORDER_LIGNE .'.REMISE,
+                        '. TABLE_ERP_ORDER_LIGNE .'.TVA_ID,
+                        '. TABLE_ERP_ORDER_LIGNE .'.DELAIS,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE AS ORDER_ACKNOWLEGMENT_CODE,
-                        '. TABLE_ERP_COMMANDE .'.CODE AS ORDER_CODE,
+                        '. TABLE_ERP_ORDER .'.CODE AS ORDER_CODE,
                         '. TABLE_ERP_TVA .'.TAUX,
                         '. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA,
                         '. TABLE_ERP_UNIT .'.LABEL AS LABEL_UNIT
                         FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'
-                            LEFT JOIN `'. TABLE_ERP_COMMANDE .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_ID` = `'. TABLE_ERP_COMMANDE .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_COMMANDE_LIGNE .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_LINE_ID` = `'. TABLE_ERP_COMMANDE_LIGNE .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_ORDER_LIGNE .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_LINE_ID` = `'. TABLE_ERP_ORDER_LIGNE .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_ORDER_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_ORDER_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
                             LEFT JOIN `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'`.`ORDER_ACKNOWLEGMENT_ID` = `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`id` 
                             '. $Clause.'
                         ORDER BY '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDRE ';

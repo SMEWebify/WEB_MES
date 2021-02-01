@@ -3,7 +3,7 @@
 <!-- UI node --> 
    <!-- User UI -->
 	<QuoteLinkPage>Quote</QuoteLinkPage>
-	<OrderLinkPage>Order</OrderLinkPage>
+	<OrderLinkPage>Sales Orders</OrderLinkPage>
    <PlanningLinkPage>Planning</PlanningLinkPage>
    <CompaniesLinkPage>Companies</CompaniesLinkPage>
    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
@@ -12,10 +12,10 @@
    <LogOutLinkPage>Logout</LogOutLinkPage>
       <!-- Sub menu User UI -->
       <SubQuoteLinkPage>Quote | Quote lines</SubQuoteLinkPage>
-      <SubOrderLinkPage>Order | Order lines | AR | Delivery form | Invoice</SubOrderLinkPage>
+      <SubOrderLinkPage>Sales Order | Order lines | AR | Delivery notes | Invoice</SubOrderLinkPage>
       <SubPlanningLinkPage>Calendar | Ressource | Section | Service</SubPlanningLinkPage>
       <SubCompaniesLinkPage>Companies | Adresse | Contacts | Activity Sector | Coment</SubCompaniesLinkPage>
-      <SubPurchaseLinkPage>Consultation | Purchase Order | AR | Delivery form | Invoice</SubPurchaseLinkPage>
+      <SubPurchaseLinkPage>Purchase request | Purchase Order | AR | PO receipts | Supplier Invoice</SubPurchaseLinkPage>
       <SubArticleLinkPage>Article | Stock | Inventory</SubArticleLinkPage>
       <SubQualityLinkPage>NCR | Action | Derogations | Devices</SubQualityLinkPage>
       <SubLogOutLinkPage>This disconnect from the application</SubLogOutLinkPage>
@@ -117,7 +117,7 @@
     <SelectAR>Acknowledgment of receipt</SelectAR>
     <SelectBLS>Supplier delivery note</SelectBLS>
     <SelectBLC>Customer return slip</SelectBLC>
-    <SelectBL>Delivery form</SelectBL>
+    <SelectBL>Delivery notes</SelectBL>
     <SelectORDER>Order</SelectORDER>
     <SelectBUYORDER>Purchase order</SelectBUYORDER>
     <SelectINTORDER>Internal control</SelectINTORDER>

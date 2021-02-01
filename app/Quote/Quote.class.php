@@ -34,7 +34,7 @@ class Quote Extends SQL  {
 
     public function NewQuote($CODE, $CutomerID, $UserID){
 
-        $NewQuote = $this->GetInsert("INSERT INTO ". TABLE_ERP_DEVIS ." VALUE ('0',
+        $NewQuote = $this->GetInsert("INSERT INTO ". TABLE_ERP_QUOTE ." VALUE ('0',
 																				'". $CODE ."',
 																				'1',
 																				'',
@@ -60,34 +60,36 @@ class Quote Extends SQL  {
 
     public function GETQuote($id_GET){
 
-        $Quote = $this->GetQuery('SELECT '. TABLE_ERP_DEVIS .'.id,
-                                        '. TABLE_ERP_DEVIS .'.CODE,
-                                        '. TABLE_ERP_DEVIS .'.INDICE,
-                                        '. TABLE_ERP_DEVIS .'.LABEL,
-                                        '. TABLE_ERP_DEVIS .'.LABEL_INDICE,
-                                        '. TABLE_ERP_DEVIS .'.CUSTOMER_ID,
-                                        '. TABLE_ERP_DEVIS .'.CONTACT_ID,
-                                        '. TABLE_ERP_DEVIS .'.ADRESSE_ID,
-                                        '. TABLE_ERP_DEVIS .'.FACTURATION_ID,
-                                        '. TABLE_ERP_DEVIS .'.DATE,
-                                        '. TABLE_ERP_DEVIS .'.DATE_VALIDITE,
-                                        '. TABLE_ERP_DEVIS .'.ETAT,
-                                        '. TABLE_ERP_DEVIS .'.CREATEUR_ID,
-                                        '. TABLE_ERP_DEVIS .'.RESP_COM_ID,
-                                        '. TABLE_ERP_DEVIS .'.RESP_TECH_ID,
-                                        '. TABLE_ERP_DEVIS .'.REFERENCE,
-                                        '. TABLE_ERP_DEVIS .'.COND_REG_CUSTOMER_ID,
-                                        '. TABLE_ERP_DEVIS .'.MODE_REG_CUSTOMER_ID,
-                                        '. TABLE_ERP_DEVIS .'.ECHEANCIER_ID,
-                                        '. TABLE_ERP_DEVIS .'.TRANSPORT_ID,
-                                        '. TABLE_ERP_DEVIS .'.COMENT,
+        if($this-> GETQuoteCount($id_GET) == 0){ header('Location: index.php?page=quote'); }
+
+        $Quote = $this->GetQuery('SELECT '. TABLE_ERP_QUOTE .'.id,
+                                        '. TABLE_ERP_QUOTE .'.CODE,
+                                        '. TABLE_ERP_QUOTE .'.INDICE,
+                                        '. TABLE_ERP_QUOTE .'.LABEL,
+                                        '. TABLE_ERP_QUOTE .'.LABEL_INDICE,
+                                        '. TABLE_ERP_QUOTE .'.CUSTOMER_ID,
+                                        '. TABLE_ERP_QUOTE .'.CONTACT_ID,
+                                        '. TABLE_ERP_QUOTE .'.ADRESSE_ID,
+                                        '. TABLE_ERP_QUOTE .'.FACTURATION_ID,
+                                        '. TABLE_ERP_QUOTE .'.DATE,
+                                        '. TABLE_ERP_QUOTE .'.DATE_VALIDITE,
+                                        '. TABLE_ERP_QUOTE .'.ETAT,
+                                        '. TABLE_ERP_QUOTE .'.CREATEUR_ID,
+                                        '. TABLE_ERP_QUOTE .'.RESP_COM_ID,
+                                        '. TABLE_ERP_QUOTE .'.RESP_TECH_ID,
+                                        '. TABLE_ERP_QUOTE .'.REFERENCE,
+                                        '. TABLE_ERP_QUOTE .'.COND_REG_CUSTOMER_ID,
+                                        '. TABLE_ERP_QUOTE .'.MODE_REG_CUSTOMER_ID,
+                                        '. TABLE_ERP_QUOTE .'.ECHEANCIER_ID,
+                                        '. TABLE_ERP_QUOTE .'.TRANSPORT_ID,
+                                        '. TABLE_ERP_QUOTE .'.COMENT,
                                         '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM,
                                         '. TABLE_ERP_EMPLOYEES .'.PRENOM
-                                        FROM `'. TABLE_ERP_DEVIS .'`
-                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_DEVIS .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
-                                        WHERE '. TABLE_ERP_DEVIS .'.id = \''. $id_GET.'\' ', true, 'App\Quote\Quote');
+                                        FROM `'. TABLE_ERP_QUOTE .'`
+                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_QUOTE .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QUOTE .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                        WHERE '. TABLE_ERP_QUOTE .'.id = \''. $id_GET.'\' ', true, 'App\Quote\Quote');
         return $Quote;
     }
 
@@ -97,20 +99,20 @@ class Quote Extends SQL  {
             $Clause = 'WHERE id = \''. $ID .'\'';
         }
 
-        $QuoteCount =  $this->GetCount(TABLE_ERP_DEVIS,'id', $Clause);
+        $QuoteCount =  $this->GetCount(TABLE_ERP_QUOTE,'id', $Clause);
         return $QuoteCount;
     }
 
     public function GETQuoteList($IdData=0, $Select = true){
 
         $this->QuoteList ='';
-        $query='SELECT '. TABLE_ERP_DEVIS .'.id,
-                        '. TABLE_ERP_DEVIS .'.CODE,
-                        '. TABLE_ERP_DEVIS .'.LABEL,
+        $query='SELECT '. TABLE_ERP_QUOTE .'.id,
+                        '. TABLE_ERP_QUOTE .'.CODE,
+                        '. TABLE_ERP_QUOTE .'.LABEL,
                         '. TABLE_ERP_CLIENT_FOUR .'.NAME
-                FROM '. TABLE_ERP_DEVIS .'
-                LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-                ORDER BY  '. TABLE_ERP_DEVIS .'.id DESC';
+                FROM '. TABLE_ERP_QUOTE .'
+                LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_QUOTE .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                ORDER BY  '. TABLE_ERP_QUOTE .'.id DESC';
         if($Select){
             foreach ($this->GetQuery($query) as $data){
             
@@ -145,7 +147,7 @@ class QuoteLines Extends Quote  {
 
     public function NewQuoteLine($IdQuote, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $REMISE, $TVA_ID, $DELAIS){
 
-        $NewQuoteLine = $this->GetInsert("INSERT INTO ". TABLE_ERP_DEVIS_LIGNE ." VALUE ('0',
+        $NewQuoteLine = $this->GetInsert("INSERT INTO ". TABLE_ERP_QUOTE_LIGNE ." VALUE ('0',
                                                                                         '". $IdQuote ."',
                                                                                         '". addslashes($ORDRE) ."',
                                                                                         '". addslashes($ARTICLE_CODE) ."',
@@ -163,7 +165,7 @@ class QuoteLines Extends Quote  {
 
     public function UpdateQuoteLine($id, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $REMISE, $TVA_ID, $DELAIS, $ETAT){
 
-        $UpdateQuoteLine = $this->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET 	ORDRE='". addslashes($ORDRE) ."',
+        $UpdateQuoteLine = $this->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE_LIGNE ." SET 	ORDRE='". addslashes($ORDRE) ."',
                                                                                         ARTICLE_CODE='". addslashes($ARTICLE_CODE) ."',
                                                                                         LABEL='". addslashes($LABEL) ."',
                                                                                         QT='". addslashes($QT) ."',
@@ -181,32 +183,32 @@ class QuoteLines Extends Quote  {
     public function GETQuoteLineList($IdData=0, $Select = true, $IdQuote=0){
 
         $this->QuoteLineList ='';
-        $Clause = 'WHERE '. TABLE_ERP_DEVIS_LIGNE .'.DEVIS_ID = \''. $IdQuote.'\'';
+        $Clause = 'WHERE '. TABLE_ERP_QUOTE_LIGNE .'.DEVIS_ID = \''. $IdQuote.'\'';
         if($IdQuote===0){
             $Clause = '';
         }
-        $query='SELECT  '. TABLE_ERP_DEVIS_LIGNE .'.id,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.DEVIS_ID,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.ORDRE,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.ARTICLE_CODE,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.LABEL,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.QT,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.UNIT_ID,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.PRIX_U,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.REMISE,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.TVA_ID,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.DELAIS,
-                        '. TABLE_ERP_DEVIS_LIGNE .'.ETAT,
-                        '. TABLE_ERP_DEVIS .'.CODE AS QUOTE_CODE,
+        $query='SELECT  '. TABLE_ERP_QUOTE_LIGNE .'.id,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.DEVIS_ID,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.ORDRE,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.ARTICLE_CODE,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.LABEL,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.QT,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.UNIT_ID,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.PRIX_U,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.REMISE,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.TVA_ID,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.DELAIS,
+                        '. TABLE_ERP_QUOTE_LIGNE .'.ETAT,
+                        '. TABLE_ERP_QUOTE .'.CODE AS QUOTE_CODE,
                         '. TABLE_ERP_TVA .'.TAUX,
                         '. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA,
                         '. TABLE_ERP_UNIT .'.LABEL AS LABEL_UNIT
-                        FROM '. TABLE_ERP_DEVIS_LIGNE .'
-                            LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_DEVIS .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`DEVIS_ID` = `'. TABLE_ERP_DEVIS .'`.`id`
+                        FROM '. TABLE_ERP_QUOTE_LIGNE .'
+                            LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_QUOTE_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_QUOTE_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_QUOTE .'` ON `'. TABLE_ERP_QUOTE_LIGNE .'`.`DEVIS_ID` = `'. TABLE_ERP_QUOTE .'`.`id`
                             '. $Clause.'
-                        ORDER BY '. TABLE_ERP_DEVIS_LIGNE .'.ORDRE ';
+                        ORDER BY '. TABLE_ERP_QUOTE_LIGNE .'.ORDRE ';
         if($Select){
             foreach ($this->GetQuery($query) as $data){
             

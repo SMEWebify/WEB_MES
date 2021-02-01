@@ -60,32 +60,32 @@
 	if(isset($_GET['id'])){$IDdevis = addslashes($_GET['id']);}
 		
 		// check if exist	
-		$data=$bdd->GetQuery("SELECT COUNT(id) as nb FROM ". TABLE_ERP_DEVIS ." WHERE CODE = '". $IDdevis."'", true);
+		$data=$bdd->GetQuery("SELECT COUNT(id) as nb FROM ". TABLE_ERP_QUOTE ." WHERE CODE = '". $IDdevis."'", true);
 		$nb = $data->nb;
 			
 		if($nb=1){
 
-			$query='SELECT '. TABLE_ERP_DEVIS .'.Id,
-									'. TABLE_ERP_DEVIS .'.CODE,
-									'. TABLE_ERP_DEVIS .'.INDICE,
-									'. TABLE_ERP_DEVIS .'.LABEL,
-									'. TABLE_ERP_DEVIS .'.LABEL_INDICE,
-									'. TABLE_ERP_DEVIS .'.CLIENT_ID,
-									'. TABLE_ERP_DEVIS .'.CONTACT_ID,
-									'. TABLE_ERP_DEVIS .'.ADRESSE_ID,
-									'. TABLE_ERP_DEVIS .'.FACTURATION_ID,
-									DATE_FORMAT('. TABLE_ERP_DEVIS .'.DATE, "%d/%m/%Y"),
-									'. TABLE_ERP_DEVIS .'.DATE_VALIDITE,
-									'. TABLE_ERP_DEVIS .'.ETAT,
-									'. TABLE_ERP_DEVIS .'.CREATEUR_ID,
-									'. TABLE_ERP_DEVIS .'.RESP_COM_ID,
-									'. TABLE_ERP_DEVIS .'.RESP_TECH_ID,
-									'. TABLE_ERP_DEVIS .'.REFERENCE,
-									'. TABLE_ERP_DEVIS .'.COND_REG_CLIENT_ID,
-									'. TABLE_ERP_DEVIS .'.MODE_REG_CLIENT_ID,
-									'. TABLE_ERP_DEVIS .'.ECHEANCIER_ID,
-									'. TABLE_ERP_DEVIS .'.TRANSPORT_ID,
-									'. TABLE_ERP_DEVIS .'.COMENT,
+			$query='SELECT '. TABLE_ERP_QUOTE .'.Id,
+									'. TABLE_ERP_QUOTE .'.CODE,
+									'. TABLE_ERP_QUOTE .'.INDICE,
+									'. TABLE_ERP_QUOTE .'.LABEL,
+									'. TABLE_ERP_QUOTE .'.LABEL_INDICE,
+									'. TABLE_ERP_QUOTE .'.CLIENT_ID,
+									'. TABLE_ERP_QUOTE .'.CONTACT_ID,
+									'. TABLE_ERP_QUOTE .'.ADRESSE_ID,
+									'. TABLE_ERP_QUOTE .'.FACTURATION_ID,
+									DATE_FORMAT('. TABLE_ERP_QUOTE .'.DATE, "%d/%m/%Y"),
+									'. TABLE_ERP_QUOTE .'.DATE_VALIDITE,
+									'. TABLE_ERP_QUOTE .'.ETAT,
+									'. TABLE_ERP_QUOTE .'.CREATEUR_ID,
+									'. TABLE_ERP_QUOTE .'.RESP_COM_ID,
+									'. TABLE_ERP_QUOTE .'.RESP_TECH_ID,
+									'. TABLE_ERP_QUOTE .'.REFERENCE,
+									'. TABLE_ERP_QUOTE .'.COND_REG_CLIENT_ID,
+									'. TABLE_ERP_QUOTE .'.MODE_REG_CLIENT_ID,
+									'. TABLE_ERP_QUOTE .'.ECHEANCIER_ID,
+									'. TABLE_ERP_QUOTE .'.TRANSPORT_ID,
+									'. TABLE_ERP_QUOTE .'.COMENT,
 									'. TABLE_ERP_CLIENT_FOUR .'.NAME,
 									'. TABLE_ERP_EMPLOYEES .'.NOM,
 									'. TABLE_ERP_EMPLOYEES .'.PRENOM,
@@ -98,15 +98,15 @@
 									'. TABLE_ERP_MODE_REG .'.LABEL AS CONDI_MODE_LABEL,
 									'. TABLE_ERP_TRANSPORT .'.LABEL AS TRANSPORT_LABEL,
 									'. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL AS ECHEANCIER_LABEL
-									FROM `'. TABLE_ERP_DEVIS .'`
-										LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_DEVIS .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_DEVIS .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
-										LEFT JOIN `'. TABLE_ERP_CONTACT .'` ON `'. TABLE_ERP_DEVIS .'`.`CONTACT_ID` = `'. TABLE_ERP_CONTACT .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_DEVIS .'`.`COND_REG_CLIENT_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_DEVIS .'`.`MODE_REG_CLIENT_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_TRANSPORT .'` ON `'. TABLE_ERP_DEVIS .'`.`TRANSPORT_ID` = `'. TABLE_ERP_TRANSPORT .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_ECHEANCIER_TYPE .'` ON `'. TABLE_ERP_DEVIS .'`.`ECHEANCIER_ID` = `'. TABLE_ERP_ECHEANCIER_TYPE .'`.`id`
-									WHERE '. TABLE_ERP_DEVIS .'.CODE = \''. $IDdevis.'\' ';
+									FROM `'. TABLE_ERP_QUOTE .'`
+										LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_QUOTE .'`.`CLIENT_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+										LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QUOTE .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+										LEFT JOIN `'. TABLE_ERP_CONTACT .'` ON `'. TABLE_ERP_QUOTE .'`.`CONTACT_ID` = `'. TABLE_ERP_CONTACT .'`.`id`
+										LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_QUOTE .'`.`COND_REG_CLIENT_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
+										LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_QUOTE .'`.`MODE_REG_CLIENT_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
+										LEFT JOIN `'. TABLE_ERP_TRANSPORT .'` ON `'. TABLE_ERP_QUOTE .'`.`TRANSPORT_ID` = `'. TABLE_ERP_TRANSPORT .'`.`id`
+										LEFT JOIN `'. TABLE_ERP_ECHEANCIER_TYPE .'` ON `'. TABLE_ERP_QUOTE .'`.`ECHEANCIER_ID` = `'. TABLE_ERP_ECHEANCIER_TYPE .'`.`id`
+									WHERE '. TABLE_ERP_QUOTE .'.CODE = \''. $IDdevis.'\' ';
 
 			$data = $bdd->GetQuery($query, true);
 			
@@ -154,25 +154,25 @@
 			$DevisETAT = $data['ETAT'];
 			$DevisREFERENCE = $data['REFERENCE'];
 			
-			$req = $bdd -> query('SELECT  '. TABLE_ERP_DEVIS_LIGNE .'.Id, 
-														'. TABLE_ERP_DEVIS_LIGNE .'.ORDRE,
-														'. TABLE_ERP_DEVIS_LIGNE .'.ARTICLE_CODE,
-														'. TABLE_ERP_DEVIS_LIGNE .'.LABEL,
-														'. TABLE_ERP_DEVIS_LIGNE .'.QT,
-														'. TABLE_ERP_DEVIS_LIGNE .'.UNIT_ID,
-														'. TABLE_ERP_DEVIS_LIGNE .'.PRIX_U,
-														'. TABLE_ERP_DEVIS_LIGNE .'.REMISE,
-														'. TABLE_ERP_DEVIS_LIGNE .'.TVA_ID,
-														DATE_FORMAT('. TABLE_ERP_DEVIS_LIGNE .'.DELAIS, "%d/%m/%Y"),
-														'. TABLE_ERP_DEVIS_LIGNE .'.ETAT,
+			$req = $bdd -> query('SELECT  '. TABLE_ERP_QUOTE_LIGNE .'.Id, 
+														'. TABLE_ERP_QUOTE_LIGNE .'.ORDRE,
+														'. TABLE_ERP_QUOTE_LIGNE .'.ARTICLE_CODE,
+														'. TABLE_ERP_QUOTE_LIGNE .'.LABEL,
+														'. TABLE_ERP_QUOTE_LIGNE .'.QT,
+														'. TABLE_ERP_QUOTE_LIGNE .'.UNIT_ID,
+														'. TABLE_ERP_QUOTE_LIGNE .'.PRIX_U,
+														'. TABLE_ERP_QUOTE_LIGNE .'.REMISE,
+														'. TABLE_ERP_QUOTE_LIGNE .'.TVA_ID,
+														DATE_FORMAT('. TABLE_ERP_QUOTE_LIGNE .'.DELAIS, "%d/%m/%Y"),
+														'. TABLE_ERP_QUOTE_LIGNE .'.ETAT,
 														'. TABLE_ERP_TVA .'.TAUX,
 														'. TABLE_ERP_TVA .'.LABEL AS LABEL_TVA,
 														'. TABLE_ERP_UNIT .'.LABEL AS LABEL_UNIT
-														FROM '. TABLE_ERP_DEVIS_LIGNE .'
-															LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
-															LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_DEVIS_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-															WHERE '. TABLE_ERP_DEVIS_LIGNE .'.DEVIS_ID = \''. $IDDevisSQL.'\' 
-														ORDER BY '. TABLE_ERP_DEVIS_LIGNE .'.ORDRE ');
+														FROM '. TABLE_ERP_QUOTE_LIGNE .'
+															LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_QUOTE_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
+															LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_QUOTE_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
+															WHERE '. TABLE_ERP_QUOTE_LIGNE .'.DEVIS_ID = \''. $IDDevisSQL.'\' 
+														ORDER BY '. TABLE_ERP_QUOTE_LIGNE .'.ORDRE ');
 						$tableauTVA = array();
 						
 			while ($DonneesListeLigneDuDevis = $req->fetch()){

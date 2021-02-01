@@ -35,16 +35,31 @@ class Prestation Extends SQL  {
         return $Prestation;
     }
 
-    public function GetPrestationList($IdData=0){
+    public function GetPrestationList($IdData=0, $Select = true){
 
         $this->PrestationList ='';
-        $query='SELECT Id, LABEL   FROM '. TABLE_ERP_PRESTATION .'';
-		foreach ($this->GetQuery($query) as $data){
-           
-			$this->PrestationList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-		}
-        
-        return  $this->PrestationList;
+        $query='SELECT '. TABLE_ERP_PRESTATION .'.Id,
+									'. TABLE_ERP_PRESTATION .'.CODE,
+									'. TABLE_ERP_PRESTATION .'.ORDRE,
+									'. TABLE_ERP_PRESTATION .'.LABEL,
+									'. TABLE_ERP_PRESTATION .'.TYPE,
+									'. TABLE_ERP_PRESTATION .'.TAUX_H,
+									'. TABLE_ERP_PRESTATION .'.MARGE,
+									'. TABLE_ERP_PRESTATION .'.COLOR,
+									'. TABLE_ERP_PRESTATION .'.IMAGE
+									FROM `'. TABLE_ERP_PRESTATION .'`
+                                    ORDER BY ORDRE';
+                                    
+        if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->PrestationList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
+            }
+            
+            return  $this->PrestationList;
+        }else {
+            return  $this->GetQuery($query);
+        } 
     }
 
     public function GetPrestationCheckedList($IdData){

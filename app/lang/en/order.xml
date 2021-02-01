@@ -3,7 +3,7 @@
 <!-- UI node --> 
    <!-- User UI -->
 	<QuoteLinkPage>Quote</QuoteLinkPage>
-	<OrderLinkPage>Order</OrderLinkPage>
+	<OrderLinkPage>Sales Orders</OrderLinkPage>
    <PlanningLinkPage>Planning</PlanningLinkPage>
    <CompaniesLinkPage>Companies</CompaniesLinkPage>
    <PurchaseLinkPage>Purchase</PurchaseLinkPage>
@@ -12,10 +12,10 @@
    <LogOutLinkPage>Logout</LogOutLinkPage>
       <!-- Sub menu User UI -->
       <SubQuoteLinkPage>Quote | Quote lines</SubQuoteLinkPage>
-      <SubOrderLinkPage>Order | Order lines | AR | Delivery form | Invoice</SubOrderLinkPage>
+      <SubOrderLinkPage>Sales Order | Order lines | AR | Delivery notes | Invoice</SubOrderLinkPage>
       <SubPlanningLinkPage>Calendar | Ressource | Section | Service</SubPlanningLinkPage>
       <SubCompaniesLinkPage>Companies | Adresse | Contacts | Activity Sector | Coment</SubCompaniesLinkPage>
-      <SubPurchaseLinkPage>Consultation | Purchase Order | AR | Delivery form | Invoice</SubPurchaseLinkPage>
+      <SubPurchaseLinkPage>Purchase request | Purchase Order | AR | PO receipts | Supplier Invoice</SubPurchaseLinkPage>
       <SubArticleLinkPage>Article | Stock | Inventory</SubArticleLinkPage>
       <SubQualityLinkPage>NCR | Action | Derogations | Devices</SubQualityLinkPage>
       <SubLogOutLinkPage>This disconnect from the application</SubLogOutLinkPage>
@@ -45,18 +45,20 @@
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
 <!-- title page --> 
-	<TiltePage>Order</TiltePage>
+	 <TiltePage>Order</TiltePage>
     <Title1>Home</Title1> 
+
     <Title2>Order</Title2>
     <Title3>Order detail</Title3>
-    <Title4>Document</Title4>
-
     <Title5>Order Lines</Title5>
-    <Title6>Order Acknowledgment</Title6>
 
+    <Title6>Order Acknowledgment</Title6>
     <Title7>Order Acknowledgment detail</Title7>
     
-    <Title9>Order assistant</Title9>
+    <Title8>Delivery notes</Title8>
+    <Title9>Invoices</Title9>
+
+    <Title4>Document</Title4>
 <!-- table content --> 
     <TableNameUser>Name :</TableNameUser>
     <TableNameCompany>Company name :</TableNameCompany>
@@ -131,6 +133,7 @@
     <AddOrderNotification>Order created</AddOrderNotification>
     <AddOrderLineNotification> Line add to Order</AddOrderLineNotification>
     <DeleteOrderLineNotification> line delete to Order</DeleteOrderLineNotification>
+    <DeleteOrderAcknowledgmentLinesNotificationNotification> line Acknowledgment Order delete</DeleteOrderAcknowledgmentLinesNotificationNotification>
     <AddOrderAcknowledgmentNotificationNotification>Order Acknowledgment added</AddOrderAcknowledgmentNotificationNotification>
     <AddOrderAcknowledgmentLinesNotificationNotification> Order Acknowledgment lines added</AddOrderAcknowledgmentLinesNotificationNotification>
 <!-- Select-->

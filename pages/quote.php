@@ -56,7 +56,7 @@
 		}
 		elseif(isset($_POST['COMENT']) AND !empty($_POST['COMENT'])){
 			//// COMMMENT ////
-			$bdd->GetUpdatePOST(TABLE_ERP_DEVIS, $_POST, 'WHERE id=\''. $Id .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_QUOTE, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));
 		}
 		elseif(isset($_POST['RESP_COM_ID']) AND !empty($_POST['RESP_COM_ID'])){
@@ -67,7 +67,7 @@
 			if($_POST['RESP_COM_ID'] == 'null'){ $PostRESP_COM_ID = 0; }
 			if($_POST['RESP_TECH_ID'] == 'null'){ $PostRESP_TECH_ID = 0; }
 
-			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
+			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
 																	RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
 																			WHERE id='". $Id ."'");
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
@@ -75,12 +75,12 @@
 		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
 			//// ACCEUIL DEVIS  ////
 			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'	
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'	
 																		WHERE DEVIS_ID='". addslashes($_POST['IdDevis'])."'");
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
 			unset($_POST['MajLigne']);
-			$bdd->GetUpdatePOST(TABLE_ERP_DEVIS, $_POST, 'WHERE id=\''. $Id .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_QUOTE, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
 		}
 		elseif(isset($_POST['CONTACT_ID']) AND !empty($_POST['CONTACT_ID'])){
@@ -93,7 +93,7 @@
 			if($_POST['ADRESSE_ID'] == 'null'){ $PostADRESSE_ID = 0; }
 			if($_POST['FACTURATION_ID'] == 'null'){ $PostFACTURATION_ID = 0; }
 	
-			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_DEVIS ." SET 	CONTACT_ID='". addslashes($PostCONTACT_ID) ."',
+			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE ." SET 	CONTACT_ID='". addslashes($PostCONTACT_ID) ."',
 																	ADRESSE_ID='". addslashes($PostADRESSE_ID) ."',
 																	FACTURATION_ID='". addslashes($PostFACTURATION_ID) ."'
 																WHERE id='". $Id ."'");
@@ -101,12 +101,12 @@
 		}
 		elseif(isset($_POST['COND_REG_CUSTOMER_ID']) AND !empty($_POST['COND_REG_CUSTOMER_ID'])){
 			//// COMMERCIAL UPDATE ////
-			$bdd->GetUpdatePOST(TABLE_ERP_DEVIS, $_POST, 'WHERE id=\''. $Id .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_QUOTE, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
 		}
 		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			//// DELETE LIGNE ////
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_DEVIS_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteQuoteLineNotification')));
 		}
 		elseif(isset($_POST['AddORDRELigne']) AND !empty($_POST['AddORDRELigne'])){
@@ -199,94 +199,7 @@
 		$actionForm = 'index.php?page=quote&quote=new';
 	}
 ?>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
- <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-		var data = google.visualization.arrayToDataTable([
-<?php
-			$ListeEtat = "['Task', 'Number of Quote']";
-			$query="SELECT ETAT, COUNT(ETAT) AS CountEtat FROM ". TABLE_ERP_DEVIS ." GROUP BY ETAT";
-			foreach ($bdd->GetQuery($query) as $data){
-				If ($data->ETAT == 1) {$Etat = 'En cours';}
-				If ($data->ETAT == 2) {$Etat = 'Refusé';}
-				If ($data->ETAT == 3) {$Etat = 'Envoyé';}
-				If ($data->ETAT == 4) {$Etat = 'Décliné';}
-				If ($data->ETAT == 5) {$Etat = 'Fermé';}
-				If ($data->ETAT == 6) {$Etat = 'Obselète';}
-
-				$ListeEtat .= ", ['". $Etat ."',". $data->CountEtat ."]";
-			}
-
-			echo $ListeEtat;
-?>
-        ]);
-
-        var options = {
-          title: 'Taux de transformation'
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-        chart.draw(data, options);
-      }
-    </script>
-	<script type="text/javascript">
-    google.charts.load("current", {packages:['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-    	var data = google.visualization.arrayToDataTable([
-		<?php
-			$ListeEtat = "['Element', 'Total Price', { role: 'style' } ]";
-			$query="SELECT SUM(PRIX_U *	QT) AS PRIX_TOTAL, 
-						CASE MONTH(". TABLE_ERP_DEVIS .".DATE) 
-							WHEN 1 THEN 'janvier'
-							WHEN 2 THEN 'février'
-							WHEN 3 THEN 'mars'
-							WHEN 4 THEN 'avril'
-							WHEN 5 THEN 'mai'
-							WHEN 6 THEN 'juin'
-							WHEN 7 THEN 'juillet'
-							WHEN 8 THEN 'août'
-							WHEN 9 THEN 'septembre'
-							WHEN 10 THEN 'octobre'
-							WHEN 11 THEN 'novembre'
-							ELSE 'décembre'
-						END AS MONTH
-			FROM ". TABLE_ERP_DEVIS_LIGNE ." join ". TABLE_ERP_DEVIS ." ON ". TABLE_ERP_DEVIS_LIGNE .".DEVIS_ID=". TABLE_ERP_DEVIS .".id 
-			GROUP BY MONTH(". TABLE_ERP_DEVIS .".DATE)  ";
-
-		//	var_dump($bdd->GetQuery($query));
-			foreach ($bdd->GetQuery($query) as $data){
-
-				$ListeEtat .= ", ['". $data->MONTH ."',". $data->PRIX_TOTAL .", \"#b87333\"]";
-			}
-
-			echo $ListeEtat;
-?>
-      ]);
-
-      var view = new google.visualization.DataView(data);
-      view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" },
-                       2]);
-
-      var options = {
-        title: "Montant chiffré ce mois ci",
-        width: 400,
-        height: 300,
-        bar: {groupWidth: "95%"},
-        legend: { position: "none" },
-      };
-      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-      chart.draw(view, options);
-  }
-  </script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -396,13 +309,13 @@ $(document).ready(function() {
 												<td><input type="radio" id="new" name="ADD_ORDER_FROM_QUOTE" value="new" checked="checked"><label for="new"><?= $langue->show_text('TableNewOrder') ?></label></td>
 											</tr>
 											<?php
-											$query='SELECT '. TABLE_ERP_COMMANDE .'.id,
-															'. TABLE_ERP_COMMANDE .'.CODE,
-															'. TABLE_ERP_COMMANDE .'.LABEL,
+											$query='SELECT '. TABLE_ERP_ORDER .'.id,
+															'. TABLE_ERP_ORDER .'.CODE,
+															'. TABLE_ERP_ORDER .'.LABEL,
 															'. TABLE_ERP_CLIENT_FOUR .'.NAME
-													FROM '. TABLE_ERP_COMMANDE .'
-														LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_COMMANDE .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-													ORDER BY '. TABLE_ERP_COMMANDE .'.id';
+													FROM '. TABLE_ERP_ORDER .'
+														LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+													ORDER BY '. TABLE_ERP_ORDER .'.id';
 											$i = 1;
 											foreach ($bdd->GetQuery($query) as $data): ?>
 											<tr>

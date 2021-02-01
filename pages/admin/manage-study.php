@@ -29,20 +29,15 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	///////////////////////////////
 	//// COMMMENT ////
-	///////////////////////////////
 	//if update comment article
-	if(isset($_POST['Comment']) AND !empty($_POST['Comment'])){
-		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_STANDARD_ARTICLE ." SET 	COMMENT='". addslashes($_POST['Comment']) ."'
+	if(isset($_POST['COMMENT']) AND !empty($_POST['COMMENT'])){
+		$bdd->GetUpdate("UPDATE  ". TABLE_ERP_STANDARD_ARTICLE ." SET 	COMMENT='". addslashes($_POST['COMMENT']) ."'
 																		WHERE Id='". addslashes($_POST['IDArticle'])."'");
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));			
 	}
 
-	////////////////////
 	////  ARTICLES  ////
-	////////////////////
-
 	$titleOnglet1 = $langue->show_text('TableAddArticleButton');
 	$actionForm = 'admin.php?page=manage-study&id='. $_GET['id'];
 	$id = preg_replace('#-+#',' ', addslashes($_GET['id']));
@@ -210,7 +205,7 @@
 		$i = 0;
 		foreach ($UpdateIdDecoupTech as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_STANDARD_TECH_CUT .'` SET  ORDRE = \''. addslashes($UpdateORDREDecoupTech[$i]) .'\',
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_STANDARD_TECH_CUT .' SET  ORDRE = \''. addslashes($UpdateORDREDecoupTech[$i]) .'\',
 																PRESTA_ID = \''. addslashes($UpdatePRESTADecoupTech[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELDecoupTech[$i]) .'\',
 																TPS_PREP = \''. addslashes($UpdateTPSPREPDecoupTech[$i]) .'\',
@@ -300,10 +295,7 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSubFamillyNotification')));
 	}
 
-	///////////////////////////////
 	//// IMPUTATION ////
-	///////////////////////////////
-
 	if(isset($_POST['AddORDREImputation']) AND !empty($_POST['AddORDREImputation'])){
 
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_IMPUT_COMPTA_LIGNE ." VALUE ('0',
@@ -330,10 +322,7 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateAllocationNotification')));
 	}
 
-	///////////////
 	//// UNITS ////
-	///////////////
-
 	if(isset($_POST['AddCODEUnit']) AND !empty($_POST['AddCODEUnit'])){
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_UNIT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEUnit']) ."',
@@ -352,7 +341,7 @@
 		$i = 0;
 		foreach ($UpdateIdUnit as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_UNIT .'` SET  CODE = \''. addslashes($UpdateCODEUnit[$i]) .'\',
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_UNIT .' SET  CODE = \''. addslashes($UpdateCODEUnit[$i]) .'\',
 																LABEL = \''. addslashes($UpdateLABELUnit[$i]) .'\',
 																TYPE = \''. addslashes($UpdateTYPEUnit[$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
@@ -390,8 +379,6 @@
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateFamillyNotification')));
 	}
-
-
 ?>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$titleOnglet1; ?></button>
@@ -411,15 +398,15 @@
 		<button class="tablinks" onclick="openDiv(event, 'div9')" ><?= $langue->show_text('Title9'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div10')"><?= $langue->show_text('Title10'); ?></button>
 	</div>
+
 	<div id="div1" class="tabcontent" >
 		<div class="column">
 			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindArticle'); ?>">
 			<ul id="myUL">
 				<?php
 				//generate list for datalist find input
-				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_STANDARD_ARTICLE ." ORDER BY LABEL";
-				foreach ($bdd->GetQuery($query) as $data): ?>
-				<li><a href="admin.php?page=manage-study&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
+				foreach ($Article->GETArticleList('',false) as $data): ?>
+				<li><a href="admin.php?page=manage-study&id=<?= $data->id ?>&type=study"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
 				<?php $i++; endforeach; ?>
 			</ul>
 		</div>
@@ -580,7 +567,7 @@
 				</table>
 			</form>
 	</div>
-<?php
+	<?php
 	if(isset($_POST['CODEArticle']) AND isset($_POST['LABELAtricle']) AND !empty($_POST['CODEArticle']) AND !empty($_POST['LABELAtricle']) OR  isset($_GET['id']) AND !empty($_GET['id']))
 	{
 		?>
@@ -607,7 +594,7 @@
 								$TtCout = 0;
 								$TtPrix = 0;
 	
-								foreach ($Article->GETTechnicalCut($ArticleId) as $data){?>
+								foreach ($Article->GETTechnicalCut($ArticleId, $_GET['type']) as $data){?>
 											<tr>
 												<td></td>
 												<td>
@@ -695,7 +682,7 @@
 							<tbody>
 							<?php
 								$i = 0;
-								foreach ($Article->GETNomenclature($ArticleId) as $data): ?>
+								foreach ($Article->GETNomenclature($ArticleId, $_GET['type']) as $data): ?>
 									<tr>
 										<td></td>
 										<td>
@@ -762,7 +749,7 @@
 								<?php
 							
 								$i = 1;
-								foreach ($Article->GETSubAssembly($ArticleId) as $data):?>
+								foreach ($Article->GETSubAssembly($ArticleId, $_GET['type']) as $data):?>
 								<tr>
 									<td><input type="hidden" name="UpdateIdSousEns[]" id="UpdateIdSousEns" value="<?= $data->id ?>"></td>
 									<td><input type="number" name="UpdateORDRESousEns[]" value="<?= $data->ORDRE ?>"></td>
@@ -890,7 +877,7 @@
 							<tr>
 								<td>
 									<input type="hidden" name="IDArticle" value="<?=$ArticleId ?>">
-									<textarea class="Comment" name="Comment" rows="40" ><?=$ArticleComment ?></textarea>
+									<textarea class="Comment" name="COMMENT" rows="40" ><?=$ArticleComment ?></textarea>
 								</td>
 							</tr>
 							<tr>

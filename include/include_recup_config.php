@@ -30,8 +30,11 @@ define('TABLE_ERP_EMAIL', 'company_email_type');
 define('TABLE_ERP_INFO_GENERAL', 'company_timeline'); 
 define('TABLE_ERP_NUM_DOC', 'company_document_numbering');
 //DATA BASE ORDER
-define('TABLE_ERP_COMMANDE', 'orders');
-define('TABLE_ERP_COMMANDE_LIGNE', 'orders_lines');
+define('TABLE_ERP_ORDER', 'orders');
+define('TABLE_ERP_ORDER_LIGNE', 'orders_lines');
+define('TABLE_ERP_ORDER_TECH_CUT', 'order_technical_cut');
+define('TABLE_ERP_ORDER_NOMENCLATURE', 'order_nomenclature');
+define('TABLE_ERP_ORDER_SUB_ASSEMBLY', 'order_sub_assembly');
 //DATA BASE ORDER ACKNOWLEGMENT
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT', 'order_acknowledgment');
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES', 'order_acknowledgment_lines');
@@ -44,8 +47,14 @@ define('TABLE_ERP_DEFAUT', 'ql_defaut');
 define('TABLE_ERP_DEROGATION', 'ql_derogation');
 define('TABLE_ERP_NFC', 'ql_nfc');
 //DATA BASE QUOTE
-define('TABLE_ERP_DEVIS', 'quote');
-define('TABLE_ERP_DEVIS_LIGNE', 'quote_lines');
+define('TABLE_ERP_QUOTE', 'quote');
+define('TABLE_ERP_QUOTE_LIGNE', 'quote_lines');
+define('TABLE_ERP_QUOTE_TECH_CUT', 'quote_technical_cut');
+define('TABLE_ERP_QUOTE_NOMENCLATURE', 'quote_nomenclature');
+define('TABLE_ERP_QUOTE_SUB_ASSEMBLY', 'quote_sub_assembly');
+// DATA PURCHASE REQUEST
+define('TABLE_ERP_PURCHASE_REQUEST', 'purchase_request');
+define('TABLE_ERP_PURCHASE_REQUEST_LINES', 'purchase_request_lines');
 //DATA BASE STUDY
 define('TABLE_ERP_UNIT', 'study_unit');
 define('TABLE_ERP_SOUS_FAMILLE', 'study_sub_familly');

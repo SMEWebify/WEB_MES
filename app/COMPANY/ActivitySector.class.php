@@ -12,6 +12,14 @@ class ActivitySector Extends SQL  {
     Public $ActivitySectorList;
     Public $ActivitySectorCheckedList;
 
+    public function NewActivitySector($AddCODESector, $AddLABELSector){
+        $NewActivitySector = $this->GetInsert("INSERT INTO ". TABLE_ERP_ACTIVITY_SECTOR ." VALUE ('0',
+                                                                                        '". addslashes($AddCODESector) ."',
+                                                                                        '". addslashes($AddLABELSector) ."')");
+                                                                                    
+        return $NewActivitySector;
+    }
+
     public function GETActivitySector($id_GET){
 
         $ActivitySector = $this->GetQuery('SELECT '. TABLE_ERP_ACTIVITY_SECTOR .'.Id,
@@ -22,15 +30,20 @@ class ActivitySector Extends SQL  {
         return $ActivitySector;
     }
 
-    public function GETActivitySectorList($IdData=0){
+    public function GETActivitySectorList($IdData=0, $Select = true){
 
         $this->ActivitySectorList ='';
         $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_ACTIVITY_SECTOR .'';
-        foreach ( $this->GetQuery($query) as $data){
-            $this->ActivitySectorList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
-        }
-        
-        return  $this->ActivitySectorList;
+        if($Select){
+            foreach ( $this->GetQuery($query) as $data){
+                $this->ActivitySectorList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
+            }
+            
+            return  $this->ActivitySectorList;
+        }else {
+            
+            return  $this->GetQuery($query);
+        }  
     }
 
     public function GETActivitySectorCheckedList($IdData){

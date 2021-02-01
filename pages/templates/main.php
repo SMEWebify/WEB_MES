@@ -44,12 +44,8 @@
 				</table>
 			</form>
 		</div>
-		<div class="column">
-			<div id="piechart" style="width: 100%; height: 300px;"></div>
-			<div id="columnchart_values" style="width: 100%; height: 300px;"></div>
-		</div>
 	</div>
-	<?php if(isset($_GET[$GET]) AND !empty($_GET[$GET])){ ?>
+	<?php if(isset($_GET[$GET]) AND !empty($_GET[$GET])){   ?>
 	<div id="div2" class="tabcontent">
 		<div class="box">
 			<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
@@ -396,6 +392,7 @@
 							else{
 								$tableauTVA[$data->TVA_ID] = array($TotalLigneHTEnCours, $data->TAUX, $TotalLigneTVAEnCours, $TotalLigneTTCEnCours);
 							}
+
 							$LignePourCommande .='
 							<tr>
 								<td>
@@ -423,7 +420,7 @@
 							<tr>
 								<td>
 									<input type="hidden" name="UpdateIdLigne[]" id="UpdateIdLigne" value="<?= $data->id ?>">
-									<a href="index.php?page=<?= $_GET['page'] ?>&<?= $GET ?>=<?= $_GET[$GET] ?>&amp;delete=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a>
+									<a href="index.php?page=<?= $_GET['page'] ?>&amp;<?= $GET ?>=<?= $_GET[$GET] ?>&amp;delete=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a>
 								</td>
 								<td><?= $Form->input('number', 'UpdateORDRELigne[]',  $data->ORDRE) ?></td>
 								<td>
@@ -431,6 +428,7 @@
 									<datalist id="Article">
 										<?= $ListeArticle ?>
 									</datalist>
+									<a href="admin.php?page=manage-study&amp;id=<?= $data->id ?>&amp;type=<?= $GET ?>" title="Découpage technique">&#10144;</a>
 								</td>
 								<td><?= $Form->input('text', 'UpdateLABELLigne[]', $data->LABEL) ?></td>
 								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT) ?></td>

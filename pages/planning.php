@@ -2,6 +2,9 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\Methods\Prestation;
+	use \App\Methods\Ressource;
+	use \App\Methods\Section;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -11,6 +14,9 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Ressource = new Ressource();
+	$Prestation = new Prestation();
+	$Section = new Section();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_2'] != '1'){
@@ -114,18 +120,14 @@
 						<tbody>
 							<tr>';
 
-	$query='SELECT '. TABLE_ERP_COMMANDE_LIGNE .'.id,
-					'. TABLE_ERP_COMMANDE_LIGNE .'.ARTICLE_CODE,
-					'. TABLE_ERP_COMMANDE_LIGNE .'.DELAIS_INTERNE,
-					'. TABLE_ERP_COMMANDE .'.CODE
-					FROM '. TABLE_ERP_COMMANDE_LIGNE .'
-						LEFT JOIN `'. TABLE_ERP_COMMANDE .'` ON `'. TABLE_ERP_COMMANDE_LIGNE .'`.`ORDER_ID` = `'. TABLE_ERP_COMMANDE .'`.`id`
-					WHERE DELAIS_INTERNE
-							BETWEEN "'.$annee.'-'.$mois.'-01 00:00:00"
-							AND "'.$annee.'-'.$mois.'-'.$nombrejours.' 23:59:59"
-					GROUP BY ORDER_ID, DELAIS_INTERNE
-						ORDER BY id ASC';
-
+	$query='SELECT '. TABLE_ERP_ORDER_LIGNE .'.id,
+					'. TABLE_ERP_ORDER_LIGNE .'.ARTICLE_CODE,
+					'. TABLE_ERP_ORDER_LIGNE .'.ORDER_ID,
+					'. TABLE_ERP_ORDER_LIGNE .'.DELAIS,
+					'. TABLE_ERP_ORDER .'.CODE
+					FROM '. TABLE_ERP_ORDER_LIGNE .'
+						LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_LIGNE .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
+					WHERE  MONTH(DELAIS)='.$mois.' and YEAR(DELAIS)='.$annee.'';
 
 
 	unset($cles) ;
@@ -138,12 +140,12 @@
 	$nombreresultat=0 ;
 
 	foreach ($bdd->GetQuery($query, false) as $data){
-		$debut=explode(' ', $data->DELAIS_INTERNE) ;
+		$debut=explode(' ', $data->DELAIS) ;
 
-		if(!empty($data->DELAIS_INTERNE)){
-			$fin=explode(' ', $data->DELAIS_INTERNE) ;
+		if(!empty($data->DELAIS)){
+			$fin=explode(' ', $data->DELAIS) ;
 		}
-		$id[$nombreresultat]=$data->id ;
+		$id[$nombreresultat]=$data->ORDER_ID ;
 		$titres[$nombreresultat]=htmlspecialchars($data->CODE) ;
 		$datesdebut[$nombreresultat]=$debut[0] ;
 		$heuresdebut[$nombreresultat]=substr($debut[1], 0, 5) ;
@@ -184,16 +186,8 @@
 									echo "\n\t\t\t\t\t\t\t\t\t\t";
 									echo '<div class="evenement">' ;
 									foreach($cles as $cle){
-										echo "\n\t\t\t\t\t\t\t\t\t\t\t";
-										if(array_key_exists($cle, $datesfin) && $datesfin[$cle]==$datesdebut[$cle]){
-											echo '<h6>'.$titres[$cle].'</h6>' ;
-										}
-										elseif(array_key_exists($cle, $datesfin) && $datesfin[$cle]==$annee.'-'.$mois.'-'.$jour){
-											echo '<h6>Fin de : '.$titres[$cle].'</h6>' ;
-										}
-										else{
-											echo '<h6>'.$titres[$cle].'</h6>' ;
-										}
+										
+											echo '<h6><a href="index.php?page=order&order='.$id[$cle].'">'.$titres[$cle].'</a></h6>' ;
 									}
 									echo "\n\t\t\t\t\t\t\t\t\t\t";
 									echo '</div>' ;
@@ -231,6 +225,31 @@
 		</div>
 	</div>
 	<div id="div2" class="tabcontent" >
+		<table class="content-table">
+			<thead>
+				<tr>
+						<th></th>
+						<th>W<?= strftime("%W", time())+1 ?></th>
+					<?php
+					for ($w = 1; $w <= 6; $w++): ?>
+						<th>W<?= strftime("%W", time())+$w ?></th>
+					<?php $i++; endfor; ?>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			$i = 1;
+			foreach ($Ressource->GETRessourcesList('',false) as $data): ?>
+			<tr>
+				<td><a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+				<?php
+					for ($w = 1; $w <= 7; $w++): ?>
+						<td>%</t>
+					<?php $i++; endfor; ?>
+			</tr>
+			<?php $i++; endforeach; ?>
+			</tbody>
+		</table>
 	</div>
 	<div id="div3" class="tabcontent" >
 	</div>

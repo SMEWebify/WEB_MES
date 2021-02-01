@@ -539,24 +539,9 @@
 					</thead>
 					<tbody>
 						<?php
-						//------------------------------
 						// PRESTA
-						//------------------------------
-
-						$query='SELECT '. TABLE_ERP_PRESTATION .'.Id,
-									'. TABLE_ERP_PRESTATION .'.CODE,
-									'. TABLE_ERP_PRESTATION .'.ORDRE,
-									'. TABLE_ERP_PRESTATION .'.LABEL,
-									'. TABLE_ERP_PRESTATION .'.TYPE,
-									'. TABLE_ERP_PRESTATION .'.TAUX_H,
-									'. TABLE_ERP_PRESTATION .'.MARGE,
-									'. TABLE_ERP_PRESTATION .'.COLOR,
-									'. TABLE_ERP_PRESTATION .'.IMAGE
-									FROM `'. TABLE_ERP_PRESTATION .'`
-									ORDER BY ORDRE';
-
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($Prestation->GetPrestationList('',false) as $data): ?>
 						<tr>
 							<td>
 								<input type="hidden" name="id_presta[]" id="id_presta" value="<?= $data->Id ?>">
@@ -631,28 +616,9 @@
 					</thead>
 					<tbody>
 						<?php
-						//------------------------------
 						// RESSOURCES
-						//------------------------------
-
-						
-
-						$query='SELECT '. TABLE_ERP_RESSOURCE .'.Id,
-									'. TABLE_ERP_RESSOURCE .'.CODE,
-									'. TABLE_ERP_RESSOURCE .'.LABEL,
-									'. TABLE_ERP_RESSOURCE .'.IMAGE,
-									'. TABLE_ERP_RESSOURCE .'.MASK_TIME,
-									'. TABLE_ERP_RESSOURCE .'.ORDRE,
-									'. TABLE_ERP_RESSOURCE .'.CAPACITY,
-									'. TABLE_ERP_RESSOURCE .'.SECTION_ID,
-									'. TABLE_ERP_RESSOURCE .'.COLOR,
-									'. TABLE_ERP_SECTION .'.LABEL AS LABEL_SECTOR
-						FROM `'. TABLE_ERP_RESSOURCE .'`
-							LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_RESSOURCE .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`
-						ORDER BY ORDRE';
-
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($Ressource->GETRessourcesList('',false) as $data): ?>
 						<tr>
 							<td><input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>"></td>
 							<td><input type="number" name="UpdateCODEressource[]" value="<?=  $data->ORDRE ?>" id="number"></td>

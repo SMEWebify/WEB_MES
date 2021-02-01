@@ -3,6 +3,8 @@
 	use \App\Autoloader;
 	use \App\Form;
 	use \App\COMPANY\Numbering;
+	use \App\COMPANY\Company;
+	use \App\Company\ActivitySector;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -13,63 +15,19 @@
 	//init form class
 	$Form = new Form($_POST);
 	$Numbering = new Numbering();
+	$Company = new Company();
+	$DataCompany= $Company->GETCompany();
+	$ActivitySector = new ActivitySector();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	///////////////////////////////////
-	////  PARAMETRE DE L'ENTREPRISE  ////
-	//////////////////////////////////
-
-	//if update gerenal info of company
-	if(isset($_POST['CompanyName']) AND !empty($_POST['CompanyName'])){
-		$Company->SetADDRESS('2 Rue Henriette Deloras');
-
-		/*$update = array('NAME' =>  'SUPER ERP',
-									'ADDRESS' =>  '2 Rue Henriette Deloras',
-									'CITY' =>  'grenoble',
-									'ZIPCODE' =>  '4000',
-									'REGION' =>  'BRETAGNE' ,
-									'COUNTRY' =>  'France' ,
-									'PHONE_NUMBER' =>  '0679214987' ,
-									'MAIL' =>  'SuperERP@gmail.com', 
-									'WEB_SITE' =>  'www.erp.com' ,
-									'FACEBOOK_SITE' =>  'https://www.facebook.com/Kevin.Niglaut',
-									'TWITTER_SITE' =>  'https://twitter.com/kevin_niglaut/' ,
-									'LKD_SITE' =>  '' ,
-									'LOGO' =>  'images/unnamed.jpg' ,
-									'SIREN' =>  '362 521 879' ,
-									'APE' =>  '12347' ,
-									'TVA_INTRA' =>  'FR53157896342.',
-									'TAUX_TVA' =>  '20',
-									'CAPITAL' =>  'SAS au capital de 2500 €',
-									'RCS' =>  '400 900 001');*/
-		
-		
-		
-		/*$UpdateCompanyName = $_POST['CompanyName'];
-		$UpdateCompanyAddress = $_POST['CompanyAddress'];
-		$UpdateCompanyCity = $_POST['CompanyCity'];
-		$UpdateCompanyZipCode= $_POST['CompanyZipCode'];
-		$UpdateCompanyCountry = $_POST['CompanyCountry'];
-		$UpdateCompanyRegion = $_POST['CompanyRegion'];
-		$UpdateCompanyPhone = $_POST['CompanyPhone'];
-		$UpdateCompanyMail = $_POST['CompanyMail'];
-		$UpdateCompanyWebSite = $_POST['CompanyWebSite'];
-		$UpdateCompanyFbSite = $_POST['CompanyFbSite'];
-		$UpdateCompanyTwitter = $_POST['CompanyTwitter'];
-		$UpdateCompanyLkd = $_POST['CompanyLkd'];
-		$UpdateCompanyLogo = $dossier.$fichier;
-		$UpdateCompanySIREN = $_POST['CompanySIREN'];
-		$UpdateCompanyAPE = $_POST['CompanyAPE'];
-		$UpdateCompanyTVAINTRA = $_POST['CompanyTVAINTRA'];
-		$UpdateCompanyTAUXTVA = $_POST['CompanyTAUXTVA'];
-		$UpdateCompanyCAPITAL = $_POST['CompanyCAPITAL'];
-		$UpdateCompanyRCS = $_POST['CompanyRCS'];
-
-		$dossier = 'images/';
+	////  COMPANY SETTING  ////
+	if(isset($_POST['NAME']) AND !empty($_POST['NAME'])){
+		//if update gerenal info of company
+	/*	$dossier = 'images/';
 		$fichier = basename($_FILES['fichier_LOGO']['name']);
 		move_uploaded_file($_FILES['fichier_LOGO']['tmp_name'], $dossier . $fichier);
 		If(empty($fichier)){
@@ -77,49 +35,22 @@
 		}
 		else{
 			$AddSQL = 'LOGO = \''. addslashes($UpdateCompanyLogo) .'\',';
-		}
+		}*/
 
 		//update data in db
-		$bdd->exec('UPDATE `'. TABLE_ERP_COMPANY .'` SET  NAME = \''. addslashes($UpdateCompanyName) .'\',
-																ADDRESS = \''. addslashes($UpdateCompanyAddress) .'\',
-																CITY = \''. addslashes($UpdateCompanyCity) .'\',
-																ZIPCODE = \''. addslashes($UpdateCompanyZipCode) .'\',
-																REGION = \''. addslashes($UpdateCompanyRegion) .'\',
-																COUNTRY = \''. addslashes($UpdateCompanyCountry) .'\',
-																PHONE_NUMBER = \''. addslashes($UpdateCompanyPhone) .'\',
-																MAIL = \''. addslashes($UpdateCompanyMail) .'\',
-																WEB_SITE = \''. addslashes($UpdateCompanyWebSite) .'\',
-																FACEBOOK_SITE = \''. addslashes($UpdateCompanyFbSite) .'\',
-																TWITTER_SITE = \''. addslashes($UpdateCompanyTwitter) .'\',
-																LKD_SITE = \''. addslashes($UpdateCompanyLkd) .'\',
-																'. $AddSQL .'
-																SIREN = \''. addslashes($UpdateCompanySIREN) .'\',
-																APE = \''. addslashes($UpdateCompanyAPE) .'\',
-																TVA_INTRA = \''. addslashes($UpdateCompanyTVAINTRA) .'\',
-																TAUX_TVA = \''. addslashes($UpdateCompanyTAUXTVA) .'\',
-																CAPITAL = \''. addslashes($UpdateCompanyCAPITAL) .'\',
-																RCS = \''. addslashes($UpdateCompanyRCS) .'\'
-																WHERE Id=1');*/
+		$bdd->GetUpdatePOST(TABLE_ERP_COMPANY, $_POST, 'WHERE id=1');
+		$DataCompany= $Company->GETCompany();
 	}
 
 
-
-	////////////////////////
 	//// SECTOR ACTIVITY////
-	///////////////////////
-
-	//add new sector activity
 	if(isset($_POST['AddCODESector']) AND !empty($_POST['AddCODESector'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ACTIVITY_SECTOR ." VALUE ('0',
-																		'". addslashes($_POST['AddCODESector']) ."',
-																		'". addslashes($_POST['AddLABELSector']) ."')");
+	//add new sector activity
+		$ActivitySector->NewActivitySector($_POST['AddCODESector'], $_POST['AddLABELSector']);
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddSectorNotification')));
 	}
-
+	elseif(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
 	//update sector activity
-	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
-
 		$UpdateIdSector = $_POST['id_sector'];
 		$UpdateCODESector = $_POST['UpdateCODESector'];
 		$UpdateLABELSector = $_POST['UpdateLABELSector'];
@@ -134,13 +65,10 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectorNotification')));
 	}
 
-	////////////////////////
+
 	//// NUM DOCUMENTS ////
-	///////////////////////
-
-	//if add new document
 	if(isset($_POST['AddDOCNum']) AND !empty($_POST['AddDOCNum'])){
-
+		//if add new document
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_NUM_DOC ." VALUE ('0',
 																		'". addslashes($_POST['AddDOCNum']) ."',
 																		'". addslashes($_POST['AddModeleNum']) ."',
@@ -265,22 +193,22 @@
 						</tr>
 						<tr>
 							<td >
-								<input type="text" name="CompanyName" value="<?= $Company->CompanyName() ?>">
+								<input type="text" name="NAME" value="<?= $DataCompany->NAME ?>">
 							</td>
 							<td >
-								<input type="text" name="CompanyAddress" value="<?= $Company->CompanyAddress() ?>">
+								<input type="text" name="ADDRESS" value="<?= $DataCompany->ADDRESS ?>">
 							</td>
 							<td >
-								<input type="text" name="CompanyCity" value="<?= $Company->CompanyCity() ?>">
+								<input type="text" name="CITY" value="<?= $DataCompany->CITY ?>">
 							</td>
 							<td >
-								<input type="text" name="CompanyZipCode" value="<?= $Company->CompanyZipCode() ?>">
+								<input type="text" name="ZIPCODE" value="<?= $DataCompany->ZIPCODE ?>">
 							</td>
 							<td>
-								<input type="text" name="CompanyRegion" value="<?= $Company->CompanyRegion() ?>">
+								<input type="text" name="REGION" value="<?= $DataCompany->REGION ?>">
 							</td>
 							<td>
-								<input type="text" name="CompanyCountry" value="<?= $Company->CompanyCountry() ?>">
+								<input type="text" name="COUNTRY" value="<?= $DataCompany->COUNTRY ?>">
 							</td>
 						</tr>
 						<tr>
@@ -293,10 +221,10 @@
 						</tr>
 						<tr>
 							<td >
-								<input type="text" name="CompanyPhone" value="<?= $Company->CompanyPhone() ?>">
+								<input type="text" name="PHONE_NUMBER" value="<?= $DataCompany->PHONE_NUMBER ?>">
 							</td>
 							<td >
-								<input type="text" name="CompanyMail" value="<?= $Company->CompanyMail() ?>">
+								<input type="text" name="MAIL" value="<?= $DataCompany->MAIL ?>">
 							</td>
 							<td></td>
 							<td></td>
@@ -313,16 +241,16 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" name="CompanyWebSite" value="<?= $Company->CompanyWebSite() ?>">
+								<input type="text" name="WEB_SITE" value="<?= $DataCompany->WEB_SITE ?>">
 							</td>
 							<td >
-								<input type="text" name="CompanyFbSite" value="<?= $Company->CompanyFbSite() ?>">
+								<input type="text" name="FACEBOOK_SITE" value="<?= $DataCompany->FACEBOOK_SITE ?>">
 							</td>
 							<td>
-								<input type="text" name="CompanyTwitter" value="<?=  $Company->CompanyTwitter() ?>">
+								<input type="text" name="TWITTER_SITE" value="<?=  $DataCompany->TWITTER_SITE ?>">
 							</td>
 							<td>
-								<input type="text" name="CompanyLkd" value="<?=  $Company->CompanyLkd() ?>">
+								<input type="text" name="LKD_SITE" value="<?=  $DataCompany->LKD_SITE ?>">
 							</td>
 							<td></td>
 							<td></td>
@@ -337,32 +265,32 @@
 						</tr>
 						<tr>
 							<td >
-								<input type="text" name="CompanySIREN" value="<?= $Company->CompanySIREN() ?>" >
+								<input type="text" name="SIREN" value="<?= $DataCompany->SIREN ?>" >
 							</td>
 							<td >
-								<input type="text" name="CompanyAPE" value="<?= $Company->CompanyAPE() ?>">
+								<input type="text" name="APE" value="<?= $DataCompany->APE ?>">
 							</td>
 							<td >
-								<input type="text" name="CompanyTVAINTRA" value="<?= $Company->CompanyTVAINTRA() ?>" >
+								<input type="text" name="TVA_INTRA" value="<?= $DataCompany->TVA_INTRA ?>" >
 							</td>
 							<td >
-								<input type="text" name="CompanyTAUXTVA" value="<?= $Company->CompanyTAUXTVA() ?>" >
+								<input type="text" name="TAUX_TVA" value="<?= $DataCompany->TAUX_TVA ?>" >
 							</td>
 							<td>
-								<input type="text" name="CompanyCAPITAL" value="<?= $Company->CompanyCAPITAL() ?>" >
+								<input type="text" name="CAPITAL" value="<?= $DataCompany->CAPITAL ?>" >
 							</td>
 							<td>
-								<input type="text" name="CompanyRCS" value="<?= $Company->CompanyRCS() ?>" >
+								<input type="text" name="RCS" value="<?= $DataCompany->RCS ?>" >
 							</td>
 						</tr>
 						<tr>
 							<td colspan=6"><?= $langue->show_text('TableLogo') ?></td>
 						</tr>
 						<tr>
-							<td colspan=6" ><input type="file" name="fichier_LOGO" /></td>
+							<td colspan=6" ><input type="file" name="LOGO" /></td>
 						</tr>
 						<tr>
-							<td colspan=6"><img src="<?= $Company->CompanyLogo() ?>" title="LOGO entreprise" alt="Logo" /></td>
+							<td colspan=6"><img src="<?= $DataCompany->LOGO ?>" title="LOGO entreprise" alt="Logo" /></td>
 						</tr>
 						<tr>
 							<td colspan="6" >
@@ -388,16 +316,10 @@
 					<tbody>
 					<?php
 					//generate list of actiity sector
-					$query ='SELECT '. TABLE_ERP_ACTIVITY_SECTOR .'.Id,
-									'. TABLE_ERP_ACTIVITY_SECTOR .'.CODE,
-									'. TABLE_ERP_ACTIVITY_SECTOR .'.LABEL
-									FROM `'. TABLE_ERP_ACTIVITY_SECTOR .'`
-									ORDER BY Id';
-
 					$i = 1;
-					foreach ($bdd->GetQuery($query) as $data): ?>
+					foreach ($ActivitySector->GETActivitySectorList('', false) as $data): ?>
 				<tr>
-					<td><?= $i ?><?= $Form->input('hidden', 'id_sector[]',  $data->Id) ?></td>
+					<td><?= $i ?><?= $Form->input('hidden', 'id_sector[]',  $data->id) ?></td>
 					<td><?= $Form->input('text', 'UpdateCODESector[]',  $data->CODE) ?></td>
 					<td><?= $Form->input('text', 'UpdateLABELSector[]',  $data->LABEL) ?></td>
 				</tr>
