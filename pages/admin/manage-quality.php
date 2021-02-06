@@ -31,13 +31,8 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	///////////////////////////
-	////MEASURING DEVICE SECTION ///
-	//////////////////////////
-
-	//Create New device
 	if(isset($_POST['AddCODEAppareil']) AND !empty($_POST['AddCODEAppareil'])){
-
+		//Create New device
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_QL_APP_MESURE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEAppareil']) ."',
 																		'". addslashes($_POST['AddLABELAppareil']) ."',
@@ -48,120 +43,76 @@
 																		'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeviceNotification')));
 	}
-
-	//Update Devices
-	if(isset($_POST['id_Appareil']) AND !empty($_POST['id_Appareil'])){
-
-		$UpdateIdAppareil = $_POST['id_Appareil'];
-		$UpdateCODEAppareil = $_POST['UpdateCODEAppareil'];
-		$UpdateLABELAppareil = $_POST['UpdateLABELAppareil'];
-		$UpdateRESSOURCEAppareil = $_POST['UpdateRESSOURCEAppareil'];
-		$UpdateUSERAppareil = $_POST['UpdateUSERAppareil'];
-		$UpdateSERIALAppareil = $_POST['UpdateSERIALAppareil'];
-		$UpdateDATEAppareil = $_POST['UpdateDATEAppareil'];
-
-		$i = 0;
-		foreach ($UpdateIdAppareil as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_APP_MESURE .'` SET  CODE = \''. addslashes($UpdateCODEAppareil[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELAppareil[$i]) .'\',
-																RESSOURCE_ID = \''. addslashes($UpdateRESSOURCEAppareil[$i]) .'\',
-																USER_ID = \''. addslashes($UpdateUSERAppareil[$i]) .'\',
-																SERIAL_NUMBER = \''. addslashes($UpdateSERIALAppareil[$i]) .'\',
-																DATE = \''. addslashes($UpdateDATEAppareil[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDeviceNotification')));
-	}
-
-	////////////////////////
-	//// FLAW SECTION    ///
-	///////////////////////
-
-	// Create new type flaw
-	if(isset($_POST['AddCODEDefaut']) AND !empty($_POST['AddCODEDefaut'])){
-
+	elseif(isset($_POST['AddCODEDefaut']) AND !empty($_POST['AddCODEDefaut'])){
+		// Create new type flaw
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DEFAUT ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEDefaut']) ."',
 																		'". addslashes($_POST['AddLABELDefaut']) ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddFailNotification')));
 	}
-
-	//Update Flaw list
-	if(isset($_POST['id_Defaut']) AND !empty($_POST['id_Defaut'])){
-
-		$UpdateIdDefaut = $_POST['id_Defaut'];
-		$UpdateCODEDefaut = $_POST['UpdateCODEDefaut'];
-		$UpdateLABELDefaut = $_POST['UpdateLABELDefaut'];
-
-		$i = 0;
-		foreach ($UpdateIdDefaut as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_DEFAUT .'` SET  CODE = \''. addslashes($UpdateCODEDefaut[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELDefaut[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateFailNotification')));
-	}
-
-	///////////////////////
-	//// Origin  of flaw ////
-	//////////////////////
-
-	//Create new origin
-	if(isset($_POST['AddCODECauses']) AND !empty($_POST['AddCODECauses'])){
-
+	elseif(isset($_POST['AddCODECauses']) AND !empty($_POST['AddCODECauses'])){
+		//Create new origin
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_QL_CAUSES ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECauses']) ."',
 																		'". addslashes($_POST['AddLABELCauses']) ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddCauseNotification')));
 	}
-
-	//Update Origin List
-	if(isset($_POST['id_Causes']) AND !empty($_POST['id_Causes'])){
-
-		$UpdateIdCauses = $_POST['id_Causes'];
-		$UpdateCODECauses = $_POST['UpdateCODECauses'];
-		$UpdateLABELCauses = $_POST['UpdateLABELCauses'];
-
-		$i = 0;
-		foreach ($UpdateIdCauses as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_CAUSES .'` SET  CODE = \''. addslashes($UpdateCODECauses[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELCauses[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCauseNotification')));	
-	}
-
-	////////////////////////////////
-	////  Correction  section ////
-	///////////////////////////////
-
-	// Create new correction line
-	if(isset($_POST['AddCODECorrection']) AND !empty($_POST['AddCODECorrection'])){
-
+	elseif(isset($_POST['AddCODECorrection']) AND !empty($_POST['AddCODECorrection'])){
+		// Create new correction line
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_QL_CORRECTIONS ." VALUE ('0',
 																		'". addslashes($_POST['AddCODECorrection']) ."',
 																		'". addslashes($_POST['AddLABELCorrection'])  ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddCorrectionNotification')));																
 	}
 
-	//Uodate correction list
-	if(isset($_POST['id_Correction']) AND !empty($_POST['id_Correction'])){
-
-		$UpdateIdCorrection = $_POST['id_Correction'];
-		$UpdateCODECorrection = $_POST['UpdateCODECorrection'];
-		$UpdateLABELCorrection = $_POST['UpdateLABELCorrection'];
-
+	
+	if(isset($_POST['id_Appareil']) AND !empty($_POST['id_Appareil'])){
+		//Update Devices
 		$i = 0;
-		foreach ($UpdateIdCorrection as $id_generation) {
+		foreach ($_POST['id_Appareil']as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_CORRECTIONS .'` SET  CODE = \''. addslashes($UpdateCODECorrection[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELCorrection[$i]) .'\'
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_APP_MESURE .'` SET  CODE = \''. addslashes($_POST['UpdateCODEAppareil'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELAppareil'][$i]) .'\',
+																RESSOURCE_ID = \''. addslashes($_POST['UpdateRESSOURCEAppareil'][$i]) .'\',
+																USER_ID = \''. addslashes($_POST['UpdateUSERAppareil'][$i]) .'\',
+																SERIAL_NUMBER = \''. addslashes($_POST['UpdateSERIALAppareil'][$i]) .'\',
+																DATE = \''. addslashes($_POST['UpdateDATEAppareil'][$i]) .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDeviceNotification')));
+	}
+	elseif(isset($_POST['id_Defaut']) AND !empty($_POST['id_Defaut'])){
+		//Update Flaw list
+		$i = 0;
+		foreach ($_POST['id_Defaut'] as $id_generation) {
+
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_DEFAUT .'` SET  CODE = \''. addslashes($_POST['UpdateCODEDefaut'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELDefaut'][$i]) .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateFailNotification')));
+	}
+	elseif(isset($_POST['id_Causes']) AND !empty($_POST['id_Causes'])){
+		//Update Origin List
+		$i = 0;
+		foreach ($_POST['id_Causes'] as $id_generation) {
+
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_CAUSES .'` SET  CODE = \''. addslashes($_POST['UpdateCODECauses'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELCauses'][$i]) .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCauseNotification')));	
+	}
+	elseif(isset($_POST['id_Correction']) AND !empty($_POST['id_Correction'])){
+		//Uodate correction list
+		$i = 0;
+		foreach ($_POST['id_Correction'] as $id_generation) {
+
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_QL_CORRECTIONS .'` SET  CODE = \''. addslashes($_POST['UpdateCODECorrection'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELCorrection'][$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}

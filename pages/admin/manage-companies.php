@@ -9,6 +9,7 @@
 	use \App\COMPANY\ActivitySector;
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
+	use \App\Accounting\VAT;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -25,6 +26,7 @@
 	$ActivitySector = new ActivitySector();
 	$PaymentMethod = new PaymentMethod();
 	$PaymentCondition = new PaymentCondition();
+	$VAT = new VAT();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -184,17 +186,6 @@
 		$SteSECTOR_ID = $data->SECTOR_ID;
 	}
 
-	// Create liste for TVA choise
-	$query='SELECT Id, LABEL, TAUX FROM '. TABLE_ERP_TVA .'';
-	foreach ($bdd->GetQuery($query) as $data){
-		$TVAListe .='<option value="'. $data->Id .'"  '. selected($SteTVA_ID, $data->Id) .' $SteTVA_INTRA>'. $data->TAUX .'% - '. $data->LABEL .'</option>';
-	}
-
-
-	/////////////////////////////
-	////  Company SITE section  ////
-	/////////////////////////////
-
 	// if creat new site we add in db
 	if(isset($_POST['AddLABELSite']) AND !empty($_POST['AddLABELSite'])){
 
@@ -213,48 +204,8 @@
 
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddSiteNotification')));
 	}
-
-	// update data site
-	if(isset($_POST['UpdateIdSite']) AND !empty($_POST['UpdateIdSite'])){
-
-		$UpdateIdSite = $_POST['UpdateIdSite'];
-		$UpdateORDRESite = $_POST['UpdateORDRESite'];
-		$UpdateLABELSite = $_POST['UpdateLABELSite'];
-		$UpdateADRESSESite = $_POST['UpdateADRESSESite'];
-		$UpdateZIPCODESite = $_POST['UpdateZIPCODESite'];
-		$UpdateCITYSite = $_POST['UpdateCITYSite'];
-		$UpdateCOUNTRYSite = $_POST['UpdateCOUNTRYSite'];
-		$UpdateNUMBERSite = $_POST['UpdateNUMBERSite'];
-		$UpdateMAILSite = $_POST['UpdateMAILSite'];
-		$UpdateLIVSite = $_POST['UpdateLIVSite'];
-		$UpdateFacSite = $_POST['UpdateFacSite'];
-
-		$i = 0;
-		foreach ($UpdateIdSite as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ADRESSE .'` SET  ORDRE = \''. addslashes($UpdateORDRESite[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELSite[$i]) .'\',
-																ADRESSE = \''. addslashes($UpdateADRESSESite[$i]) .'\',
-																ZIPCODE = \''. addslashes($UpdateZIPCODESite[$i]) .'\',
-																CITY = \''. addslashes($UpdateCITYSite[$i]) .'\',
-																COUNTRY = \''. addslashes($UpdateCOUNTRYSite[$i]) .'\',
-																NUMBER = \''. addslashes($UpdateNUMBERSite[$i]) .'\',
-																MAIL = \''. addslashes($UpdateMAILSite[$i]) .'\',
-																ADRESS_LIV = \''. addslashes($UpdateLIVSite[$i]) .'\',
-																ADRESS_FAC = \''. addslashes($UpdateFacSite[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSiteNotification')));
-	}
-
-	//////////////////
-	////  CONTACT Section  ////
-	//////////////////
-
-	//add new contact in db
-	if(isset($_POST['AddPrenomContact']) AND !empty($_POST['AddPrenomContact'])){
-
+	elseif(isset($_POST['AddPrenomContact']) AND !empty($_POST['AddPrenomContact'])){
+		//add new contact in db
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CONTACT ." VALUE ('0',
 																		'". addslashes($_POST['AddIdContact']) ."',
 																		'". addslashes($_POST['AddORDREContact']) ."',
@@ -266,36 +217,44 @@
 																		'". addslashes($_POST['AddNumberContact']) ."',
 																		'". addslashes($_POST['AddMobileContact']) ."',
 																		'". addslashes($_POST['AddMailContact']) ."')");
-		$CallOutBox->add_notification(array('2', $langue->show_text('AddContactNotification')));
-																		
+		$CallOutBox->add_notification(array('2', $langue->show_text('AddContactNotification')));																	
 	}
 
-	//update all contact
-	if(isset($_POST['UpdateIdContact']) AND !empty($_POST['UpdateIdContact'])){
-
-		$UpdateIdContact = $_POST['UpdateIdContact'];
-		$UpdateORDREContact = $_POST['UpdateORDREContact'];
-		$UpdateCiviContact = $_POST['UpdateCiviContact'];
-		$UpdatePrenomContact = $_POST['UpdatePrenomContact'];
-		$UpdateNomContact = $_POST['UpdateNomContact'];
-		$UpdateFonctionContact = $_POST['UpdateFonctionContact'];
-		$UpdateAdresseContact = $_POST['UpdateAdresseContact'];
-		$UpdateNumberContact = $_POST['UpdateNumberContact'];
-		$UpdateMobileContact = $_POST['UpdateMobileContact'];
-		$UpdateMailContact = $_POST['UpdateMailContact'];
-
+	
+	if(isset($_POST['UpdateIdSite']) AND !empty($_POST['UpdateIdSite'])){
+	// update data site
 		$i = 0;
-		foreach ($UpdateIdContact as $id_generation) {
+		foreach ($_POST['UpdateIdSite'] as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_CONTACT .'` SET  ORDRE = \''. addslashes($UpdateORDREContact[$i]) .'\',
-																CIVILITE = \''. addslashes($UpdateCiviContact[$i]) .'\',
-																PRENOM = \''. addslashes($UpdatePrenomContact[$i]) .'\',
-																NOM = \''. addslashes($UpdateNomContact[$i]) .'\',
-																FONCTION = \''. addslashes($UpdateFonctionContact[$i]) .'\',
-																ADRESSE_ID = \''. addslashes($UpdateAdresseContact[$i]) .'\',
-																NUMBER = \''. addslashes($UpdateNumberContact[$i]) .'\',
-																MOBILE = \''. addslashes($UpdateMobileContact[$i]) .'\',
-																MAIL = \''. addslashes($UpdateMailContact[$i]) .'\'
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ADRESSE .'` SET  ORDRE = \''. addslashes($_POST['UpdateORDRESite'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELSite'][$i]) .'\',
+																ADRESSE = \''. addslashes($_POST['UpdateADRESSESite'][$i]) .'\',
+																ZIPCODE = \''. addslashes($_POST['UpdateZIPCODESite'][$i]) .'\',
+																CITY = \''. addslashes($_POST['UpdateCITYSite'][$i]) .'\',
+																COUNTRY = \''. addslashes($_POST['UpdateCOUNTRYSite'][$i]) .'\',
+																NUMBER = \''. addslashes($_POST['UpdateNUMBERSite'][$i]) .'\',
+																MAIL = \''. addslashes($_POST['UpdateMAILSite'][$i]) .'\',
+																ADRESS_LIV = \''. addslashes($_POST['UpdateLIVSite'][$i]) .'\',
+																ADRESS_FAC = \''. addslashes($_POST['UpdateFacSite'][$i]) .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSiteNotification')));
+	}
+	elseif(isset($_POST['UpdateIdContact']) AND !empty($_POST['UpdateIdContact'])){
+		//update all contact
+		$i = 0;
+		foreach ($_POST['UpdateIdContact'] as $id_generation) {
+
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_CONTACT .'` SET  ORDRE = \''. addslashes($_POST['UpdateORDREContact'][$i]) .'\',
+																CIVILITE = \''. addslashes($_POST['UpdateCiviContact'][$i]) .'\',
+																PRENOM = \''. addslashes($_POST['UpdatePrenomContact'][$i]) .'\',
+																NOM = \''. addslashes($_POST['UpdateNomContact'][$i]) .'\',
+																FONCTION = \''. addslashes($_POST['UpdateFonctionContact'][$i]) .'\',
+																ADRESSE_ID = \''. addslashes($_POST['UpdateAdresseContact'][$i]) .'\',
+																NUMBER = \''. addslashes($_POST['UpdateNumberContact'][$i]) .'\',
+																MOBILE = \''. addslashes($_POST['UpdateMobileContact'][$i]) .'\',
+																MAIL = \''. addslashes($_POST['UpdateMailContact'][$i]) .'\'
 															WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
@@ -406,7 +365,7 @@
 							<td >
 
 								<select name="TAUXTVASte">
-									<?=$TVAListe ?>
+									<?= $VAT->GETVATList($SteTVA_ID) ?>
 								</select>
 							</td>
 							<td></td>

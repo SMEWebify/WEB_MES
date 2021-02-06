@@ -29,25 +29,25 @@ class Company Extends SQL  {
   public function GETCompany(){
 
     $Order = $this->GetQuery('SELECT NAME,
-              ADDRESS,
-              CITY,
-              ZIPCODE,
-              REGION,
-              COUNTRY,
-              PHONE_NUMBER,
-              MAIL,
-              WEB_SITE,
-              FACEBOOK_SITE,
-              TWITTER_SITE,
-              LKD_SITE,
-              LOGO,
-              SIREN,
-              APE,
-              TVA_INTRA,
-              TAUX_TVA,
-              CAPITAL,
-              RCS
-             FROM '. TABLE_ERP_COMPANY .'', true, 'App\COMPANY\Company');
+                                  ADDRESS,
+                                  CITY,
+                                  ZIPCODE,
+                                  REGION,
+                                  COUNTRY,
+                                  PHONE_NUMBER,
+                                  MAIL,
+                                  WEB_SITE,
+                                  FACEBOOK_SITE,
+                                  TWITTER_SITE,
+                                  LKD_SITE,
+                                  LOGO,
+                                  SIREN,
+                                  APE,
+                                  TVA_INTRA,
+                                  TAUX_TVA,
+                                  CAPITAL,
+                                  RCS
+                                FROM '. TABLE_ERP_COMPANY .'', true, 'App\COMPANY\Company');
       return $Order;
     }  
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\COMPANY\Employees;
@@ -9,6 +9,7 @@
 	use \App\Form;
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
+	use \App\Accounting\PaymentSchedule;
 	use \App\Order\Order;
 	use \App\Order\OrderLines;
 	use \App\Order\OrderAcknowledgment;
@@ -32,6 +33,7 @@
 	$Address = new Address();
 	$PaymentMethod = new PaymentMethod();
 	$PaymentCondition = new PaymentCondition();
+	$PaymentSchedule = new PaymentSchedule();
 	$Order = new Order();
 	$OrderLines = new OrderLines();
 	$OrderAcknowledgment = new OrderAcknowledgment();
@@ -158,38 +160,7 @@
 		}
 
 		//Load data
-		$data= $Order->GETOrder($Id);
-
-		$Id = $data->id;
-		$COMENT = $data->COMENT;
-		$CUSTOMER_ID = $data->CUSTOMER_ID;
-		$CONTACT_ID = $data->CONTACT_ID;
-		$CUSTOMER_NAME = $data->CUSTOMER_NAME;
-		$ADRESSE_ID = $data->ADRESSE_ID;
-		$FACTURATION_ID = $data->FACTURATION_ID;
-		$NOM = $data->NOM;
-		$PRENOM = $data->PRENOM;
-		$RESP_COM_ID = $data->RESP_COM_ID;
-		$RESP_TECH_ID = $data->RESP_TECH_ID;
-		$COND_REG_CUSTOMER_ID = $data->COND_REG_CUSTOMER_ID;
-		$MODE_REG_CUSTOMER_ID = $data->MODE_REG_CUSTOMER_ID;
-		$Echeancier_ID = $data->ECHEANCIER_ID;
-		$TRANSPORT_ID = $data->TRANSPORT_ID;
-
-		$CODE = $data->CODE;
-		$INDICE = $data->INDICE;
-		$LABEL = $data->LABEL;
-		$LABEL_INDICE = $data->LABEL_INDICE;
-
-		$DATE = $data->DATE;
-		$ETAT = $data->ETAT;
-		$REFERENCE = $data->REFERENCE;
-
-		//deadline payment list
-		$query='SELECT Id, LABEL FROM '. TABLE_ERP_ECHEANCIER_TYPE .'';
-		foreach ($bdd->GetQuery($query) as $data){
-			$EcheancierListe1 .='<option value="'. $data->Id .'" '. selected($DevisEcheancier_ID, $data->Id) .'>'. $data->LABEL .'</option>';
-		}	
+		$Maindata= $Order->GETOrder($Id);
 	}
 	elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){
 
@@ -214,7 +185,7 @@
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderAcknowledgmentLinesNotificationNotification')));
 		}
 		//Load data
-		$data= $OrderAcknowledgment->GETOrderAcknowledgment($Id);
+		$Maindata= $OrderAcknowledgment->GETOrderAcknowledgment($Id);
 	}
 	
 	$ListeArticleJava  ='"';
@@ -320,6 +291,14 @@ $(document).ready(function() {
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){?>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
+		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+	<?php } elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){?>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
+		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+	<?php } elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
 		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>

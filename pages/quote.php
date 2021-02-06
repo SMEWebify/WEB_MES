@@ -1,4 +1,4 @@
-<?php 
+<?php
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\COMPANY\Employees;
@@ -9,6 +9,7 @@
 	use \App\Form;
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
+	use \App\Accounting\PaymentSchedule;
 	use \App\Quote\Quote;
 	use \App\Quote\QuoteLines;
 	use \App\Accounting\Delevery;
@@ -30,6 +31,7 @@
 	$Address = new Address();
 	$PaymentMethod = new PaymentMethod();
 	$PaymentCondition = new PaymentCondition();
+	$PaymentSchedule = new PaymentSchedule();
 	$Quote = new Quote();
 	$QuoteLines = new QuoteLines();
 	$Delevery = new Delevery();
@@ -68,8 +70,8 @@
 			if($_POST['RESP_TECH_ID'] == 'null'){ $PostRESP_TECH_ID = 0; }
 
 			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
-																	RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
-																			WHERE id='". $Id ."'");
+																RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
+															WHERE id='". $Id ."'");
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
 		}
 		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
@@ -129,39 +131,7 @@
 		}
 	
 		//Load data
-		$data= $Quote->GETQuote($Id);
-		
-		$Id = $data->id;
-		$COMENT = $data->COMENT;
-		$CUSTOMER_ID = $data->CUSTOMER_ID;
-		$CONTACT_ID = $data->CONTACT_ID;
-		$CUSTOMER_NAME = $data->CUSTOMER_NAME;
-		$ADRESSE_ID = $data->ADRESSE_ID;
-		$FACTURATION_ID = $data->FACTURATION_ID;
-		$NOM = $data->NOM;
-		$PRENOM = $data->PRENOM;
-		$RESP_COM_ID = $data->RESP_COM_ID;
-		$RESP_TECH_ID = $data->RESP_TECH_ID;
-		$CONDI_REG_ID = $data->COND_REG_CUSTOMER_ID;
-		$MODE_REG_CUSTOMER_ID = $data->MODE_REG_CUSTOMER_ID;
-		$Echeancier_ID = $data->ECHEANCIER_ID;
-		$TRANSPORT_ID = $data->TRANSPORT_ID;
-
-		$CODE = $data->CODE;
-		$INDICE = $data->INDICE;
-		$LABEL = $data->LABEL;
-		$LABEL_INDICE = $data->LABEL_INDICE;
-
-		$DATE = $data->DATE;
-		$DATE_VALIDITE = $data->DATE_VALIDITE;
-		$ETAT = $data->ETAT;
-		$REFERENCE = $data->REFERENCE;
-
-		//deadline payment list
-		$query='SELECT id, LABEL FROM '. TABLE_ERP_ECHEANCIER_TYPE .'';
-		foreach ($bdd->GetQuery($query) as $data){
-			$EcheancierListe1 .='<option value="'. $data->id .'" '. selected($DevisEcheancier_ID, $data->id) .'>'. $data->LABEL .'</option>';
-		}	
+		$Maindata= $Quote->GETQuote($Id);
 	}
 
 	$ListeArticleJava  ='"';

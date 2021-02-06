@@ -41,33 +41,12 @@
 		$bdd->GetUpdatePOST(TABLE_ERP_COMPANY, $_POST, 'WHERE id=1');
 		$DataCompany= $Company->GETCompany();
 	}
-
-
-	//// SECTOR ACTIVITY////
-	if(isset($_POST['AddCODESector']) AND !empty($_POST['AddCODESector'])){
-	//add new sector activity
+	elseif(isset($_POST['AddCODESector']) AND !empty($_POST['AddCODESector'])){
+		//add new sector activity
 		$ActivitySector->NewActivitySector($_POST['AddCODESector'], $_POST['AddLABELSector']);
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddSectorNotification')));
 	}
-	elseif(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
-	//update sector activity
-		$UpdateIdSector = $_POST['id_sector'];
-		$UpdateCODESector = $_POST['UpdateCODESector'];
-		$UpdateLABELSector = $_POST['UpdateLABELSector'];
-
-		$i = 0;
-		foreach ($UpdateIdSector as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ACTIVITY_SECTOR .'` SET  CODE = \''. addslashes($UpdateCODESector[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELSector[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectorNotification')));
-	}
-
-
-	//// NUM DOCUMENTS ////
-	if(isset($_POST['AddDOCNum']) AND !empty($_POST['AddDOCNum'])){
+	elseif(isset($_POST['AddDOCNum']) AND !empty($_POST['AddDOCNum'])){
 		//if add new document
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_NUM_DOC ." VALUE ('0',
 																		'". addslashes($_POST['AddDOCNum']) ."',
@@ -76,32 +55,8 @@
 																		'0')");
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddDocNotification')));
 	}
-
-	// if update num sequence document
-	if(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
-
-		$UpdateIdNumDoc = $_POST['id_NumDoc'];
-		$UpdateDOCNum = $_POST['UpdateDOCNum'];
-		$UpddateModeleNum = $_POST['UpddateModeleNum'];
-
-		$i = 0;
-		foreach ($UpdateIdNumDoc as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  DOC_TYPE = \''. addslashes($UpdateDOCNum[$i]) .'\',
-																MODEL = \''. addslashes($UpddateModeleNum[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDocNotification')));
-	}
-
-	////////////////////////
-	//// EMAIL ////
-	///////////////////////
-
-	//Model email add
-	if(isset($_POST['AddCODEMail']) AND !empty($_POST['AddCODEMail'])){
-
+	elseif(isset($_POST['AddCODEMail']) AND !empty($_POST['AddCODEMail'])){
+		//Model email add
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_EMAIL ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEMail']) ."',
 																		'". addslashes($_POST['AddLABELMAIL']) ."',
@@ -109,27 +64,8 @@
 																		'". addslashes($_POST['AddTEXTMAIL']) ."')");
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddMailNotification')));
 	}
-
-	//update mail model
-	if(isset($_POST['UpdateIdMail']) AND !empty($_POST['UpdateIdMail'])){
-
-		$UpdateIdMail = $_POST['UpdateIdMail'];
-		$UpddateObjetMail = $_POST['UpddateObjetMail'];
-		$UpddateTextMail = $_POST['UpddateTextMail'];
-
-		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMAIL .'` SET  OBJET = \''. addslashes($UpddateObjetMail) .'\',
-																TEXT = \''. addslashes($UpddateTextMail) .'\'
-																WHERE id = '. $UpdateIdMail.'');
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateMailNotification')));
-	}
-
-	////////////////////////
-	//// TIMELINE ////
-	///////////////////////
-
-	//TIMELINE  add
-	if(isset($_POST['AddTEXTTIMELINE']) AND !empty($_POST['AddTEXTTIMELINE'])){
-
+	elseif(isset($_POST['AddTEXTTIMELINE']) AND !empty($_POST['AddTEXTTIMELINE'])){
+		//TIMELINE  add
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_INFO_GENERAL ." VALUE ('0',
 																		'". addslashes($_POST['AddEtatTIMELINE']) ."',
 																		'". time() ."',
@@ -137,16 +73,43 @@
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddTimelineNotification')));
 	}
 
-	//TIMELINE  update
-	if(isset($_POST['UpdateIdTimeLine']) AND !empty($_POST['UpdateIdTimeLine'])){
 
-		$UpdateIdTimeLine = $_POST['UpdateIdTimeLine'];
-		$UpddateEtatTimeLine = $_POST['UpddateEtatTimeLine'];
-		$UpddateTextTimeLine = $_POST['UpddateTextTimeLine'];
 
-		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_INFO_GENERAL .'` SET  ETAT = \''. addslashes($UpddateEtatTimeLine) .'\',
-																TEXT = \''. addslashes($UpddateTextTimeLine) .'\'
-																WHERE id = '. $UpdateIdTimeLine.'');
+	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
+		//update sector activity
+		$i = 0;
+		foreach ($_POST['id_sector'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ACTIVITY_SECTOR .'` SET  CODE = \''. addslashes($_POST['UpdateCODESector'][$i]) .'\',
+																				LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\'
+																				WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectorNotification')));
+	}
+	elseif(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
+		// if update num sequence document
+		$i = 0;
+		foreach ($_POST['id_NumDoc'] as $id_generation) {
+
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_NUM_DOC .'` SET  DOC_TYPE = \''. addslashes($_POST['DOC_TYPE'][$i]) .'\',
+																MODEL = \''. addslashes($_POST['MODEL'][$i]) .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDocNotification')));
+	}
+	elseif(isset($_POST['UpdateIdMail']) AND !empty($_POST['UpdateIdMail'])){
+		//update mail model
+		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMAIL .'` SET  OBJET = \''. addslashes($_POST['OBJET']) .'\',
+																TEXT = \''. addslashes($_POST['TEXT']) .'\'
+																WHERE id = '. addslashes($_POST['UpdateIdMail']) .'');
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateMailNotification')));
+	}
+	elseif(isset($_POST['UpdateIdTimeLine']) AND !empty($_POST['UpdateIdTimeLine'])){
+		//TIMELINE  update
+		$bdd->GetUpdate('UPDATE `'. TABLE_ERP_INFO_GENERAL .'` SET  ETAT = \''. addslashes($_POST['ETAT']) .'\',
+																TEXT = \''. addslashes($_POST['TEXT']) .'\'
+																WHERE id = '. addslashes($_POST['UpdateIdTimeLine']) .'');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTimelineNotification')));
 	}
 
@@ -320,8 +283,8 @@
 					foreach ($ActivitySector->GETActivitySectorList('', false) as $data): ?>
 				<tr>
 					<td><?= $i ?><?= $Form->input('hidden', 'id_sector[]',  $data->id) ?></td>
-					<td><?= $Form->input('text', 'UpdateCODESector[]',  $data->CODE) ?></td>
-					<td><?= $Form->input('text', 'UpdateLABELSector[]',  $data->LABEL) ?></td>
+					<td><?= $Form->input('text', 'CODE[]',  $data->CODE) ?></td>
+					<td><?= $Form->input('text', 'LABEL[]',  $data->LABEL) ?></td>
 				</tr>
 				<?php $i++; endforeach; ?>
 						<tr>
@@ -387,13 +350,13 @@
 
 						<tr>
 							<td><input type="hidden" name="UpdateIdMail" value="<?= $Data->Id ?>">Objet :</td>
-							<td colspan="3"><input type="text" name="UpddateObjetMail" value="<?= $Data->OBJET ?>" ></td>
+							<td colspan="3"><input type="text" name="OBJET" value="<?= $Data->OBJET ?>" ></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td><?= $langue->show_text('TableMessage') ?></td>
 							<td colspan="3" >
-								<textarea id="UpddateTextMail" name="UpddateTextMail" rows="10" cols="100" style="align-content:left; white-space: normal;"><?= $Data->TEXT ?></textarea>
+								<textarea id="TEXT" name="TEXT" rows="10" cols="100" style="align-content:left; white-space: normal;"><?= $Data->TEXT ?></textarea>
 							</td>
 							<td>
 								<p>
@@ -443,22 +406,15 @@
 					<tbody>
 						<?php
 						//generate list of Sequence number document
-						$query='SELECT '. TABLE_ERP_NUM_DOC .'.Id,
-												'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
-												'. TABLE_ERP_NUM_DOC .'.MODEL,
-												'. TABLE_ERP_NUM_DOC .'.DIGIT,
-												'. TABLE_ERP_NUM_DOC .'.COMPTEUR
-												FROM `'. TABLE_ERP_NUM_DOC .'`
-												ORDER BY Id';
 
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): 
+						foreach ($Numbering->GETNumberingList() as $data): 
 							$Exemple = $Numbering->getCodeNumbering($type='0', $sql ='', $data->MODEL , $data->DIGIT, $data->COMPTEUR);
 						?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_NumDoc[]" id="id_NumDoc" value="<?= $data->Id ?>"></td>
+							<td><?= $i ?> <input type="hidden" name="id_NumDoc[]" id="id_NumDoc" value="<?= $data->id ?>"></td>
 							<td>
-								<select name="UpdateDOCNum[]">
+								<select name="DOC_TYPE[]">
 									<option value="1" <?= selected($data->DOC_TYPE, 1) ?>><?= $langue->show_text('SelectBLS') ?></option>
 									<option value="2" <?= selected($data->DOC_TYPE, 2) ?>><?= $langue->show_text('SelectBLC') ?></option>
 									<option value="3" <?= selected($data->DOC_TYPE, 3) ?>><?= $langue->show_text('SelectBL') ?></option>
@@ -473,7 +429,7 @@
 									<option value="12" <?= selected($data->DOC_TYPE, 12) ?>><?= $langue->show_text('SelectAR') ?></option>
 								</select>
 							</td>
-							<td><input type="text" class="input-moyen-vide" name="UpddateModeleNum[]" value="<?= $data->MODEL ?>" ></td>
+							<td><input type="text" class="input-moyen-vide" name="MODEL[]" value="<?= $data->MODEL ?>" ></td>
 							<td><?= $data->DIGIT ?></td>
 							<td><?= $data->COMPTEUR ?></td>
 							<td><?= $Exemple ?></td>
@@ -555,7 +511,7 @@
 						<tr>
 							<td><input type="hidden" name="UpdateIdTimeLine" value="<?= $Data->Id ?>">Etat :</td>
 							<td>
-								<select name="UpddateEtatTimeLine">
+								<select name="ETAT">
 									<option value="2" <?= selected($Data->ETAT, 2) ?>><?= $langue->show_text('SelectEdition') ?></option>
 									<option value="1" <?= selected($Data->ETAT, 1) ?><?= $langue->show_text('SelectDisplay') ?></option>
 									<option value="0" <?= selected($Data->ETAT, 0) ?>><?= $langue->show_text('SelectNoDisplay') ?></option>
@@ -567,7 +523,7 @@
 						<tr>
 							<td><?= $langue->show_text('TableMessage') ?></td>
 							<td colspan="3" >
-								<textarea id="UpddateTextTimeLine" name="UpddateTextTimeLine" rows="10" cols="100" style="align-content:left; white-space: normal;"><?= $Data->TEXT ?></textarea>
+								<textarea id="TEXT" name="TEXT" rows="10" cols="100" style="align-content:left; white-space: normal;"><?= $Data->TEXT ?></textarea>
 							</td>
 						</tr>
 						<?php }?>

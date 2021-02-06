@@ -1,6 +1,7 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
+	use App\COMPANY\Employees;
 	use \App\Form;
 	use \App\Methods\Section;
 
@@ -13,6 +14,7 @@
 	//init form class
 	$Form = new Form($_POST);
 	$Section = new Section();
+	$Employees= new Employees();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -41,10 +43,8 @@
 
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddUserNotification')));														
 	}
-
-	//If add Right
-	if(isset($_POST['AddRight']) AND !empty($_POST['AddRight'])){
-
+	elseif(isset($_POST['AddRight']) AND !empty($_POST['AddRight'])){
+		//If add Right
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_RIGHTS ." VALUE ('0',
 																		'". $_POST['AddRight'] ."',
 																		'". $_POST['Addpage_1_ajout'] ."',
@@ -64,33 +64,23 @@
 	//Update data employees
 	if(isset($_POST['id_membre']) AND !empty($_POST['id_membre'])){
 
-		$id_membre = $_POST['id_membre'];
-		$CODE = $_POST['CODE'];
-		$NAME = $_POST['NAME'];
-		$PRENOM = $_POST['PRENOM'];
-		$NOM = $_POST['NOM'];
-		$FONCTION = $_POST['FONCTION'];
-		$SECTION_ID = $_POST['SECTION_ID'];
-
 		$i = 0;
-		foreach ($id_membre as $id_generation) {
+		foreach ($_POST['id_membre'] as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $CODE[$i] .'\',
-																NOM = \''. addslashes($NOM[$i]) .'\',
-																PRENOM = \''. addslashes($PRENOM[$i]) .'\',
-																NAME = \''. addslashes($NAME[$i]) .'\',
-																FONCTION = \''. $FONCTION[$i] .'\',
-																SECTION_ID = \''. $SECTION_ID[$i] .'\'
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EMPLOYEES .'` SET  CODE = \''. $_POST['CODE'][$i] .'\',
+																NOM = \''. addslashes($_POST['NOM'][$i]) .'\',
+																PRENOM = \''. addslashes($_POST['PRENOM'][$i]) .'\',
+																NAME = \''. addslashes($_POST['NAME'][$i]) .'\',
+																FONCTION = \''. $_POST['FONCTION'][$i] .'\',
+																SECTION_ID = \''. $_POST['SECTION_ID'][$i] .'\'
 																WHERE idUser = '. $id_generation . ' ');
 			$i++;
 		}
 
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateUserNotification')));
 	}
-
-	//Update data right
-	if(isset($_POST['id_Right']) AND !empty($_POST['id_Right'])){
-
+	elseif(isset($_POST['id_Right']) AND !empty($_POST['id_Right'])){
+		//Update data right
 		$UpdateIdRight = $_POST['id_Right'];
 		$UpdateNameRight = $_POST['RIGHT_NAME'];
 		$UpdatePage_1 = $_POST['page_1_membre'];
@@ -164,23 +154,8 @@
 					</thead>
 					<tbody>
 					<?php 
-					$query ='SELECT '. TABLE_ERP_EMPLOYEES .'.IdUser,
-						'. TABLE_ERP_EMPLOYEES .'.CODE,
-						'. TABLE_ERP_EMPLOYEES .'.NOM,
-						'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-						'. TABLE_ERP_EMPLOYEES .'.CODE,
-						'. TABLE_ERP_EMPLOYEES .'.STATU,
-						'. TABLE_ERP_EMPLOYEES .'.CONNEXION,
-						'. TABLE_ERP_EMPLOYEES .'.NAME,
-						'. TABLE_ERP_EMPLOYEES .'.FONCTION,
-						'. TABLE_ERP_EMPLOYEES .'.SECTION_ID,
-						'. TABLE_ERP_RIGHTS .'.RIGHT_NAME,
-						'. TABLE_ERP_SECTION .'.LABEL
-						FROM `'. TABLE_ERP_EMPLOYEES .'`
-						LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
-						LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`';
 					$i = 1;
-					foreach ($bdd->GetQuery($query) as $data): ?>
+					foreach ($Employees->GETEmployeesList($SteRESP_COM_ID , false) as $data): ?>
 						<tr>
 							<td><?= $i .''. $Form->input('hidden', 'id_membre[]',  $data->IdUser) ?></td>
 							<td><?= format_temps($data->CONNEXION) ?></td>

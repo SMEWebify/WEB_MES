@@ -6,7 +6,18 @@ use \App\SQL;
 
 class Allocations Extends SQL  {
 
-    Public  $AllocationsList;
+    Public $AllocationsList;
+
+    public function NewAllocations($CODE, $LABEL,$VAT,$ACCOUNT_VAT , $CODE_ACCOUNT, $TYPE){
+        $NewAllocations = $this->GetInsert("INSERT INTO ". TABLE_ERP_IMPUT_COMPTA ." VALUE ('0',
+																			'". addslashes($CODE) ."',
+																			'". addslashes($LABEL) ."',
+																			'". addslashes($VAT) ."',
+																			'". addslashes($ACCOUNT_VAT) ."',
+																			'". addslashes($CODE_ACCOUNT) ."',
+																			'". addslashes($TYPE) ."')");
+        return $NewAllocations;
+    }
 
     public function GETAllocationsList($IdData=0, $Select = true){
 

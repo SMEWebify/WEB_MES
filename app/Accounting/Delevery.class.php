@@ -8,6 +8,13 @@ class Delevery Extends SQL  {
 
     Public  $DeleveryList;
 
+    public function NewDelevery($CODE, $LABEL){
+        $NewDelevery = $this->GetInsert("INSERT INTO ". TABLE_ERP_TRANSPORT ." VALUE ('0',
+                                                                                '". addslashes($CODE) ."',
+                                                                                '". addslashes($LABEL) ."')");
+        return $NewDelevery;
+    }
+
     public function GETDeleveryList($IdData=0, $Select = true){
 
         $this->DeleveryList ='';

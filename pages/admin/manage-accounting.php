@@ -1,4 +1,4 @@
-<?php 
+<?php
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
@@ -7,6 +7,8 @@
 	use \App\Accounting\PaymentCondition;
 	use \App\Accounting\Delevery;
 	use \App\Accounting\VAT;
+	use \App\Accounting\PaymentSchedule;
+	use \App\Accounting\PaymentScheduleLine;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -21,260 +23,142 @@
 	$PaymentCondition = new PaymentCondition();
 	$Delevery = new Delevery();
 	$VAT = new VAT();
+	$PaymentSchedule = new PaymentSchedule();
+	$PaymentScheduleLine = new PaymentScheduleLine();
+
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	////////////////////////
-	//// CONDITION REG ////
-	///////////////////////
-
-	//Insert in db new payement condition
 	if(isset($_POST['AddCODECondiReg']) AND !empty($_POST['AddCODECondiReg'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CONDI_REG ." VALUE ('0',
-																		'". addslashes($_POST['AddCODECondiReg']) ."',
-																		'". addslashes($_POST['AddLABELCondiReg']) ."',
-																		'". addslashes($_POST['AddNbrMoisCondiReg']) ."',
-																		'". addslashes($_POST['AddNbrJoursCondiReg']) ."',
-																		'". addslashes($_POST['AddFinDeMoiCondiReg']) ."')");
+		//Insert in db new payement condition
+		$PaymentCondition->NewPaymentCondition($_POST['AddCODECondiReg'],$_POST['AddLABELCondiReg'],$_POST['AddNbrMoisCondiReg'],$_POST['AddNbrJoursCondiReg'],$_POST['AddFinDeMoiCondiReg']);
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddCondiNotification')));	
 	}
+	elseif(isset($_POST['AddCODEModeRef']) AND !empty($_POST['AddCODEModeRef'])){
+		//if add new payment mode
+		$PaymentMethod->NewPaymentMethod($_POST['AddCODEModeRef'], $_POST['AddLABELModeRef'], $_POST['AddCODEComptaModeRef']);
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddModeNotification')));
+	}
+	elseif(isset($_POST['AddCODETVA']) AND !empty($_POST['AddCODETVA'])){
+		//if add new VAT type
+		$VAT->NewVAT($_POST['AddCODETVA'], $_POST['AddLABELTVA'], $_POST['AddTAUXTVA']);
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTVANotification')));
+	}	
+	elseif(isset($_POST['AddCODEIMPUT']) AND !empty($_POST['AddCODEIMPUT'])){
+		//if Add new Accouting entry
+		$Allocation->NewAllocations($_POST['AddCODEIMPUT'], $_POST['AddLABELIMPUT'] ,$_POST['AddTVAIMPUT'] ,$_POST['AddCOMPTETVAIMPUT'] , $_POST['AddCODECOMPTAIMPUT'], $_POST['AddTYPEIMPUT']);
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddAccountingNotification')));
+	}
+	elseif(isset($_POST['AddCODEEcheancier']) AND !empty($_POST['AddCODEEcheancier'])){
+		//if add new Payment Schedule
+		$PaymentSchedule->NewPaymentSchedule($_POST['AddCODEEcheancier'],$_POST['AddLABELEcheancier']);
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTimeLinePayementNotification')));
+	}
+	elseif(isset($_POST['AddLABELLigneEcheancier']) AND !empty($_POST['AddLABELLigneEcheancier'])){
+		//if add new ligne of timeline
+		$PaymentScheduleLine->NewPaymentScheduleLine($_GET['Echeancier'], $_POST['AddLABELLigneEcheancier'], $_POST['AddPourcMontantLigneEcheancier'], $_POST['AddPourcTVALigneEcheancier'], $_POST['AddRegLigneEcheancier'],$_POST['AddModeLigneEcheancier'], $_POST['AddDelaisLigneEcheancier']);
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLineTimeLinePayementNotification')));
+	}
+	elseif(isset($_POST['AddCODETransport']) AND !empty($_POST['AddCODETransport'])){
+		//if add new delevery method
+		$Delevery->NewDelevery($_POST['AddCODETransport'], $_POST['AddLABELTransport']);
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeleveryTypeNotification')));
+	}
 
-	//if update list condition payement
+	
 	if(isset($_POST['id_CondiReg']) AND !empty($_POST['id_CondiReg'])){
-
-		$UpdateIdCondiReg = $_POST['id_CondiReg'];
-		$UpdateCODECondiReg = $_POST['UpdateCODECondiReg'];
-		$UpdateLABELCondiReg = $_POST['UpdateLABELCondiReg'];
-		$UpdateNBRMOISCondiReg = $_POST['UpdateNBRMOISCondiReg'];
-		$UpdateNBRJOURSCondiReg = $_POST['UpdateNBRJOURSCondiReg'];
-		$FINMOISCondiReg = $_POST['FINMOISCondiReg'];
-
+		//if update list condition payement
 		$i = 0;
-		foreach ($UpdateIdCondiReg as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_CONDI_REG .'` SET  CODE = \''. addslashes($UpdateCODECondiReg[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELCondiReg[$i]) .'\',
-																NBR_MOIS = \''. addslashes($UpdateNBRMOISCondiReg[$i]) .'\',
-																NBR_JOURS = \''. addslashes($UpdateNBRJOURSCondiReg[$i]) .'\',
-																FIN_MOIS = \''. addslashes($FINMOISCondiReg[$i]) .'\'
+		foreach ($_POST['id_CondiReg'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_CONDI_REG .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																NBR_MOIS = \''. addslashes($_POST['NBR_MOIS'][$i]) .'\',
+																NBR_JOURS = \''. addslashes($_POST['NBR_JOURS'][$i]) .'\',
+																FIN_MOIS = \''. addslashes($_POST['FIN_MOIS'][$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCondiNotification')));
 	}
-
-	/////////////////////////
-	////  MODE REGLEMENT ////
-	/////////////////////////
-
-	//if add new payment mode
-	if(isset($_POST['AddCODEModeRef']) AND !empty($_POST['AddCODEModeRef'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_MODE_REG ." VALUE ('0',
-																		'". addslashes($_POST['AddCODEModeRef']) ."',
-																		'". addslashes($_POST['AddLABELModeRef']) ."',
-																		'". addslashes($_POST['AddCODEComptaModeRef']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddModeNotification')));
-	}
-
+	elseif(isset($_POST['id_ModeReg']) AND !empty($_POST['id_ModeReg'])){
 	//Update mode payement list
-	if(isset($_POST['id_ModeReg']) AND !empty($_POST['id_ModeReg'])){
-
-		$UpdateIdModeReg = $_POST['id_ModeReg'];
-		$UpdateCODEModeReg = $_POST['UpdateCODEModeReg'];
-		$UpdateLABELModeReg = $_POST['UpdateLABELModeReg'];
-		$UpdateCODECOMPTABLEModeReg = $_POST['UpdateCODECOMPTABLEModeReg'];
-
 		$i = 0;
-		foreach ($UpdateIdModeReg as $id_generation) {
-
-			$bdd->exec('UPDATE `'. TABLE_ERP_MODE_REG .'` SET  CODE = \''. addslashes($UpdateCODEModeReg[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELModeReg[$i]) .'\',
-																CODE_COMPTABLE = \''. addslashes($UpdateCODECOMPTABLEModeReg[$i]) .'\'
+		foreach ($_POST['id_ModeReg'] as $id_generation) {
+			$bdd->exec('UPDATE '. TABLE_ERP_MODE_REG .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																CODE_COMPTABLE = \''. addslashes($_POST['CODE_COMPTABLE'][$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateModeNotification')));
 	}
-
-	//////////////
-	////  VAT ////
-	//////////////
-
-	//if add new VAT type
-	if(isset($_POST['AddCODETVA']) AND !empty($_POST['AddCODETVA'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_TVA ." VALUE ('0',
-																		'". addslashes($_POST['AddCODETVA']) ."',
-																		'". addslashes($_POST['AddLABELTVA']) ."',
-																		'". addslashes($_POST['AddTAUXTVA']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTVANotification')));
-	}
-
+	elseif(isset($_POST['id_TVA']) AND !empty($_POST['id_TVA'])){
 	//update VAT List
-	if(isset($_POST['id_TVA']) AND !empty($_POST['id_TVA'])){
-
-		$UpdateIdTVA = $_POST['id_TVA'];
-		$UpdateCODETVA = $_POST['UpdateCODETVA'];
-		$UpdateLABELTVA = $_POST['UpdateLABELTVA'];
-		$UpdateTAUXTVA = $_POST['UpdateTAUXTVA'];
-
 		$i = 0;
-		foreach ($UpdateIdTVA as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_TVA .'` SET  CODE = \''. addslashes($UpdateCODETVA[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELTVA[$i]) .'\',
-																TAUX = \''. addslashes($UpdateTAUXTVA[$i]) .'\'
+		foreach ($_POST['id_TVA'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_TVA .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																TAUX = \''. addslashes($_POST['TAUX'][$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTVANotification')));
 	}
-
-	///////////////////////////////
-	////  ACCOUNTING ENTRY////
-	///////////////////////////////
-
-	//if Add new Accouting entry
-	if(isset($_POST['AddCODEIMPUT']) AND !empty($_POST['AddCODEIMPUT'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_IMPUT_COMPTA ." VALUE ('0',
-																		'". addslashes($_POST['AddCODEIMPUT']) ."',
-																		'". addslashes($_POST['AddLABELIMPUT']) ."',
-																		'". addslashes($_POST['AddTVAIMPUT']) ."',
-																		'". addslashes($_POST['AddCOMPTETVAIMPUT']) ."',
-																		'". addslashes($_POST['AddCODECOMPTAIMPUT']) ."',
-																		'". addslashes($_POST['AddTYPEIMPUT']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddAccountingNotification')));
-	}
-
-	//update list of entry accouting
-	if(isset($_POST['id_IMPUT']) AND !empty($_POST['id_IMPUT'])){
-
-		$id_IMPUT = $_POST['id_IMPUT'];
-		$UpdateCODEIMPUT = $_POST['UpdateCODEIMPUT'];
-		$UpdateLABELIMPUT = $_POST['UpdateLABELIMPUT'];
-		$UpdateTVAIMPUT = $_POST['UpdateTVAIMPUT'];
-		$UpdateCOMPTETVAIMPUT = $_POST['UpdateCOMPTETVAIMPUT'];
-		$UpdateCODECOMPTAIMPUT = $_POST['UpdateCODECOMPTAIMPUT'];
-		$UpdateTYPEIMPUT = $_POST['UpdateTYPEIMPUT'];
-
+	elseif(isset($_POST['id_IMPUT']) AND !empty($_POST['id_IMPUT'])){
+		//update list of entry accouting
 		$i = 0;
-		foreach ($id_IMPUT as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_IMPUT_COMPTA .'` SET  CODE = \''. addslashes($UpdateCODEIMPUT[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELIMPUT[$i]) .'\',
-																TVA = \''. addslashes($UpdateTVAIMPUT[$i]) .'\',
-																COMPTE_TVA = \''. addslashes($UpdateCOMPTETVAIMPUT[$i]) .'\',
-																CODE_COMPTA = \''. addslashes($UpdateCODECOMPTAIMPUT[$i]) .'\',
-																TYPE_IMPUTATION = \''. addslashes($UpdateTYPEIMPUT[$i]) .'\'
-																WHERE id IN ('. $id_generation . ')');
+		foreach ($_POST['id_IMPUT'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_IMPUT_COMPTA .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	TVA = \''. addslashes($_POST['TVA'][$i]) .'\',
+																	COMPTE_TVA = \''. addslashes($_POST['COMPTE_TVA'][$i]) .'\',
+																	CODE_COMPTA = \''. addslashes($_POST['CODE_COMPTA'][$i]) .'\',
+																	TYPE_IMPUTATION = \''. addslashes($_POST['TYPE_IMPUTATION'][$i]) .'\'
+																	WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateAccountingNotification')));
 	}
-
-	//////////////////////////////////
-	////TYPICAL TIMELINE PAYEMENT ////
-	/////////////////////////////////
-
-	//if add new TimeLine payement
-	if(isset($_POST['AddCODEEcheancier']) AND !empty($_POST['AddCODEEcheancier'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ECHEANCIER_TYPE ." VALUE ('0',
-																		'". addslashes($_POST['AddCODEEcheancier']) ."',
-																		'". addslashes($_POST['AddLABELEcheancier']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTimeLinePayementNotification')));
-	}
-
-	//update TimeLine payement list
-	if(isset($_POST['UpdateIdEcheancier']) AND !empty($_POST['UpdateIdEcheancier'])){
-
-		$UpdateIdEcheancier = $_POST['UpdateIdEcheancier'];
-		$UpdateCODEEcheancier = $_POST['UpdateCODEEcheancier'];
-		$UpdateLABELEcheancier = $_POST['UpdateLABELEcheancier'];
-
-		$i = 0;
-		foreach ($UpdateIdEcheancier as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ECHEANCIER_TYPE .'` SET  CODE = \''. addslashes($UpdateCODEEcheancier[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELEcheancier[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTimeLinePayementNotification')));
-	}
-
-	//if add new ligne of timeline 
-	if(isset($_POST['AddLABELLigneEcheancier']) AND !empty($_POST['AddLABELLigneEcheancier'])){
-
-			$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ECHEANCIER_TYPE_LIGNE ." VALUE ('0',
-																			'". addslashes($_GET['Echeancier']) ."',
-																			'". addslashes($_POST['AddLABELLigneEcheancier']) ."',
-																			'". addslashes($_POST['AddPourcMontantLigneEcheancier']) ."',
-																			'". addslashes($_POST['AddPourcTVALigneEcheancier']) ."',
-																			'". addslashes($_POST['AddRegLigneEcheancier']) ."',
-																			'". addslashes($_POST['AddModeLigneEcheancier']) ."',
-																			'". addslashes($_POST['AddDelaisLigneEcheancier']) ."')");
-			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLineTimeLinePayementNotification')));
-	}
-
-	//update timeline détail list
-	if(isset($_POST['UpdateIdLigneEcheancier']) AND !empty($_POST['UpdateIdLigneEcheancier'])){
-
-		$UpdateIdLigneEcheancier = $_POST['UpdateIdLigneEcheancier'];
-		$UpdateLABELLigneEcheancier = $_POST['UpdateLABELLigneEcheancier'];
-		$UpdatePourcMontantLigneEcheancier = $_POST['UpdatePourcMontantLigneEcheancier'];
-		$UpdatePourcTVALigneEcheancier = $_POST['UpdatePourcTVALigneEcheancier'];
-		$UpdateRegLigneEcheancier = $_POST['UpdateRegLigneEcheancier'];
-		$UpdateModeLigneEcheancier = $_POST['UpdateModeLigneEcheancier'];
-		$UpdateDelaisLigneEcheancier = $_POST['UpdateDelaisLigneEcheancier'];
-		
-			$i = 0;
-			foreach ($UpdateIdLigneEcheancier as $id_generation) {
-		
-				$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'` SET  LABEL = \''. addslashes($UpdateLABELLigneEcheancier[$i]) .'\',
-																			POURC_MONTANT = \''. addslashes($UpdatePourcMontantLigneEcheancier[$i]) .'\',
-																			POURC_TVA = \''. addslashes($UpdatePourcTVALigneEcheancier[$i]) .'\',
-																			CONDI_REG_ID = \''. addslashes($UpdateRegLigneEcheancier[$i]) .'\',
-																			MODE_REG_ID = \''. addslashes($UpdateModeLigneEcheancier[$i]) .'\',
-																			DELAI = \''. addslashes($UpdateDelaisLigneEcheancier[$i]) .'\'
-																			WHERE Id IN ('. $id_generation . ')');
-				$i++;
-			}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineTimeLinePayementNotification')));
-	}
-
-	////////////////////////
-	////     DELEVERY   ////
-	///////////////////////
-
-	//if add new delevery method
-	if(isset($_POST['AddCODETransport']) AND !empty($_POST['AddCODETransport'])){
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_TRANSPORT ." VALUE ('0',
-																		'". addslashes($_POST['AddCODETransport']) ."',
-																		'". addslashes($_POST['AddLABELTransport']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeleveryTypeNotification')));
-	}
-
+	elseif(isset($_POST['UpdateIdTransport']) AND !empty($_POST['UpdateIdTransport'])){
 	//udpdate list of delevery method
-	if(isset($_POST['UpdateIdTransport']) AND !empty($_POST['UpdateIdTransport'])){
-
-		$UpdateIdTransport = $_POST['UpdateIdTransport'];
-		$UpdateCODETransport = $_POST['UpdateCODETransport'];
-		$UpdateLABELTransport = $_POST['UpdateLABELTransport'];
-
 		$i = 0;
-		foreach ($UpdateIdTransport as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_TRANSPORT .'` SET  CODE = \''. addslashes($UpdateCODETransport[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELTransport[$i]) .'\'
+		foreach ($_POST['UpdateIdTransport'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_TRANSPORT .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateDeleveryNotification')));
 	}
-
+	elseif(isset($_POST['UpdateIdEcheancier']) AND !empty($_POST['UpdateIdEcheancier'])){
+		//update TimeLine payement list
+		$i = 0;
+		foreach ($_POST['UpdateIdEcheancier'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ECHEANCIER_TYPE .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																			LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\'
+																			WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTimeLinePayementNotification')));
+	}
+	elseif(isset($_POST['UpdateIdLigneEcheancier']) AND !empty($_POST['UpdateIdLigneEcheancier'])){
+		//update timeline détail list	
+		$i = 0;
+		foreach ($_POST['UpdateIdLigneEcheancier'] as $id_generation) {	
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'` SET  LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																			POURC_MONTANT = \''. addslashes($_POST['POURC_MONTANT'][$i]) .'\',
+																			POURC_TVA = \''. addslashes($_POST['POURC_TVA'][$i]) .'\',
+																			CONDI_REG_ID = \''. addslashes($_POST['CONDI_REG_ID'][$i]) .'\',
+																			MODE_REG_ID = \''. addslashes($_POST['MODE_REG_ID'][$i]) .'\',
+																			DELAI = \''. addslashes($_POST['DELAI'][$i]) .'\'
+																			WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineTimeLinePayementNotification')));
+	}
+	
 	//if user want show timeline detail
 	if(isset($_GET['Echeancier']) AND !empty($_GET['Echeancier'])){
 		//we change default view on this section
@@ -307,26 +191,16 @@
 					<tbody>
 						<?php
 							//generate condition payement liste
-							$query='SELECT '. TABLE_ERP_CONDI_REG .'.Id,
-								'. TABLE_ERP_CONDI_REG .'.CODE,
-								'. TABLE_ERP_CONDI_REG .'.LABEL,
-								'. TABLE_ERP_CONDI_REG .'.NBR_MOIS,
-								'. TABLE_ERP_CONDI_REG .'.NBR_JOURS,
-								'. TABLE_ERP_CONDI_REG .'.FIN_MOIS
-								FROM `'. TABLE_ERP_CONDI_REG .'`
-								ORDER BY Id';
-
-								$i = 1;
-								foreach ($bdd->GetQuery($query) as $data): ?>
-
+							$i = 1;
+							foreach ($PaymentCondition->GETPaymentConditionList('', false) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_CondiReg[]" id="id_CondiReg" value="<?= $data->Id ?>"></td>
-							<td><input type="text" name="UpdateCODECondiReg[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="UpdateLABELCondiReg[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="number" name="UpdateNBRMOISCondiReg[]" value="<?= $data->NBR_MOIS ?>" required="required"></td>
-							<td><input type="number" name="UpdateNBRJOURSCondiReg[]" value="<?= $data->NBR_JOURS ?>" required="required"></td>
+							<td><?= $i ?> <input type="hidden" name="id_CondiReg[]" id="id_CondiReg" value="<?= $data->id ?>"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="number" name="NBR_MOIS[]" value="<?= $data->NBR_MOIS ?>" required="required"></td>
+							<td><input type="number" name="NBR_JOURS[]" value="<?= $data->NBR_JOURS ?>" required="required"></td>
 							<td>
-								<select name="FINMOISCondiReg[]">
+								<select name="FIN_MOIS[]">
 									<option value="1" <?= selected($data->FIN_MOIS, "1") ?>><?= $langue->show_text('Yes') ?></option>
 									<option value="0" <?= selected($data->FIN_MOIS, "0") ?>><?= $langue->show_text('No') ?></option>
 								</select>
@@ -371,20 +245,13 @@
 					<tbody>
 					<?php
 						//generate liste of payement mode
-						$quer='SELECT '. TABLE_ERP_MODE_REG .'.Id,
-								'. TABLE_ERP_MODE_REG .'.CODE,
-								'. TABLE_ERP_MODE_REG .'.LABEL,
-								'. TABLE_ERP_MODE_REG .'.CODE_COMPTABLE
-								FROM `'. TABLE_ERP_MODE_REG .'`
-								ORDER BY Id';
-
-								$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						$i = 1;
+						foreach ($PaymentMethod->GETPaymentMethodList('', false) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_ModeReg[]" id="id_ModeReg" value="<?= $data->Id ?>"></td>
-							<td><input type="text" name="UpdateCODEModeReg[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="UpdateLABELModeReg[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="text" name="UpdateCODECOMPTABLEModeReg[]" value="<?= $data->CODE_COMPTABLE ?>" required="required"></td>
+							<td><?= $i ?> <input type="hidden" name="id_ModeReg[]" id="id_ModeReg" value="<?= $data->id ?>"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="CODE_COMPTABLE[]" value="<?= $data->CODE_COMPTABLE ?>" required="required"></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -422,9 +289,9 @@
 						foreach ($VAT->GETVATList('',False) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_TVA[]" id="id_TVA" value="<?= $data->Id ?>"></td>
-							<td><input type="text" name="UpdateCODETVA[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="UpdateLABELTVA[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="text" name="UpdateTAUXTVA[]" value="<?= $data->TAUX ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="TAUX[]" value="<?= $data->TAUX ?>" required="required"></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -465,17 +332,17 @@
 						foreach ($Allocations->GETAllocationsList('', false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_IMPUT[]" id="id_IMPUT" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="UpdateCODEIMPUT[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="UpdateLABELIMPUT[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
 							<td>
-								<select name="UpdateTVAIMPUT[]">
+								<select name="TVA[]">
 									<?= $VAT->GETVATList($data->TVA) ?>
 								</select>
 							</td>
-							<td><input type="text" name="UpdateCOMPTETVAIMPUT[]" value="<?= $data->COMPTE_TVA ?>" required="required"></td>
-							<td><input type="text" name="UpdateCODECOMPTAIMPUT[]" value="<?= $data->CODE_COMPTA ?>" required="required"></td>
+							<td><input type="text" name="COMPTE_TVA[]" value="<?= $data->COMPTE_TVA ?>" required="required"></td>
+							<td><input type="text" name="CODE_COMPTA[]" value="<?= $data->CODE_COMPTA ?>" required="required"></td>
 							<td>
-								<select name="AddTYPEIMPUT[]">
+								<select name="TYPE_IMPUTATION[]">
 									<option value="1" <?= selected($data->TYPE_IMPUTATION, 1) ?>><?= $langue->show_text('TableSelect1') ?></option>
 									<option value="2" <?= selected($data->TYPE_IMPUTATION, 2) ?>><?= $langue->show_text('TableSelect2') ?></option>
 									<option value="3" <?= selected($data->TYPE_IMPUTATION, 3) ?>><?= $langue->show_text('TableSelect3') ?></option>
@@ -533,19 +400,13 @@
 					<tbody>
 						<?php
 						// generate list of TimeLine payement
-						$query='SELECT '. TABLE_ERP_ECHEANCIER_TYPE .'.Id,
-									'. TABLE_ERP_ECHEANCIER_TYPE .'.CODE,
-									'. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL
-									FROM `'. TABLE_ERP_ECHEANCIER_TYPE .'`
-									ORDER BY Id';
-
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data): ?>
+						foreach ($PaymentSchedule->GETPaymentScheduleList('', false) as $data): ?>
 						<tr>
-							<td><input type="hidden" name="UpdateIdEcheancier[]" id="UpdateIdEcheancier" value="<?= $data->Id ?>"></td>
-							<td><input type="text" name="UpdateCODEEcheancier[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="UpdateLABELEcheancier[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><a href="admin.php?page=manage-accounting&Echeancier=<?= $data->Id ?>">--></a></td>
+							<td><input type="hidden" name="UpdateIdEcheancier[]" id="UpdateIdEcheancier" value="<?= $data->id ?>"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><a href="admin.php?page=manage-accounting&Echeancier=<?= $data->id ?>">--></a></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -567,19 +428,6 @@
 			<?php
 			//if user want show timeline detail
 			if(isset($_GET['Echeancier']) AND !empty($_GET['Echeancier'])){
-
-				//re init liste of condition payement
-				$query='SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'';
-				foreach ($bdd->GetQuery($query) as $data){
-					$CondiListe2 .='<option value="'. $data->Id .'" >'. $data->LABEL .'</option>';
-				}
-
-				//re init liste of methode payement
-				$query='SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'';
-				foreach ($bdd->GetQuery($query) as $data){
-					$RegListe2 .='<option value="'. $data->Id .'" >'. $data->LABEL .'</option>';
-				}
-
 				//generate liste of detail timeline payement
 			?>
 			<form method="post" name="Section" action="admin.php?page=manage-accounting&Echeancier=<?= $_GET['Echeancier'] ?>" class="content-form" >
@@ -598,46 +446,26 @@
 					<tbody>
 					<?php
 					//generate list of détail TimeLine payement
-					$query='SELECT '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.Id,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.ECHEANCIER_ID,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.LABEL,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.POURC_MONTANT,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.POURC_TVA,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.CONDI_REG_ID,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.MODE_REG_ID,
-									'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.DELAI
-									FROM `'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'`
-										WHERE '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.ECHEANCIER_ID = \''. 	addslashes($_GET['Echeancier']).'\'
-									ORDER BY Id';
 
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data){
-							$query='SELECT Id, LABEL FROM '. TABLE_ERP_CONDI_REG .'';
-							foreach ($bdd->GetQuery($query) as $data1){
-								$CondiListe1 .='<option value="'. $data1->Id .'" '. selected( $data->CONDI_REG_ID, $data1->Id) .'>'. $data1->LABEL .'</option>';
-							}
-
-							$query='SELECT Id, LABEL FROM '. TABLE_ERP_MODE_REG .'';
-							foreach ($bdd->GetQuery($query) as $data2){
-								$RegListe1 .='<option value="'. $data2->Id .'" '. selected( $data->MODE_REG_ID, $data2->Id) .'>'.$data2->LABEL .'</option>';
-							}
+						foreach ($bdd->GetQuery($query) as $data){		
 						?>
 						<tr>
-							<td><input type="hidden" name="UpdateIdLigneEcheancier[]" id="UpdateIdLigneEcheancier" value="<?= $data->Id ?>" required="required"></td>
-							<td><input type="text"  name="UpdateLABELLigneEcheancier[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="number" name="UpdatePourcMontantLigneEcheancier[]" value="<?= $data->POURC_MONTANT ?>" step=".001" required="required"></td>
-							<td><input type="number"  name="UpdatePourcTVALigneEcheancier[]" value="<?= $data->POURC_TVA ?>" step=".001" required="required"></td>
+							<td><input type="hidden" name="UpdateIdLigneEcheancier[]" id="UpdateIdLigneEcheancier" value="<?= $data->id ?>" required="required"></td>
+							<td><input type="text"  name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="number" name="POURC_MONTANT[]" value="<?= $data->POURC_MONTANT ?>" step=".001" required="required"></td>
+							<td><input type="number"  name="POURC_TVA[]" value="<?= $data->POURC_TVA ?>" step=".001" required="required"></td>
 							<td>
-								<select name="UpdateRegLigneEcheancier[]">
-									<?= $CondiListe1 ?>
+								<select name="CONDI_REG_ID[]">
+									<?=$PaymentCondition->GETPaymentConditionList($data->CONDI_REG_ID)?>
 								</select>
 							</td>
 							<td>
-								<select name="UpdateModeLigneEcheancier[]">
-									<?= $RegListe1 ?>
+								<select name="MODE_REG_ID[]">
+									<?=$PaymentMethod->GETPaymentMethodList($data->MODE_REG_ID); ?>
 								</select>
 							</td>
-							<td><input type="number" class="input-moyen-vide" name="UpdateDelaisLigneEcheancier[]" value="<?= $data->DELAI ?>" required="required"></td>
+							<td><input type="number" class="input-moyen-vide" name="DELAI[]" value="<?= $data->DELAI ?>" required="required"></td>
 						</tr>
 						<?php $CondiListe1 = '';$RegListe1 = '';  $i++; 
 							}  ?>
@@ -648,12 +476,12 @@
 							<td><input type="number" class="input-moyen-vide" name="AddPourcTVALigneEcheancier" step=".001" ></td>
 							<td>
 								<select name="AddRegLigneEcheancier">
-									<?= $CondiListe2 ?>
+									<?=$PaymentCondition->GETPaymentConditionList()?>
 								</select>
 							</td>
 							<td>
 								<select name="AddModeLigneEcheancier">
-									<?= $RegListe2 ?>
+									<?=$PaymentMethod->GETPaymentMethodList(); ?>
 								</select>
 							</td>
 							<td><input type="number"  name="AddDelaisLigneEcheancier" ></td>
@@ -689,8 +517,8 @@
 						foreach ($Delevery->GETDeleveryList('', false) as $data): ?>
 						<tr>
 							<td><input type="hidden" name="UpdateIdTransport[]" id="UpdateIdTransport" value="<?= $data->id ?>" ></td>
-							<td><input type="text" name="UpdateCODETransport[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="UpdateLABELTransport[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>

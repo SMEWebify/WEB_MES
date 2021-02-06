@@ -54,33 +54,33 @@
 							<thead>
 								<tr>
 									<th colspan="5">
-									<?= $langue->show_text('TableNumberQuote')  ?> <?= $CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $INDICE  ?>
+									<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->$INDICE  ?>
 									</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<td><?= $langue->show_text('TableCodeLabel')  ?></td>
-									<td><?= $CODE ?><?= $Form->input('hidden', 'CODE', $CODE, '') ?></td>
-									<td><?= $Form->input('text', 'LABEL', $LABEL, $langue->show_text('TableLabelplaceholder')) ?></td>
+									<td><?= $Maindata->CODE ?><?= $Form->input('hidden', 'CODE', $Maindata->CODE, '') ?></td>
+									<td><?= $Form->input('text', 'LABEL', $Maindata->$LABEL, $langue->show_text('TableLabelplaceholder')) ?></td>
 								</tr>
 								<tr>
 									<td><?= $langue->show_text('TableIndexLabel')  ?></td>
-									<td><?= $INDICE  ?></td>
-									<td><?= $Form->input('text', 'LABEL_INDICE', $LABEL_INDICE, $langue->show_text('TableLabelIndexplaceholder')) ?></td>
+									<td><?= $Maindata->$INDICE  ?></td>
+									<td><?= $Form->input('text', 'LABEL_INDICE', $Maindata->$LABEL_INDICE, $langue->show_text('TableLabelIndexplaceholder')) ?></td>
 								</tr>
 								<tr>
 									<td><?= $langue->show_text('TableCustomerReference')  ?></td>
-									<td  colspan="2"><?= $Form->input('text', 'REFERENCE', $REFERENCE, $langue->show_text('TableCustomerReference')) ?></td>
+									<td  colspan="2"><?= $Form->input('text', 'REFERENCE', $Maindata->$REFERENCE, $langue->show_text('TableCustomerReference')) ?></td>
 								</tr>
 								<tr>
 									<td><?= $langue->show_text('TableCreationDate')  ?></td>
-									<td  colspan="2"><?= $DATE ?></td>
+									<td  colspan="2"><?= $Maindata->$DATE ?></td>
 								</tr>
 								<?php if(isset($_GET['quote'])): ?>
 								<tr>
 									<td><?= $langue->show_text('TableValidityDate')  ?></td>
-									<td colspan="2"><?= $Form->input('date', 'DATE_VALIDITE', $DATE_VALIDITE) ?></td>
+									<td colspan="2"><?= $Form->input('date', 'DATE_VALIDITE', $Maindata->$DATE_VALIDITE) ?></td>
 								</tr>
 								<?php endif ?>
 								<tr>
@@ -88,20 +88,20 @@
 									<td>
 										<select name="ETAT">
 											<?php if(isset($_GET['quote'])): ?>
-											<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
-											<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectRefuse') ?></option>
-											<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectSend') ?></option>
-											<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectDecline') ?></option>
-											<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectClosed') ?></option>
-											<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectObsolete') ?></option>
+											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectRefuse') ?></option>
+											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelectSend') ?></option>
+											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelectDecline') ?></option>
+											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectClosed') ?></option>
+											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectObsolete') ?></option>
 											<?php endif ?>
 											<?php if(isset($_GET['order'])): ?>
-											<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
-											<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectRun') ?></option>
-											<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectStop') ?></option>
-											<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
-											<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectDelivered') ?></option>
-											<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectInvoice') ?></option>
+											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectRun') ?></option>
+											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelectStop') ?></option>
+											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
+											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectDelivered') ?></option>
+											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectInvoice') ?></option>
 										<?php endif ?>
 										</select>
 									</td>
@@ -131,7 +131,7 @@
 								<td><?= $langue->show_text('TableCondiList') ?></td>
 								<td>
 									<select name="COND_REG_CUSTOMER_ID">
-										<?=$PaymentCondition->GETPaymentConditionList($COND_REG_CUSTOMER_ID)?>
+										<?=$PaymentCondition->GETPaymentConditionList($Maindata->COND_REG_CUSTOMER_ID)?>
 									</select>
 								</td>
 							</tr>
@@ -139,7 +139,7 @@
 								<td><?= $langue->show_text('TableMethodList') ?></td>
 								<td>
 										<select name="MODE_REG_CUSTOMER_ID">
-											<?=$PaymentMethod->GETPaymentMethodList($MODE_REG_CUSTOMER_ID); ?>
+											<?=$PaymentMethod->GETPaymentMethodList($Maindata->MODE_REG_CUSTOMER_ID); ?>
 										</select>
 									</td>
 								</tr>
@@ -147,7 +147,7 @@
 									<td><?= $langue->show_text('TimeLinePayement') ?></td>
 									<td>
 										<select name="ECHEANCIER_ID">
-											<?=  $EcheancierListe1 ?>
+											<?=  $PaymentSchedule->GETPaymentScheduleList($Maindata->Echeancier_ID, true) ?> 
 										</select>
 									</td>
 								</tr>
@@ -155,7 +155,7 @@
 									<td><?= $langue->show_text('TableDeleveryMode') ?></td>
 									<td>
 										<select name="TRANSPORT_ID">
-											<?=  $Delevery->GETDeleveryList($TRANSPORT_ID, true) ?>
+											<?=  $Delevery->GETDeleveryList($Maindata->TRANSPORT_ID, true) ?>
 										</select>
 									</td>
 								</tr>
@@ -176,7 +176,7 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td><textarea class="Comment" name="COMENT" id="COMENT" rows="20" ><?= $COMENT ?></textarea></td>
+								<td><textarea class="Comment" name="COMENT" id="COMENT" rows="20" ><?= $Maindata->COMENT ?></textarea></td>
 							</tr>
 							<tr>
 								<td><?= $Form->submit($langue->show_text('TableUpdateButton')) ?></td>
@@ -196,7 +196,7 @@
 						<tbody>
 							<tr>
 								<td>
-									<?= $Form->input('hidden', 'id', $Id) ?>
+									<?= $Form->input('hidden', 'id', $Maindata->id) ?>
 									<?= $langue->show_text('TableUserCreate') ?>
 								</td>
 								<td><?= $NOM ?> <?= $PRENOM ?></td>
@@ -205,7 +205,7 @@
 								<td><?= $langue->show_text('TableSalesManager') ?></td>
 								<td>
 									<select name="RESP_COM_ID">
-										<?=$Employees->GETEmployeesList($RESP_COM_ID) ?>
+										<?=$Employees->GETEmployeesList($Maindata->RESP_COM_ID) ?>
 									</select>
 								</td>
 							</tr>
@@ -213,7 +213,7 @@
 								<td><?= $langue->show_text('TableTechnicalManager') ?></td>
 								<td>
 									<select name="RESP_TECH_ID">
-									<?=$Employees->GETEmployeesList($RESP_TECH_ID) ?>
+									<?=$Employees->GETEmployeesList($Maindata->RESP_TECH_ID) ?>
 									</select>
 								</td>
 							</tr>
@@ -235,16 +235,16 @@
 						<tbody>
 							<tr>
 								<td>
-									<input type="hidden" name="id" value="<?= $Id ?>">
+									<input type="hidden" name="id" value="<?= $Maindata->id ?>">
 									<?= $langue->show_text('TableCustomer') ?>
 								</td>
-								<td><a href="index.php?page=companies&id=<?=  $CUSTOMER_ID  ?>"><?=  $CUSTOMER_NAME  ?></a></td>
+								<td><a href="index.php?page=companies&id=<?=  $Maindata->CUSTOMER_ID  ?>"><?=  $Maindata->CUSTOMER_NAME  ?></a></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableContact') ?></td>
 								<td>
 									<select name="CONTACT_ID">
-										<?=  $Contact->GETContactList($CONTACT_ID, true, $CUSTOMER_ID )  ?>
+										<?=  $Contact->GETContactList($Maindata->CONTACT_ID, true, $Maindata->CUSTOMER_ID )  ?>
 									</select>
 								</td>
 							</tr>
@@ -252,7 +252,7 @@
 								<td><?= $langue->show_text('TableAdresseDelevery') ?></td>
 								<td>
 									<select name="ADRESSE_ID">
-									<?=  $Address->GETAddressList($ADRESSE_ID, true, $CUSTOMER_ID,'AND ADRESS_LIV=\'1\'' ) ?>
+									<?=  $Address->GETAddressList($Maindata->ADRESSE_ID, true, $Maindata->CUSTOMER_ID,'AND ADRESS_LIV=\'1\'' ) ?>
 									</select>
 								</td>
 							</tr>
@@ -260,7 +260,7 @@
 								<td><?= $langue->show_text('TableAdresseInvoice') ?></td>
 								<td>
 									<select name="FACTURATION_ID">
-										<?=  $Address->GETAddressList($FACTURATION_ID, true, $CUSTOMER_ID,'AND ADRESS_FAC=\'1\'' ) ?>
+										<?=  $Address->GETAddressList($Maindata->FACTURATION_ID, true, $Maindata->CUSTOMER_ID,'AND ADRESS_FAC=\'1\'' ) ?>
 									</select>
 								</td>
 							</tr>
@@ -292,11 +292,11 @@
 							</tr>
 							<tr>
 								<td>
-									<?= $Form->input('hidden', 'ORDER_ID', $Id  ) ?>
-									<?= $Form->input('hidden', 'CUSTOMER_ID', $CUSTOMER_ID ) ?>
-									<?= $Form->input('hidden', 'CONTACT_ID', $CONTACT_ID ) ?>
-									<?= $Form->input('hidden', 'ADRESSE_ID', $ADRESSE_ID ) ?>
-									<?= $Form->input('hidden', 'FACTURATION_ID', $FACTURATION_ID ) ?>
+									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ) ?>
+									<?= $Form->input('hidden', 'CUSTOMER_ID', $Maindata->CUSTOMER_ID ) ?>
+									<?= $Form->input('hidden', 'CONTACT_ID', $Maindata->CONTACT_ID ) ?>
+									<?= $Form->input('hidden', 'ADRESSE_ID', $Maindata->ADRESSE_ID ) ?>
+									<?= $Form->input('hidden', 'FACTURATION_ID', $Maindata->FACTURATION_ID ) ?>
 									<?= $Form->submit($langue->show_text('TableNewOrderAcknowledgment')) ?>
 								</td>
 							</tr>
@@ -315,7 +315,7 @@
 				<thead>
 					<tr>
 						<th colspan="12" >
-						<?= $langue->show_text('TableNumberQuote')  ?> <?= $CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $INDICE  ?>
+						<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->$INDICE  ?>
 						</th>
 					</tr>
 					<tr>

@@ -29,10 +29,6 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	//------------------------------
-	// SERVICE
-	//------------------------------
-
 	//if add new service
 	if(isset($_POST['AddPosteCharge']) AND !empty($_POST['AddPosteCharge'])){
 
@@ -47,33 +43,9 @@
 																		'',
 																		'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddServiceNotification')));
-	}
-
-	//update service list 
-	if(isset($_POST['id_presta']) AND !empty($_POST['id_presta'])){
-		$UpdateIdPresta = $_POST['id_presta'];
-		$UpdateORDREpresta = $_POST['ORDREpresta'];
-		$UpdateTYPEpresta = $_POST['TYPEpresta'];
-		$UpdateCOLORpresta = $_POST['COLORpresta'];
-
-		$i = 0;
-		foreach ($UpdateIdPresta as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  
-																ORDRE = \''. $UpdateORDREpresta[$i] .'\',
-																TYPE = \''. $UpdateTYPEpresta[$i] .'\',
-																COLOR = \''. $UpdateCOLORpresta[$i] .'\'
-																WHERE Id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateServiceNotification')));
-	}
-
-	//------------------------------
-	// SECTION
-	//------------------------------
-
-	//add new section in db
-	if(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
+	}	
+	elseif(isset($_POST['AddSection']) AND !empty($_POST['AddSection'])){
+		//add new section in db
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_SECTION ." VALUE ('0',
 																		'". $_POST['ORDRESection'] ."',
 																		'". addslashes($_POST['CODESection']) ."',
@@ -83,40 +55,8 @@
 																		'". $_POST['COLORSection'] ."')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddSectionNotification')));
 	}
-
-	//update section list 
-	if(isset($_POST['id_section']) AND !empty($_POST['id_section'])){
-
-		$UpdateIdSection = $_POST['id_section'];
-		$UpdateORDRESection = $_POST['UpdateORDRESection'];
-		$UpdateCODESection = $_POST['UpdateCODESection'];
-		$UpdateLABELSection = $_POST['UpdateLABELSection'];
-		$UpdateTAUX_HSection = $_POST['UpdateTAUX_HSection'];
-		$UpdateRESPONSABLESection = $_POST['UpdateRESPONSABLESection'];
-		$UpdateCOLORSection = $_POST['UpdateCOLORSection'];
-
-		$i = 0;
-		foreach ($UpdateIdSection as $id_generation) {
-
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SECTION .'` SET  ORDRE = \''. $UpdateORDRESection[$i] .'\',
-																CODE = \''. addslashes($UpdateCODESection[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELSection[$i]) .'\',
-																COUT_H = \''. $UpdateTAUX_HSection[$i] .'\',
-																RESPONSABLE = \''. $UpdateRESPONSABLESection[$i] .'\',
-																COLOR = \''. $UpdateCOLORSection[$i] .'\'
-																WHERE id IN ('. $id_generation . ')');
-			$i++;
-		}
-		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectionNotification')));
-	}
-
-	//------------------------------
-	// RESSOURCES
-	//------------------------------
-
-	//add new ressource 
-	if(isset($_POST['AddRessource']) AND !empty($_POST['AddRessource'])){
-
+	elseif(isset($_POST['AddRessource']) AND !empty($_POST['AddRessource'])){
+		//add new ressource
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_RESSOURCE ." VALUE ('0',
 																		'". addslashes($_POST['CODERessource']) ."',
 																		'". addslashes($_POST['AddRessource']) ."',
@@ -130,15 +70,8 @@
 																		'')");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddRessourcesnNotification')));	
 	}
-
-
-	//------------------------------
-	// ZONE OF STOCK
-	//------------------------------
-
-	//add new stock zone in dd
-	if(isset($_POST['AddCODEZoneStock']) AND !empty($_POST['AddCODEZoneStock'])){
-
+	elseif(isset($_POST['AddCODEZoneStock']) AND !empty($_POST['AddCODEZoneStock'])){
+		//add new stock zone in dd
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STOCK_ZONE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEZoneStock']) ."',
 																		'". addslashes($_POST['AddLABELZoneStock']) ."',
@@ -147,22 +80,45 @@
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLocationNotification')));																		
 	}
 
-	//update list stock zone
-	if(isset($_POST['id_ZoneStock']) AND !empty($_POST['id_ZoneStock'])){
-
-		$UpdateIdZoneStock = $_POST['id_ZoneStock'];
-		$UpdateCODEZoneStock = $_POST['UpdateCODEZoneStock'];
-		$UpdateLABELZoneStock = $_POST['UpdateLABELZoneStock'];
-		$UpdateRESSOURCEIDZoneStock = $_POST['UpdateRESSOURCEIDZoneStock'];
-		$UpdateCOLORZoneStock = $_POST['UpdateCOLORZoneStock'];
-
+	 
+	if(isset($_POST['id_presta']) AND !empty($_POST['id_presta'])){
+		//update service list
 		$i = 0;
-		foreach ($UpdateIdZoneStock as $id_generation) {
+		foreach ($_POST['id_presta'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  
+																ORDRE = \''. $_POST['ORDREpresta'][$i] .'\',
+																TYPE = \''. $_POST['TYPEpresta'][$i] .'\',
+																COLOR = \''. $_POST['COLORpresta'][$i] .'\'
+																WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateServiceNotification')));
+	}
+	elseif(isset($_POST['id_section']) AND !empty($_POST['id_section'])){
+		//update section list 
+		$i = 0;
+		foreach ($_POST['id_section'] as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_STOCK_ZONE .'` SET CODE = \''. addslashes($UpdateCODEZoneStock[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELZoneStock[$i]) .'\',
-																RESSOURCE_ID = \''. $UpdateRESSOURCEIDZoneStock[$i] .'\',
-																COLOR = \''. $UpdateCOLORZoneStock[$i] .'\'
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SECTION .'` SET  ORDRE = \''. $_POST['UpdateORDRESection'][$i] .'\',
+																CODE = \''. addslashes($_POST['UpdateCODESection'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELSection'][$i]) .'\',
+																COUT_H = \''. $_POST['UpdateTAUX_HSection'][$i] .'\',
+																RESPONSABLE = \''. $_POST['UpdateRESPONSABLESection'][$i] .'\',
+																COLOR = \''. $_POST['UpdateCOLORSection'][$i] .'\'
+																WHERE id IN ('. $id_generation . ')');
+			$i++;
+		}
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSectionNotification')));
+	}
+	elseif(isset($_POST['id_ZoneStock']) AND !empty($_POST['id_ZoneStock'])){
+		//update list stock zone
+		$i = 0;
+		foreach ($_POST['id_ZoneStock'] as $id_generation) {
+
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_STOCK_ZONE .'` SET CODE = \''. addslashes($_POST['UpdateCODEZoneStock'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELZoneStock'][$i]) .'\',
+																RESSOURCE_ID = \''. $_POST['UpdateRESSOURCEIDZoneStock'][$i] .'\',
+																COLOR = \''.$_POST['UpdateCOLORZoneStock'][$i] .'\'
 																WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}

@@ -3,10 +3,17 @@
 namespace App\Accounting;
 use \App\SQL;
 
-
 class VAT Extends SQL  {
 
-    Public  $VATList;
+    Public $VATList;
+
+    public function NewVAT($CODE, $LABEL, $VATRate){
+        $NewVAT = $this->GetInsert("INSERT INTO ". TABLE_ERP_TVA ." VALUE ('0',
+                                                                                '". addslashes($CODE) ."',
+                                                                                '". addslashes($LABEL) ."',
+                                                                                '". addslashes($VATRate) ."')");
+        return $NewVAT;
+    }
 
     public function GETVATList($IdData=0, $Select = true){
         $this->VATList = '';
@@ -17,7 +24,6 @@ class VAT Extends SQL  {
                         FROM `'. TABLE_ERP_TVA .'`
                         ORDER BY CODE';
         
-
         if($Select){
             foreach ( $this->GetQuery($query) as $data){
                 $this->VATList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->TAUX .'% - '. $data->LABEL .'</option>';

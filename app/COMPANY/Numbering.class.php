@@ -54,4 +54,16 @@ class Numbering Extends SQL {
   {
     $this->GetUpdate('UPDATE '. TABLE_ERP_NUM_DOC .' SET  COMPTEUR = COMPTEUR + 1 WHERE DOC_TYPE IN ('. $type  .')');
   }
+
+  public function GETNumberingList(){
+    $this->NumberingList = '';
+    $query='SELECT '. TABLE_ERP_NUM_DOC .'.id,
+												'. TABLE_ERP_NUM_DOC .'.DOC_TYPE,
+												'. TABLE_ERP_NUM_DOC .'.MODEL,
+												'. TABLE_ERP_NUM_DOC .'.DIGIT,
+												'. TABLE_ERP_NUM_DOC .'.COMPTEUR
+												FROM `'. TABLE_ERP_NUM_DOC .'`
+												ORDER BY id';
+    return  $this->GetQuery($query);
+  }
 }
