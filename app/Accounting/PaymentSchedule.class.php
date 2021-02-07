@@ -57,7 +57,7 @@ class PaymentScheduleLine Extends PaymentSchedule  {
                         '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.MODE_REG_ID,
                         '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.DELAI
                         FROM `'. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'`
-                            WHERE '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.ECHEANCIER_ID = \''. 	addslashes($_GET['Echeancier']).'\'
+                            WHERE '. TABLE_ERP_ECHEANCIER_TYPE_LIGNE .'.ECHEANCIER_ID = \''. 	addslashes($IdData).'\'
                         ORDER BY id';
         
         if($Select){

@@ -448,7 +448,7 @@
 					//generate list of détail TimeLine payement
 
 						$i = 1;
-						foreach ($bdd->GetQuery($query) as $data){		
+						foreach ($PaymentScheduleLine->GETPaymentScheduleLineList($_GET['Echeancier'],false) as $data){		
 						?>
 						<tr>
 							<td><input type="hidden" name="UpdateIdLigneEcheancier[]" id="UpdateIdLigneEcheancier" value="<?= $data->id ?>" required="required"></td>
