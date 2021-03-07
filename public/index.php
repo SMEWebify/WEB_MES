@@ -79,6 +79,12 @@
         $langue = new Language('lang', 'quality', $User->LANGUAGE);
         require '../pages/quality.php';
     }
+    elseif($p == 'document'){
+    	//init xml for user language
+        $langue = new Language('lang', 'document', $User->LANGUAGE);
+        require '../pages/document.php';
+        exit;
+    }
     elseif($p == 'login'){
     	//init xml for user language
         $langue = new Language('lang', 'login', $User->LANGUAGE);

@@ -116,7 +116,7 @@
     <TableIndexLabel>Libellé de version  :</TableIndexLabel>  
     <TableCreationDate>Date de création :</TableCreationDate>  
     <TableValidityDate>Date de validité :</TableValidityDate>  
-    <TableQuoteStatu>Etat du devis :</TableQuoteStatu>     
+    <TableStatu>Etat du devis :</TableStatu>     
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
     <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>
@@ -131,6 +131,7 @@
 <!-- Select-->
     <SelectOpen>En cours</SelectOpen>
     <SelectRefuse>Refusé</SelectRefuse>
+    <SelectWin>Gagné</SelectWin>
     <SelectSend>Envoyé</SelectSend>
     <SelectDecline>Décliné</SelectDecline>
     <SelectClosed>Fermé</SelectClosed>

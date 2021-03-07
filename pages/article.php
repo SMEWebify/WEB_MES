@@ -48,13 +48,13 @@
 								<ul>
 								<?php
 									// FIRST RANK PART TECHNICAL CUT
-									foreach ($Article->GETTechnicalCut($_GET['id']) as $data){
+									foreach ($Article->GETTechnicalCut($_GET['id'], TABLE_ERP_STANDARD_TECH_CUT) as $data){
 										$TpsTotal = $data->TPS_PREP + $data->TPS_PRO;?>
 									<li><?= $TpsTotal ?> hrs - <?= $data->PRESTA_LABEL ?> </li>
 
 								<?php }
 									// FIRST RANK PART NOMENCLATURE
-									foreach ($Article->GETNomenclature($_GET['id']) as $data){ ?>
+									foreach ($Article->GETNomenclature($_GET['id'], TABLE_ERP_STANDARD_NOMENCLATURE) as $data){ ?>
 									<li> <?= $data->QT ?> <?= $data->UNIT_LABEL ?> - <?= $data->ARTICLE_LABEL ?></li>
 									<?php }
 

@@ -1,4 +1,3 @@
-
     <div id="div1" class="tabcontent">
 		<div class="column">
 			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindQuote') ?>">
@@ -6,7 +5,12 @@
 				<?php
 				//generate list for datalist find input
 				foreach ($reqList as $data): 
-                 echo '<li><a href="index.php?page='. $_GET['page'] .'&'. $GET .'='. $data->id .'">'. $data->CODE .' - '. $data->NAME .'</a></li>';
+					if($data->ETAT == 1) $class="info";
+					elseif($data->ETAT == 2) $class="warning";
+					elseif($data->ETAT == 3) $class="success";
+					elseif($data->ETAT == 6) $class="alert";
+					else $class="normal";
+                 echo '<li><span ><a class='. $class .' href="index.php?page='. $_GET['page'] .'&'. $GET .'='. $data->id .'">'. $data->CODE .' - '. $data->NAME .'</a></span></li>';
 				$i++; endforeach; ?>
 			</ul>
 		</div>
@@ -30,13 +34,13 @@
 						<tr>
 							<td><?= $langue->show_text('TableNumberQuote') ?></td>
 							<td>
-								<?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering($DocNum)) ?>
+								<?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering($DocNum),'', $ActivateForm) ?>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="6" >
 								<br/>
-								<?= $Form->submit($langue->show_text('TableNewButton')) ?>
+								<?= $Form->submit($langue->show_text('TableNewButton'), $ActivateForm) ?>
 								<br/>
 							</td>
 						</tr>
@@ -54,54 +58,56 @@
 							<thead>
 								<tr>
 									<th colspan="5">
-									<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->$INDICE  ?>
+									<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->INDICE  ?>
 									</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<td><?= $langue->show_text('TableCodeLabel')  ?></td>
-									<td><?= $Maindata->CODE ?><?= $Form->input('hidden', 'CODE', $Maindata->CODE, '') ?></td>
-									<td><?= $Form->input('text', 'LABEL', $Maindata->$LABEL, $langue->show_text('TableLabelplaceholder')) ?></td>
+									<td><?= $Maindata->CODE ?><?= $Form->input('hidden', 'CODE', $Maindata->CODE, '', true) ?></td>
+									<td><?= $Form->input('text', 'LABEL', $Maindata->LABEL, $langue->show_text('TableLabelplaceholder'), true) ?></td>
 								</tr>
 								<tr>
 									<td><?= $langue->show_text('TableIndexLabel')  ?></td>
-									<td><?= $Maindata->$INDICE  ?></td>
-									<td><?= $Form->input('text', 'LABEL_INDICE', $Maindata->$LABEL_INDICE, $langue->show_text('TableLabelIndexplaceholder')) ?></td>
+									<td><?= $Maindata->INDICE  ?></td>
+									<td><?= $Form->input('text', 'LABEL_INDICE', $Maindata->LABEL_INDICE, $langue->show_text('TableLabelIndexplaceholder'), true) ?></td>
 								</tr>
 								<tr>
 									<td><?= $langue->show_text('TableCustomerReference')  ?></td>
-									<td  colspan="2"><?= $Form->input('text', 'REFERENCE', $Maindata->$REFERENCE, $langue->show_text('TableCustomerReference')) ?></td>
+									<td  colspan="2"><?= $Form->input('text', 'REFERENCE', $Maindata->REFERENCE, $langue->show_text('TableCustomerReference'),$ActivateForm) ?></td>
 								</tr>
 								<tr>
 									<td><?= $langue->show_text('TableCreationDate')  ?></td>
-									<td  colspan="2"><?= $Maindata->$DATE ?></td>
+									<td  colspan="2"><?= $Maindata->DATE ?></td>
 								</tr>
 								<?php if(isset($_GET['quote'])): ?>
 								<tr>
 									<td><?= $langue->show_text('TableValidityDate')  ?></td>
-									<td colspan="2"><?= $Form->input('date', 'DATE_VALIDITE', $Maindata->$DATE_VALIDITE) ?></td>
+									<td colspan="2"><?= $Form->input('date', 'DATE_VALIDITE', $Maindata->DATE_VALIDITE,'', $ActivateForm) ?></td>
 								</tr>
 								<?php endif ?>
 								<tr>
-									<td><?= $langue->show_text('TableQuoteStatu') ?></td>
+									<td><?= $langue->show_text('TableStatu') ?></td>
 									<td>
 										<select name="ETAT">
 											<?php if(isset($_GET['quote'])): ?>
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
-											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectRefuse') ?></option>
-											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelectSend') ?></option>
-											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelectDecline') ?></option>
-											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectClosed') ?></option>
-											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectObsolete') ?></option>
+											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelectWin') ?></option>
+											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelectRefuse') ?></option>
+											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectDecline') ?></option>
+											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectClosed') ?></option>
+											<option value="7" <?= selected($Maindata->ETAT, 7) ?>><?= $langue->show_text('SelectObsolete') ?></option>
 											<?php endif ?>
 											<?php if(isset($_GET['order'])): ?>
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectRun') ?></option>
-											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelectStop') ?></option>
-											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
-											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectDelivered') ?></option>
-											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectInvoice') ?></option>
+											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
+											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelectDelivered') ?></option>
+											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectInvoice') ?></option>
+											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectStop') ?></option>
+											
 										<?php endif ?>
 										</select>
 									</td>
@@ -110,7 +116,7 @@
 								<tr>
 									<td colspan="3" >
 										<br/>
-										<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+										<?= $Form->submit($langue->show_text('TableUpdateButton'), true) ?> <br/>
 										<br/>
 									</td>
 								</tr>
@@ -160,7 +166,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2"><?= $Form->submit($langue->show_text('TableUpdateButton')) ?></td>
+									<td colspan="2"><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
 								</tr>
 						</tbody>
 					</table>
@@ -179,7 +185,7 @@
 								<td><textarea class="Comment" name="COMENT" id="COMENT" rows="20" ><?= $Maindata->COMENT ?></textarea></td>
 							</tr>
 							<tr>
-								<td><?= $Form->submit($langue->show_text('TableUpdateButton')) ?></td>
+								<td><?= $Form->submit($langue->show_text('TableUpdateButton'), true) ?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -199,7 +205,7 @@
 									<?= $Form->input('hidden', 'id', $Maindata->id) ?>
 									<?= $langue->show_text('TableUserCreate') ?>
 								</td>
-								<td><?= $NOM ?> <?= $PRENOM ?></td>
+								<td><?= $Maindata->NOM ?> <?= $Maindata->PRENOM ?></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableSalesManager') ?></td>
@@ -218,7 +224,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2" ><?= $Form->submit($langue->show_text('TableUpdateButton')) ?></td>
+								<td colspan="2" ><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -265,7 +271,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2" ><?= $Form->submit($langue->show_text('TableUpdateButton')) ?></td>
+								<td colspan="2" ><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -287,17 +293,13 @@
 						<tbody>
 							<tr>
 								<td>
-									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewOrderAcknowledgment',  $Numbering->getCodeNumbering(12)) ?>
+									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewOrderAcknowledgment',  $Numbering->getCodeNumbering(12),'', $ActivateForm) ?>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ) ?>
-									<?= $Form->input('hidden', 'CUSTOMER_ID', $Maindata->CUSTOMER_ID ) ?>
-									<?= $Form->input('hidden', 'CONTACT_ID', $Maindata->CONTACT_ID ) ?>
-									<?= $Form->input('hidden', 'ADRESSE_ID', $Maindata->ADRESSE_ID ) ?>
-									<?= $Form->input('hidden', 'FACTURATION_ID', $Maindata->FACTURATION_ID ) ?>
-									<?= $Form->submit($langue->show_text('TableNewOrderAcknowledgment')) ?>
+									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ,'', $ActivateForm) ?>
+									<?= $Form->submit($langue->show_text('TableNewOrderAcknowledgment'), $ActivateForm) ?>
 								</td>
 							</tr>
 						</tbody>
@@ -315,7 +317,7 @@
 				<thead>
 					<tr>
 						<th colspan="12" >
-						<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->$INDICE  ?>
+						<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->INDICE  ?>
 						</th>
 					</tr>
 					<tr>
@@ -368,11 +370,11 @@
 						<td colspan="12" >
 							<input type="button" class="add" value="<?= $langue->show_text('Addline') ?>">
 							<input type="button" class="delete" value="<?= $langue->show_text('Deleteline') ?>">
-							<?= $Form->submit($langue->show_text('UpdateLine')) ?>
+							<?= $Form->submit($langue->show_text('UpdateLine'), $ActivateForm) ?>
 						</td>
 					</tr>
 					<?php
-						//// LISTE DES LIGNES  ////
+						////LIGNE LIST  ////
 						$i =0;
 						$tableauTVA = array();
 						foreach ($reqLines as $data): 
@@ -400,15 +402,6 @@
 										<input type="checkbox" title="'. $data->id .'" name="ADD_ORDER_LINE[]" value="'. $data->id .'" id="'. $data->id .'" checked="checked"/>
 										<span class="checkmark"></span>
 									</label>
-									'. $Form->input('hidden', 'AddORDRELigne[]', $data->ORDRE) .'
-									'. $Form->input('hidden', 'AddARTICLELigne[]', $data->ARTICLE_CODE) .'
-									'. $Form->input('hidden', 'AddLABELLigne[]', $data->LABEL ) .'
-									'. $Form->input('hidden', 'AddQTLigne[]', $data->QT) .'
-									'. $Form->input('hidden', 'AddUNITLigne[]', $data->UNIT_ID) .'
-									'. $Form->input('hidden', 'AAddPrixLigne[]', $data->PRIX_U) .'
-									'. $Form->input('hidden', 'AddRemiseLigne[]', $data->REMISE) .'
-									'. $Form->input('hidden', 'AddTVALigne[]', $data->TVA_ID) .'
-									'. $Form->input('hidden', 'AddDELAISigne[]', $data->DELAIS) .'
 								</td>
 								<td>'. $data->LABEL .'</td>
 								<td>'. $data->QT .'</td>
@@ -422,23 +415,23 @@
 									<input type="hidden" name="UpdateIdLigne[]" id="UpdateIdLigne" value="<?= $data->id ?>">
 									<a href="index.php?page=<?= $_GET['page'] ?>&amp;<?= $GET ?>=<?= $_GET[$GET] ?>&amp;delete=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a>
 								</td>
-								<td><?= $Form->input('number', 'UpdateORDRELigne[]',  $data->ORDRE) ?></td>
+								<td><?= $Form->input('number', 'UpdateORDRELigne[]',  $data->ORDRE, '', $ActivateForm)  ?></td>
 								<td>
 									<input list="Article" name="UpdateIDArticleLigne[]" id="UpdateIDArticleLigne" value="<?= $data->ARTICLE_CODE ?>">
 									<datalist id="Article">
 										<?= $ListeArticle ?>
 									</datalist>
-									<a href="admin.php?page=manage-study&amp;id=<?= $data->id ?>&amp;type=<?= $GET ?>" title="Découpage technique">&#10144;</a>
+									<a href="admin.php?page=manage-study&amp;id=<?= $data->id ?>&amp;type=<?= $GET ?>&amp;<?= $GET ?>Id=<?= $_GET[$GET] ?>" title="Découpage technique">&#10144;</a>
 								</td>
-								<td><?= $Form->input('text', 'UpdateLABELLigne[]', $data->LABEL) ?></td>
-								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT) ?></td>
+								<td><?= $Form->input('text', 'UpdateLABELLigne[]', $data->LABEL,'', $ActivateForm) ?></td>
+								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT,'', $ActivateForm) ?></td>
 								<td>
 									<select  name="UpdateUNITLigne[]">
 										<?= $Unit->GetUnitList($data->UNIT_ID, true) ?>
 									</select>
 								</td>
-								<td><input type="number"  name="UpdatePrixLigne[]" step=".001" value="<?= $data->PRIX_U ?>" ></td>
-								<td><input type="number"   name="UpdateRemiseLigne[]" min="0" max="100" step=".001" value="<?= $data->REMISE ?>" ></td>
+								<td><?= $Form->input('number', 'UpdatePrixLigne[]', $data->PRIX_U,'', $ActivateForm, ' step=".001"') ?></td>
+								<td><?= $Form->input('number', 'UpdateRemiseLigne[]', $data->REMISE,'', $ActivateForm, ' min="0" max="100" step=".001"') ?></td>
 								<td><?=   $TotalLigneHTEnCours ?> €</td>
 
 								<td>
@@ -446,16 +439,17 @@
 										<?= $VAT->GETVATList($data->TVA_ID) ?>
 									</select>
 								</td>
-								<td><?= $Form->input('date', 'UpdateDELAISLigne[]',  $data->DELAIS) ?></td>
+								<td><?= $Form->input('date', 'UpdateDELAISLigne[]',  $data->DELAIS,'', $ActivateForm) ?></td>
 								<td>
 									<select  name="UpdateETATLigne[]">
 										<?php if(isset($_GET['quote'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectRefuse') ?></option>
-										<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectSend') ?></option>
-										<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectDecline') ?></option>
-										<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectClosed') ?></option>
-										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectObsolete') ?></option>
+										<option value="2" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectWin') ?></option>
+										<option value="3" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectSend') ?></option>
+										<option value="4" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectDecline') ?></option>
+										<option value="5" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectClosed') ?></option>
+										<option value="6" <?= selected($data->ETAT, 7) ?>><?= $langue->show_text('SelectObsolete') ?></option>
 										<?php endif ?>
 										<?php if(isset($_GET['order'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>

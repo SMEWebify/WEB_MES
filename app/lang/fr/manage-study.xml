@@ -56,6 +56,8 @@
    <Title9>Unités</Title9>
    <Title10>Sous-Famille</Title10>
    <ListArticle>Article :</ListArticle>
+   <TitreQuoteReturn>Revenir au devis</TitreQuoteReturn>
+   <TitreOrderReturn>Revenir a la commande devis</TitreOrderReturn>
    
 <!-- select -->
    <SelectMass>Masse</SelectMass>

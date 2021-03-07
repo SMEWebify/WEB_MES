@@ -34,27 +34,9 @@ class Quote Extends SQL  {
 
     public function NewQuote($CODE, $CutomerID, $UserID){
 
-        $NewQuote = $this->GetInsert("INSERT INTO ". TABLE_ERP_QUOTE ." VALUE ('0',
-																				'". $CODE ."',
-																				'1',
-																				'',
-																				'',
-																				'". $CutomerID ."',
-																				'0',
-																				'0',
-																				'0',
-																				NOW(),
-																				NOW(),
-																				'1',
-																				'". $UserID ."',
-																				'0',
-																				'0',
-																				'',
-																				'9',
-																				'5',
-																				'0',
-																				'0',
-                                                                                '')");
+        $NewQuote = $this->GetInsert("INSERT INTO ". TABLE_ERP_QUOTE ." VALUE ('0', '". $CODE ."','1','','','". $CutomerID ."','0','0','0',
+																				NOW(),NOW(),'1','". $UserID ."','0','0','','9','5','0','0','')");
+
         return $NewQuote;
     }
 
@@ -109,6 +91,7 @@ class Quote Extends SQL  {
         $query='SELECT '. TABLE_ERP_QUOTE .'.id,
                         '. TABLE_ERP_QUOTE .'.CODE,
                         '. TABLE_ERP_QUOTE .'.LABEL,
+                        '. TABLE_ERP_QUOTE .'.ETAT,
                         '. TABLE_ERP_CLIENT_FOUR .'.NAME
                 FROM '. TABLE_ERP_QUOTE .'
                 LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_QUOTE .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
@@ -159,6 +142,8 @@ class QuoteLines Extends Quote  {
                                                                                         '". addslashes($TVA_ID) ."',
                                                                                         '". addslashes($DELAIS) ."',
                                                                                         '1')");
+
+                      
 
         return $NewQuoteLine;
     }

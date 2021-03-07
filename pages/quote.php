@@ -24,6 +24,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	
 	$Employees = new Employees();
 	$Numbering = new Numbering();
 	$Companies = new Companies();
@@ -52,6 +53,7 @@
 			$ParDefautDiv2 = 'id="defaultOpen"';
 			//insert in DB new quote
 			$Id = $Quote->NewQuote(addslashes($_POST['CODE']), addslashes($_POST['CUSTOMER_ID']), $User->idUSER);
+			
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddQuoteNotification')));
 			//update increment in num sequence db
 			$Numbering->getIncrementNumbering(8);
@@ -76,9 +78,10 @@
 		}
 		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
 			//// ACCEUIL DEVIS  ////
+			
 			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
 				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'	
-																		WHERE DEVIS_ID='". addslashes($_POST['IdDevis'])."'");
+																		WHERE DEVIS_ID='". addslashes($Id)."'");
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
 			unset($_POST['MajLigne']);
@@ -115,7 +118,7 @@
 			//// AJOUT DE LIGNE  ////
 			$i = 0;
 			foreach ($_POST['AddORDRELigne'] as $id_generation) {
-				$QuoteLines->NewQuoteLine($Id, $_POST['AddORDRELigne'][$i],  $_POST['AddARTICLELigne'][$i], $_POST['UpdateLABELLigne'][$i], $_POST['AddQTLigne'][$i], $_POST['AddUNITLigne'][$i], $_POST['AAddPrixLigne'][$i],$_POST['AddRemiseLigne'][$i], $_POST['AddTVALigne'][$i],$_POST['AddDELAISigne'][$i]);
+				$QuoteLines->NewQuoteLine($Id, $_POST['AddORDRELigne'][$i],  $_POST['AddARTICLELigne'][$i], $_POST['AddLABELLigne'][$i], $_POST['AddQTLigne'][$i], $_POST['AddUNITLigne'][$i], $_POST['AAddPrixLigne'][$i],$_POST['AddRemiseLigne'][$i], $_POST['AddTVALigne'][$i],$_POST['AddDELAISigne'][$i]);
 				$i++;
 			}
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddQuoteLineNotification')));
@@ -124,7 +127,7 @@
 		if(isset($_POST['UpdateIdLigne']) AND !empty($_POST['UpdateIdLigne'])){
 			$i = 0;
 			foreach ($_POST['UpdateIdLigne'] as $id) {
-				$QuoteLines->UpdateQuoteLine($id, $_POST['UpdateORDRELigne'][$i],  $_POST['UpdateIDArticleLigne'][$i], $_POST['UpdateLABELLigneDevis'][$i], $_POST['UpdateQTLigne'][$i], $_POST['UpdateUNITLigne'][$i], $_POST['UpdatePrixLigne'][$i],$_POST['UpdateRemiseLigne'][$i], $_POST['UpdateTVALigne'][$i],$_POST['UpdateDELAISLigne'][$i],$_POST['UpdateETATLigne'][$i] );
+				$QuoteLines->UpdateQuoteLine($id, $_POST['UpdateORDRELigne'][$i],  $_POST['UpdateIDArticleLigne'][$i], $_POST['UpdateLABELLigne'][$i], $_POST['UpdateQTLigne'][$i], $_POST['UpdateUNITLigne'][$i], $_POST['UpdatePrixLigne'][$i],$_POST['UpdateRemiseLigne'][$i], $_POST['UpdateTVALigne'][$i],$_POST['UpdateDELAISLigne'][$i],$_POST['UpdateETATLigne'][$i] );
 				$i++;
 			}
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineNotification')));
@@ -176,7 +179,7 @@ $(document).ready(function() {
     $(".add").click(function() {
         var AddORDRELigne = $("#AddORDRELigne").val();
         var AddARTICLELigne = $("#AddARTICLELigne").val();
-		var AAddLABELLigne = $("#AAddLABELLigne").val();
+		var AddLABELLigne = $("#AddLABELLigne").val();
 		var AddQTLigne = $("#AddQTLigne").val();
 		var AddUNITLigne = $("#AddUNITLigne").val();
 		var AAddPrixLigne = $("#AAddPrixLigne").val();
@@ -192,7 +195,7 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input list=\"Article\" name=\"AddARTICLELigne[]\" value=\"" + AddARTICLELigne +"\"><datalist id=\"Article\">";
 		var ligne = ligne + <?= $ListeArticleJava ?> ;
 		var ligne = ligne + "</datalist></td>";
-		var ligne = ligne + "<td><input type=\"text\" name=\"AAddLABELLigne[]\" value=\""+ AAddLABELLigne +"\" ></td>";
+		var ligne = ligne + "<td><input type=\"text\" name=\"AddLABELLigne[]\" value=\""+ AddLABELLigne +"\" ></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddQTLigne[]\" value=\""+ AddQTLigne +"\"  id=\"number\" required=\"required\"></td>";
 		var ligne = ligne + "<td><input type=\"hidden\" name=\"AddUNITLigne[]\" value=\"" + AddUNITLigne + "\">-</td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AAddPrixLigne[]\" value=\""+ AAddPrixLigne +"\"  step=\".001\" id=\"number\" required=\"required\"></td>";
@@ -218,7 +221,7 @@ $(document).ready(function() {
 	<?php if(isset($_GET['quote']) AND !empty($_GET['quote'])){ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="document.php?id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
+		<a href="index.php?page=document&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
 	<?php
 	}
@@ -229,7 +232,8 @@ $(document).ready(function() {
 	?>
 	</div>
 	<?php
-
+	
+	$ActivateForm=true;
 	$reqList = $Quote->GETQuoteList('',false);
 	$reqLines= $QuoteLines->GETQuoteLineList('', false, $Id);
 	$GET = 'quote';
@@ -309,7 +313,8 @@ $(document).ready(function() {
 										<tbody>
 											<tr>
 												<td>
-												<?= $Form->input('hidden', 'CUSTOMER_ID', $CUSTOMER_ID) ?>
+												<?= $Form->input('hidden', 'QUOTE_ID', $Maindata->id) ?>
+													<?= $Form->input('hidden', 'CUSTOMER_ID', $Maindata->CUSTOMER_ID) ?>
 													<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(4)) ?>
 												</td>
 											</tr>
@@ -332,8 +337,13 @@ $(document).ready(function() {
 						<ul id="myUL">
 							<?php
 							//generate list for datalist find input
-							foreach ($QuoteLines->GETQuoteLineList('',false, 0) as $data): ?>
-							<li><a href="index.php?page=quote&quote=<?= $data->DEVIS_ID ?>"><?= $data->QUOTE_CODE ?> - <?= $data->ARTICLE_CODE ?>  <?= $data->LABEL ?></a></li>
+							foreach ($QuoteLines->GETQuoteLineList('',false, 0) as $data): 
+								if($data->ETAT == 1) $class="info";
+								elseif($data->ETAT == 2) $class="warning";
+								elseif($data->ETAT == 3) $class="success";
+								elseif($data->ETAT == 6) $class="alert";
+								else $class="normal";?>
+							<li><a class=<?= $class ?> href="index.php?page=quote&quote=<?= $data->DEVIS_ID ?>"><?= $data->QUOTE_CODE ?> - <?= $data->ARTICLE_CODE ?>  <?= $data->LABEL ?></a></li>
 							<?php $i++; endforeach; ?>
 						</ul>
 					</div>

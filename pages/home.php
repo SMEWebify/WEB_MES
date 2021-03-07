@@ -37,12 +37,13 @@
 			$ListeEtat = "['Task', 'Number of Quote']";
 			$query="SELECT ETAT, COUNT(ETAT) AS CountEtat FROM ". TABLE_ERP_QUOTE ." GROUP BY ETAT";
 			foreach ($bdd->GetQuery($query) as $data){
-				If ($data->ETAT == 1) {$Etat = 'En cours';}
-				If ($data->ETAT == 2) {$Etat = 'Refusé';}
-				If ($data->ETAT == 3) {$Etat = 'Envoyé';}
-				If ($data->ETAT == 4) {$Etat = 'Décliné';}
-				If ($data->ETAT == 5) {$Etat = 'Fermé';}
-				If ($data->ETAT == 6) {$Etat = 'Obselète';}
+				If ($data->ETAT == 1) {$Etat = $langue->show_text('SelectOpen');}
+				If ($data->ETAT == 2) {$Etat = $langue->show_text('SelectRefuse');}
+				If ($data->ETAT == 3) {$Etat = $langue->show_text('SelectWin');}
+				If ($data->ETAT == 4) {$Etat = $langue->show_text('SelectSend');}
+				If ($data->ETAT == 5) {$Etat = $langue->show_text('SelectDecline');}
+				If ($data->ETAT == 6) {$Etat = $langue->show_text('SelectClosed');}
+				If ($data->ETAT == 7) {$Etat = $langue->show_text('SelectObsolete');}
 
 				$ListeEtat .= ", ['". $Etat ."',". $data->CountEtat ."]";
 			}

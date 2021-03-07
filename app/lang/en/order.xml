@@ -47,6 +47,7 @@
 <!-- title page --> 
 	 <TiltePage>Order</TiltePage>
     <Title1>Home</Title1> 
+    <Title1back>Back home</Title1back> 
 
     <Title2>Order</Title2>
     <Title3>Order detail</Title3>
@@ -120,7 +121,7 @@
     <TableIndexLabel>Label index  :</TableIndexLabel>  
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
-    <TableOrderStatu>Order statu :</TableOrderStatu>  
+    <TableStatu>Order statu :</TableStatu>  
     <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>    
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>

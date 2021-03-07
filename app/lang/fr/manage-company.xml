@@ -46,10 +46,11 @@
 <!-- title page --> 
 	<TiltePage>Gestion de la société</TiltePage>
     <Titre1>Gestion de la société</Titre1>
-    <Titre2>Secteurs d'activités</Titre2>
-    <Titre3>Gestion des e-mails</Titre3>
-    <Titre4>Numérotation des documents</Titre4>
-    <Titre5>Timeline Informations</Titre5>
+    <Titre2>Logo</Titre2>
+    <Titre3>Secteurs d'activités</Titre3>
+    <Titre4>Gestion des e-mails</Titre4>
+    <Titre5>Numérotation des documents</Titre5>
+    <Titre6>Timeline Informations</Titre6>
 <!-- table content --> 
     <TableNameCompany>Nom de la société:</TableNameCompany>
     <TableCODE>CODE</TableCODE>
@@ -94,6 +95,7 @@
     <CODEMAIL07>Date du documents</CODEMAIL07>
     <CODEMAIL08>Commentaire du document</CODEMAIL08>
  <!-- notifications -->
+    <UpdateCompanyNotification>Information entreprise mise à jours</UpdateCompanyNotification>
     <AddSectorNotification>Secteur d'ativité ajouté</AddSectorNotification>
     <UpdateSectorNotification>Secteur(s) d'ativité modifié(s)</UpdateSectorNotification>
     <AddDocNotification>Numérotation de document ajoutée</AddDocNotification>

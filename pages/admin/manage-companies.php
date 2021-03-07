@@ -156,7 +156,7 @@
 		$SteNAME = $data->NAME;
 
 		$SteWEBSITE = $data->WEBSITE;
-		$SteFBSITE = $DonneesSte->FBSITE;
+		$SteFBSITE = $data->FBSITE;
 		$SteTWITTERSITE = $data->TWITTERSITE;
 		$SteLKDSITE = $data->LKDSITE;
 

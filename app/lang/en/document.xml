@@ -45,18 +45,10 @@
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
  <!-- title page --> 
-    <TiltePage>Home</TiltePage>
-    <Title1>Info</Title1>
-    <Title2>Statu order</Title2>
-    <Title3>Employees</Title3>
+  	<TiltePage>Article</TiltePage>
+   <Title1>Article</Title1>
+   <Title2>Stock</Title2>
+   <Title3>Inventory</Title3>
  <!-- div content --> 
-   <ContactEmployees>Contact</ContactEmployees>
-
-    <SelectOpen>Open</SelectOpen>
-    <SelectRefuse>Refuse</SelectRefuse>
-    <SelectWin>Win</SelectWin>
-    <SelectSend>Send</SelectSend>
-    <SelectDecline>Decline</SelectDecline>
-    <SelectClosed>Closed</SelectClosed>
-    <SelectObsolete>Obsolete</SelectObsolete>
+    <FindArticle>Find article</FindArticle>
  </langue>

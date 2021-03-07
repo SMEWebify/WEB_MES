@@ -24,22 +24,23 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	////  COMPANY SETTING  ////
 	if(isset($_POST['NAME']) AND !empty($_POST['NAME'])){
 		//if update gerenal info of company
-	/*	$dossier = 'images/';
-		$fichier = basename($_FILES['fichier_LOGO']['name']);
-		move_uploaded_file($_FILES['fichier_LOGO']['tmp_name'], $dossier . $fichier);
-		If(empty($fichier)){
-			$AddSQL = '';
-		}
-		else{
-			$AddSQL = 'LOGO = \''. addslashes($UpdateCompanyLogo) .'\',';
-		}*/
-
-		//update data in db
 		$bdd->GetUpdatePOST(TABLE_ERP_COMPANY, $_POST, 'WHERE id=1');
 		$DataCompany= $Company->GETCompany();
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
+	}
+	elseif( isset( $_FILES["PICTURE_COMPANY"] ) && !empty( $_FILES["PICTURE_COMPANY"]["name"] ) ) {
+		var_dump($_FILES);
+		//if picture is updated
+		$dossier = PICTURE_FOLDER.COMPANY_FOLDER;
+		$fichier = basename($_FILES['PICTURE_COMPANY']['name']);
+
+		If(!empty($_FILES)){		
+			move_uploaded_file($_FILES['PICTURE_COMPANY']['tmp_name'], $dossier . $fichier);
+			$bdd->GetUpdatePOST(TABLE_ERP_COMPANY, array("PICTURE_COMPANY" => $fichier ), 'WHERE id=1');
+		}	
+		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 	}
 	elseif(isset($_POST['AddCODESector']) AND !empty($_POST['AddCODESector'])){
 		//add new sector activity
@@ -113,17 +114,24 @@
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTimelineNotification')));
 	}
 
-	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
+	
+	if(isset($_POST['PICTURE_COMPANY']) AND !empty($_POST['PICTURE_COMPANY'])){
 		$ParDefautDiv2 = 'id="defaultOpen"';
 	}
-	elseif(isset($_GET['mail']) AND !empty($_GET['mail'])){
+	elseif(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
 		$ParDefautDiv3 = 'id="defaultOpen"';
 	}
-	elseif(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
+	elseif(isset($_GET['mail']) AND !empty($_GET['mail'])){
 		$ParDefautDiv4 = 'id="defaultOpen"';
 	}
-	elseif(isset($_GET['timeline']) AND !empty($_GET['timeline'])){
+	elseif(isset($_GET['mail']) AND !empty($_GET['mail'])){
+		$ParDefautDiv4 = 'id="defaultOpen"';
+	}
+	elseif(isset($_POST['id_NumDoc']) AND !empty($_POST['id_NumDoc'])){
 		$ParDefautDiv5 = 'id="defaultOpen"';
+	}
+	elseif(isset($_GET['timeline']) AND !empty($_GET['timeline'])){
+		$ParDefautDiv6 = 'id="defaultOpen"';
 	}
 	else{
 		$ParDefautDiv1 = 'id="defaultOpen"';
@@ -135,6 +143,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Titre3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv4; ?>><?=$langue->show_text('Titre4'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div5')" <?=$ParDefautDiv5; ?>><?=$langue->show_text('Titre5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')" <?=$ParDefautDiv6; ?>><?=$langue->show_text('Titre6'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 			<form method="post" name="Company" action="admin.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
@@ -195,30 +204,6 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td><?= $langue->show_text('TableWebSite') ?></td>
-							<td><?= $langue->show_text('TableFacebook') ?></td>
-							<td><?= $langue->show_text('TableTwitter') ?></td>
-							<td><?= $langue->show_text('TableLinked') ?></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" name="WEB_SITE" value="<?= $DataCompany->WEB_SITE ?>">
-							</td>
-							<td >
-								<input type="text" name="FACEBOOK_SITE" value="<?= $DataCompany->FACEBOOK_SITE ?>">
-							</td>
-							<td>
-								<input type="text" name="TWITTER_SITE" value="<?=  $DataCompany->TWITTER_SITE ?>">
-							</td>
-							<td>
-								<input type="text" name="LKD_SITE" value="<?=  $DataCompany->LKD_SITE ?>">
-							</td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
 							<td><?= $langue->show_text('TableSIREN') ?></td>
 							<td><?= $langue->show_text('TableAPE') ?></td>
 							<td><?= $langue->show_text('TableTVAINTRA') ?></td>
@@ -247,13 +232,28 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan=6"><?= $langue->show_text('TableLogo') ?></td>
+							<td><?= $langue->show_text('TableWebSite') ?></td>
+							<td><?= $langue->show_text('TableFacebook') ?></td>
+							<td><?= $langue->show_text('TableTwitter') ?></td>
+							<td><?= $langue->show_text('TableLinked') ?></td>
+							<td></td>
+							<td></td>
 						</tr>
 						<tr>
-							<td colspan=6" ><input type="file" name="LOGO" /></td>
-						</tr>
-						<tr>
-							<td colspan=6"><img src="<?= $DataCompany->LOGO ?>" title="LOGO entreprise" alt="Logo" /></td>
+							<td>
+								<input type="text" name="WEB_SITE" value="<?= $DataCompany->WEB_SITE ?>">
+							</td>
+							<td >
+								<input type="text" name="FACEBOOK_SITE" value="<?= $DataCompany->FACEBOOK_SITE ?>">
+							</td>
+							<td>
+								<input type="text" name="TWITTER_SITE" value="<?=  $DataCompany->TWITTER_SITE ?>">
+							</td>
+							<td>
+								<input type="text" name="LKD_SITE" value="<?=  $DataCompany->LKD_SITE ?>">
+							</td>
+							<td></td>
+							<td></td>
 						</tr>
 						<tr>
 							<td colspan="6" >
@@ -267,6 +267,36 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent" >
+		<form method="post" action="admin.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th colspan="2">
+						<?= $langue->show_text('TitreTable2') ?>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan=2" ><input type="file" name="PICTURE_COMPANY" /></td>
+					</tr>
+					<tr>
+						<td colspan=2">
+							<img src="<?= PICTURE_FOLDER.COMPANY_FOLDER.$DataCompany->PICTURE_COMPANY ?>" title="Company Picture" alt="Picture" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" >
+							<br/>
+							<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+							<br/>
+						</td>
+					</tr>	
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div id="div3" class="tabcontent" >
 			<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
@@ -303,7 +333,7 @@
 				</table>
 			</form>
 	</div>
-	<div id="div3" class="tabcontent" >
+	<div id="div4" class="tabcontent" >
 		<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
@@ -390,7 +420,7 @@
 				</table>
 			</form>
 	</div>
-	<div id="div4" class="tabcontent" >
+	<div id="div5" class="tabcontent" >
 			<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
@@ -467,7 +497,7 @@
 				</table>
 			</form>
 	</div>
-	<div id="div5" class="tabcontent" >
+	<div id="div6" class="tabcontent" >
 				<form method="post" name="TimeLine" action="admin.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>

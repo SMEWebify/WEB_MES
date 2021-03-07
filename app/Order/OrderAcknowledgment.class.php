@@ -8,10 +8,15 @@ class OrderAcknowledgment Extends SQL  {
     Public $id;
     Public $CODE;
     Public $LABEL;
+    Public $ORDER_ID;
     Public $CUSTOMER_ID;
     Public $CONTACT_ID;
     Public $ADRESSE_ID;
     Public $FACTURATION_ID;
+    Public $COND_REG_CUSTOMER_ID;
+    Public $MODE_REG_CUSTOMER_ID;
+    Public $ECHEANCIER_ID;
+    Public $TRANSPORT_ID;
     Public $DATE;
     Public $ETAT;
     Public $CREATEUR_ID;
@@ -23,15 +28,12 @@ class OrderAcknowledgment Extends SQL  {
 
     Public $OrderAcknowledgment;
 
-    public function NewOrderAcknowledgment($CODE, $CUSTOMER_ID, $CONTACT_ID, $ADRESSE_ID, $FACTURATION_ID, $UserID){
+    public function NewOrderAcknowledgment($CODE, $ORDER_ID, $UserID){
 
         $NewOrderAcknowledgment = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_ACKNOWLEGMENT ." VALUE ('0',
                                                                                     '". $CODE ."',
+                                                                                    '". $ORDER_ID ."',
                                                                                     '',
-                                                                                    '". addslashes($CUSTOMER_ID) ."',
-                                                                                    '". addslashes($CONTACT_ID) ."',
-                                                                                    '". addslashes($ADRESSE_ID) ."',
-                                                                                    '". addslashes($FACTURATION_ID) ."',
                                                                                     NOW(),
                                                                                     '1',
                                                                                     '". $UserID ."',
@@ -46,22 +48,29 @@ class OrderAcknowledgment Extends SQL  {
 
         $OrderAcknowledgment = $this->GetQuery('SELECT '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ORDER_ID,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL,
-                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CUSTOMER_ID,
-                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CONTACT_ID,
-                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ADRESSE_ID,
-                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.FACTURATION_ID,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.DATE,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ETAT,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CREATEUR_ID,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.INCOTERM,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.COMENT,
-                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM,
-                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM
+                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM,
+                                        '. TABLE_ERP_ORDER .'.CUSTOMER_ID,
+                                        '. TABLE_ERP_ORDER .'.CONTACT_ID,
+                                        '. TABLE_ERP_ORDER .'.ADRESSE_ID,
+                                        '. TABLE_ERP_ORDER .'.FACTURATION_ID,
+                                        '. TABLE_ERP_ORDER .'.REFERENCE,
+                                        '. TABLE_ERP_ORDER .'.COND_REG_CUSTOMER_ID,
+                                        '. TABLE_ERP_ORDER .'.MODE_REG_CUSTOMER_ID,
+                                        '. TABLE_ERP_ORDER .'.ECHEANCIER_ID,
+                                        '. TABLE_ERP_ORDER .'.TRANSPORT_ID,
+                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME
                                         FROM `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`
-                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                         WHERE '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id = \''. $id_GET.'\' ', true, 'App\Order\OrderAcknowledgment');
         return $OrderAcknowledgment;
     }
@@ -82,9 +91,11 @@ class OrderAcknowledgment Extends SQL  {
         $query='SELECT '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ETAT,
                         '. TABLE_ERP_CLIENT_FOUR .'.NAME
                 FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'
-                LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                  LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
+                  LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                 ORDER BY  '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id DESC';
         if($Select){
             foreach ($this->GetQuery($query) as $data){

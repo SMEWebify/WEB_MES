@@ -9,11 +9,31 @@ class Form {
         $this->data = $data;
     }
 
-    public function input($type, $name, $value='', $placeholder=''){
-        return '<input type="'. $type .'" name="'. $name .'" value="'. $value .'" placeholder="'. $placeholder .'">';
+    public function ActivateForm($bool){
+        $this->_activate = $bool;
     }
 
-    public function submit($text){
-        return '<input class="input-moyen" type="submit" value="'. $text .'" />';
+    public function input($type, $name, $value='', $placeholder='', $activate=true, $option =''){
+        
+        if($activate){
+            if(!empty($placeholder))
+            {
+                $placeholder =  'placeholder="'. $placeholder .'"';
+            }
+
+            return '<input type="'. $type .'" name="'. $name .'" value="'. $value .'" '. $placeholder .' '. $option .' >';
+        }
+        else{
+            return $value;
+        }
+    }
+
+    public function submit($text, $activate=true){
+        if($activate){
+            return '<input class="input-moyen" type="submit" value="'. $text .'" />';
+        }
+         else{
+             return '';
+        }
     }
 }

@@ -47,10 +47,11 @@
 <!-- title page --> 
 	<TiltePage>Management of the company</TiltePage>
     <Titre1>Management of the company</Titre1>
-    <Titre2>Sectors activity</Titre2>
-    <Titre3>Email template</Titre3>
-    <Titre4>Document numbering</Titre4>
-    <Titre5>Timeline Informations</Titre5>
+    <Titre2>Picture</Titre2>
+    <Titre3>Sectors activity</Titre3>
+    <Titre4>Email template</Titre4>
+    <Titre5>Document numbering</Titre5>
+    <Titre6>Timeline Informations</Titre6>
 <!-- table content --> 
     <TableNameCompany>Name company:</TableNameCompany>
     <TableCODE>CODE</TableCODE>
@@ -95,6 +96,7 @@
     <CODEMAIL07>Document date</CODEMAIL07>
     <CODEMAIL08>Document commentary</CODEMAIL08>
  <!-- notifications -->
+   <UpdateCompanyNotification>Company information updated</UpdateCompanyNotification>
     <AddSectorNotification>Sector of activity added</AddSectorNotification>
     <UpdateSectorNotification> odified activity sector(s)</UpdateSectorNotification>
     <AddDocNotification>Document numbering added</AddDocNotification>

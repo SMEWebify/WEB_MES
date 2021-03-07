@@ -46,6 +46,7 @@
 <!-- title page --> 
 	<TiltePage>Commande</TiltePage>
     <Title1>Accueil</Title1> 
+    <Title1back>Retour acceuil</Title1back> 
 
     <Title2>Commande</Title2>
     <Title5>Lignes de commande</Title5>
@@ -75,7 +76,7 @@
     <TableCondiList>Condition de réglement</TableCondiList>
     <TableMethodList>Mode de réglement</TableMethodList>
     <TableUpdateButton>Mettre à jours</TableUpdateButton>
-    <TableNewButton>Mouveau Commande</TableNewButton>
+    <TableNewButton>Mouvelle Commande</TableNewButton>
     <TableNewOrderFor>Créer une nouvelle commande pour le client :</TableNewOrderFor> 
     <TimeLinePayement>Echéancier types</TimeLinePayement>
     <TableAdresseInvoice>Adresse de facturation</TableAdresseInvoice>
@@ -119,7 +120,7 @@
     <TableIndexLabel>Libellé de version  :</TableIndexLabel>  
     <TableCreationDate>Date de création :</TableCreationDate>  
     <TableValidityDate>Date de validité :</TableValidityDate>  
-    <TableOrderStatu>Etat de la commande :</TableOrderStatu>  
+    <TableStatu>Etat de la commande :</TableStatu>  
     <TableNewOrderAcknowledgment>Nouvel AR :</TableNewOrderAcknowledgment> 
        
  <!-- notifications -->

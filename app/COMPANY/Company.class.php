@@ -17,7 +17,7 @@ class Company Extends SQL  {
   Public $FACEBOOK_SITE; 
   Public $TWITTER_SITE; 
   Public $LKD_SITE; 
-  Public $LOGO; 
+  Public $PICTURE_COMPANY; 
   Public $SIREN; 
   Public $APE; 
   Public $TVA_INTRA; 
@@ -40,7 +40,7 @@ class Company Extends SQL  {
                                   FACEBOOK_SITE,
                                   TWITTER_SITE,
                                   LKD_SITE,
-                                  LOGO,
+                                  PICTURE_COMPANY,
                                   SIREN,
                                   APE,
                                   TVA_INTRA,

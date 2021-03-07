@@ -44,18 +44,10 @@
     <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
  <!-- title page --> 
-   <TiltePage>Acceuil</TiltePage>
-    <Title1>Info</Title1>
-    <Title2>Statu commandes</Title2>
-    <Title3>Employées</Title3>
+ 	<TiltePage>Article</TiltePage>
+   <Title1>Article</Title1>
+   <Title2>Stock</Title2>
+   <Title3>Inventaire</Title3>
  <!-- div content --> 
-   <ContactEmployees>Contact</ContactEmployees>
-
-    <SelectOpen>En cours</SelectOpen>
-    <SelectRefuse>Refusé</SelectRefuse>
-    <SelectWin>Gagné</SelectWin>
-    <SelectSend>Envoyé</SelectSend>
-    <SelectDecline>Décliné</SelectDecline>
-    <SelectClosed>Fermé</SelectClosed>
-    <SelectObsolete>Obselète</SelectObsolete>
+    <FindArticle>Chercher un article</FindArticle>
  </langue>

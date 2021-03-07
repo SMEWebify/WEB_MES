@@ -24,7 +24,7 @@
 	
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
-	//init form class
+	//init class
 	$Form = new Form($_POST);
 	$Employees = new Employees();
 	$Numbering = new Numbering();
@@ -62,13 +62,19 @@
 				//update increment in num sequence db
 				$Numbering->getIncrementNumbering(4);
 			}
+
 			if($_POST['ADD_ORDER_FROM_QUOTE'] != 'new') $Id = $_POST['ADD_ORDER_FROM_QUOTE'];
 			//If add line with new order from quote line
+			
 			$i=0;
 			foreach ($_POST['ADD_ORDER_LINE'] as $id_generation) {
-				$OrderLines->NewOrderLine($Id, $_POST['AddORDRELigne'][$i],  $_POST['AddARTICLELigne'][$i], $_POST['AddLABELLigne'][$i], $_POST['AddQTLigne'][$i], $_POST['AddUNITLigne'][$i], $_POST['AAddPrixLigne'][$i],$_POST['AddRemiseLigne'][$i], $_POST['AddTVALigne'][$i],$_POST['AddDELAISigne'][$i]);
+				$OrderLines->NewOrderLineFromQuote($Id,$id_generation);
+				$bdd->GetUpdatePOST(TABLE_ERP_QUOTE_LIGNE, array("ETAT"=>3), 'WHERE id=\''. $id_generation .'\'');
 				$i++;
 			}
+
+			$bdd->GetUpdatePOST(TABLE_ERP_QUOTE, array("ETAT"=>3), 'WHERE id=\''. $_POST['QUOTE_ID'] .'\'');
+
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderLineNotification')));
 		}
 		elseif(isset($_POST['CUSTOMER_ID']) And !empty($_POST['CUSTOMER_ID'])){
@@ -108,6 +114,7 @@
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
 			unset($_POST['MajLigne']);
+		
 			$bdd->GetUpdatePOST(TABLE_ERP_ORDER, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
 		}
@@ -144,7 +151,7 @@
 			//// AJOUT DE LIGNE  ////
 			$i = 0;
 			foreach ($_POST['AddORDRELigne'] as $id_generation) {
-				$OrderLines->NewOrderLine($Id, $_POST['AddORDRELigne'][$i],  $_POST['AddARTICLELigne'][$i], $_POST['AddLABELLigne'][$i], $_POST['AddQTLigne'][$i], $_POST['AddUNITLigne'][$i], $_POST['AAddPrixLigne'][$i],$_POST['AddRemiseLigne'][$i], $_POST['AddTVALigne'][$i],$_POST['AddDELAISigne'][$i]);
+				$OrderLines->NewOrderLine($Id, $_POST['AddORDRELigne'][$i],  $_POST['AddARTICLELigne'][$i], $_POST['AddLABELLigne'][$i], $_POST['AddQTLigne'][$i], $_POST['AddUNITLigne'][$i], $_POST['AAddPrixLigne'][$i],$_POST['AddRemiseLigne'][$i], $_POST['AddTVALigne'][$i],$_POST['AddDELAISigne'][$i], $id_generation);
 				$i++;
 			}
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderLineNotification')));
@@ -169,13 +176,13 @@
 		//If user create new Order Acknowledgment
 		if(isset($_POST['NewOrderAcknowledgment']) And !empty($_POST['NewOrderAcknowledgment'])){
 			// Create new Order Acknowledgment and keep id
-			$Id=$OrderAcknowledgment->NewOrderAcknowledgment($_POST['NewOrderAcknowledgment'], $_POST['CUSTOMER_ID'], $_POST['CONTACT_ID'], $_POST['ADRESSE_ID'], $_POST['FACTURATION_ID'], $User->idUSER);
+			$Id=$OrderAcknowledgment->NewOrderAcknowledgment($_POST['NewOrderAcknowledgment'], $_POST['ORDER_ID'], $User->idUSER);
 			//update increment in num sequence db
 			$Numbering->getIncrementNumbering(12);
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderAcknowledgmentNotificationNotification')));
 			$i=0;
 			//Select line who dont have an OA
-			foreach ($OrderLines->GETOrderLineList(0, false, $IdOrder=0, $_POST['ORDER_ID'], ' AND AR=0') as $data){	
+			foreach ($OrderLines->GETOrderLineList(0, false, $_POST['ORDER_ID'], ' AND AR=0') as $data){	
 				//Create OA line
 				$OrderAcknowledgmentLines->NewOrderacknowledgmentlines($Id, $_POST['ORDER_ID'], $data->ORDRE, $data->id);
 				//update order line
@@ -184,9 +191,19 @@
 			}
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderAcknowledgmentLinesNotificationNotification')));
 		}
+		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
+			//// DELETE LIGNE ////
+			$IdOrderLineToUpdate = $bdd->GetQuery('SELECT ORDER_LINE_ID FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .' WHERE id='. addslashes($_GET['delete']).'',true);
+			var_dump($IdOrderLineToUpdate->ORDER_LINE_ID);
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("AR"=>0), 'WHERE id=\''. $IdOrderLineToUpdate->ORDER_LINE_ID .'\'');
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." WHERE id='". addslashes($_GET['delete'])."'");
+
+			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderAcknowledgmentLinesNotificationNotification')));
+		}
 		//Load data
 		$Maindata= $OrderAcknowledgment->GETOrderAcknowledgment($Id);
 	}
+	
 	
 	$ListeArticleJava  ='"';
 	$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_STANDARD_ARTICLE ."  WHERE VENDU=1 ORDER BY LABEL";
@@ -196,20 +213,8 @@
 	}
 	$ListeArticleJava  .='"';
 
-	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-		$reqList = $Order->GETOrderList('',false);
-		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
-		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
-		$GET = 'order';
-		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = '';
-		$ParDefautDiv3 = 'id="defaultOpen"';
-		$GET = 'order';
-		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
-		$actionForm = 'index.php?page=order&order='. $_GET['order'] .'';
-
-	}
-	elseif(isset($_GET['order']) AND !empty($_GET['order'])){
+	if(isset($_GET['order']) AND !empty($_GET['order'])){
+		$ActivateForm=true;
 		$reqList = $Order->GETOrderList('',false);
 		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
 		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
@@ -218,9 +223,16 @@
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
 		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
-		$actionForm = 'index.php?page=order&order='. $_GET['order'] .'';
+		$actionForm = 'index.php?page=order&order='. $Id  .'';
+
+		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
+			$ParDefautDiv1 = '';
+			$ParDefautDiv2 = '';
+			$ParDefautDiv3 = 'id="defaultOpen"';
+		}
 	}
 	elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){
+		$ActivateForm=false;
 		$reqList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0);
 		$reqLines = $OrderAcknowledgmentLines->GETOrderacknowledgmentlinesList('', false, $Id);
 		$GET = 'OrderAcknowledgment';
@@ -228,9 +240,16 @@
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
 		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
-		$actionForm = 'index.php?page=order&OrderAcknowledgment='. $_GET['OrderAcknowledgment'] .'';
+		$actionForm = 'index.php?page=order&OrderAcknowledgment='.$Id  .'';
+
+		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
+			$ParDefautDiv1 = '';
+			$ParDefautDiv2 = '';
+			$ParDefautDiv3 = 'id="defaultOpen"';
+		}
 	}
 	else{
+		$ActivateForm=true;
 		$GET = 'order';
 		$reqList = $Order->GETOrderList('',false);
 		$ParDefautDiv1 = 'id="defaultOpen"';
@@ -247,7 +266,7 @@ $(document).ready(function() {
     $(".add").click(function() {
         var AddORDRELigne = $("#AddORDRELigne").val();
         var AddARTICLELigne = $("#AddARTICLELigne").val();
-		var AAddLABELLigne = $("#AAddLABELLigne").val();
+		var AddLABELLigne = $("#AddLABELLigne").val();
 		var AddQTLigne = $("#AddQTLigne").val();
 		var AddUNITLigne = $("#AddUNITLigne").val();
 		var AAddPrixLigne = $("#AAddPrixLigne").val();
@@ -263,7 +282,7 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input list=\"Article\" name=\"AddARTICLELigne[]\" value=\"" + AddARTICLELigne +"\"><datalist id=\"Article\">";
 		var ligne = ligne + <?= $ListeArticleJava ?> ;
 		var ligne = ligne + "</datalist></td>";
-		var ligne = ligne + "<td><input type=\"text\" name=\"AAddLABELLigne[]\" value=\""+ AAddLABELLigne +"\" ></td>";
+		var ligne = ligne + "<td><input type=\"text\" name=\"AddLABELLigne[]\" value=\""+ AddLABELLigne +"\" ></td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AddQTLigne[]\" value=\""+ AddQTLigne +"\"  id=\"number\" required=\"required\"></td>";
 		var ligne = ligne + "<td><input type=\"hidden\" name=\"AddUNITLigne[]\" value=\"" + AddUNITLigne + "\">-</td>";
 		var ligne = ligne + "<td><input type=\"number\" name=\"AAddPrixLigne[]\" value=\""+ AAddPrixLigne +"\"  step=\".001\" id=\"number\" required=\"required\"></td>";
@@ -285,24 +304,29 @@ $(document).ready(function() {
 });
 </script>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
+		
 	<?php if(isset($_GET['order']) AND !empty($_GET['order'])){ ?>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){?>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
-		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){?>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
-		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){?>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
-		<a href="document.php?id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php }else{ ?>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title5'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title8'); ?></button>
@@ -319,8 +343,12 @@ $(document).ready(function() {
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input.
-						foreach ($OrderLines->GETOrderLineList('',false, 0) as $data): ?>
-						<li><a href="index.php?page=order&order=<?= $data->ORDER_ID ?>"><?= $data->ORDER_CODE ?> - <?= $data->ARTICLE_CODE ?> <?= $data->LABEL ?></a></li>
+						foreach ($OrderLines->GETOrderLineList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
+						elseif($data->ETAT == 2) $class="warning";
+						elseif($data->ETAT == 3) $class="success";
+						elseif($data->ETAT == 6) $class="alert";
+						else $class="normal";?>
+						<li><a class=<?= $class ?>  href="index.php?page=order&order=<?= $data->ORDER_ID ?>"><?= $data->ORDER_CODE ?> - <?= $data->ARTICLE_CODE ?> <?= $data->LABEL ?></a></li>
 						<?php $i++; endforeach; ?>
 					</ul>
 			</div>
@@ -331,8 +359,12 @@ $(document).ready(function() {
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input
-						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): ?>
-						<li><a href="index.php?page=order&OrderAcknowledgment=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
+						elseif($data->ETAT == 2) $class="warning";
+						elseif($data->ETAT == 3) $class="success";
+						elseif($data->ETAT == 6) $class="alert";
+						else $class="normal";?>
+						<li><a class=<?= $class ?>  href="index.php?page=order&OrderAcknowledgment=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
 						<?php $i++; endforeach; ?>
 					</ul>
 			</div>
@@ -343,8 +375,12 @@ $(document).ready(function() {
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input
-						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): ?>
-						<li><a href="index.php?page=order&DeliveryNotes=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
+						elseif($data->ETAT == 2) $class="warning";
+						elseif($data->ETAT == 3) $class="success";
+						elseif($data->ETAT == 6) $class="alert";
+						else $class="normal";?>
+						<li><a class=<?= $class ?>  href="index.php?page=order&DeliveryNotes=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
 						<?php $i++; endforeach; ?>
 					</ul>
 			</div>
@@ -355,8 +391,12 @@ $(document).ready(function() {
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input
-						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): ?>
-						<li><a href="index.php?page=order&Invoice=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
+						elseif($data->ETAT == 2) $class="warning";
+						elseif($data->ETAT == 3) $class="success";
+						elseif($data->ETAT == 6) $class="alert";
+						else $class="normal";?>
+						<li><a class=<?= $class ?>  href="index.php?page=order&Invoice=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
 						<?php $i++; endforeach; ?>
 					</ul>
 			</div>

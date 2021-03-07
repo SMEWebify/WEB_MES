@@ -325,9 +325,15 @@ ul, #myUL {
   padding: 12px;
   text-decoration: none;
   font-size: 18px;
+  display: block;
   color: black;
-  display: block
 }
+
+#myUL li a.normal {	 color: black;}
+#myUL li a.success {color: #4CAF50;}
+#myUL li a.info {color: #2196F3;}
+#myUL li a.warning {color: #ff9800;}
+#myUL li a.alert {color: #f44336;}
 
 #myUL li a:hover:not(.header) {
   background-color: #eee;

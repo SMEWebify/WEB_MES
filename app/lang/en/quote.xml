@@ -117,7 +117,7 @@
     <TableIndexLabel>Label index  :</TableIndexLabel>  
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
-    <TableQuoteStatu>Quote statu :</TableQuoteStatu>     
+    <TableStatu>Quote statu :</TableStatu>     
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
     <UpdateLineNotification> line(s) updated</UpdateLineNotification>
@@ -132,6 +132,7 @@
 <!-- Select-->
     <SelectOpen>Open</SelectOpen>
     <SelectRefuse>Refuse</SelectRefuse>
+    <SelectWin>Win</SelectWin>
     <SelectSend>Send</SelectSend>
     <SelectDecline>Decline</SelectDecline>
     <SelectClosed>Closed</SelectClosed>

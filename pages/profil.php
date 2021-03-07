@@ -20,16 +20,14 @@
 		$User = $auth->User();
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateProfilNotification')));
 	}
-
-	//If user make change language profil
-	if(isset($_POST['Language']) AND !empty($_POST['Language'])){
+	elseif(isset($_POST['Language']) AND !empty($_POST['Language'])){
+		//If user make change language profil
 		$User = new User();
 		$User->UpdateLanguage($_POST['Language']);
 		stop($langue->show_text('SystemInfoLanguageDone'),	300,	'index.php?page=profil&password');
 	}
-
-	//if picture is updated
-	if ( isset( $_FILES["IMAGE_PROFIL"] ) && !empty( $_FILES["IMAGE_PROFIL"]["name"] ) ) {
+	elseif( isset( $_FILES["IMAGE_PROFIL"] ) && !empty( $_FILES["IMAGE_PROFIL"]["name"] ) ) {
+		//if picture is updated
 		$dossier = PICTURE_FOLDER.PROFIL_FOLDER;
 		$fichier = basename($_FILES['IMAGE_PROFIL']['name']);
 
@@ -39,10 +37,8 @@
 		}	
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateProfilNotification')));
 	}
-	
-	//if password is updated
-	if(isset($_POST['PASSWORD']) AND !empty($_POST['PASSWORD'])){
-
+	elseif(isset($_POST['PASSWORD']) AND !empty($_POST['PASSWORD'])){
+		//if password is updated
 		$UpdateProfilMDP = array('PASSWORD' => password_hash($_POST['PASSWORD'], PASSWORD_DEFAULT));
 		$bdd->GetUpdatePOST(TABLE_ERP_EMPLOYEES, $UpdateProfilMDP, 'WHERE IdUser='. $User->idUSER . '');
 		$User = $auth->User();
@@ -65,6 +61,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div2')"  <?= $ParDefautDiv2 ?>><?=$langue->show_text('Titre2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"  <?= $ParDefautDiv3 ?>><?=$langue->show_text('Titre3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"  <?= $ParDefautDiv4 ?>><?=$langue->show_text('Titre4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')"  <?= $ParDefautDiv4 ?>>RGPD</button>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=login&action=deconnexion';"><?=$langue->show_text('Titre5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
@@ -134,6 +131,16 @@
 							<input type="text" name="NUMERO_PERSO" value="<?= $User->NUMERO_PERSO ?>" >
 						</td>
 					</tr>
+					<tr>
+						<td colspan="2" >
+							<br/>
+							<?=$Company->NAME ?> traite les données recueillies pour la gestion des l'entreprise.<br/>
+							<br/>
+							Pour en savoir plus sur la gestion de vos données personnelles et pour exercer vos droits, reportez-vous à la notice dans l'onglet ci-dessus.
+							<br/>
+						</td>
+					</tr>
+					
 					<tr>
 						<td colspan="2" >
 							<br/>
@@ -243,4 +250,31 @@
 				</tbody>
 			</table>
 		</form>
+	</div>
+	<div id="div5" class="tabcontent" >
+		
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>RGPD</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							Les informations recueillies dans le questionnaire sont enregistrées dans un fichier informatisé par [coordonnées du responsable de traitement].<br/>
+							<br/>
+							Les données marquées par un astérisque dans le questionnaire doivent obligatoirement être fournies. Dans le cas contraire, [préciser les conséquences éventuelles en cas de non-fourniture des données].<br/>
+							<br/>
+							Les données collectées seront communiquées aux seuls clients inclue dans la base de données.<br/>
+							<br/>
+							Elles sont conservées pendant [durée de conservation des données prévue par le responsable du traitement ou critères permettant de la déterminer].<br/>
+							<br/>
+							Vous pouvez accéder aux données vous concernant, les rectifier, demander leur effacement ou exercer votre droit à la limitation du traitement de vos données. (en fonction de la base légale du traitement, mentionner également : Vous pouvez retirer à tout moment votre consentement au traitement de vos données ; Vous pouvez également vous opposer au traitement de vos données ; Vous pouvez également exercer votre droit à la portabilité de vos données)<br/>
+							<br/><br/>
+							Pour exercer ces droits ou pour toute question sur le traitement de vos données dans ce dispositif, vous pouvez contacter  : <br/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 	</div>

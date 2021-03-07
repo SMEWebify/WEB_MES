@@ -84,68 +84,58 @@ class Article Extends SQL  {
         return $ArticleCount;
     }
 
-    public function GETTechnicalCut($id_GET, $type='study'){
+    public function GETTechnicalCut($id_GET, $TechnicalCutTable){
 
-        if($type === 'quote') {$Table = TABLE_ERP_QUOTE_TECH_CUT;}
-        elseif($type === 'order') {$Table = TABLE_ERP_ORDER_TECH_CUT;}
-        else  {$Table = TABLE_ERP_STANDARD_TECH_CUT;}
-
-        $TechnicalCut = $this->GetQuery('SELECT '. $Table .'.id,
-                                                '. $Table .'.ORDRE,
-                                                '. $Table .'.PRESTA_ID,
-                                                '. $Table .'.LABEL,
-                                                '. $Table .'.TPS_PREP,
-                                                '. $Table .'.TPS_PRO,
-                                                '. $Table .'.LABEL AS PRESTA_LABEL
-                                                FROM `'. $Table .'`
-                                                    LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. $Table.'`.`PRESTA_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-                                                WHERE '. $Table .'.ARTICLE_ID = \''. addslashes($id_GET) .'\'
-                                                    ORDER BY '. $Table .'.ORDRE');
+        $TechnicalCut = $this->GetQuery('SELECT '. $TechnicalCutTable .'.id,
+                                                '. $TechnicalCutTable .'.ARTICLE_ID,
+                                                '. $TechnicalCutTable .'.ORDRE,
+                                                '. $TechnicalCutTable .'.PRESTA_ID,
+                                                '. $TechnicalCutTable .'.LABEL,
+                                                '. $TechnicalCutTable .'.TPS_PREP,
+                                                '. $TechnicalCutTable .'.TPS_PRO,
+                                                '. $TechnicalCutTable .'.COUT,
+                                                '. $TechnicalCutTable .'.PRIX,
+                                                '. TABLE_ERP_PRESTATION .'.LABEL AS PRESTA_LABEL
+                                                FROM `'. $TechnicalCutTable .'`
+                                                    LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. $TechnicalCutTable.'`.`PRESTA_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
+                                                WHERE '. $TechnicalCutTable .'.ARTICLE_ID = \''. addslashes($id_GET) .'\'
+                                                    ORDER BY '. $TechnicalCutTable .'.ORDRE');
          return $TechnicalCut;
     }
 
-    public function GETNomenclature($id_GET, $type='study'){
+    public function GETNomenclature($id_GET, $NomenclatureTable ){
 
-        if($type === 'quote') {$Table = TABLE_ERP_QUOTE_NOMENCLATURE;}
-        elseif($type === 'order') {$Table = TABLE_ERP_ORDER_NOMENCLATURE;}
-        else  {$Table = TABLE_ERP_STANDARD_NOMENCLATURE;}
-
-        $GETNomenclature = $this->GetQuery('SELECT '. $Table .'.id,
-                                                    '. $Table .'.ORDRE,
-                                                    '. $Table .'.PARENT_ID,
-                                                    '. $Table .'.ARTICLE_ID,
-                                                    '. $Table .'.LABEL,
-                                                    '. $Table .'.QT,
-                                                    '. $Table .'.UNIT_ID,
-                                                    '. $Table .'.PRIX_U,
-                                                    '. $Table .'.PRIX_ACHAT	,
+        $GETNomenclature = $this->GetQuery('SELECT '. $NomenclatureTable .'.id,
+                                                    '. $NomenclatureTable .'.ORDRE,
+                                                    '. $NomenclatureTable .'.PARENT_ID,
+                                                    '. $NomenclatureTable .'.ARTICLE_ID,
+                                                    '. $NomenclatureTable .'.LABEL,
+                                                    '. $NomenclatureTable .'.QT,
+                                                    '. $NomenclatureTable .'.UNIT_ID,
+                                                    '. $NomenclatureTable .'.PRIX_U,
+                                                    '. $NomenclatureTable .'.PRIX_ACHAT	,
                                                     '. TABLE_ERP_STANDARD_ARTICLE .'.LABEL AS ARTICLE_LABEL,
                                                     '. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL
-                                                    FROM `'. $Table .'`
-                                                        LEFT JOIN `'. TABLE_ERP_STANDARD_ARTICLE .'` ON `'. $Table .'`.`ARTICLE_ID` = `'. TABLE_ERP_STANDARD_ARTICLE .'`.`id`
-                                                        LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. $Table .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-                                                    WHERE '. $Table .'.PARENT_ID = \''.  addslashes($id_GET) .'\'
-                                                        ORDER BY '. $Table .'.ORDRE');
+                                                    FROM `'. $NomenclatureTable .'`
+                                                        LEFT JOIN `'. TABLE_ERP_STANDARD_ARTICLE .'` ON `'. $NomenclatureTable .'`.`ARTICLE_ID` = `'. TABLE_ERP_STANDARD_ARTICLE .'`.`id`
+                                                        LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. $NomenclatureTable .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
+                                                    WHERE '. $NomenclatureTable .'.PARENT_ID = \''.  addslashes($id_GET) .'\'
+                                                        ORDER BY '. $NomenclatureTable .'.ORDRE');
          return $GETNomenclature;
     }
 
-    public function GETSubAssembly($id_GET, $type='study'){
-
+    public function GETSubAssembly($id_GET, $SubAssemblesTable){
         
-        if($type === 'quote') {$Table = TABLE_ERP_QUOTE_SUB_ASSEMBLY;}
-        elseif($type === 'order') {$Table = TABLE_ERP_ORDER_SUB_ASSEMBLY;}
-        else  {$Table = TABLE_ERP_STANDARD_SUB_ASSEMBLY;}
-        
-            $GETSubAssembly = $this->GetQuery('SELECT '. $Table .'.id,
-                                                    '. $Table .'.PARENT_ID,
-                                                    '. $Table .'.ORDRE,
-                                                    '. $Table .'.ARTICLE_ID,
-                                                    '. $Table .'.QT,
+            $GETSubAssembly = $this->GetQuery('SELECT '. $SubAssemblesTable .'.id,
+                                                    '. $SubAssemblesTable .'.PARENT_ID,
+                                                    '. $SubAssemblesTable .'.ORDRE,
+                                                    '. $SubAssemblesTable .'.ARTICLE_ID,
+                                                    '. $SubAssemblesTable .'.QT,
                                                     '. TABLE_ERP_STANDARD_ARTICLE .'.LABEL AS LABEL_ARTICLE
-                                                    FROM `'. $Table .'`
-                                                        LEFT JOIN `'. TABLE_ERP_STANDARD_ARTICLE .'` ON `'. $Table .'`.`ARTICLE_ID` = `'. TABLE_ERP_STANDARD_ARTICLE .'`.`id`
-                                                    WHERE '. $Table .'.PARENT_ID = \''. addslashes($id_GET) .'\'
-                                                        ORDER BY '. $Table .'.ORDRE');
+                                                    FROM `'. $SubAssemblesTable .'`
+                                                        LEFT JOIN `'. TABLE_ERP_STANDARD_ARTICLE .'` ON `'. $SubAssemblesTable .'`.`ARTICLE_ID` = `'. TABLE_ERP_STANDARD_ARTICLE .'`.`id`
+                                                    WHERE '. $SubAssemblesTable .'.PARENT_ID = \''. addslashes($id_GET) .'\'
+                                                        ORDER BY '. $SubAssemblesTable .'.ORDRE');
 
          return $GETSubAssembly;
     }
@@ -176,22 +166,22 @@ class ArticleTreeStructure Extends Article  {
 
     public function GetTreeStructure($parent_id, $type='study') {
 
-        if(Article::GETSubAssembly($parent_id, $type)!=NULL)
+        if(Article::GETSubAssembly($parent_id, TABLE_ERP_STANDARD_SUB_ASSEMBLY)!=NULL)
         {
-            foreach(Article::GETSubAssembly($parent_id, $type) as $data)
+            foreach(Article::GETSubAssembly($parent_id, TABLE_ERP_STANDARD_SUB_ASSEMBLY) as $data)
             {
-                echo '<li><span><a href="index.php?page=article&id='. $data->ARTICLE_ID .'">'.  $data->LABEL_ARTICLE .' </a>x '.  $data->QT .'- parent : '. $parent_id .'</span> 
+                echo '<li><span> '.  $data->QT .' x <a href="index.php?page=article&id='. $data->ARTICLE_ID .'">'.  $data->LABEL_ARTICLE .' </a></span> 
                              <ul>';
       
                     // SECOND RANK PART TECHNICAL CUT
-                    foreach (Article::GETTechnicalCut($data->ARTICLE_ID, $type) as $dataTechnicalCutRank2){
+                    foreach (Article::GETTechnicalCut($data->ARTICLE_ID, TABLE_ERP_STANDARD_TECH_CUT) as $dataTechnicalCutRank2){
 
                          $TpsTotal = $dataTechnicalCutRank2->TPS_PREP + $dataTechnicalCutRank2->TPS_PRO; 
                          echo '<li>'. $TpsTotal .' hrs - '. $dataTechnicalCutRank2->PRESTA_LABEL .'</li>';
                      }
 
                     // SECONDE RANK PART NOMENCLATURE
-                    foreach (Article::GETNomenclature($data->ARTICLE_ID, $type) as $dataNomenclatureRank2){  
+                    foreach (Article::GETNomenclature($data->ARTICLE_ID, TABLE_ERP_STANDARD_NOMENCLATURE) as $dataNomenclatureRank2){  
 
                           echo '<li> '. $dataNomenclatureRank2->QT  .' '. $dataNomenclatureRank2->UNIT_LABEL  .' - '. $dataNomenclatureRank2->ARTICLE_LABEL .'</li>';
                     }

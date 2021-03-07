@@ -57,6 +57,8 @@
    <Title9>Unit</Title9>
    <Title10>Sub family</Title10>
    <ListArticle>Article :</ListArticle>
+   <TitreQuoteReturn>Back to quote</TitreQuoteReturn>
+   <TitreOrderReturn>Back to order</TitreOrderReturn>
 <!-- select -->
    <SelectMass>Mass</SelectMass>
    <SelectLength>Length</SelectLength>
