@@ -386,8 +386,8 @@
 					<tr>
 						<td colspan="2" ><?=$langue->show_text('TableMasktime'); ?>
 							<select name="MASK_TIME">
-								<option value="1" <?=  selected($data->MASK_TIME, 1) ?>><?=$langue->show_text('No'); ?></option>
-								<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('Yes'); ?></option>
+								<option value="0" <?=  selected($Data->MASK_TIME, 0) ?>><?=$langue->show_text('No'); ?></option>
+								<option value="1" <?=  selected($Data->MASK_TIME, 1) ?>><?=$langue->show_text('Yes'); ?></option>
 							</select>
 						</td>
 						<td><input type="file" name="IMAGE" /></td>
@@ -582,8 +582,8 @@
 							<td><a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
 							<td>
 								<select name="UpdateMASKressource[]">
-									<option value="1" <?=  selected($data->MASK_TIME, 1) ?>><?=$langue->show_text('No'); ?></option>
-									<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('Yes'); ?></option>
+									<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('No'); ?></option>
+									<option value="1" <?=  selected($data->MASK_TIME, 1) ?>><?=$langue->show_text('Yes'); ?></option>
 								</select>
 							</td>
 							<td><?=  $data->CAPACITY ?></td>
@@ -598,8 +598,8 @@
 						<?php $i++; endforeach; ?>
 						<tr>
 							<td><?=$langue->show_text('Addtext'); ?></td>
-							<td><input type="text"  name="CODERessource" size="1"></td>
 							<td><input type="number"  name="ORDRERessource" size="1" id="number"></td>
+							<td><input type="text"  name="CODERessource" size="1"></td>
 							<td><input type="text"  name="AddRessource" size="10"></td>
 							<td>
 								<select name="MASKRessource">

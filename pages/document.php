@@ -64,12 +64,13 @@
 			$DevisFACTURATION_ID = $Maindata->FACTURATION_ID;
 			$DevisRESP_COM_ID = $Maindata->RESP_COM_ID;
 			$DevisRESP_TECH_ID = $Maindata->RESP_TECH_ID;
+			
 			$DevisCONDI_REG_ID = $Maindata->COND_REG_CLIENT_ID;
-			$DevisCONDI_REG_LABEL = $Maindata->CONDI_REG_LABEL;
+			$DevisCONDI_REG_LABEL = $Maindata->COND_REG_LABEL;
 			
 			
 			$DevisMODE_REG_ID = $Maindata->MODE_REG_CLIENT_ID;
-			$DevisMODE_REG_LABEL = $Maindata->CONDI_MODE_LABEL;
+			$DevisMODE_REG_LABEL = $Maindata->MODE_REG_LABEL;
 			
 			$DevisMODE_DE_TRANSPORT = $Maindata->TRANSPORT_LABEL;
 			$DevisECHEANCIER_LABEL = $Maindata->ECHEANCIER_LABEL;
@@ -197,20 +198,21 @@ printPdf = function (url) {
 <button onclick="printPdf('<?="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>');" class="bouton">Export en .pdf</button>
 	<div id="content-to-pdf">
 		<page size="A4">
-			<table class="content-table-entete">
-					<tr>
-						<td colspan="5">
+				<table class="content-table">
+					<thead>
+						<tr>
+							<td colspan="3" class="Picture">
 									 <img src="<?= "http://" . $_SERVER['HTTP_HOST'] . "/erp/public/images/Clients/" . $CompanyLogo   ?>" title="LOGO entreprise" alt="Logo" style="width:100px"/>
-						</td>
-						<td colspan="5" class="TitreDevis">
+							</td>
+							<td colspan="7" class="TitreDevis">
 									 <h1>DEVIS</h1> 
 									 <h2  style="text-decoration: underline;">N° <?=$DevisCODE ?></h2>
 									 <h2><?=date("m-d-Y");  ?></h2>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="5" class="CompanyContact">
-									<table >
+							</td>
+						</tr>
+						<tr>
+							<td colspan="5" class="CompanyContact">
+									<table>
 										<tr>
 											<td>
 												<h3>Contact :</h3>
@@ -232,9 +234,9 @@ printPdf = function (url) {
 											</td>
 										</tr>
 									</table>
-						</td>
-						<td colspan="5" class="CustomersContact">
-							<table style="float: right">
+							</td>
+							<td colspan="5" class="CustomersContact">
+									<table>
 										<tr>
 											<td>
 												<h3>A l'attention de  :</h3>
@@ -265,33 +267,30 @@ printPdf = function (url) {
 											<?= $DevisCONTACT_MAIL ?>
 											</td>
 										</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-				<table class="content-table"
-					<tr>
-						<td colspan="10" class="CompanyContact">
-							Votre référence : <?= $DevisREFERENCE?>
-						</td>
-					</tr>
-				</table>
-				<table class="content-table">
-					<thead>
-						<tr>
-								<th>Désignation</th>
-								<th>Quantité</th>
-								<th>Prix U H.T.</th>
-								<th>Unité</th>
-								<th>Remise</th>
-								<th>Total H.T.</th>
-								<th>Délais</th>
+									</table>
+							</td>
 						</tr>
-					</thead>
-					<tbody>
-						<?=$DetailLigneDuDevis ?>
 						<tr>
-							<td colspan="3">
+							<td colspan="10" class="CompanyContact">
+								Votre référence : <?= $DevisREFERENCE?>
+							</td>
+						</tr>
+				</thead>
+				<tbody>
+					<tr>
+							<th>Désignation</th>
+							<th>Quantité</th>
+							<th>Prix U H.T.</th>
+							<th>Unité</th>
+							<th>Remise</th>
+							<th>Total H.T.</th>
+							<th>Délais</th>
+					</tr>
+					<?=$DetailLigneDuDevis ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="3">
 									<table style="float: left">
 										<tr>
 											<td>
@@ -314,7 +313,7 @@ printPdf = function (url) {
 												 <B>Mode de transport :</B>
 											</td>
 											<td>
-													<?= $DevisMODE_DE_TRANSPORT ?>
+												<?= $DevisMODE_DE_TRANSPORT ?>
 											</td>
 										</tr>
 										<tr>
@@ -322,20 +321,20 @@ printPdf = function (url) {
 												 <B>Echéancier :</B>
 											</td>
 											<td>
-													<?= $DevisECHEANCIER_LABEL ?>
+												<?= $DevisECHEANCIER_LABEL ?>
 											</td>
 										</tr>
 										
 								</table>
-							</td>
-							<td colspan="7">
+						</td>
+						<td colspan="7">
 								<table style="float: right">
 										<?=$DetailLigneTVA; ?>
 								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+						</td>
+					</tr>
+				</foot>
+			</table>
 		</page>
 	</div>
 </body>

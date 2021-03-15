@@ -80,8 +80,7 @@
 			//// ACCEUIL DEVIS  ////
 			
 			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'	
-																		WHERE DEVIS_ID='". addslashes($Id)."'");
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_QUOTE_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."' WHERE DEVIS_ID='". addslashes($Id)."'");
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
 			unset($_POST['MajLigne']);
@@ -112,6 +111,10 @@
 		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			//// DELETE LIGNE ////
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_TECH_CUT ." WHERE ARTICLE_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_NOMENCLATURE ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_SUB_ASSEMBLY ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteQuoteLineNotification')));
 		}
 		elseif(isset($_POST['AddORDRELigne']) AND !empty($_POST['AddORDRELigne'])){
@@ -208,9 +211,9 @@ $(document).ready(function() {
         $("table.content-table-devis").append(ligne);
     });
     $(".delete").click(function() {
-        $("table.content-table").find('input[name="select"]').each(function() {
+        $("table.content-table-devis").find('input[name="select"]').each(function() {
             if ($(this).is(":checked")) {
-                $(this).parents("table.content-table tr").remove();
+                $(this).parents("table.content-table-devis tr").remove();
             }
         });
     });
@@ -221,7 +224,7 @@ $(document).ready(function() {
 	<?php if(isset($_GET['quote']) AND !empty($_GET['quote'])){ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
+		<a href="index.php?page=document$type=quote&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
 	<?php
 	}

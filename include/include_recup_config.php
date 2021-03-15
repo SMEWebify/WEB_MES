@@ -35,6 +35,8 @@ define('TABLE_ERP_ORDER_LIGNE', 'orders_lines');
 define('TABLE_ERP_ORDER_TECH_CUT', 'order_technical_cut');
 define('TABLE_ERP_ORDER_NOMENCLATURE', 'order_nomenclature');
 define('TABLE_ERP_ORDER_SUB_ASSEMBLY', 'order_sub_assembly');
+define('TABLE_ERP_ORDER_DATE_PLAN_TASK', 'order_date_plan_task');
+
 //DATA BASE ORDER ACKNOWLEGMENT
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT', 'order_acknowledgment');
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES', 'order_acknowledgment_lines');

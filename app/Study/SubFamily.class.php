@@ -15,13 +15,22 @@ class SubFamily Extends SQL  {
 
     public function GETSubFamily($id_GET){
 
-        $SubFamily = $this->GetQuery('SELECT '. TABLE_ERP_UNIT .'.id,
-                                                '. TABLE_ERP_UNIT .'.CODE,
-                                                '. TABLE_ERP_UNIT .'.LABEL,
-                                                '. TABLE_ERP_UNIT .'.TYPE
-                                             FROM `'. TABLE_ERP_PRESTATION .'`
+        $SubFamily = $this->GetQuery('SELECT '. TABLE_ERP_SOUS_FAMILLE .'.id,
+                                                '. TABLE_ERP_SOUS_FAMILLE .'.CODE,
+                                                '. TABLE_ERP_SOUS_FAMILLE .'.LABEL,
+                                                '. TABLE_ERP_SOUS_FAMILLE .'.TYPE
+                                             FROM `'. TABLE_ERP_SOUS_FAMILLE .'`
 								              WHERE id=\''. $id_GET .'\'', true, 'App\Study\SubFamily');
         return $SubFamily;
+    }
+
+    public function NewSubFamily($CODE, $LABEL, $RESSOURCES){
+
+        $req = $this->GetInsert("INSERT INTO ". TABLE_ERP_SOUS_FAMILLE ." VALUE ('0',
+																			'". addslashes($CODE) ."',
+																			'". addslashes($LABEL) ."',
+																			'". addslashes($RESSOURCES) ."')");
+        return $req;
     }
 
     public function GetSubFamilyList($IdData=0, $Select = true){

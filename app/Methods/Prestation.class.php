@@ -35,7 +35,15 @@ class Prestation Extends SQL  {
         return $Prestation;
     }
 
-    public function GetPrestationList($IdData=0, $Select = true){
+    public function GetPrestationList($IdData=0, $Select = true, $AllData = "all"){
+
+        $SQLClause ='';
+        if($AllData == "productive"){
+            $SQLClause ='WHERE TYPE IN ( 1, 7)';
+        }
+        elseif($AllData == "material"){
+            $SQLClause ='WHERE TYPE IN ( 2, 3, 4, 5, 6, 8)';
+        }
 
         $this->PrestationList ='';
         $query='SELECT '. TABLE_ERP_PRESTATION .'.Id,
@@ -48,6 +56,7 @@ class Prestation Extends SQL  {
 									'. TABLE_ERP_PRESTATION .'.COLOR,
 									'. TABLE_ERP_PRESTATION .'.IMAGE
 									FROM `'. TABLE_ERP_PRESTATION .'`
+                                    '. $SQLClause  .'
                                     ORDER BY ORDRE';
                                     
         if($Select){

@@ -102,6 +102,8 @@
 			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
 																	RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
 																			WHERE id='". $Id ."'");
+			
+
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
 		}
 		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
@@ -111,6 +113,12 @@
 	
 				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'
 																WHERE 	ORDER_ID='". $Id ."'");
+
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_TECH_CUT ." 
+								LEFT JOIN `". TABLE_ERP_ORDER_LIGNE ."` ON `". TABLE_ERP_ORDER_LIGNE ."`.`id` = `". TABLE_ERP_ORDER_TECH_CUT ."`.`ARTICLE_ID`
+								SET ". TABLE_ERP_ORDER_TECH_CUT .".ETAT='3'
+								WHERE 	". TABLE_ERP_ORDER_LIGNE .".ORDER_ID='". $Id ."'");
+
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
 			unset($_POST['MajLigne']);
@@ -144,6 +152,10 @@
 			//// DELETE LIGNE ////
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." WHERE ORDER_LINE_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_TECH_CUT ." WHERE ARTICLE_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_NOMENCLATURE ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_SUB_ASSEMBLY ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderLineNotification')));
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderAcknowledgmentLinesNotificationNotification')));
 		}
@@ -295,9 +307,9 @@ $(document).ready(function() {
         $("table.content-table-devis").append(ligne);
     });
     $(".delete").click(function() {
-        $("table.content-table").find('input[name="select"]').each(function() {
+        $("table.content-table-devis").find('input[name="select"]').each(function() {
             if ($(this).is(":checked")) {
-                $(this).parents("table.content-table tr").remove();
+                $(this).parents("table.content-table-devis tr").remove();
             }
         });
     });
@@ -309,22 +321,22 @@ $(document).ready(function() {
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document$type=order&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
-		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document$type=OrderAcknowledgment&id=<?= $_GET['OrderAcknowledgment'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
-		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['DeliveryNotes'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
-		<a href="index.php?page=document&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document$type=Invoice&id=<?= $_GET['Invoice'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php }else{ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title5'); ?></button>

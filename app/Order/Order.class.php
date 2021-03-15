@@ -21,9 +21,13 @@ class Order Extends SQL  {
     Public $RESP_TECH_ID;
     Public $REFERENCE;
     Public $COND_REG_CUSTOMER_ID;
+    Public $COND_REG_LABEL;
     Public $MODE_REG_CUSTOMER_ID;
+    Public $MODE_REG_LABEL;
     Public $ECHEANCIER_ID;
+    Public $ECHEANCIER_LABEL;
     Public $TRANSPORT_ID;
+    Public $TRANSPORT_LABEL;
     Public $COMMENT;
     Public $QUOTE_ID;
     Public $QUOTE_CODE;
@@ -88,11 +92,19 @@ class Order Extends SQL  {
                                         '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM,
                                         '. TABLE_ERP_EMPLOYEES .'.PRENOM,
-                                        '. TABLE_ERP_QUOTE .'.CODE AS QUOTE_CODE
+                                        '. TABLE_ERP_QUOTE .'.CODE AS QUOTE_CODE,
+                                        '. TABLE_ERP_CONDI_REG .'.LABEL AS COND_REG_LABEL,
+                                        '. TABLE_ERP_MODE_REG .'.LABEL AS MODE_REG_LABEL,
+                                        '. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL AS ECHEANCIER_LABEL,
+                                        '. TABLE_ERP_TRANSPORT .'.LABEL AS TRANSPORT_LABEL
                                         FROM `'. TABLE_ERP_ORDER .'`
                                             LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_QUOTE .'` ON `'. TABLE_ERP_ORDER .'`.`QUOTE_ID` = `'. TABLE_ERP_QUOTE .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_ORDER .'`.`COND_REG_CUSTOMER_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_ORDER .'`.`MODE_REG_CUSTOMER_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_ECHEANCIER_TYPE .'` ON `'. TABLE_ERP_ORDER .'`.`ECHEANCIER_ID` = `'. TABLE_ERP_ECHEANCIER_TYPE .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_TRANSPORT .'` ON `'. TABLE_ERP_ORDER .'`.`TRANSPORT_ID` = `'. TABLE_ERP_TRANSPORT .'`.`id`
                                         WHERE '. TABLE_ERP_ORDER .'.id = \''. $id_GET.'\' ', true, 'App\Order\Order');
         return $Order;
     }

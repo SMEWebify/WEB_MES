@@ -74,6 +74,11 @@
    <SelectSupplies>Fourniture</SelectSupplies>
    <SelectSubcontracting>Sous-traitance</SelectSubcontracting>
    <SelectCompoundItem>Article composés</SelectCompoundItem>
+   <!-- -->
+   <SelectCanceled>Annulée</SelectCanceled>
+   <SelectCreated>Crée</SelectCreated>
+   <SelectStarted>Démarée</SelectStarted>
+   <SelectInterrupted>Interronpue</SelectInterrupted>
 <!-- Table -->
    <TableType>Type</TableType>
    <TableComment>Commentaire</TableComment>
@@ -96,7 +101,7 @@
    <TableBuy>Acheté :</TableBuy> 
    <TableSold>Vendu :</TableSold> 
    <TableFamilly>Famille :</TableFamilly> 
-
+   <TableStatu>Etat</TableStatu> 
 
    <TableDimX>Dimension X</TableDimX>
    <TableDimY>Dimension Y</TableDimY>

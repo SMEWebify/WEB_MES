@@ -14,7 +14,6 @@
 }
 .content-table-decal{
 	margin:auto;
-	margin-top:100px;
 	
 }
 .content-table-devis thead tr,
@@ -34,7 +33,7 @@
 .content-table-decal td,
 .content-table th,
 .content-table td{
-	padding : 12px 15px;
+	padding : 5px 9px;
 }
 
 .content-table-devis tbody tr,

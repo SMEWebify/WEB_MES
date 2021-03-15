@@ -23,6 +23,15 @@ class Unit Extends SQL  {
         return $Unit;
     }
 
+    public function NewUnit($CODE, $LABEL, $TYPE){
+
+        $req = $this->GetInsert("INSERT INTO ". TABLE_ERP_UNIT ." VALUE ('0',
+																			'". addslashes($CODE) ."',
+																			'". addslashes($LABEL) ."',
+																			'". addslashes($TYPE) ."')");
+        return $req;
+    }
+
     public function GetUnitList($IdData=0, $Select = true){
         $this->UnitList = '';
           $query='SELECT '. TABLE_ERP_UNIT .'.id,

@@ -34,12 +34,10 @@ class Article Extends SQL  {
 
     Public $ArticleList;
 
-
-
     public function GETArticle($id_GET){
-
-        if($this-> GETArticleCount($id_GET) == 0){ header('Location: index.php?page=article'); }
-
+        
+        if($this-> GETArticleCount($id_GET) === 0){ header('Location: index.php?page=article'); }
+       
         $Article = $this->GetQuery('SELECT '. TABLE_ERP_STANDARD_ARTICLE .'.id,
                                             '. TABLE_ERP_STANDARD_ARTICLE .'.CODE,
                                             '. TABLE_ERP_STANDARD_ARTICLE .'.LABEL,
@@ -86,6 +84,11 @@ class Article Extends SQL  {
 
     public function GETTechnicalCut($id_GET, $TechnicalCutTable){
 
+        $AddSQL='';
+        if($TechnicalCutTable == TABLE_ERP_ORDER_TECH_CUT){
+            $AddSQL =TABLE_ERP_ORDER_TECH_CUT .".ETAT,";
+        }
+
         $TechnicalCut = $this->GetQuery('SELECT '. $TechnicalCutTable .'.id,
                                                 '. $TechnicalCutTable .'.ARTICLE_ID,
                                                 '. $TechnicalCutTable .'.ORDRE,
@@ -95,6 +98,8 @@ class Article Extends SQL  {
                                                 '. $TechnicalCutTable .'.TPS_PRO,
                                                 '. $TechnicalCutTable .'.COUT,
                                                 '. $TechnicalCutTable .'.PRIX,
+                                                '. $AddSQL .'
+                                                '. TABLE_ERP_PRESTATION .'.CODE AS PRESTA_CODE,
                                                 '. TABLE_ERP_PRESTATION .'.LABEL AS PRESTA_LABEL
                                                 FROM `'. $TechnicalCutTable .'`
                                                     LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. $TechnicalCutTable.'`.`PRESTA_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`

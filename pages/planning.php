@@ -28,10 +28,53 @@
 		$annee = intval($_GET['annee']);
 	}
 ?>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function daysToMilliseconds(days) {
+      return days * 24 * 60 * 60 * 1000;
+    }
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Task ID');
+      data.addColumn('string', 'Task Name');
+      data.addColumn('string', 'Resource');
+      data.addColumn('date', 'Start Date');
+      data.addColumn('date', 'End Date');
+      data.addColumn('number', 'Duration');
+      data.addColumn('number', 'Percent Complete');
+      data.addColumn('string', 'Dependencies');
+
+      data.addRows([
+        ['Research', 'Find sources', null,
+         new Date(2015, 0, 1), new Date(2015, 0, 5), null,  100,  null],
+        ['Write', 'Write paper', 'write',
+         null, new Date(2015, 0, 9), daysToMilliseconds(3), 25, 'Research,Outline'],
+        ['Cite', 'Create bibliography', 'write',
+         null, new Date(2015, 0, 7), daysToMilliseconds(1), 20, 'Research'],
+        ['Complete', 'Hand in paper', 'complete',
+         null, new Date(2015, 0, 10), daysToMilliseconds(1), 0, 'Cite,Write'],
+        ['Outline', 'Outline paper', 'write',
+         null, new Date(2015, 0, 6), daysToMilliseconds(1), 100, 'Research']
+      ]);
+
+      var options = {
+        height: 275
+      };
+
+      var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+  </script>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" ><?=$langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" ><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" ><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" ><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')" ><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
@@ -228,8 +271,36 @@
 		<table class="content-table">
 			<thead>
 				<tr>
-						<th></th>
-						<th>W<?= strftime("%W", time())+1 ?></th>
+					<th></th>
+					<th>W<?= strftime("%W", time())+1 ?></th>
+					<?php
+					for ($w = 1; $w <= 6; $w++): ?>
+						<th>W<?= strftime("%W", time())+$w ?></th>
+					<?php $i++; endfor; ?>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			$i = 1;
+			foreach ($Section->GetSectionList('',false) as $data): ?>
+			<tr>
+				<td><a href="admin.php?page=planning&section=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+				<?php
+					for ($w = 1; $w <= 7; $w++): ?>
+						<td>100 %</t>
+					<?php $i++; endfor; ?>
+			</tr>
+			<?php $i++; endforeach; ?>
+			
+		  </tbody>
+		</table>
+	</div>
+	<div id="div3" class="tabcontent" >
+		<table class="content-table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>W<?= strftime("%W", time())+1 ?></th>
 					<?php
 					for ($w = 1; $w <= 6; $w++): ?>
 						<th>W<?= strftime("%W", time())+$w ?></th>
@@ -241,17 +312,50 @@
 			$i = 1;
 			foreach ($Ressource->GETRessourcesList('',false) as $data): ?>
 			<tr>
-				<td><a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+				<td><a href="admin.php?page=planning&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
 				<?php
 					for ($w = 1; $w <= 7; $w++): ?>
-						<td>%</t>
+						<td>100 %</t>
 					<?php $i++; endfor; ?>
 			</tr>
 			<?php $i++; endforeach; ?>
-			</tbody>
+			<tr>
+				<td colspan="10">
+ 				 <div id="chart_div" style="width: 100%;"></div>
+				</td>
+			</tr>
+		  </tbody>
 		</table>
 	</div>
-	<div id="div3" class="tabcontent" >
-	</div>
 	<div id="div4" class="tabcontent" >
+		<table class="content-table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>W<?= strftime("%W", time())+1 ?></th>
+					<?php
+					for ($w = 1; $w <= 6; $w++): ?>
+						<th>W<?= strftime("%W", time())+$w ?></th>
+					<?php $i++; endfor; ?>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			$i = 1;
+			foreach ($Prestation->GetPrestationList('',false) as $data): ?>
+			<tr>
+				<td><a href="admin.php?page=planning&prestation=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+				<?php
+					for ($w = 1; $w <= 7; $w++): ?>
+						<td>100 %</t>
+					<?php $i++; endfor; ?>
+			</tr>
+			<?php $i++; endforeach; ?>
+			<tr>
+				<td colspan="10">
+ 				 <div id="chart_div" style="width: 100%;"></div>
+				</td>
+			</tr>
+		  </tbody>
+		</table>
 	</div>

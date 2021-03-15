@@ -6,7 +6,6 @@ page {
   display: block;
   margin: 0 auto;
   margin-bottom: 0.5cm;
-  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
 }
 page[size="A4"] {  
   width: 21cm;
@@ -53,14 +52,21 @@ page[size="A5"][layout="landscape"] {
 	 display: none;
 }
 
+.Picture{
+	text-align: center;
+	width: 50%;
+}
 .TitreDevis{
 	text-align: center;
+	width: 50%;
 }
 .CompanyContact{
 	text-align: left;
+	width: 50%;
 }
 .CustomersContact{
 	text-align: right;
+	width: 50%;
 }
 
 .content-table-entete,
@@ -71,11 +77,8 @@ page[size="A5"][layout="landscape"] {
 	border-collapse: collapse;
 	border-radius: 0px 5px 0 0;
 	overflow: hidden;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .content-table thead tr{
-	background-color: #52A19A !important;
-	color: #FFFFFF;
 	text-align: left;
 	font-weight: blod;
 }

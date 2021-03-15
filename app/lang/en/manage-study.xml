@@ -74,6 +74,11 @@
    <SelectSupplies>Supplies</SelectSupplies>
    <SelectSubcontracting>Sub-contracting</SelectSubcontracting>
    <SelectCompoundItem>Compound item</SelectCompoundItem>
+   <!-- -->
+   <SelectCanceled>Canceled</SelectCanceled>
+   <SelectCreated>Created</SelectCreated>
+   <SelectStarted>Started</SelectStarted>
+   <SelectInterrupted>Interrupted</SelectInterrupted>
 <!-- Table -->
    <TableType>Type</TableType>
    <TableComment>Comment</TableComment>
@@ -96,6 +101,8 @@
    <TableBuy>Buy :</TableBuy> 
    <TableSold>Sold :</TableSold> 
    <TableFamilly>Familly :</TableFamilly> 
+   <TableStatu>Etat</TableStatu> 
+   
 
    <TableDimX>Size X</TableDimX>
    <TableDimY>Size Y</TableDimY>

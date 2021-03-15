@@ -1,6 +1,6 @@
     <div id="div1" class="tabcontent">
 		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindQuote') ?>">
+			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFind1') ?>">
 			<ul id="myUL">
 				<?php
 				//generate list for datalist find input
@@ -107,8 +107,11 @@
 											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelectDelivered') ?></option>
 											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectInvoice') ?></option>
 											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectStop') ?></option>
-											
-										<?php endif ?>
+											<?php endif ?>
+											<?php if(isset($_GET['OrderAcknowledgment'])): ?>
+											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+											<?php endif ?>
 										</select>
 									</td>
 									<td><input type="checkbox" id="MajLigne" name="MajLigne" checked="checked"><label ><?= $langue->show_text('UpdateLine') ?></label></td>
@@ -336,7 +339,8 @@
 					</tr>
 				</thead>
 				<tbody>
-				</tr>
+					<?php if(!isset($_GET['OrderAcknowledgment'])): ?>
+					</tr>
 						<th colspan="12" ><?= $langue->show_text('Addline') ?></th>
 					</tr>
 					<tr>
@@ -348,7 +352,7 @@
 								<?= $ListeArticle ?>
 							</datalist>
 						</td>
-						<td><input type="text"  name="" id="AAddLABELLigne" placeholder="Désignation"></td>
+						<td><input type="text"  name="" id="AddLABELLigne" placeholder="Désignation"></td>
 						<td><input type="number"  name="" id="AddQTLigne" placeholder="1"  value="1"></td>
 						<td>
 							<select name="" id="AddUNITLigne">
@@ -373,6 +377,7 @@
 							<?= $Form->submit($langue->show_text('UpdateLine'), $ActivateForm) ?>
 						</td>
 					</tr>
+					<?php endif ?>
 					<?php
 						////LIGNE LIST  ////
 						$i =0;
@@ -444,20 +449,24 @@
 									<select  name="UpdateETATLigne[]">
 										<?php if(isset($_GET['quote'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
-										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectRefuse') ?></option>
-										<option value="2" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectWin') ?></option>
-										<option value="3" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectSend') ?></option>
-										<option value="4" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectDecline') ?></option>
-										<option value="5" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectClosed') ?></option>
-										<option value="6" <?= selected($data->ETAT, 7) ?>><?= $langue->show_text('SelectObsolete') ?></option>
+										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+										<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectWin') ?></option>
+										<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectRefuse') ?></option>
+										<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectDecline') ?></option>
+										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectClosed') ?></option>
+										<option value="7" <?= selected($data->ETAT, 7) ?>><?= $langue->show_text('SelectObsolete') ?></option>
 										<?php endif ?>
 										<?php if(isset($_GET['order'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectRun') ?></option>
-										<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectStop') ?></option>
-										<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
-										<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectDelivered') ?></option>
-										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectInvoice') ?></option>
+										<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
+										<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectDelivered') ?></option>
+										<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectInvoice') ?></option>
+										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectStop') ?></option>
+										<?php endif ?>
+										<?php if(isset($_GET['OrderAcknowledgment'])): ?>
+										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 										<?php endif ?>
 									</select>
 								</td>

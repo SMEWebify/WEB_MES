@@ -31,7 +31,7 @@
 
 	////  ARTICLES  ////
 	$ArticleId = preg_replace('#-+#',' ', addslashes($_GET['id']));
-
+	
 	//if add or update Article
 	if(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){
 
@@ -55,8 +55,6 @@
 		}else{
 			header('Location: admin.php?page=manage-study');
 		}
-
-
 
 		//if is update standart article  
 		if(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
@@ -93,7 +91,7 @@
 																			SUR_Y='". addslashes($_POST['SURDIMYArticle']) ."',
 																			SUR_Z='". addslashes($_POST['SURDIMZArticle']) ."'
 																			". $AddSQL ."
-																		WHERE id='". $articleid ."'");
+																		WHERE id='". $ArticleId ."'");
 
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateArticleNotification')));
 		}
@@ -104,7 +102,7 @@
 			move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
 
 			//insert in db
-			$articleid = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_ARTICLE ." VALUE ('0',
+			$ArticleId = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_ARTICLE ." VALUE ('0',
 																				'". addslashes($_POST['CODEArticle']) ."',
 																				'". addslashes($_POST['LABELAtricle']) ."',
 																				'". addslashes($_POST['INDArticle']) ."',
@@ -131,6 +129,11 @@
 		}
 
 		if(isset($_POST['AddORDREDecoupTech']) AND !empty($_POST['AddORDREDecoupTech'])){
+
+			if(isset($_GET['type']) AND $_GET['type'] === 'order'){
+				$AddSql = ",'2'";
+			}
+
 			//// TECHNICAL CUT  ////
 			$req = $bdd->GetInsert("INSERT INTO ". $TechnicalCutTable ." VALUE ('0',
 																			'". addslashes($ArticleId) ."',
@@ -140,7 +143,9 @@
 																			'". addslashes($_POST['AddTPSPREPDecoupTech']) ."',
 																			'". addslashes($_POST['AddTPSPRODDecoupTech']) ."',
 																			'". addslashes($_POST['AddCOUTDecoupTech']) ."',
-																			'". addslashes($_POST['AddPRIXDecoupTech']) ."')");
+																			'". addslashes($_POST['AddPRIXDecoupTech']) ."'
+																			". $AddSql .")");
+
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTechnicalCutNotification')));
 		}
 		elseif(isset($_POST['AddORDRENomencl']) AND !empty($_POST['AddORDRENomencl'])){
@@ -175,33 +180,33 @@
 		}
 		elseif(isset($_POST['AddCODEUnit']) AND !empty($_POST['AddCODEUnit'])){
 			//// UNITS ////
-			$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_UNIT ." VALUE ('0',
-																			'". addslashes($_POST['AddCODEUnit']) ."',
-																			'". addslashes($_POST['AddLABELUnit']) ."',
-																			'". addslashes($_POST['AddTYPEUnit']) ."')");
+			$Unit->NewUnit($_POST['AddCODEUnit'], $_POST['AddLABELUnit'], $_POST['AddTYPEUnit']);
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddUnitNotification')));
 		}
 		elseif(isset($_POST['AddCODESousFamille']) AND !empty($_POST['AddCODESousFamille'])){
 			//// SUB FAMILLY ////
-			$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_SOUS_FAMILLE ." VALUE ('0',
-																			'". addslashes($_POST['AddCODESousFamille']) ."',
-																			'". addslashes($_POST['AddLABELSousFamille']) ."',
-																			'". addslashes($_POST['AddRESSOURCESousFamille']) ."')");
+			$SubFamily->NewSubFamily($_POST['AddCODESousFamille'], $_POST['AddLABELSousFamille'], $_POST['AddRESSOURCESousFamille']);
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddFamillyNotification')));
 		}
 
 		if(isset($_POST['id_DecoupTech']) AND !empty($_POST['id_DecoupTech'])){
 			//if update technical cut list
+		
 			$i = 0;
 			foreach ($_POST['id_DecoupTech'] as $id_generation) {
+				$AddSql ='';
+				if(isset($_GET['type']) AND $_GET['type'] === 'order'){
+					$AddSql = ",ETAT = '". addslashes($_POST['ETAT'][$i]) ."'";
+				}
 
-				$bdd->GetUpdate('UPDATE '. $TechnicalCutTable .' SET  ORDRE = \''. addslashes($_POST['UpdateORDREDecoupTech'][$i]) .'\',
-																	PRESTA_ID = \''. addslashes($_POST['UpdatePRESTADecoupTech'][$i]) .'\',
-																	LABEL = \''. addslashes($_POST['UpdateLABELDecoupTech'][$i]) .'\',
-																	TPS_PREP = \''. addslashes($_POST['UpdateTPSPREPDecoupTech'][$i]) .'\',
-																	TPS_PRO = \''. addslashes($_POST['UpdateTPSPRODDecoupTech'][$i]) .'\',
-																	COUT = \''. addslashes($_POST['UpdateCOUTDecoupTech'][$i]) .'\',
-																	PRIX = \''. addslashes($_POST['UpdatePRIXDecoupTech'][$i]) .'\'
+				$bdd->GetUpdate('UPDATE '. $TechnicalCutTable .' SET  ORDRE = \''. addslashes($_POST['ORDRE'][$i]) .'\',
+																	PRESTA_ID = \''. addslashes($_POST['PRESTA_ID'][$i]) .'\',
+																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	TPS_PREP = \''. addslashes($_POST['TPS_PREP'][$i]) .'\',
+																	TPS_PRO = \''. addslashes($_POST['TPS_PRO'][$i]) .'\',
+																	COUT = \''. addslashes($_POST['COUT'][$i]) .'\',
+																	PRIX = \''. addslashes($_POST['PRIX'][$i]) .'\'
+																	'. $AddSql .'
 																	WHERE Id IN ('. $id_generation . ')');
 				$i++;
 			}
@@ -212,12 +217,12 @@
 			$i = 0;
 			foreach ($_POST['UpdateIdNomencl'] as $id_generation) {
 
-				$bdd->GetUpdate('UPDATE '. $NomenclatureTable .' SET  ORDRE = \''. addslashes($_POST['UpdateORDRENomencl'][$i]) .'\',
-																	LABEL = \''. addslashes($_POST['UpdateLABELNomencl'][$i]) .'\',
-																	QT = \''. addslashes($_POST['UpdateQTNomencl'][$i]) .'\',
-																	UNIT_ID = \''. addslashes($_POST['UpdateUNITNomencl'][$i]) .'\',
-																	PRIX_U = \''. addslashes($_POST['UpdatePRIXUNomencl'][$i]) .'\',
-																	PRIX_ACHAT = \''. addslashes($_POST['UpdatePRIXACHATNomencl'][$i]) .'\'
+				$bdd->GetUpdate('UPDATE '. $NomenclatureTable .' SET  ORDRE = \''. addslashes($_POST['ORDRE'][$i]) .'\',
+																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	QT = \''. addslashes($_POST['QT'][$i]) .'\',
+																	UNIT_ID = \''. addslashes($_POST['UNIT_ID'][$i]) .'\',
+																	PRIX_U = \''. addslashes($_POST['PRIX_U'][$i]) .'\',
+																	PRIX_ACHAT = \''. addslashes($_POST['PRIX_ACHAT'][$i]) .'\'
 																	WHERE Id IN ('. $id_generation . ')');
 				$i++;
 			}
@@ -228,9 +233,9 @@
 			$i = 0;
 			foreach ($_POST['UpdateIdSousEns'] as $id_generation) {
 
-				$bdd->GetUpdate('UPDATE '. $SubAssemblesTable .' SET  ORDRE = \''. addslashes($_POST['UpdateORDRESousEns'][$i]) .'\',
-																		ARTICLE_ID = \''. addslashes($_POST['UpdateARTICLESousEns'][$i]) .'\',
-																		QT = \''. addslashes($_POST['UpdateQTSousEns'][$i]) .'\'
+				$bdd->GetUpdate('UPDATE '. $SubAssemblesTable .' SET  ORDRE = \''. addslashes($_POST['ORDRE'][$i]) .'\',
+																		ARTICLE_ID = \''. addslashes($_POST['ARTICLE_ID'][$i]) .'\',
+																		QT = \''. addslashes($_POST['QT'][$i]) .'\'
 																		WHERE Id IN ('. $id_generation . ')');
 				$i++;
 			}
@@ -241,7 +246,7 @@
 			$i = 0;
 			foreach ($_POST['UpdateIdImputationLigne'] as $id_generation) {
 
-				$bdd->GetUpdate('UPDATE `'. TABLE_ERP_IMPUT_COMPTA_LIGNE .'` SET  ORDRE = \''. addslashes($_POST['UpdateORDREImputation'][$i]) .'\',
+				$bdd->GetUpdate('UPDATE '. TABLE_ERP_IMPUT_COMPTA_LIGNE .' SET  ORDRE = \''. addslashes($_POST['UpdateORDREImputation'][$i]) .'\',
 																	IMPUTATION_ID = \''. addslashes($_POST['UpdateIdImpuration'][$i]) .'\'
 																	WHERE Id IN ('. $id_generation . ')');
 				$i++;
@@ -253,9 +258,9 @@
 			$i = 0;
 			foreach ($_POST['id_unit'] as $id_generation) {
 
-				$bdd->GetUpdate('UPDATE '. TABLE_ERP_UNIT .' SET  CODE = \''. addslashes($_POST['UpdateCODEUnit'][$i]) .'\',
-																	LABEL = \''. addslashes($_POST['UpdateLABELUnit'][$i]) .'\',
-																	TYPE = \''. addslashes($_POST['UpdateTYPEUnit'][$i]) .'\'
+				$bdd->GetUpdate('UPDATE '. TABLE_ERP_UNIT .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	TYPE = \''. addslashes($_POST['TYPE'][$i]) .'\'
 																	WHERE Id IN ('. $id_generation . ')');
 				$i++;
 			}
@@ -266,9 +271,9 @@
 			$i = 0;
 			foreach ($_POST['id_sous_famille'] as $id_generation) {
 
-				$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SOUS_FAMILLE .'` SET  CODE = \''. addslashes($_POST['UpdateCODESousFamille'][$i]) .'\',
-																	LABEL = \''. addslashes($_POST['UpdateLABELSousFamille'][$i]) .'\',
-																	PRESTATION_ID = \''. addslashes($_POST['AddTRESSOURCESousFamille'][$i]) .'\'
+				$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SOUS_FAMILLE .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	PRESTATION_ID = \''. addslashes($_POST['PRESTATION_ID'][$i]) .'\'
 																	WHERE Id IN ('. $id_generation . ')');
 				$i++;
 			}
@@ -284,31 +289,6 @@
 		//Assign  values	
 		$Articledata = $Article->GETArticle($ArticleId);
 
-		$ArticleCODE = $Articledata->CODE;
-		$ArticleLabel = $Articledata->LABEL;
-		$ArticleInd = $Articledata->IND;
-		$ArticlePrestaId = $Articledata->PRESTATION_ID;
-		$ArticlePrestaLab = $Articledata->PRESTATION_LABEL;
-		$ArticleTYPEPresta = $Articledata->TYPE;
-		$ArticleFamilleId = $Articledata->FAMILLE_ID;
-		$ArticleFamilleLab = $Articledata->FAMILLE_LABEL;
-		$ArticleAcheter = $Articledata->ACHETER;
-		$ArticlePrixAch = $Articledata->PRIX_ACHETER;
-		$ArticleVendu = $Articledata->VENDU;
-		$ArticlePrixVendu = $Articledata->PRIX_VENDU;
-		$ArticleUNIT_ID = $Articledata->UNITE_ID;
-		$ArticleUNIT = $Articledata->UNIT_LABEL;
-		$ArticleMatiere = $Articledata->MATIERE;
-		$ArticleEP = $Articledata->EP;
-		$ArticleDimX = $Articledata->DIM_X;
-		$ArticleDimY = $Articledata->DIM_Y;
-		$ArticleDimZ = $Articledata->DIM_Z;
-		$ArticlePoids = $Articledata->POIDS;
-		$ArticleSurX = $Articledata->SUR_X;
-		$ArticleSurY = $Articledata->SUR_Y;
-		$ArticleSurZ = $Articledata->SUR_Z;
-		$ArticleComment = $Articledata->COMMENT;
-		$ArticleImage = $Articledata->IMAGE;
 	}
 
 	if(isset($_GET['type']) AND $_GET['type'] === 'quote'){
@@ -322,7 +302,7 @@
 	elseif(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){
 		$titleOnglet1 = '<button class="tablinks" onclick="openDiv(event, \'div1\')" id="defaultOpen">'. $langue->show_text('TableUpdateButton') .'</button>';
 		$actionForm = 'admin.php?page=manage-study&id='. $_GET['id'] .'&type='. $_GET['type'];
-		$DisplayCode = '<input type="hidden" name="CODE" value="'. $ArticleCODE .'">' .$ArticleCODE;
+		$DisplayCode = '<input type="hidden" name="CODE" value="'. $Articledata->CODE .'">' .$Articledata->CODE;
 	}
 	else{
 		$titleOnglet1 = '<button class="tablinks" onclick="openDiv(event, \'div1\')" id="defaultOpen">'. $langue->show_text('TableAddArticleButton') .'</button>';
@@ -386,31 +366,31 @@
 								<?= $DisplayCode ?>
 							</td>
 							<td >
-								<input type="text" name="LABELAtricle" value="<?= $ArticleLabel ?>" >
+								<input type="text" name="LABELAtricle" value="<?= $Articledata->LABEL ?>" >
 							</td>
 							<td >
-								<input type="text" name="INDArticle" value="<?= $ArticleInd ?>" size="10">
+								<input type="text" name="INDArticle" value="<?= $Articledata->IND ?>" size="10">
 							</td>
 							<td >
 								<select name="PRESTA_IDAtricle">
-									<?= $Prestation ->GetPrestationList($ArticlePrestaId) ?>
+									<?= $Prestation ->GetPrestationList($Articledata->PRESTATION_ID,true) ?>
 								</select>
 							</td>
 							<td >
 								<select name="FAMILLE_IDArticle">
-								<?= $SubFamily->GetSubFamilyList($ArticleFamilleId, true) ?>
+								<?= $SubFamily->GetSubFamilyList($Articledata->FAMILLE_ID, true) ?>
 								</select>
 							</td>
 							<td>
 								<select name="">
-									<option value="1" <?= selected($ArticleTYPEPresta, 1) ?> ><?= $langue->show_text('SelectProductive') ?></option>
-									<option value="2" <?= selected($ArticleTYPEPresta, 2) ?> ><?= $langue->show_text('SelectRawMat') ?></option>
-									<option value="3" <?= selected($ArticleTYPEPresta, 3) ?> ><?= $langue->show_text('SelectRawMatSheet') ?></option>
-									<option value="4" <?= selected($ArticleTYPEPresta, 4) ?> ><?= $langue->show_text('SelectRawMatProfil') ?></option>
-									<option value="5" <?= selected($ArticleTYPEPresta, 5) ?> ><?= $langue->show_text('SelectRawMatBlock') ?></option>
-									<option value="6" <?= selected($ArticleTYPEPresta, 6) ?> ><?= $langue->show_text('SelectSupplies') ?></option>
-									<option value="7" <?= selected($ArticleTYPEPresta, 7) ?> ><?= $langue->show_text('SelectSubcontracting') ?></option>
-									<option value="8" <?= selected($ArticleTYPEPresta, 8) ?> ><?= $langue->show_text('SelectCompoundItem') ?></option>
+									<option value="1" <?= selected($Articledata->TYPE, 1) ?> ><?= $langue->show_text('SelectProductive') ?></option>
+									<option value="2" <?= selected($Articledata->TYPE, 2) ?> ><?= $langue->show_text('SelectRawMat') ?></option>
+									<option value="3" <?= selected($Articledata->TYPE, 3) ?> ><?= $langue->show_text('SelectRawMatSheet') ?></option>
+									<option value="4" <?= selected($Articledata->TYPE, 4) ?> ><?= $langue->show_text('SelectRawMatProfil') ?></option>
+									<option value="5" <?= selected($Articledata->TYPE, 5) ?> ><?= $langue->show_text('SelectRawMatBlock') ?></option>
+									<option value="6" <?= selected($Articledata->TYPE, 6) ?> ><?= $langue->show_text('SelectSupplies') ?></option>
+									<option value="7" <?= selected($Articledata->TYPE, 7) ?> ><?= $langue->show_text('SelectSubcontracting') ?></option>
+									<option value="8" <?= selected($Articledata->TYPE, 8) ?> ><?= $langue->show_text('SelectCompoundItem') ?></option>
 								</select>
 							</td>
 						</tr>
@@ -425,22 +405,22 @@
 						<tr>
 							<td >
 								<select name="ACHETERArticle">
-									<option value="0" <?= selected($ArticleAcheter, 0) ?>><?= $langue->show_text('No') ?></option>
-									<option value="1" <?= selected($ArticleAcheter, 1) ?>><?= $langue->show_text('Yes') ?></option>
+									<option value="0" <?= selected($Articledata->ACHETER, 0) ?>><?= $langue->show_text('No') ?></option>
+									<option value="1" <?= selected($Articledata->ACHETER, 1) ?>><?= $langue->show_text('Yes') ?></option>
 								</select>
 							</td>
 							<td >
-								<input type="number" name="PRIXACHArticle" value="<?= $ArticlePrixAch ?>" step=".001" required="required">
+								<input type="number" name="PRIXACHArticle" value="<?= $Articledata->PRIX_ACHETER ?>" step=".001" required="required">
 							</td>
 							<td >
 								<select name="VENDUArticle">
-									<option value="0" <?= selected($ArticleVendu, 0) ?>><?= $langue->show_text('No') ?></option>
-									<option value="1" <?= selected($ArticleVendu, 1) ?>><?= $langue->show_text('Yes') ?></option>
+									<option value="0" <?= selected($Articledata->VENDU, 0) ?>><?= $langue->show_text('No') ?></option>
+									<option value="1" <?= selected($Articledata->VENDU, 1) ?>><?= $langue->show_text('Yes') ?></option>
 								</select>
 							</td>
 							</td>
 							<td >
-								<input type="number" name="PRIXVENArticle" value="<?= $ArticlePrixVendu ?>" step=".001" required="required">
+								<input type="number" name="PRIXVENArticle" value="<?= $Articledata->PRIX_VENDU ?>" step=".001" required="required">
 							</td>
 							<td></td>
 							<td></td>
@@ -456,17 +436,17 @@
 						<tr>
 							<td >
 								<select name="UNITArticle">
-									<?= $Unit->GetUnitList($ArticleUNIT_ID, true) ?>
+									<?= $Unit->GetUnitList($Articledata->UNITE_ID, true) ?>
 								</select>
 							</td>
 							<td >
-								<input type="text" name="MATIEREArticle" value="<?= $ArticleMatiere ?>" size="10">
+								<input type="text" name="MATIEREArticle" value="<?= $Articledata->MATIERE ?>" size="10">
 							</td>
 							<td >
-								<input type="number" name="EPArticle" value="<?= $ArticleEP ?>" size="10" step=".001" required="required">
+								<input type="number" name="EPArticle" value="<?= $Articledata->EP ?>" size="10" step=".001" required="required">
 							</td>
 							<td >
-								<input type="number" name="POIRDSArticle" value="<?= $ArticlePoids ?>" size="10" step=".001" required="required">
+								<input type="number" name="POIRDSArticle" value="<?= $Articledata->POIDS ?>" size="10" step=".001" required="required">
 							</td>
 							<td></td>
 							<td></td>
@@ -481,22 +461,22 @@
 						</tr>
 						<tr>
 							<td >
-								<input type="number" name="DIMXArticle" value="<?= $ArticleDimX ?>" required="required">
+								<input type="number" name="DIMXArticle" value="<?= $Articledata->DIM_X ?>" required="required">
 							</td>
 							<td >
-								<input type="number" name="DIMYArticle" value="<?= $ArticleDimY ?>" size="10" required="required">
+								<input type="number" name="DIMYArticle" value="<?= $Articledata->DIM_Y?>" size="10" required="required">
 							</td>
 							<td >
-								<input type="number" name="DIMZArticle" value="<?= $ArticleDimZ ?>" required="required">
+								<input type="number" name="DIMZArticle" value="<?= $Articledata->DIM_Z ?>" required="required">
 							</td>
 							<td >
-								<input type="number" name="SURDIMXArticle" value="<?= $ArticleSurX ?>" size="10" required="required">
+								<input type="number" name="SURDIMXArticle" value="<?= $Articledata->SUR_X ?>" size="10" required="required">
 							</td>
 							<td>
-								<input type="number" name="SURDIMYArticle" value="<?= $ArticleSurY ?>" required="required">
+								<input type="number" name="SURDIMYArticle" value="<?= $Articledata->SUR_Y ?>" required="required">
 							</td>
 							<td>
-								<input type="number" name="SURDIMZArticle" value="<?= $ArticleSurZ ?>" size="10" required="required">
+								<input type="number" name="SURDIMZArticle" value="<?= $Articledata->SUR_Z ?>" size="10" required="required">
 							</td>
 						</tr>
 						<tr>
@@ -506,7 +486,7 @@
 							<td colspan=6" ><input type="file" name="FichierImageArticle" /></td>
 						</tr>
 						<tr>
-							<td colspan=6"><img src="<?= PICTURE_FOLDER.STUDY_ARTICLE_FOLDER.$ArticleImage ?>" title="Image article" alt="Article" style="width: 400px;"/></td>
+							<td colspan=6"><img src="<?= PICTURE_FOLDER.STUDY_ARTICLE_FOLDER.$Articledata->IMAGE ?>" title="Image article" alt="Article" style="width: 400px;"/></td>
 						</tr>
 						<tr>
 							<td colspan="6" >
@@ -535,6 +515,9 @@
 								<th><?=$langue->show_text('TableProductTime'); ?></th>
 								<th><?=$langue->show_text('TableProductCost'); ?></th>
 								<th><?=$langue->show_text('TableSalePrice'); ?></th>
+								<?php if(isset($_GET['type']) AND $_GET['type'] === 'order' OR $_GET['type'] === 'quote'): ?>
+								<th><?=$langue->show_text('TableStatu'); ?></th>
+								<?php endif ?>
 							</tr>
 						</thead>
 						<tbody>
@@ -550,18 +533,31 @@
 												<td></td>
 												<td>
 													<input type="hidden" name="id_DecoupTech[]" id="id_DecoupTech" value="<?= $data->id  ?>">
-													<input type="number" name="UpdateORDREDecoupTech[]" value="<?=  $data->ORDRE  ?>" required="required">
+													<input type="number" name="ORDRE[]" value="<?=  $data->ORDRE  ?>" required="required">
 												</td>
 												<td>
-													<select name="UpdatePRESTADecoupTech[]">
-														<?= $Prestation->GetPrestationList($data->PRESTA_ID) ?>
+													<select name="PRESTA_ID[]">
+														<?= $Prestation->GetPrestationList($data->PRESTA_ID,true,"productive") ?>
 													</select>
 												</td>
-												<td><input type="text"  name="UpdateLABELDecoupTech[]" value="<?=  $data->LABEL ?>" required="required"></td>
-												<td><input type="number"  name="UpdateTPSPREPDecoupTech[]" value="<?=  $data->TPS_PREP  ?>" step=".001" required="required"></td>
-												<td><input type="number"  name="UpdateTPSPRODDecoupTech[]" value="<?=  $data->TPS_PRO  ?>" step=".001" required="required"></td>
-												<td><input type="number"  name="UpdateCOUTDecoupTech[]" value="<?=  $data->COUT  ?>" step=".001" required="required"></td>
-												<td><input type="number"  name="UpdatePRIXDecoupTech[]" value="<?=  $data->PRIX  ?>" step=".001" required="required"></td>
+												<td><input type="text"  name="LABEL[]" value="<?=  $data->LABEL ?>" required="required"></td>
+												<td><input type="number"  name="TPS_PREP[]" value="<?=  $data->TPS_PREP  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="TPS_PRO[]" value="<?=  $data->TPS_PRO  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="COUT[]" value="<?=  $data->COUT  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="PRIX[]" value="<?=  $data->PRIX  ?>" step=".001" required="required"></td>
+												<?php if(isset($_GET['type']) AND $_GET['type'] === 'order'): ?>
+												<td>
+													<select  name="ETAT[]">
+														<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectCanceled') ?></option>
+														<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectCreated') ?></option>
+														<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectStarted') ?></option>
+														<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectInterrupted') ?></option>
+													</select>
+												</td>
+												<?php else : ?>
+												<td></td>
+												<?php endif ?>
+												
 											</tr>
 								<?php
 									$iDecoupTech++;
@@ -581,7 +577,7 @@
 												<td>'. $TtTpsPrepa .'</td>
 												<td>'. $TtTpsProd .'</td>
 												<td>'. $TtCout .'</td>
-												<td>'. $TtPrix .'</td>
+												<td colspan="2">'. $TtPrix .'</td>
 											</tr>';
 									$iDecoupTech = "(". $iDecoupTech .")";
 	
@@ -595,17 +591,18 @@
 									<td><input type="number" name="AddORDREDecoupTech" ></td>
 									<td>
 										<select name="AddPRESTADecoupTech">
-											<?=$Prestation ->GetPrestationList() ?>
+											<?=$Prestation ->GetPrestationList(0,true,"productive") ?>
 										</select>
 									</td>
 									<td><input type="text"  name="AddLABELDecoupTech" ></td>
 									<td><input type="number"  name="AddTPSPREPDecoupTech" step=".001" ></td>
 									<td><input type="number"  name="AddTPSPRODDecoupTech" step=".001" ></td>
 									<td><input type="number"  name="AddCOUTDecoupTech" step=".001" ></td>
-									<td><input type="number"  name="AddPRIXDecoupTech" step=".001" ></td>
+									<td ><input type="number"  name="AddPRIXDecoupTech" step=".001" ></td>
+									<td> - </td>
 								</tr>
 								<tr>
-									<td colspan="8" >
+									<td colspan="9" >
 										<br/>
 										<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 										<br/>
@@ -638,18 +635,18 @@
 										<td></td>
 										<td>
 											<input type="hidden" name="UpdateIdNomencl[]" id="UpdateIdNomencl" value="<?= $data->Id ?>">
-											<input type="number" name="UpdateORDRENomencl[]" value="<?= $data->ORDRE ?>" required="required">
+											<input type="number" name="ORDRE[]" value="<?= $data->ORDRE ?>" required="required">
 										</td>
 										<td><?= $data->ARTICLE_LABEL  ?></td>
-										<td><input type="text"  name="UpdateLABELNomencl[]" value="<?= $data->LABEL ?>" required="required"></td>
-										<td><input type="number"  name="UpdateQTNomencl[]" value="<?= $data->QT  ?>" step=".001" required="required"></td>
+										<td><input type="text"  name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+										<td><input type="number"  name="QT[]" value="<?= $data->QT  ?>" step=".001" required="required"></td>
 										<td>
-										<select name="UpdateUNITNomencl[]">
+										<select name="UNIT_ID[]">
 												<?= $Unit->GetUnitList($data->UNIT_ID, true) ?>
 											</select>
 										</td>
-										<td><input type="number"  name="UpdatePRIXUNomencl[]" value="<?= $data->PRIX_U  ?>" step=".001" required="required"></td>
-										<td><input type="number"  name="UpdatePRIXACHATNomencl[]" value="<?= $data->PRIX_ACHAT  ?>" step=".001" required="required"></td>
+										<td><input type="number"  name="PRIX_U[]" value="<?= $data->PRIX_U  ?>" step=".001" required="required"></td>
+										<td><input type="number"  name="PRIX_ACHAT[]" value="<?= $data->PRIX_ACHAT  ?>" step=".001" required="required"></td>
 									</tr>
 								<?php $i++; endforeach; ?>
 								<tr>
@@ -700,14 +697,13 @@
 								foreach ($Article->GETSubAssembly($ArticleId, $SubAssemblesTable) as $data):?>
 								<tr>
 									<td><input type="hidden" name="UpdateIdSousEns[]" id="UpdateIdSousEns" value="<?= $data->id ?>"></td>
-									<td><input type="number" name="UpdateORDRESousEns[]" value="<?= $data->ORDRE ?>"></td>
+									<td><input type="number" name="ORDRE[]" value="<?= $data->ORDRE ?>"></td>
 									<td>
-										<select name="UpdateARTICLESousEns[]">
-											<option value="<?= $data->ARTICLE_ID ?>" <?= selected($data->ARTICLE_ID, $data->ARTICLE_ID) ?>><?= $data->LABEL_ARTICLE ?></option>
-											<?= $Article->GETArticleList() ?>
+										<select name="ARTICLE_ID[]">
+											<?= $Article->GETArticleList($data->ARTICLE_ID, true) ?>
 										</select>
 									</td>
-									<td><input type="number"  name="UpdateQTSousEns[]" value="<?= $data->QT ?>" step=".001"></td>
+									<td><input type="number"  name="QT[]" value="<?= $data->QT ?>" step=".001"></td>
 									<td><a href="admin.php?page=manage-study&id=<?= $data->ARTICLE_ID ?>&type=<?= $_GET['type']?>">--></a></td>
 								</tr>
 								<?php $i++; endforeach; ?>
@@ -825,7 +821,7 @@
 							<tr>
 								<td>
 									<input type="hidden" name="IDArticle" value="<?=$ArticleId ?>">
-									<textarea class="Comment" name="COMMENT" rows="40" ><?=$ArticleComment ?></textarea>
+									<textarea class="Comment" name="COMMENT" rows="40" ><?=$Articledata->COMMENT ?></textarea>
 								</td>
 							</tr>
 							<tr>
@@ -858,10 +854,10 @@
 						foreach ($Unit->GetUnitList('', false) as $data):?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_unit[]" id="id_unit" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="UpdateCODEUnit[]" value="<?= $data->CODE ?>" size="10"></td>
-							<td><input type="text" name="UpdateLABELUnit[]" value="<?= $data->LABEL ?>" ></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" size="10"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
-								<select name="UpdateTYPEUnit[]">
+								<select name="TYPE[]">
 									<option value="1" <?= selected($data->TYPE, 1) ?>><?= $langue->show_text('SelectMass') ?></option>
 									<option value="2" <?= selected($data->TYPE, 2) ?>><?= $langue->show_text('SelectLength') ?></option>
 									<option value="3" <?= selected($data->TYPE, 3) ?>><?= $langue->show_text('SelectAera') ?></option>
@@ -913,10 +909,10 @@
 						foreach ($SubFamily->GetSubFamilyList('', false) as $data):?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_sous_famille[]" id="id_sous_famille" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="UpdateCODESousFamille[]" value="<?= $data->CODE ?>" size="10"></td>
-							<td><input type="text" name="UpdateLABELSousFamille[]" value="<?= $data->LABEL ?>" ></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" size="10"></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
-								<select name="AddTRESSOURCESousFamille[]">
+								<select name="PRESTATION_ID[]">
 									<?= $Prestation->GetPrestationList($data->PRESTATION_ID) ?>
 								</select>
 							</td>
@@ -946,3 +942,4 @@
 	</div>
 	<?php
 	}
+
