@@ -22,7 +22,7 @@ class Section Extends SQL  {
 
     public function GetSectionList($IdData=0, $Select = true){
         $this->SectionList ='';
-        $query='SELECT Id, LABEL   FROM '. TABLE_ERP_SECTION .' ORDER BY ORDRE';
+        $query='SELECT Id, LABEL, COLOR   FROM '. TABLE_ERP_SECTION .' ORDER BY ORDRE';
 
         if($Select){
             foreach ($this->GetQuery($query) as $data){

@@ -6,6 +6,7 @@
 	use \App\Order\Order;
 	use \App\Quality\QL_NFC;
 	use \App\Methods\Ressource;
+	use App\COMPANY\Employees;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -20,7 +21,8 @@
 	$Order = new Order();
 	$QL_FNC = new QL_NFC();
 	$Ressource = new Ressource();
-	
+	$Employees= new Employees();
+
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -224,34 +226,35 @@
 			</div>
 			<div class="dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $Order->GETOrderCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
-				<p>Current month order</p>
+				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
+				<p>New month quote</p>
 			</div>
 			<div class="dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
-				<p>Current month quote</p>
+				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP) AND ETAT=3'); ?>+</h3>
+				<p>Win month quote</p>
 			</div>
+			<div class="dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3>+</h3>
+				<p>Empty</p>
+			</div>
+			<div class="dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $Order->GETOrderCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
+				<p>New month order</p>
+			</div>
+			<div class="dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3>+</h3>
+				<p>Empty</p>
+			</div>
+			
 			<div class="dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $QL_FNC->GETQNFCCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>Current month Non-compliance Record</p>
 			</div>	
-			<div class="dashboard">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
-				<p>Empty</p>
-			</div>
-			<div class="dashboard">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
-				<p>Empty</p>
-			</div>
-			<div class="dashboard">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
-				<p>Empty</p>
-			</div>
 		</div>
 		<div class="column-half">
 			<div id="chart_div" style="width: 100%; height: 400px;"></div>
@@ -270,20 +273,7 @@
 		<div class="row">
 		<?php
 		// get employees list
-		$query ='SELECT '. TABLE_ERP_EMPLOYEES .'.NOM,
-										'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-										'. TABLE_ERP_EMPLOYEES .'.PRENOM,
-										'. TABLE_ERP_EMPLOYEES .'.MAIL,
-										'. TABLE_ERP_EMPLOYEES .'.NUMERO_INTERNE,
-										'. TABLE_ERP_EMPLOYEES .'.IMAGE_PROFIL,
-										'. TABLE_ERP_EMPLOYEES .'.FONCTION,
-										'. TABLE_ERP_SECTION .'.LABEL,
-										'. TABLE_ERP_RIGHTS .'.RIGHT_NAME
-										FROM `'. TABLE_ERP_EMPLOYEES .'`
-										LEFT JOIN `'. TABLE_ERP_RIGHTS .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`FONCTION` = `'. TABLE_ERP_RIGHTS .'`.`id`
-										LEFT JOIN `'. TABLE_ERP_SECTION .'` ON `'. TABLE_ERP_EMPLOYEES .'`.`SECTION_ID` = `'. TABLE_ERP_SECTION .'`.`id`';
-
-		foreach ($bdd->GetQuery($query) as $data): 
+		foreach ($Employees->GETEmployeesList($SteRESP_COM_ID , false) as $data):
 		if(!empty($data->IMAGE_PROFIL)){
 			$image = PICTURE_FOLDER.PROFIL_FOLDER.$data->IMAGE_PROFIL;
 		}

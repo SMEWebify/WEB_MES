@@ -3,24 +3,27 @@
 
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Workflow.png)
 
+Version 1 in progress - See the projects page to see the progress.
+https://github.com/billyboy35/WEB_MES/projects/2
+
+I am unprofessional, any improvement discussion would be helpful.
+
+The goal is to have version 1 with a functional workflow up to invoicing.
+
+Currently, the quotation, orders, confirmation are finished.
 
 -----------------
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Menu.PNG)
 
-
-#For launch configuration
+### Installation
+1. git clone git@gitlab.com:billy_boy/ERP.git
+2. SQL setting connection
 * Use __erp.sql__ to import ERP database  
 * Connection to the SQL database in __SQL.class.php__ file
 * SQL login to define in __include_recup_config.php__
 
------------------
+3. http://localhost/erp/public/
 
-# initial remote source code recovery
-git clone git@gitlab.com:billy_boy/ERP.git
-
-# url acces with wamp server
-http://localhost/erp/public/
-
-# Log acces to user pages
-Login : Admin
-Password : password
+4. Log acces to user pages
+* Login : Admin
+* Password : password

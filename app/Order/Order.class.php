@@ -223,7 +223,8 @@ class OrderLines Extends Order  {
                                                                         TPS_PREP, 
                                                                         TPS_PRO, 
                                                                         COUT, 
-                                                                        PRIX) 
+                                                                        PRIX,
+                                                                        ETAT) 
                                                                             SELECT 
                                                                                 '". $NewOrderLine ."', 
                                                                                 ORDRE, 
@@ -232,11 +233,26 @@ class OrderLines Extends Order  {
                                                                                 TPS_PREP, 
                                                                                 TPS_PRO, 
                                                                                 COUT, 
-                                                                                PRIX 
+                                                                                PRIX,
+                                                                                '1' 
                                                                             FROM 
                                                                                     ". TABLE_ERP_QUOTE_TECH_CUT ." 
                                                                             WHERE  
                                                                             ARTICLE_ID = '". $IDQuoteLine ."'");
+         $query='SELECT  '. TABLE_ERP_ORDER_TECH_CUT .'.id,
+                         '. TABLE_ERP_ORDER_TECH_CUT .'.ARTICLE_ID
+                            FROM '. TABLE_ERP_ORDER_TECH_CUT .'
+                            WHERE  '. TABLE_ERP_ORDER_TECH_CUT .'.ARTICLE_ID=\''. $NewOrderLine  .'\' ';
+                                                            
+        foreach ($this->GetQuery($query) as $data){
+                                        
+            $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_DATE_PLAN_TASK ." VALUE ('0', 
+                                                                                    '".  $data->id ."',
+                                                                                    '".  $data->ARTICLE_ID ."', 
+                                                                                    '". time() ."',
+                                                                                    '". time() ."')
+                                                                                ");
+          }
 
         $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_NOMENCLATURE ." (ORDRE, 
                                                                         PARENT_ID, 

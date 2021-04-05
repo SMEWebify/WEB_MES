@@ -282,8 +282,8 @@
 			</form>
 			<?php
 			//for converte ORDER TO ACKNOWLEGMENT 
-			if(isset($_GET['order']) && !empty($_GET['order']) && $MakeAR > 0){?>
-			<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
+			if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
+				<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
 				<div>
 					<table class="content-table" >
 						<thead>
@@ -294,6 +294,7 @@
 							</tr>
 						</thead>
 						<tbody>
+				<?php if( $MakeAR > 0){?>
 							<tr>
 								<td>
 									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewOrderAcknowledgment',  $Numbering->getCodeNumbering(12),'', $ActivateForm) ?>
@@ -305,13 +306,21 @@
 									<?= $Form->submit($langue->show_text('TableNewOrderAcknowledgment'), $ActivateForm) ?>
 								</td>
 							</tr>
+						
+				<?php } if($ARList > 0){?>
+				
+						<?php foreach ($ARList as $dataAr): ?>
+							<tr>
+								<td>
+								<a  href="index.php?page=order&OrderAcknowledgment=<?= $dataAr->id ?>"><?= $dataAr->CODE ?></a>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+				<?php } 
+				}?>
 						</tbody>
 					</table>
 				</div>
-			</form>
-			<?php
-			}
-			?>
 		</div>
 	</div>
 	<div id="div3" class="tabcontent">

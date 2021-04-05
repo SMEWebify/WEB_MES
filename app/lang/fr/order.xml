@@ -145,7 +145,7 @@
     <SelecPartialDelivery>Livrée partiellement</SelecPartialDelivery>
     <SelectDelivered>Livrée</SelectDelivered>
     <SelectInvoice>Facturé</SelectInvoice>
-
+    <SelectSend>Envoyé</SelectSend>
 
     <Yes>Oui</Yes>
     <No>Non</No>

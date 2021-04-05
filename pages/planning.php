@@ -5,6 +5,7 @@
 	use \App\Methods\Prestation;
 	use \App\Methods\Ressource;
 	use \App\Methods\Section;
+	use \App\Planning\Task;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -17,6 +18,7 @@
 	$Ressource = new Ressource();
 	$Prestation = new Prestation();
 	$Section = new Section();
+	$Task =  new Task();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_2'] != '1'){
@@ -27,55 +29,24 @@
 		$mois = intval($_GET['mois']);
 		$annee = intval($_GET['annee']);
 	}
+	if(isset($_GET['section'])){
+		$ParDefautDiv2 = 'id="defaultOpen"';
+	}
+	elseif(isset($_GET['resources'])){
+		$ParDefautDiv3 = 'id="defaultOpen"';
+	}
+	elseif(isset($_GET['prestation'])){
+		$ParDefautDiv4 = 'id="defaultOpen"';
+	}
+	else{
+		$ParDefautDiv1 = 'id="defaultOpen"';
+	}
 ?>
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    google.charts.load('current', {'packages':['gantt']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    function daysToMilliseconds(days) {
-      return days * 24 * 60 * 60 * 1000;
-    }
-
-    function drawChart() {
-
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Task ID');
-      data.addColumn('string', 'Task Name');
-      data.addColumn('string', 'Resource');
-      data.addColumn('date', 'Start Date');
-      data.addColumn('date', 'End Date');
-      data.addColumn('number', 'Duration');
-      data.addColumn('number', 'Percent Complete');
-      data.addColumn('string', 'Dependencies');
-
-      data.addRows([
-        ['Research', 'Find sources', null,
-         new Date(2015, 0, 1), new Date(2015, 0, 5), null,  100,  null],
-        ['Write', 'Write paper', 'write',
-         null, new Date(2015, 0, 9), daysToMilliseconds(3), 25, 'Research,Outline'],
-        ['Cite', 'Create bibliography', 'write',
-         null, new Date(2015, 0, 7), daysToMilliseconds(1), 20, 'Research'],
-        ['Complete', 'Hand in paper', 'complete',
-         null, new Date(2015, 0, 10), daysToMilliseconds(1), 0, 'Cite,Write'],
-        ['Outline', 'Outline paper', 'write',
-         null, new Date(2015, 0, 6), daysToMilliseconds(1), 100, 'Research']
-      ]);
-
-      var options = {
-        height: 275
-      };
-
-      var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
-
-      chart.draw(data, options);
-    }
-  </script>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" ><?=$langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" ><?=$langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" ><?=$langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv4; ?>><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<div id="grand_calendrier">
@@ -170,7 +141,8 @@
 					'. TABLE_ERP_ORDER .'.CODE
 					FROM '. TABLE_ERP_ORDER_LIGNE .'
 						LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_LIGNE .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
-					WHERE  MONTH(DELAIS)='.$mois.' and YEAR(DELAIS)='.$annee.'';
+					WHERE  MONTH(DELAIS)='.$mois.' and YEAR(DELAIS)='.$annee.'
+					GROUP BY '. TABLE_ERP_ORDER_LIGNE .'.ORDER_ID';
 
 
 	unset($cles) ;
@@ -267,95 +239,197 @@
 			</table>
 		</div>
 	</div>
+	
 	<div id="div2" class="tabcontent" >
-		<table class="content-table">
-			<thead>
-				<tr>
-					<th></th>
-					<th>W<?= strftime("%W", time())+1 ?></th>
-					<?php
-					for ($w = 1; $w <= 6; $w++): ?>
-						<th>W<?= strftime("%W", time())+$w ?></th>
-					<?php $i++; endfor; ?>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-			$i = 1;
-			foreach ($Section->GetSectionList('',false) as $data): ?>
-			<tr>
-				<td><a href="admin.php?page=planning&section=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+		<div class="column-half">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<?php
+						for ($w = 0; $w <= 8; $w++): ?>
+							<th>W<?= strftime("%W", time())+$w ?></th>
+						<?php $i++; endfor; ?>
+					</tr>
+				</thead>
+				<tbody>
 				<?php
-					for ($w = 1; $w <= 7; $w++): ?>
-						<td>100 %</t>
-					<?php $i++; endfor; ?>
-			</tr>
-			<?php $i++; endforeach; ?>
-			
-		  </tbody>
-		</table>
+				$i = 1;
+				foreach ($Section->GetSectionList('',false) as $data): ?>
+				<tr>
+				<td style="background-color:<?= $data->COLOR  ?>"></td>
+					<td><a href="index.php?page=planning&section=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+					<?php
+						for ($w = 0; $w <= 8; $w++): ?>
+							<td><a href="index.php?page=planning&section=<?= $data->Id ?>&w=<?= strftime("%W", time())+$w ?>">100 %</a></t>
+						<?php $i++; endfor; ?>
+				</tr>
+				<?php $i++; endforeach; ?>
+				
+			</tbody>
+			</table>
+		</div>
+		<?php if(isset($_GET['section']) && !empty($_GET['section'])):?>
+		<div class="column-half">
+			<table class="content-table">
+					<thead>
+						<tr>
+							<th>Stat Date</th>
+							<th>End Date</th>
+							<th>Task</th>
+							<th>Total time</th>
+							<th>Remaining time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($Task->GETListTask($_GET['section'],'section') as $data): ?>
+						<tr>
+							<td></td>
+							<td><?= $data->DATE_START_TIMESTAMPS ?></td>
+							<td><?= $data->DATE_END_START_TIMESTAMPS ?></td>
+							<td><a href="index.php?page=planning&prestation=2&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE_ORDER ?> - <?= $data->LABEL_ORDER_LINE ?> - <?= $data->LABEL ?> - <?= $data->ORDRE ?></a></td>
+							<td><?= $data->TPS_PREP+$data->TPS_PRO*$data->QT ?></td>
+							<td></td>
+						</tr>
+						<?php $i++; endforeach;?>
+					</tbody>
+			</table>
+		</div>
+		<?php endif; ?>
 	</div>
 	<div id="div3" class="tabcontent" >
-		<table class="content-table">
-			<thead>
-				<tr>
+		<div class="column-half">
+			<table class="content-table">
+				<thead>
+					<tr>
 					<th></th>
-					<th>W<?= strftime("%W", time())+1 ?></th>
-					<?php
-					for ($w = 1; $w <= 6; $w++): ?>
-						<th>W<?= strftime("%W", time())+$w ?></th>
-					<?php $i++; endfor; ?>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-			$i = 1;
-			foreach ($Ressource->GETRessourcesList('',false) as $data): ?>
-			<tr>
-				<td><a href="admin.php?page=planning&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+					<th></th>
+						<?php
+						for ($w = 0; $w <= 8; $w++): ?>
+							<th>W<?= strftime("%W", time())+$w ?></th>
+						<?php $i++; endfor; ?>
+					</tr>
+				</thead>
+				<tbody>
 				<?php
-					for ($w = 1; $w <= 7; $w++): ?>
-						<td>100 %</t>
-					<?php $i++; endfor; ?>
-			</tr>
-			<?php $i++; endforeach; ?>
-			<tr>
-				<td colspan="10">
- 				 <div id="chart_div" style="width: 100%;"></div>
-				</td>
-			</tr>
-		  </tbody>
-		</table>
+				$i = 1;
+				foreach ($Ressource->GETRessourcesList('',false) as $data): ?>
+				<tr>
+					<td style="background-color:<?= $data->COLOR  ?>"></td>
+					<td><a href="index.php?page=planning&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+					<?php
+						for ($w = 0; $w <= 8; $w++): ?>
+							<td><a href="index.php?page=planning&resources=<?= $data->Id ?>&w=<?= strftime("%W", time())+$w ?>">100 %</a></t>
+						<?php $i++; endfor; ?>
+				</tr>
+				<?php $i++; endforeach; ?>
+			</tbody>
+			</table>
+		</div>
+		<?php if(isset($_GET['resources']) && !empty($_GET['resources'])):?>
+		<div class="column-half">
+			<table class="content-table">
+					<thead>
+						<tr>
+							<th>Stat Date</th>
+							<th>End Date</th>
+							<th>Task</th>
+							<th>Remaining time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($Task->GETListTask($_GET['resources'],'resources') as $data): ?>
+						<tr>
+							<td><?= $data->DATE_START_TIMESTAMPS ?></td>
+							<td><?= $data->DATE_END_START_TIMESTAMPS ?></td>
+							<td><a href="index.php?page=planning&prestation=2&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE_ORDER ?> - <?= $data->LABEL_ORDER_LINE ?> - <?= $data->LABEL ?> - <?= $data->ORDRE ?></a></td>
+							<td></td>
+						</tr>
+						<?php $i++; endforeach;  ?>
+					</tbody>
+			</table>
+		</div>
+		<?php endif; ?>
 	</div>
 	<div id="div4" class="tabcontent" >
-		<table class="content-table">
-			<thead>
-				<tr>
-					<th></th>
-					<th>W<?= strftime("%W", time())+1 ?></th>
+		<div class="column-half">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<?php
+						for ($w = 0; $w <= 8; $w++): ?>
+							<th>W<?= strftime("%W", time())+$w ?></th>
+						<?php  endfor; ?>
+					<th> No display</th>
+					</tr>
+				</thead>
+				<tbody>
 					<?php
-					for ($w = 1; $w <= 6; $w++): ?>
-						<th>W<?= strftime("%W", time())+$w ?></th>
-					<?php $i++; endfor; ?>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-			$i = 1;
-			foreach ($Prestation->GetPrestationList('',false) as $data): ?>
-			<tr>
-				<td><a href="admin.php?page=planning&prestation=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
-				<?php
-					for ($w = 1; $w <= 7; $w++): ?>
-						<td>100 %</t>
-					<?php $i++; endfor; ?>
-			</tr>
-			<?php $i++; endforeach; ?>
-			<tr>
-				<td colspan="10">
- 				 <div id="chart_div" style="width: 100%;"></div>
-				</td>
-			</tr>
-		  </tbody>
-		</table>
+					$i = 1;
+
+					foreach ($Prestation->GetPrestationList('',false, 'productive') as $data): 
+					$WorkLoad = $Task->GETWorkload($data->Id,'prestation'); ?>
+					<tr>
+						<td style="background-color:<?= $data->COLOR  ?>"></td>
+						<td><a href="index.php?page=planning&prestation=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+						<?php
+							$NotDisplay = 0;
+							$CurentColWeek = strftime("%W", time());
+							//var_dump($WorkLoad);
+							for ($w = 0; $w <= 8; $w++): 
+								
+								
+								$key = array_search($CurentColWeek, array_column($WorkLoad, 'WEEK'));
+								
+								if(false !== $key ):
+									echo '<td><a href="index.php?page=planning&prestation='. $data->Id .'&w='. $WorkLoad[$key]->WEEK .'">'. $WorkLoad[$key]->WORKLOAD  .'</a></td>';
+									$NotDisplay+= $WorkLoad[$key]->WORKLOAD;
+								else:
+									echo '<td>0</td>';
+									
+								endif;	
+								$CurentColWeek+=1;
+								
+							endfor;?>
+							
+							<td><?=  round(array_sum(array_column($WorkLoad, 'WORKLOAD'))-$NotDisplay,3) ?></td>
+					</tr>
+					<?php $i++; endforeach; ?>
+				</tbody>
+			</table>
+
+		</div>
+		<?php if(isset($_GET['prestation']) && !empty($_GET['prestation'])):?>
+		<div class="column-half">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Week num</th>
+						<th>Stat Date</th>
+						<th>End Date</th>
+						<th>Task</th>
+						<th>Total time</th>
+						<th>Remaining time</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($Task->GETListTask($_GET['prestation'],false, $_GET['w']) as $data):
+						if(date('W', $data->START_TIMESTAMPS)<strftime("%W", time())) $color='red';
+						else $color='green' ?>
+					<tr>
+						<td style="background-color:<?= $color ?>;"><?= date('W', $data->START_TIMESTAMPS)  ?></td>
+						<td><?= $data->DATE_START_TIMESTAMPS ?></td>
+						<td><?= $data->DATE_END_START_TIMESTAMPS ?></td>
+						<td><a href="index.php?page=planning&prestation=2&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE_ORDER ?> - <?= $data->LABEL_ORDER_LINE ?> - <?= $data->LABEL ?> - <?= $data->ORDRE ?></a></td>
+						<td><?= $data->TPS_PREP+$data->TPS_PRO*$data->QT ?></td>	
+						<td></td>
+					</tr>
+					<?php $i++; endforeach;?>
+				</tbody>
+			</table>
+		</div>
+		<?php endif; ?>
 	</div>

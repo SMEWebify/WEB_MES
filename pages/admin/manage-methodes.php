@@ -29,9 +29,8 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	//if add new service
 	if(isset($_POST['AddPosteCharge']) AND !empty($_POST['AddPosteCharge'])){
-
+		//if add new service
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_PRESTATION ." VALUE ('0',
 																		'". addslashes($_POST['CODEPosteCharge']) ."',
 																		'". $_POST['ORDREPosteCharge'] ."',
@@ -85,7 +84,7 @@
 		//update service list
 		$i = 0;
 		foreach ($_POST['id_presta'] as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_PRESTATION .'` SET  
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_PRESTATION .' SET  
 																ORDRE = \''. $_POST['ORDREpresta'][$i] .'\',
 																TYPE = \''. $_POST['TYPEpresta'][$i] .'\',
 																COLOR = \''. $_POST['COLORpresta'][$i] .'\'
@@ -99,7 +98,7 @@
 		$i = 0;
 		foreach ($_POST['id_section'] as $id_generation) {
 
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SECTION .'` SET  ORDRE = \''. $_POST['UpdateORDRESection'][$i] .'\',
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_SECTION .' SET  ORDRE = \''. $_POST['UpdateORDRESection'][$i] .'\',
 																CODE = \''. addslashes($_POST['UpdateCODESection'][$i]) .'\',
 																LABEL = \''. addslashes($_POST['UpdateLABELSection'][$i]) .'\',
 																COUT_H = \''. $_POST['UpdateTAUX_HSection'][$i] .'\',
@@ -150,6 +149,7 @@
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddAccountingNotification')));
 		}	
 
+		//if deleted allocation accouting
 		if(isset($_GET['delete']) && !empty($_GET['delete'])){
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_IMPUT_COMPTA_PRESTATION ." WHERE id='". addslashes($_GET['delete'])."'");
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteAccountingNotification')));

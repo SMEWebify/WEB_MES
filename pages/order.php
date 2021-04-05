@@ -100,8 +100,8 @@
 			if($_POST['RESP_TECH_ID'] == 'null'){ $PostRESP_TECH_ID = 0; }
 
 			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER ." SET 	RESP_COM_ID='". addslashes($PostRESP_COM_ID) ."',
-																	RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
-																			WHERE id='". $Id ."'");
+																RESP_TECH_ID='". addslashes($PostRESP_TECH_ID) ."'
+																WHERE id='". $Id ."'");
 			
 
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralNotification')));
@@ -116,7 +116,7 @@
 
 				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_TECH_CUT ." 
 								LEFT JOIN `". TABLE_ERP_ORDER_LIGNE ."` ON `". TABLE_ERP_ORDER_LIGNE ."`.`id` = `". TABLE_ERP_ORDER_TECH_CUT ."`.`ARTICLE_ID`
-								SET ". TABLE_ERP_ORDER_TECH_CUT .".ETAT='3'
+								SET ". TABLE_ERP_ORDER_TECH_CUT .".ETAT='". $_POST['ETAT'] ."'
 								WHERE 	". TABLE_ERP_ORDER_LIGNE .".ORDER_ID='". $Id ."'");
 
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
@@ -155,6 +155,7 @@
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_TECH_CUT ." WHERE ARTICLE_ID='". addslashes($_GET['delete'])."'");
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_NOMENCLATURE ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_SUB_ASSEMBLY ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_DATE_PLAN_TASK ." WHERE ORDER_LINE_ID='". addslashes($_GET['delete'])."'");
 
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderLineNotification')));
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderAcknowledgmentLinesNotificationNotification')));
@@ -230,6 +231,8 @@
 		$reqList = $Order->GETOrderList('',false);
 		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
 		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
+		$ARList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, $Id);
+		
 		$GET = 'order';
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';

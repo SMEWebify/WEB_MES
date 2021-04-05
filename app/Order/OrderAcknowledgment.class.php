@@ -97,7 +97,11 @@ class OrderAcknowledgment Extends SQL  {
         return $OrderAcknowledgmentCount;
     }
 
-    public function GETOrderAcknowledgmentList($IdData=0, $Select = true){
+    public function GETOrderAcknowledgmentList($IdData=0, $Select = true, $OrderId=0){
+
+        If($OrderId>0){
+            $Clause = 'WHERE ORDER_ID = '. $OrderId .' ';
+        }
 
         $this->OrderAcknowledgmentList ='';
         $query='SELECT '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id,
@@ -108,7 +112,9 @@ class OrderAcknowledgment Extends SQL  {
                 FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'
                   LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
                   LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                  '. $Clause .'
                 ORDER BY  '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.id DESC';
+              
         if($Select){
             foreach ($this->GetQuery($query) as $data){
             

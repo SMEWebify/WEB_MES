@@ -23,6 +23,7 @@
 	$Article = new Article();
 	$Unit = new Unit();
 	$SubFamily = new SubFamily();
+	$date = new DateTime();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -131,7 +132,7 @@
 		if(isset($_POST['AddORDREDecoupTech']) AND !empty($_POST['AddORDREDecoupTech'])){
 
 			if(isset($_GET['type']) AND $_GET['type'] === 'order'){
-				$AddSql = ",'2'";
+				$AddSql = ",'1'";
 			}
 
 			//// TECHNICAL CUT  ////
@@ -145,6 +146,10 @@
 																			'". addslashes($_POST['AddCOUTDecoupTech']) ."',
 																			'". addslashes($_POST['AddPRIXDecoupTech']) ."'
 																			". $AddSql .")");
+
+			if(isset($_GET['type']) AND $_GET['type'] === 'order'){
+				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_DATE_PLAN_TASK ." VALUE ('0', '". $req ."','". addslashes($ArticleId) ."', '". $date->getTimestamp() ."', '". $date->getTimestamp() ."')");
+			}
 
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTechnicalCutNotification')));
 		}
@@ -319,10 +324,18 @@
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?> ><?=$langue->show_text('Title2'); ?> <?=$iDecoupTech; ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?> <?=$iNomencl; ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?> <?=$iSousEns; ?></button>
+		<?php
+		if(isset($_GET['type']) AND $_GET['type']== 'study'){
+		?>	
 		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title5'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div7')"><?=$langue->show_text('Title7'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title8'); ?></button>
+
+		<?php
+		}
+		?>
+		
 	<?php
 	}
 	else{
@@ -548,10 +561,9 @@
 												<?php if(isset($_GET['type']) AND $_GET['type'] === 'order'): ?>
 												<td>
 													<select  name="ETAT[]">
-														<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectCanceled') ?></option>
-														<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectCreated') ?></option>
-														<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectStarted') ?></option>
-														<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectInterrupted') ?></option>
+														<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectCreated') ?></option>
+														<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectStarted') ?></option>
+														<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectInterrupted') ?></option>
 													</select>
 												</td>
 												<?php else : ?>
@@ -574,10 +586,10 @@
 												<td></td>
 												<td></td>
 												<td>Total :</td>
-												<td>'. $TtTpsPrepa .'</td>
-												<td>'. $TtTpsProd .'</td>
-												<td>'. $TtCout .'</td>
-												<td colspan="2">'. $TtPrix .'</td>
+												<td>'. $TtTpsPrepa .' mn</td>
+												<td>'. $TtTpsProd .' mn</td>
+												<td>'. $TtCout .' €</td>
+												<td colspan="2">'. $TtPrix .'  €</td>
 											</tr>';
 									$iDecoupTech = "(". $iDecoupTech .")";
 	

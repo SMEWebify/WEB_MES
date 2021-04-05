@@ -63,10 +63,10 @@
 
 <!-- select -->
    <SelectProductive>Productive</SelectProductive>
-   <SelectRawMat>Rax material</SelectRawMat>
-   <SelectRawMatSheet>Rax material (Sheet)</SelectRawMatSheet>
-   <SelectRawMatProfil>Rax material (Profil)</SelectRawMatProfil>
-   <SelectRawMatBlock>Rax material (block)</SelectRawMatBlock>
+   <SelectRawMat>Raw material</SelectRawMat>
+   <SelectRawMatSheet>Raw material (Sheet)</SelectRawMatSheet>
+   <SelectRawMatProfil>Raw material (Profil)</SelectRawMatProfil>
+   <SelectRawMatBlock>Raw material (block)</SelectRawMatBlock>
    <SelectSupplies>Supplies</SelectSupplies>
    <SelectSubcontracting>Sub-contracting</SelectSubcontracting>
    <SelectCompoundItem>Compound item</SelectCompoundItem>
