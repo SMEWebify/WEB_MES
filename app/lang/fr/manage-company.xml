@@ -51,6 +51,8 @@
     <Titre4>Gestion des e-mails</Titre4>
     <Titre5>Numérotation des documents</Titre5>
     <Titre6>Timeline Informations</Titre6>
+    <Titre7>Sauvegarde base de donnée</Titre7>
+
 <!-- table content --> 
     <TableNameCompany>Nom de la société:</TableNameCompany>
     <TableCODE>CODE</TableCODE>
@@ -85,6 +87,7 @@
     <TableExemple>Exemple</TableExemple>
     <TableState>Etat</TableState>
     <TablePostDate>Posté le : </TablePostDate> 
+    <TableDatabaseBackup>Sauvegarde base de donnée</TableDatabaseBackup>
 
     <CODEMAIL01>Politesse du contact</CODEMAIL01>
     <CODEMAIL02>Civilité du contact</CODEMAIL02>
@@ -104,6 +107,9 @@
     <UpdateMailNotification>Modèle de mail modifié(s)</UpdateMailNotification>
     <AddTimelineNotification>Info timeline ajoutée</AddTimelineNotification>
     <UpdateTimelineNotification>Info timeline modifié</UpdateTimelineNotification>
+    <DataBaseBackUpDone>Sauvegarde base de donnée faite</DataBaseBackUpDone>
+    <deleteDataBaseBackUpDone>Suppression de sauvegarde BDD</deleteDataBaseBackUpDone>
+
 <!-- Select-->
     <SelectMr>Mr</SelectMr>
     <SelectMme>Mme</SelectMme>
@@ -127,6 +133,10 @@
     <SelectINVOICE>Facture</SelectINVOICE>
     <SelectINVOICESUP>Facture fournisseur</SelectINVOICESUP>
     <SelectNONCONF>Fiche non conformité</SelectNONCONF>
+    
+    <SelectDatabaseBackupMode1>Table Structure</SelectDatabaseBackupMode1>
+    <SelectDatabaseBackupMode2>Table Structure + données</SelectDatabaseBackupMode2>
+    <SelectDatabaseBackupMode3>Drop + Table Structure + données</SelectDatabaseBackupMode3>
 
     <Yes>Oui</Yes>
     <No>Non</No>

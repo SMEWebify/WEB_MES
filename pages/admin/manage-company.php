@@ -73,8 +73,16 @@
 																		'". addslashes($_POST['AddTEXTTIMELINE']) ."')");
 		$CallOutBox->add_notification(array('2', $langue->show_text('AddTimelineNotification')));
 	}
+	elseif(isset($_POST['DatabaseBackup']) AND !empty($_POST['DatabaseBackup'])){
 
+		$BackupFileName = $bdd->dump_MySQL($_POST['DatabaseBackup']);
 
+		$CallOutBox->add_notification(array('2', $BackupFileName . $langue->show_text('DataBaseBackUpDone')));
+	}
+	elseif(isset($_GET['deleteDatabaseBackup']) AND !empty($_GET['deleteDatabaseBackup'])){
+		$DeleteBackupFileName = $bdd->DeleteBackup($_GET['deleteDatabaseBackup']);
+		$CallOutBox->add_notification(array('4', $i . $langue->show_text('deleteDataBaseBackUpDone')));
+	}
 
 	if(isset($_POST['id_sector']) AND !empty($_POST['id_sector'])){
 		//update sector activity
@@ -133,6 +141,9 @@
 	elseif(isset($_GET['timeline']) AND !empty($_GET['timeline'])){
 		$ParDefautDiv6 = 'id="defaultOpen"';
 	}
+	elseif(isset($_POST['DatabaseBackup']) AND !empty($_POST['DatabaseBackup'])){
+		$ParDefautDiv7 = 'id="defaultOpen"';
+	}
 	else{
 		$ParDefautDiv1 = 'id="defaultOpen"';
 	}
@@ -144,6 +155,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv4; ?>><?=$langue->show_text('Titre4'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div5')" <?=$ParDefautDiv5; ?>><?=$langue->show_text('Titre5'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div6')" <?=$ParDefautDiv6; ?>><?=$langue->show_text('Titre6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div7')" <?=$ParDefautDiv7; ?>><?=$langue->show_text('Titre7'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 			<form method="post" name="Company" action="admin.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
@@ -509,7 +521,7 @@
 						</tr>
 					</thead>
 					<tbody>
-<?php
+						<?php
 						//generate TIMELINE
 						$query='SELECT '. TABLE_ERP_INFO_GENERAL .'.Id,
 									'. TABLE_ERP_INFO_GENERAL .'.TIMESTAMP,
@@ -576,6 +588,51 @@
 								<br/>
 							</td>
 						</tr>
+					</tbody>
+				</table>
+			</form>
+	</div>
+	<div id="div7" class="tabcontent">
+		<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
+				<table class="content-table">
+					<thead>
+						<tr>
+							<th colspan="2"><?=$langue->show_text('TableDatabaseBackup'); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="2">
+								Mode : 
+								<select name="DatabaseBackup">
+									<option value="1"><?= $langue->show_text('SelectDatabaseBackupMode1'); ?></option>
+									<option value="2"><?= $langue->show_text('SelectDatabaseBackupMode2'); ?></option>
+									<option value="3"><?= $langue->show_text('SelectDatabaseBackupMode3'); ?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br/>
+								<?= $Form->submit($langue->show_text('TableDatabaseBackup')) ?> <br/>
+								<br/>
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2"><?=$langue->show_text('TableDatabaseBackup'); ?></th>
+						</tr>
+						
+						<?php
+						$scandir = scandir("../app/Company/DatabaseBackUp");
+							foreach($scandir as $fichier){
+								if(preg_match("#\.(sql)$#",strtolower($fichier))){
+									echo '<tr>
+												<td><a href="admin.php?page=manage-company&amp;deleteDatabaseBackup='.$fichier .'" title="Supprimer la ligne">&#10007;</a></td>
+												<td>'.$fichier .'</td>
+											</tr>';
+								}
+							} ?>
+							
 					</tbody>
 				</table>
 			</form>

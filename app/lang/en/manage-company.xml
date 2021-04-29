@@ -52,6 +52,8 @@
     <Titre4>Email template</Titre4>
     <Titre5>Document numbering</Titre5>
     <Titre6>Timeline Informations</Titre6>
+    <Titre7>Database backup</Titre7>
+    
 <!-- table content --> 
     <TableNameCompany>Name company:</TableNameCompany>
     <TableCODE>CODE</TableCODE>
@@ -86,6 +88,7 @@
     <TableExemple>Exemple</TableExemple>
     <TableState>State</TableState>
     <TablePostDate>Posted the : </TablePostDate> 
+    <TableDatabaseBackup>Database backup</TableDatabaseBackup>
 
     <CODEMAIL01>Politeness of contact</CODEMAIL01>
     <CODEMAIL02>Contact Civility</CODEMAIL02>
@@ -105,6 +108,9 @@
     <UpdateMailNotification> Modified email template(s)</UpdateMailNotification>
     <AddTimelineNotification>Timeline info added</AddTimelineNotification>
     <UpdateTimelineNotification>Timeline info changed</UpdateTimelineNotification>
+    <DataBaseBackUpDone>DataBase Backup Done</DataBaseBackUpDone>
+    <deleteDataBaseBackUpDone>Delete DataBase Backup Done</deleteDataBaseBackUpDone>
+    
 <!-- Select-->
     <SelectMr>Mr</SelectMr>
     <SelectMme>Mrs</SelectMme>
@@ -129,6 +135,10 @@
     <SelectINVOICESUP>Invoice supllier</SelectINVOICESUP>
     <SelectNONCONF>Non-compliance sheet</SelectNONCONF>
     
+    <SelectDatabaseBackupMode1>Table Structure</SelectDatabaseBackupMode1>
+    <SelectDatabaseBackupMode2>Table Structure + Datas</SelectDatabaseBackupMode2>
+    <SelectDatabaseBackupMode3>Drop + Table Structure + Datas</SelectDatabaseBackupMode3>
+
     <Yes>Yes</Yes>
     <No>No</No>
 </langue>
