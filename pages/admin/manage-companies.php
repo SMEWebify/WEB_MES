@@ -10,6 +10,7 @@
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
 	use \App\Accounting\VAT;
+	use \App\Document;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -27,6 +28,7 @@
 	$PaymentMethod = new PaymentMethod();
 	$PaymentCondition = new PaymentCondition();
 	$VAT = new VAT();
+	$Document = new Document();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -274,6 +276,10 @@
 		$bdd->GetUpdatePOST(TABLE_ERP_CLIENT_FOUR, $UpdateSECTOR_ID, 'WHERE id IN ('. $_GET['id'] . ')');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 	}
+	elseif(isset($_GET['deleteFile']) AND !empty($_GET['deleteFile'])){
+		//// DELETE LIGNE ////
+		$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ATTACHED_DOCUMENT ." WHERE id='". addslashes($_GET['deleteFile'])."'");
+	}
 
 	// we cant change codeId of DB, he can be used on other table
 	if(!empty($SteCODE)){$DisplayCode = '<input type="hidden" name="CODE" value="'. $SteCODE .'">' .$SteCODE;}
@@ -300,6 +306,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Titre3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Titre4'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Titre5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Titre6'); ?></button>
 <?php
 	}
 ?>
@@ -714,6 +721,141 @@
 					</tbody>
 				</table>
 			</form>
+		</div>
+		<div id="div6" class="tabcontent">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+       	 	<script type="text/javascript">
+				$(function() {
+
+					// preventing page from redirecting
+					$("html").on("dragover", function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						$("h1").text("Drag here");
+					});
+
+					$("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
+
+					// Drag enter
+					$('.upload-area').on('dragenter', function (e) {
+						e.stopPropagation();
+						e.preventDefault();
+						$("h1").text("Drop");
+					});
+
+					// Drag over
+					$('.upload-area').on('dragover', function (e) {
+						e.stopPropagation();
+						e.preventDefault();
+						$("h1").text("Drop");
+					});
+
+					// Drop
+					$('.upload-area').on('drop', function (e) {
+						e.stopPropagation();
+						e.preventDefault();
+
+						$("h1").text("Upload");
+
+						var file = e.originalEvent.dataTransfer.files;
+						var fd = new FormData();
+
+						fd.append('file', file[0]);
+
+						uploadData(fd);
+					});
+
+					// Open file selector on div click
+					$("#uploadfile").click(function(){
+						$("#file").click();
+					});
+
+					// file selected
+					$("#file").change(function(){
+						var fd = new FormData();
+
+						var files = $('#file')[0].files[0];
+
+						fd.append('file',files);
+
+						uploadData(fd);
+					});
+					});
+
+					// Sending AJAX request and upload file
+					function uploadData(formdata){
+
+					$.ajax({
+						url: '../app/upload.php?type=COMPANY_ID&id=<?= $SteId ?>',
+						type: 'post',
+						data: formdata,
+						contentType: false,
+						processData: false,
+						dataType: 'json',
+						success: function(response){
+							addThumbnail(response);
+						}
+					});
+					}
+
+					// Added thumbnail
+					function addThumbnail(data){
+					$("#uploadfile h1").remove(); 
+					var len = $("#uploadfile div.thumbnail").length;
+
+					var num = Number(len);
+					num = num + 1;
+
+					var name = data.name;
+					var size = convertSize(data.size);
+					var src = data.src;
+
+					// Creating an thumbnail
+					$("#uploadfile").append('<div id="thumbnail_'+num+'" class="thumbnail"></div>');
+					$("#thumbnail_"+num).append('<img src="'+src+'" width="100%" height="78%">');
+					$("#thumbnail_"+num).append('<span class="size">'+size+'<span>');
+
+					}
+
+					// Bytes conversion
+					function convertSize(size) {
+					var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+					if (size == 0) return '0 Byte';
+					var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)));
+					return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
+					}
+					</script>
+
+			<div id="drop_file_zone">
+				<input type="file" name="file" id="file">
+				<div class="upload-area"  id="uploadfile">
+					<h1>Drag and Drop file here<br/>Or<br/>Click to select file</h1>
+				</div>
+			</div>
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th></th>
+						<th><?=$langue->show_text('TableOrder'); ?></th>
+						<th><?=$langue->show_text('TableArticle'); ?></th>
+						<th><?=$langue->show_text('TableLabel'); ?></th>
+						<th><?=$langue->show_text('TableQty'); ?></th>
+						<th><?=$langue->show_text('TableUnit'); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach ($Document->GETDocumentList('COMPANY_ID', $SteId ) as $data): ?>
+					<tr>
+						<td><a href="admin.php?page=manage-companies&id=<?= $SteId ?>&deleteFile=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a></td>
+						<td><?= $data->LABEL ?></td>
+						<td><?= $data->DATE ?></td>
+						<td><?= $data->PATH_FILE ?></td>
+						<td><?= $data->SIZE ?></td>
+						<td><?= $data->NOM ?> <?= $data->PRENOM ?></td>
+					</tr>
+				<?php $i++; endforeach; ?>
+				</tbody>
+			</table>
 		</div>
 <?php
 	}
