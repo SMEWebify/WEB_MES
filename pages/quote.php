@@ -153,7 +153,6 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = 'id="defaultOpen"';
-		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'index.php?page=quote&quote='. $Id .'';
 
 	}
@@ -161,7 +160,6 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
-		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
 		$actionForm = 'index.php?page=quote&quote='. $Id .'';
 		$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
@@ -170,8 +168,6 @@
 		$ParDefautDiv3 = '';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv1 = 'id="defaultOpen"';
-		$VerrouInput = ' disabled="disabled"  Value="-" ';
-		$ImputButton = $langue->show_text('TablenoQuote');
 		$actionForm = 'index.php?page=quote&quote=new';
 	}
 ?>

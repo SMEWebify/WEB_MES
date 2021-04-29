@@ -17,12 +17,8 @@
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
 	}
 
-	////////////////////////
-	//// EVENT MACHINE////
-	///////////////////////
-	//add event machine in db
 	if(isset($_POST['AddCODEEventMach']) AND !empty($_POST['AddCODEEventMach'])){
-
+		//add event machine in db
 		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_EVENT_MACHINE ." VALUE ('0',
 																		'". addslashes($_POST['AddCODEEventMach']) ."',
 																		'". addslashes($_POST['AddORDREEventMach']) ."',
@@ -33,10 +29,55 @@
 																		)");
 		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddEventNotification')));
 	}
+	elseif(isset($_POST['AddLABELImproductTime']) AND !empty($_POST['AddLABELImproductTime'])){
+		//add improduct time
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_EVENT_IMPRODUC_TIME ." VALUE ('0',
+																		'". addslashes($_POST['AddLABELImproductTime']) ."',
+																		'". addslashes($_POST['AddETATImproductTime']) ."',
+																		'". addslashes($_POST['AddRessourceImproductTime']) ."',
+																		'". addslashes($_POST['AddMASKImproductTime']) ."'
+																		)");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddImproductTimetNotification')));																	
+	}
+	elseif(isset($_POST['AddCODEAbs']) AND !empty($_POST['AddCODEAbs'])){
+		//if add new ligne od absence type
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_TYPE_ABS ." VALUE ('0',
+																		'". addslashes($_POST['AddCODEAbs']) ."',
+																		'". addslashes($_POST['AddLABELAbs']) ."',
+																		'". addslashes($_POST['AddPAYEAbs']) ."',
+																		'". addslashes($_POST['AddCOLORAbs']) ."',
+																		'". addslashes($_POST['AddTYPEAbs']) ."')");
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOutNotification')));																
+	}
+	elseif(isset($_POST['AddLABELFerier']) AND !empty($_POST['AddLABELFerier'])){
+		//if add new bank holiday
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_FERIER ." VALUE ('0',
+																		'". addslashes($_POST['AddFixeFerier']) ."',
+																		'". addslashes($_POST['AddDATEFerier']) ."',
+																		'". addslashes($_POST['AddLABELFerier']) ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddBankNotification')));
+	}
+	elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
+		//if add new hourly model day
+		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DAILY_HOURLY_MODEL ." VALUE ('0',
+																		'". addslashes($_POST['CODE']) ."',
+																		'". addslashes($_POST['LABEL']) ."')");
+		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddMODELtimeNotification')));
+	}
+	elseif(isset($_POST['AddORDREHourdlyModelLine']) AND !empty($_POST['AddORDREHourdlyModelLine'])){
+		//if add new line of hourly model day 
+			$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DAILY_HOURLY_MODEL_LINES ." VALUE ('0',
+																			'". addslashes($_GET['HourdlyModel']) ."',
+																			'". addslashes($_POST['AddORDREHourdlyModelLine']) ."',
+																			'". addslashes($_POST['AddTYPEHourdlyModelLine']) ."',
+																			'". addslashes($_POST['AddSTARTHourdlyModelLine']) ."',
+																			'". addslashes($_POST['AddENDHourdlyModelLine']) ."')");
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLineMODELtimetNotification')));
+	}
 
-	//Update list event machine
+
 	if(isset($_POST['id_EventMach']) AND !empty($_POST['id_EventMach'])){
-
+		//Update list event machine
 		$UpdateIdEventMach = $_POST['id_EventMach'];
 		$UpdateORDREEventMach = $_POST['UpdateORDREEventMach'];
 		$UpdateCODEEventMach = $_POST['UpdateCODEEventMach'];
@@ -59,173 +100,68 @@
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateEventNotification')));
 	}
-
-	////////////////////////
-	//// IMPRODUCT TIME ////
-	///////////////////////
-
-	//add improduct time
-	if(isset($_POST['AddLABELImproductTime']) AND !empty($_POST['AddLABELImproductTime'])){
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_EVENT_IMPRODUC_TIME ." VALUE ('0',
-																		'". addslashes($_POST['AddLABELImproductTime']) ."',
-																		'". addslashes($_POST['AddETATImproductTime']) ."',
-																		'". addslashes($_POST['AddRessourceImproductTime']) ."',
-																		'". addslashes($_POST['AddMASKImproductTime']) ."'
-																		)");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddImproductTimetNotification')));																	
-	}
-
-	//update improduct time list
-	if(isset($_POST['id_ImproductTime']) AND !empty($_POST['id_ImproductTime'])){
-
-		$UpdateIdEventMach = $_POST['id_ImproductTime'];
-		$UpdateLABELImproductTime = $_POST['UpdateLABELImproductTime'];
-		$UpdateETATImproductTime = $_POST['UpdateETATImproductTime'];
-		$UpdateRESSImproductTime = $_POST['UpdateRESSImproductTime'];
-		$UpdateMASKImproductTime = $_POST['UpdateMASKImproductTime'];
-
+	elseif(isset($_POST['id_ImproductTime']) AND !empty($_POST['id_ImproductTime'])){
+		//update improduct time list
 		$i = 0;
-		foreach ($UpdateIdEventMach as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EVENT_IMPRODUC_TIME .'` SET LABEL = \''. addslashes($UpdateLABELImproductTime[$i]) .'\',
-																		ETAT_MACHINE = \''. addslashes($UpdateETATImproductTime[$i]) .'\',
-																		RESSOURCE_NEC = \''. addslashes($UpdateRESSImproductTime[$i]) .'\',
-																		MASK_TIME = \''. addslashes($UpdateMASKImproductTime[$i]) .'\'
+		foreach ($_POST['id_ImproductTime'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_EVENT_IMPRODUC_TIME .'` SET LABEL = \''. addslashes($_POST['UpdateLABELImproductTime'][$i]) .'\',
+																		ETAT_MACHINE = \''. addslashes($_POST['UpdateETATImproductTime'][$i]) .'\',
+																		RESSOURCE_NEC = \''. addslashes($_POST['UpdateRESSImproductTime'][$i]) .'\',
+																		MASK_TIME = \''. addslashes($_POST['UpdateMASKImproductTime'][$i]) .'\'
 																		WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateImproductTimetNotification')));
 	}
-
-	////////////////////////
-	//// TYPE ABSENCE ////
-	///////////////////////
-
-	//if add new ligne od absence type
-	if(isset($_POST['AddCODEAbs']) AND !empty($_POST['AddCODEAbs'])){
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_TYPE_ABS ." VALUE ('0',
-																		'". addslashes($_POST['AddCODEAbs']) ."',
-																		'". addslashes($_POST['AddLABELAbs']) ."',
-																		'". addslashes($_POST['AddPAYEAbs']) ."',
-																		'". addslashes($_POST['AddCOLORAbs']) ."',
-																		'". addslashes($_POST['AddTYPEAbs']) ."')");
-			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOutNotification')));																
-	}
-
-	//update list of absence
-	if(isset($_POST['id_Abs']) AND !empty($_POST['id_Abs'])){
-
-		$UpdateIdAbs = $_POST['id_Abs'];
-		$UpdateCODEdAbs = $_POST['UpdateCODEdAbs'];
-		$UpdateLABELdAbs = $_POST['UpdateLABELdAbs'];
-		$UpdatePAYEAbs = $_POST['UpdatePAYEAbs'];
-		$UpdateCOLORAbs = $_POST['UpdateCOLORAbs'];
-		$UpdateTYPEAbs = $_POST['UpdateTYPEAbs'];
-
+	elseif(isset($_POST['id_Abs']) AND !empty($_POST['id_Abs'])){
+		//update list of absence
 		$i = 0;
-		foreach ($UpdateIdAbs as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_TYPE_ABS .'` SET CODE = \''. addslashes($UpdateCODEdAbs[$i]) .'\',
-																		LABEL = \''. addslashes($UpdateLABELdAbs[$i]) .'\',
-																		PAYE = \''. addslashes($UpdatePAYEAbs[$i]) .'\',
-																		COLOR = \''. addslashes($UpdateCOLORAbs[$i]) .'\',
-																		TYPE_JOUR = \''. addslashes($UpdateTYPEAbs[$i]) .'\'
-																		WHERE Id IN ('. $id_generation . ')');
+		foreach ($_POST['id_Abs'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_TYPE_ABS .' SET CODE = \''. addslashes($_POST['UpdateCODEdAbs'][$i]) .'\',
+																		LABEL = \''. addslashes($_POST['UpdateLABELdAbs'][$i]) .'\',
+																		PAYE = \''. addslashes($_POST['UpdatePAYEAbs'][$i]) .'\',
+																		COLOR = \''. addslashes($_POST['UpdateCOLORAbs'][$i]) .'\',
+																		TYPE_JOUR = \''. addslashes($_POST['UpdateTYPEAbs'][$i]) .'\'
+																	WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateOutNotification')));
 	}
-
-	////////////////////////
-	//// bank holiday ////
-	///////////////////////
-
-	//if add new bank holiday
-	if(isset($_POST['AddLABELFerier']) AND !empty($_POST['AddLABELFerier'])){
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_FERIER ." VALUE ('0',
-																		'". addslashes($_POST['AddFixeFerier']) ."',
-																		'". addslashes($_POST['AddDATEFerier']) ."',
-																		'". addslashes($_POST['AddLABELFerier']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddBankNotification')));
-	}
-
-	//update list of bank holiday
-	if(isset($_POST['id_Ferrier']) AND !empty($_POST['id_Ferrier'])){
-		$UpdateIdFerier = $_POST['id_Ferrier'];
-		$UpdateFIXEFerier = $_POST['UpdateFIXEFerier'];
-		$UpdateDATEFerier = $_POST['UpdateDATEFerier'];
-		$UpdateLABELFerier = $_POST['UpdateLABELFerier'];
-
+	elseif(isset($_POST['id_Ferrier']) AND !empty($_POST['id_Ferrier'])){
+		//update list of bank holiday
 		$i = 0;
-		foreach ($UpdateIdFerier as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_FERIER .'` SET FIXE = \''. addslashes($UpdateFIXEFerier[$i]) .'\',
-															DATE = \''. addslashes($UpdateDATEFerier[$i]) .'\',
-															LABEL = \''. addslashes($UpdateLABELFerier[$i]) .'\'
-														WHERE Id IN ('. $id_generation . ')');
+		foreach ($_POST['id_Ferrier'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_FERIER .' SET FIXE = \''. addslashes($_POST['UpdateFIXEFerier'][$i]) .'\',
+																DATE = \''. addslashes($_POST['UpdateDATEFerier'][$i]) .'\',
+																LABEL = \''. addslashes($_POST['UpdateLABELFerier'][$i]) .'\'
+															WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateBankNotification')));
 	}
-
-	//////////////////////////////////
-	////TIME MODEL ////
-	/////////////////////////////////
-
-	//if add new hourly model day
-	if(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
-
-		$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DAILY_HOURLY_MODEL ." VALUE ('0',
-																		'". addslashes($_POST['CODE']) ."',
-																		'". addslashes($_POST['LABEL']) ."')");
-		$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddMODELtimeNotification')));
-	}
-
-	//update hourly model day
-	if(isset($_POST['UpdateIdHourdlyModel']) AND !empty($_POST['UpdateIdHourdlyModel'])){
-
-		$UpdateIdHourdlyModel = $_POST['UpdateIdHourdlyModel'];
-		$UpdateCODEHourdlyModel = $_POST['UpdateCODEHourdlyModel'];
-		$UpdateLABELHourdlyModel = $_POST['UpdateLABELHourdlyModel'];
-
+	elseif(isset($_POST['UpdateIdHourdlyModel']) AND !empty($_POST['UpdateIdHourdlyModel'])){
+		//update hourly model day
 		$i = 0;
-		foreach ($UpdateIdHourdlyModel as $id_generation) {
-			$bdd->GetUpdate('UPDATE '. TABLE_ERP_DAILY_HOURLY_MODEL .' SET  CODE = \''. addslashes($UpdateCODEHourdlyModel[$i]) .'\',
-																LABEL = \''. addslashes($UpdateLABELHourdlyModel[$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
+		foreach ($_POST['UpdateIdHourdlyModel'] as $id_generation) {
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_DAILY_HOURLY_MODEL .' SET  CODE = \''. addslashes($_POST['UpdateCODEHourdlyModel'][$i]) .'\',
+																			LABEL = \''. addslashes($_POST['UpdateLABELHourdlyModel'][$i]) .'\'
+																		WHERE Id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateMODELtimeNotification')));
 	}
-
-	//if add new line of hourly model day 
-	if(isset($_POST['AddORDREHourdlyModelLine']) AND !empty($_POST['AddORDREHourdlyModelLine'])){
-
-			$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_DAILY_HOURLY_MODEL_LINES ." VALUE ('0',
-																			'". addslashes($_GET['HourdlyModel']) ."',
-																			'". addslashes($_POST['AddORDREHourdlyModelLine']) ."',
-																			'". addslashes($_POST['AddTYPEHourdlyModelLine']) ."',
-																			'". addslashes($_POST['AddSTARTHourdlyModelLine']) ."',
-																			'". addslashes($_POST['AddENDHourdlyModelLine']) ."')");
-			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddLineMODELtimetNotification')));
-	}
-
-	//update hourly model day line
-	if(isset($_POST['UpdateIdHourdlyModelLine']) AND !empty($_POST['UpdateIdHourdlyModelLine'])){
-
-		$UpdateIdHourdlyModelLine = $_POST['UpdateIdHourdlyModelLine'];
-		$UpdateORDREHourdlyModelLine = $_POST['UpdateORDREHourdlyModelLine'];
-		$UpdateTYPEHourdlyModelLine = $_POST['UpdateTYPEHourdlyModelLine'];
-		$UpdateSTARTHourdlyModelLine = $_POST['UpdateSTARTHourdlyModelLine'];
-		$UpdateENDHourdlyModelLine = $_POST['UpdateENDHourdlyModelLine'];
+	elseif(isset($_POST['UpdateIdHourdlyModelLine']) AND !empty($_POST['UpdateIdHourdlyModelLine'])){
+		//update hourly model day line
+		$i = 0;
+		foreach ($_POST['UpdateIdHourdlyModelLine'] as $id_generation) {
 		
-			$i = 0;
-			foreach ($UpdateIdHourdlyModelLine as $id_generation) {
-		
-				$bdd->GetUpdate('UPDATE '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .' SET  ORDRE = \''. addslashes($UpdateORDREHourdlyModelLine[$i]) .'\',
-																			TYPE = \''. addslashes($UpdateTYPEHourdlyModelLine[$i]) .'\',
-																			START = \''. addslashes($UpdateSTARTHourdlyModelLine[$i]) .'\',
-																			END = \''. addslashes($UpdateENDHourdlyModelLine[$i]) .'\'
-																			WHERE Id IN ('. $id_generation . ')');
-				$i++;
-			}
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_DAILY_HOURLY_MODEL_LINES .' SET  ORDRE = \''. addslashes($_POST['UpdateORDREHourdlyModelLine'][$i]) .'\',
+																			TYPE = \''. addslashes($_POST['UpdateTYPEHourdlyModelLine'][$i]) .'\',
+																			START = \''. addslashes($_POST['UpdateSTARTHourdlyModelLine'][$i]) .'\',
+																			END = \''. addslashes($_POST['UpdateENDHourdlyModelLine'][$i]) .'\'
+																		WHERE Id IN ('. $id_generation . ')');
+			$i++;
+		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateLineMODELtimeNotification')));
 	}
 

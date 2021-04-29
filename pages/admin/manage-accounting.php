@@ -98,7 +98,7 @@
 	//update VAT List
 		$i = 0;
 		foreach ($_POST['id_TVA'] as $id_generation) {
-			$bdd->GetUpdate('UPDATE `'. TABLE_ERP_TVA .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_TVA .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
 																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
 																TAUX = \''. addslashes($_POST['TAUX'][$i]) .'\'
 																WHERE Id IN ('. $id_generation . ')');
@@ -288,7 +288,7 @@
 						$i = 1;
 						foreach ($VAT->GETVATList('',False) as $data): ?>
 						<tr>
-							<td><?= $i ?> <input type="hidden" name="id_TVA[]" id="id_TVA" value="<?= $data->Id ?>"></td>
+							<td><?= $i ?> <input type="hidden" name="id_TVA[]" id="id_TVA" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
 							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
 							<td><input type="text" name="TAUX[]" value="<?= $data->TAUX ?>" required="required"></td>

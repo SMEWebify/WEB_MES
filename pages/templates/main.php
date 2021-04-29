@@ -138,39 +138,23 @@
 						<tbody>
 							<tr>
 								<td><?= $langue->show_text('TableCondiList') ?></td>
-								<td>
-									<select name="COND_REG_CUSTOMER_ID">
-										<?=$PaymentCondition->GETPaymentConditionList($Maindata->COND_REG_CUSTOMER_ID)?>
-									</select>
-								</td>
+								<td><?= $Form->select('COND_REG_CUSTOMER_ID', '',  $Maindata->COND_REG_CUSTOMER_ID,$ActivateForm,$Maindata->COND_REG_LABEL, $PaymentCondition->GETPaymentConditionList(0, false))  ?></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableMethodList') ?></td>
-								<td>
-										<select name="MODE_REG_CUSTOMER_ID">
-											<?=$PaymentMethod->GETPaymentMethodList($Maindata->MODE_REG_CUSTOMER_ID); ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?= $langue->show_text('TimeLinePayement') ?></td>
-									<td>
-										<select name="ECHEANCIER_ID">
-											<?=  $PaymentSchedule->GETPaymentScheduleList($Maindata->Echeancier_ID, true) ?> 
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?= $langue->show_text('TableDeleveryMode') ?></td>
-									<td>
-										<select name="TRANSPORT_ID">
-											<?=  $Delevery->GETDeleveryList($Maindata->TRANSPORT_ID, true) ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2"><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
-								</tr>
+								<td><?= $Form->select('MODE_REG_CUSTOMER_ID', '',  $Maindata->MODE_REG_CUSTOMER_ID,$ActivateForm,$Maindata->MODE_REG_LABEL, $PaymentMethod->GETPaymentMethodList(0, false))  ?></td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TimeLinePayement') ?></td>
+								<td><?= $Form->select('ECHEANCIER_ID', '',  $Maindata->ECHEANCIER_ID,$ActivateForm,$Maindata->ECHEANCIER_LABEL, $PaymentSchedule->GETPaymentScheduleList(0, false))  ?></td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableDeleveryMode') ?></td>
+								<td><?= $Form->select('TRANSPORT_ID', '',  $Maindata->TRANSPORT_ID,$ActivateForm,$Maindata->TRANSPORT_LABEL, $Delevery->GETDeleveryList(0, false))  ?></td>
+							</tr>
+							<tr>
+								<td colspan="2"><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -280,10 +264,11 @@
 					</table>
 				</div>
 			</form>
+			
 			<?php
-			//for converte ORDER TO ACKNOWLEGMENT 
-			if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
-				<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
+		//for converte ORDER TO ACKNOWLEGMENT 
+		if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
+			<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
 				<div>
 					<table class="content-table" >
 						<thead>
@@ -316,11 +301,13 @@
 								</td>
 							</tr>
 						<?php endforeach; ?>
-				<?php } 
-				}?>
+				<?php } ?>
 						</tbody>
 					</table>
 				</div>
+			</form>
+			<?php } ?>
+
 		</div>
 	</div>
 	<div id="div3" class="tabcontent">
@@ -328,9 +315,7 @@
 			<table class="content-table-devis" >
 				<thead>
 					<tr>
-						<th colspan="12" >
-						<?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->INDICE  ?>
-						</th>
+						<th colspan="12" ><?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->INDICE  ?></th>
 					</tr>
 					<tr>
 						<th></th>
@@ -363,19 +348,11 @@
 						</td>
 						<td><input type="text"  name="" id="AddLABELLigne" placeholder="Désignation"></td>
 						<td><input type="number"  name="" id="AddQTLigne" placeholder="1"  value="1"></td>
-						<td>
-							<select name="" id="AddUNITLigne">
-							<?= $Unit->GetUnitList() ?>
-							</select>
-						</td>
+						<td><?= $Form->select('', 'AddUNITLigne', '',$ActivateForm,'', $Unit->GetUnitList(0, false) )  ?></td>
 						<td><input type="number"  name="" id="AAddPrixLigne" step=".001" placeholder="10 €"  value="0"></td>
 						<td><input type="number"  name="" id="AddRemiseLigne" min="0" max="100" step=".001" placeholder="0 %" value="0"></td>
 						<td></td>
-						<td>
-							<select name="" id="AddTVALigne">
-							<?= $VAT->GETVATList() ?>
-							</select>
-						</td>
+						<td><?= $Form->select('', 'AddTVALigne', '',$ActivateForm,'', $VAT->GETVATList(0, false) )  ?></td>
 						<td><input type="date" name="" id="AddDELAISigne"></td>
 						<td></td>
 					</tr>
@@ -439,20 +416,11 @@
 								</td>
 								<td><?= $Form->input('text', 'UpdateLABELLigne[]', $data->LABEL,'', $ActivateForm) ?></td>
 								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT,'', $ActivateForm) ?></td>
-								<td>
-									<select  name="UpdateUNITLigne[]">
-										<?= $Unit->GetUnitList($data->UNIT_ID, true) ?>
-									</select>
-								</td>
+								<td><?= $Form->select('UpdateUNITLigne[]', '',  $data->UNIT_ID,$ActivateForm,$data->LABEL_UNIT, $Unit->GetUnitList($data->UNIT_ID, false) )  ?></td>
 								<td><?= $Form->input('number', 'UpdatePrixLigne[]', $data->PRIX_U,'', $ActivateForm, ' step=".001"') ?></td>
 								<td><?= $Form->input('number', 'UpdateRemiseLigne[]', $data->REMISE,'', $ActivateForm, ' min="0" max="100" step=".001"') ?></td>
-								<td><?=   $TotalLigneHTEnCours ?> €</td>
-
-								<td>
-									<select  name="UpdateTVALigne[]">
-										<?= $VAT->GETVATList($data->TVA_ID) ?>
-									</select>
-								</td>
+								<td><?= $TotalLigneHTEnCours ?> €</td>
+								<td><?= $Form->select('UpdateTVALigne[]', '',  $data->TVA_ID,$ActivateForm,$data->LABEL_TVA, $VAT->GETVATList($data->TVA_ID, false) )  ?></td>
 								<td><?= $Form->input('date', 'UpdateDELAISLigne[]',  $data->DELAIS,'', $ActivateForm) ?></td>
 								<td>
 									<select  name="UpdateETATLigne[]">

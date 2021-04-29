@@ -624,15 +624,14 @@
 						
 						<?php
 						$scandir = scandir("../app/Company/DatabaseBackUp");
-							foreach($scandir as $fichier){
-								if(preg_match("#\.(sql)$#",strtolower($fichier))){
-									echo '<tr>
-												<td><a href="admin.php?page=manage-company&amp;deleteDatabaseBackup='.$fichier .'" title="Supprimer la ligne">&#10007;</a></td>
-												<td>'.$fichier .'</td>
-											</tr>';
-								}
-							} ?>
-							
+						foreach($scandir as $File){
+							if(preg_match("#\.(sql)$#",strtolower($File))){
+								echo '<tr>
+											<td><a href="admin.php?page=manage-company&amp;deleteDatabaseBackup='.$File .'" title="Supprimer la ligne">&#10007;</a></td>
+											<td>'.$File .'</td>
+										</tr>';
+							}
+						}?>
 					</tbody>
 				</table>
 			</form>

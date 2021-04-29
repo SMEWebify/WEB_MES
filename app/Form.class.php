@@ -1,7 +1,8 @@
 <?php
 namespace App;
-    
-class Form {
+use \App\SQL;
+
+class Form Extends SQL  {
 
     private $data;
 
@@ -25,6 +26,40 @@ class Form {
         }
         else{
             return $value;
+        }
+    }
+
+    public function select($SelectName='', $SelectId='',$TargetId='', $activate=true, $NoSelectValue='', $QueryResult ){
+
+        if($activate){
+
+            $option ='';
+
+            
+
+            foreach($QueryResult as $line){
+                $option .= $this->option($line->id, $line->LABEL, $activate, selected($line->id, $TargetId) );  
+            }
+
+
+            return '<select name="'. $SelectName .'" >
+                '. $option .'
+            </select>';
+
+            
+        }
+        else{
+            return $NoSelectValue;
+        }
+    }
+
+    public function option($Datavalue='', $Displayvalue='', $activate=true, $Selected = '' ){
+
+        if($activate){
+            return '<option value="'. $Datavalue .'" '.  $Selected .'>'. $Displayvalue .'</option>';
+        }
+        else{
+            return $Displayvalue;
         }
     }
 

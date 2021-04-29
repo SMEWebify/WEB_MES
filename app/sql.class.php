@@ -107,7 +107,7 @@ class SQL extends PDO{
 		return $datas;
 	}
 
-	public function GetPrepare($statement, $attributes){
+	public function GetPrepare($statement, $attributes = null){
 		$req = $this->getPDO()->prepare($statement);
 		$req->execute($attributes);
 		$datas = $req->fetchAll(PDO::FETCH_OBJ);
@@ -190,6 +190,82 @@ class SQL extends PDO{
 		}
         return false;
 	}  
+
+	public function  dump_MySQL($mode)
+    {
+    
+		$FileName =  DB_NAME .'_BackUp_'. date("d-M-Y_H-i-s")	 .'.sql';
+		$entete  = "-- ----------------------\n";
+		$entete .= "-- dump de la base ". DB_NAME ." au ".date("d-M-Y")."\n";
+		$entete .= "-- ----------------------\n\n\n";
+		$creations = "";
+		$insertions = "\n\n";
+		
+		$listeTables = $this->getPDO()->query("show tables");
+		while($table = $listeTables->fetch())
+		{
+			// structure ou la totalité de la BDD
+			if($mode == 1 || $mode == 2 || $mode == 3)
+			{
+
+				$creations .= "-- \n";
+				$creations .= "-- Structure de la table ".$table[0]."\n";
+				$creations .= "-- \n";
+
+				if($mode == 3){
+					$creations .="DROP TABLE IF EXISTS `". $table[0] ."`;\n";
+				}
+
+				$listeCreationsTables = $req = $this->getPDO()->query("show create table ".$table[0]);
+
+				while($creationTable = $listeCreationsTables->fetch())
+				{
+				$creations .= $creationTable[1].";\n\n";
+				}
+			}
+			// données ou la totalité
+			if($mode > 1)
+			{
+				$donnees = $this->getPDO()->query("SELECT * FROM ".$table[0]);
+				$creations .= "-- \n";
+				$creations .= "-- Contenu de la table ".$table[0]."\n";
+				$creations .= "-- \n";
+				while($nuplet = $donnees->fetch())
+				{
+					$creations .= "INSERT INTO ".$table[0]." VALUES(";
+					for($i=0; $i < $donnees->columnCount(); $i++)
+					{
+					if($i != 0)
+						$creations .=  ", ";
+					if($donnees->getColumnMeta($i) == "string" || $donnees->getColumnMeta($i) == "blob")
+						$creations .=  "'";
+					$creations .= addslashes($nuplet[$i]);
+					if($donnees->getColumnMeta($i) == "string" || $donnees->getColumnMeta($i) == "blob")
+						$creations .=  "'";
+					}
+					$creations .=  ");\n";
+				}
+				$creations .= "\n";
+			}
+		}
+	
+		$fichierDump = fopen("../app/Company/DatabaseBackUp/". $FileName, "wb");
+
+		fwrite($fichierDump, $entete);
+		fwrite($fichierDump, $creations);
+
+		fclose($fichierDump);
+ 
+		Return $FileName;
+
+    }
+
+	Public function DeleteBackup($string){
+		$filename ="../app/Company/DatabaseBackUp/". $string;
+		if (file_exists($filename)) {
+			unlink ($filename);
+		}
+	}
 	
 	private function ProtectVal($chaine){
 		$chaine = trim($chaine);

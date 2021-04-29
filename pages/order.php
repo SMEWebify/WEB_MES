@@ -14,6 +14,8 @@
 	use \App\Order\OrderLines;
 	use \App\Order\OrderAcknowledgment;
 	use \App\Order\OrderAcknowledgmentLines;
+	use \App\Order\DeleveryNote;
+	use \App\Order\DeleveryNoteLines;
 	use \App\Accounting\Delevery;
 	use \App\Accounting\VAT;
 	use \App\Study\Unit;
@@ -38,6 +40,8 @@
 	$OrderLines = new OrderLines();
 	$OrderAcknowledgment = new OrderAcknowledgment();
 	$OrderAcknowledgmentLines = new OrderAcknowledgmentLines();
+	$DeleveryNote = new DeleveryNote();
+	$DeleveryNoteLines = new DeleveryNoteLines();
 	$Delevery = new Delevery();
 	$VAT = new VAT();
 	$Unit = new Unit();
@@ -237,13 +241,16 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
-		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
+		$ParDefautDiv4 = '';
+		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&order='. $Id  .'';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
 			$ParDefautDiv2 = '';
 			$ParDefautDiv3 = 'id="defaultOpen"';
+			$ParDefautDiv4 = '';
+			$ParDefautDiv5 = '';
 		}
 	}
 	elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){
@@ -254,13 +261,56 @@
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
-		$ImputButton = '<input type="submit" class="input-moyen" value="'. $langue->show_text('TableUpdateButton') .'" />';
+		$ParDefautDiv4 = '';
+		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&OrderAcknowledgment='.$Id  .'';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
 			$ParDefautDiv2 = '';
 			$ParDefautDiv3 = 'id="defaultOpen"';
+			$ParDefautDiv4 = '';
+			$ParDefautDiv5 = '';
+		}
+	}
+	elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){
+		$ActivateForm=false;
+		$reqList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0);
+		$reqLines = $OrderAcknowledgmentLines->GETOrderacknowledgmentlinesList('', false, $Id);
+		$GET = 'DeliveryNotes';
+		$ParDefautDiv1 = '';
+		$ParDefautDiv2 = '';
+		$ParDefautDiv3 = '';
+		$ParDefautDiv4 = 'id="defaultOpen"';
+		$ParDefautDiv5 = '';
+		$actionForm = 'index.php?page=order&DeliveryNotes='.$Id  .'';
+
+		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
+			$ParDefautDiv1 = '';
+			$ParDefautDiv2 = '';
+			$ParDefautDiv3 = 'id="defaultOpen"';
+			$ParDefautDiv4 = '';
+			$ParDefautDiv5 = '';
+		}
+	}
+	elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){
+		$ActivateForm=false;
+		$reqList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0);
+		$reqLines = $OrderAcknowledgmentLines->GETOrderacknowledgmentlinesList('', false, $Id);
+		$GET = 'Invoice';
+		$ParDefautDiv1 = '';
+		$ParDefautDiv2 = '';
+		$ParDefautDiv3 = '';
+		$ParDefautDiv4 = '';
+		$ParDefautDiv5 = 'id="defaultOpen"';
+		$actionForm = 'index.php?page=order&Invoice='.$Id  .'';
+
+		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
+			$ParDefautDiv1 = '';
+			$ParDefautDiv2 = '';
+			$ParDefautDiv3 = 'id="defaultOpen"';
+			$ParDefautDiv4 = '';
+			$ParDefautDiv5 = '';
 		}
 	}
 	else{
@@ -270,8 +320,8 @@
 		$ParDefautDiv1 = 'id="defaultOpen"';
 		$ParDefautDiv2 = '';
 		$ParDefautDiv3 = '';
-		$VerrouInput = ' disabled="disabled"  Value="-" ';
-		$ImputButton = $langue->show_text('TablenoOrder');
+		$ParDefautDiv4 = '';
+		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&order=new';
 	}
 ?>
@@ -350,7 +400,7 @@ $(document).ready(function() {
 	</div>
 	<?php
 
-	if(!isset($_GET['order']) && !isset($_GET['OrderAcknowledgment'])){
+	if(!isset($_GET['order']) && !isset($_GET['OrderAcknowledgment']) && !isset($_GET['DeliveryNotes'])  && !isset($_GET['Invoice'])){
 		?>
 		<div id="div2" class="tabcontent">
 			<div class="column">
@@ -390,7 +440,7 @@ $(document).ready(function() {
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input
-						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
+						foreach ($DeleveryNote->GETDeleveryNoteList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
 						elseif($data->ETAT == 2) $class="warning";
 						elseif($data->ETAT == 3) $class="success";
 						elseif($data->ETAT == 6) $class="alert";

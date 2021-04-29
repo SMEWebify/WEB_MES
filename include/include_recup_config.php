@@ -17,6 +17,10 @@ define('TABLE_ERP_IMPUT_COMPTA_LIGNE', 'ac_accounting_allocation_lines');
 define('TABLE_ERP_IMPUT_COMPTA_PRESTATION', 'ac_accounting_allocation_services');
 define('TABLE_ERP_ECHEANCIER_TYPE', 'ac_timeline_paiement');
 define('TABLE_ERP_ECHEANCIER_TYPE_LIGNE', 'ac_timeline_paiement_lines');
+
+//DATA
+define('TABLE_ERP_ATTACHED_DOCUMENT', 'attached_document');
+
 //DATA BASE COMPANIES
 define('TABLE_ERP_CLIENT_FOUR', 'companies');
 define('TABLE_ERP_ADRESSE', 'companies_addresses');
@@ -37,9 +41,16 @@ define('TABLE_ERP_ORDER_NOMENCLATURE', 'order_nomenclature');
 define('TABLE_ERP_ORDER_SUB_ASSEMBLY', 'order_sub_assembly');
 define('TABLE_ERP_ORDER_DATE_PLAN_TASK', 'order_date_plan_task');
 
+define('TABLE_ERP_ORDER_REMAINING_TIME', 'order_remaining_time');
+
 //DATA BASE ORDER ACKNOWLEGMENT
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT', 'order_acknowledgment');
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES', 'order_acknowledgment_lines');
+//DATA BASE ORDER DELERERY NOTE
+define('TABLE_ERP_ORDER_DELIVERY_NOTE', 'order_delivery_note');
+define('TABLE_ERP_ORDER_DELIVERY_NOTE_LINES', 'order_delivery_note_lines');
+
+
 //DATA BASE QUALITY
 define('TABLE_ERP_QL_ACTION', 'ql_action');
 define('TABLE_ERP_QL_APP_MESURE', 'ql_appareil_mesure');
@@ -76,7 +87,10 @@ define('TABLE_ERP_TYPE_ABS', 'time_absence_type');
 define('TABLE_ERP_FERIER', 'time_bank_holiday');
 define('TABLE_ERP_EVENT_MACHINE', 'time_event_machine');
 define('TABLE_ERP_EVENT_IMPRODUC_TIME', 'time_improductive_activity');
+define('TABLE_ERP_ABS_HISTORY', 'time_absence_history');
 
+//TOOL
+define('TABLE_ERP_TOOL', 'tool');
 
 //if turn off web site
 define ('MAINTENANCE', 0);
