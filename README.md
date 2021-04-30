@@ -1,4 +1,4 @@
-# WEB_ERP_MES
+# WEB ERP MES
 ##  Ressource and Manufacturing execution system  Web
 
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Workflow.png)
@@ -27,3 +27,11 @@ Currently, the quotation, orders, confirmation are finished.
 4. Log acces to user pages
 * Login : Admin
 * Password : password
+
+-----------------
+Few pages : quote - component - planning
+
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Quote/Quote_home.PNG)
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Item/Item_exemple.PNG)
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Planning/Task_list.PNG)
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Planning/Calendar.PNG)
