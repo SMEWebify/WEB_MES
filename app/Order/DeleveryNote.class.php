@@ -28,8 +28,12 @@ class DeleveryNote Extends SQL  {
     Public $TRANSPORT_ID;
     Public $TRANSPORT_LABEL;
     Public $CUSTOMER_NAME;
-    Public $NOM;
-    Public $PRENOM;
+    Public $NOM_CREATOR;
+    Public $PRENOM_CREATOR;
+    Public $NOM_RESP_COM;
+    Public $PRENOM_RESP_COM;
+    Public $NOM_RESP_TECH;
+    Public $PRENOM_RESP_TECH;
 
     Public $DeleveryNote;
 
@@ -60,12 +64,18 @@ class DeleveryNote Extends SQL  {
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.CREATEUR_ID,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.INCOTERM,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.COMENT,
-                                        '. TABLE_ERP_EMPLOYEES .'.NOM,
-                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM,
+                                        '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
+                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM  AS PRENOM_CREATOR,
+                                        TABLE_ERP_EMPPLOYEES_RESP_COM.NOM AS NOM_RESP_COM,
+                                        TABLE_ERP_EMPPLOYEES_RESP_COM.PRENOM  AS PRENOM_RESP_COM,
+                                        TABLE_ERP_EMPPLOYEES_RESP_TECH.NOM AS NOM_RESP_TECH,
+                                        TABLE_ERP_EMPPLOYEES_RESP_TECH.PRENOM  AS PRENOM_RESP_TECH,
                                         '. TABLE_ERP_ORDER .'.CUSTOMER_ID,
                                         '. TABLE_ERP_ORDER .'.CONTACT_ID,
                                         '. TABLE_ERP_ORDER .'.ADRESSE_ID,
                                         '. TABLE_ERP_ORDER .'.FACTURATION_ID,
+                                        '. TABLE_ERP_ORDER .'.RESP_COM_ID,
+                                        '. TABLE_ERP_ORDER .'.RESP_TECH_ID,
                                         '. TABLE_ERP_ORDER .'.REFERENCE,
                                         '. TABLE_ERP_ORDER .'.COND_REG_CUSTOMER_ID,
                                         '. TABLE_ERP_ORDER .'.MODE_REG_CUSTOMER_ID,
@@ -77,8 +87,10 @@ class DeleveryNote Extends SQL  {
                                         '. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL AS ECHEANCIER_LABEL,
                                         '. TABLE_ERP_TRANSPORT .'.LABEL AS TRANSPORT_LABEL
                                         FROM `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`
+                                           LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
-                                            LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS  TABLE_ERP_EMPPLOYEES_RESP_COM ON `'. TABLE_ERP_ORDER .'`.`RESP_COM_ID` =  TABLE_ERP_EMPPLOYEES_RESP_COM.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS TABLE_ERP_EMPPLOYEES_RESP_TECH ON `'. TABLE_ERP_ORDER .'`.`RESP_TECH_ID` = TABLE_ERP_EMPPLOYEES_RESP_TECH.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_ORDER .'`.`COND_REG_CUSTOMER_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_ORDER .'`.`MODE_REG_CUSTOMER_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`

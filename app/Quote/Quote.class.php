@@ -31,8 +31,12 @@ class Quote Extends SQL  {
     Public $TRANSPORT_LABEL;
     Public $COMMENT;
     Public $CUSTOMER_NAME;
-    Public $NOM;
-    Public $PRENOM;
+    Public $NOM_CREATOR;
+    Public $PRENOM_CREATOR;
+    Public $NOM_RESP_COM;
+    Public $PRENOM_RESP_COM;
+    Public $NOM_RESP_TECH;
+    Public $PRENOM_RESP_TECH;
 
     Public $Quote;
 
@@ -70,8 +74,12 @@ class Quote Extends SQL  {
                                         '. TABLE_ERP_QUOTE .'.TRANSPORT_ID,
                                         '. TABLE_ERP_QUOTE .'.COMENT,
                                         '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
-                                        '. TABLE_ERP_EMPLOYEES .'.NOM,
-                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM,
+                                        '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
+                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_CREATOR,
+                                        TABLE_ERP_EMPPLOYEES_RESP_COM.NOM AS NOM_RESP_COM,
+                                        TABLE_ERP_EMPPLOYEES_RESP_COM.PRENOM  AS PRENOM_RESP_COM,
+                                        TABLE_ERP_EMPPLOYEES_RESP_TECH.NOM AS NOM_RESP_TECH,
+                                        TABLE_ERP_EMPPLOYEES_RESP_TECH.PRENOM  AS PRENOM_RESP_TECH,
                                         '. TABLE_ERP_CONDI_REG .'.LABEL AS COND_REG_LABEL,
                                         '. TABLE_ERP_MODE_REG .'.LABEL AS MODE_REG_LABEL,
                                         '. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL AS ECHEANCIER_LABEL,
@@ -79,6 +87,8 @@ class Quote Extends SQL  {
                                         FROM `'. TABLE_ERP_QUOTE .'`
                                             LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_QUOTE .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QUOTE .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS  TABLE_ERP_EMPPLOYEES_RESP_COM ON `'. TABLE_ERP_QUOTE .'`.`RESP_COM_ID` =  TABLE_ERP_EMPPLOYEES_RESP_COM.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS TABLE_ERP_EMPPLOYEES_RESP_TECH ON `'. TABLE_ERP_QUOTE .'`.`RESP_TECH_ID` = TABLE_ERP_EMPPLOYEES_RESP_TECH.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_QUOTE .'`.`COND_REG_CUSTOMER_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_QUOTE .'`.`MODE_REG_CUSTOMER_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_ECHEANCIER_TYPE .'` ON `'. TABLE_ERP_QUOTE .'`.`ECHEANCIER_ID` = `'. TABLE_ERP_ECHEANCIER_TYPE .'`.`id`

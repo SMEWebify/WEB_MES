@@ -9,9 +9,11 @@ class QL_NFC Extends SQL  {
     Public $CODE;
     Public $LABEL;
     Public $ETAT;
-    Public $DATE;
+    Public $CREATED;
+    Public $MODIFIED;
     Public $TYPE;
-    Public $CREATEUR_ID;
+    Public $CREATOR_ID;
+    Public $MODIFIED_ID;
     Public $CAUSED_BY_ID;
     Public $SECTION_ID;
     Public $RESSOURCE_ID;
@@ -22,19 +24,24 @@ class QL_NFC Extends SQL  {
     Public $CORRECTION_ID;
     Public $CORRECTION_COMMENT;
     Public $COMMENT;
-    Public $NOM;
-    Public $PRENOM;
+    Public $COMPANY_ID;
+    Public $NOM_CREATOR;
+    Public $PRENOM_CREATOR;
+    Public $NOM_MODIFIED;
+    Public $PRENOM_MODIFIED;
 
     Public $QL_NFC;
 
-    public function NewQL_FNC($CODE, $IDuser){
+    public function NewQL_FNC($CODE, $IDuser, $COMPANY_ID){
 
         $FNC = $this->GetInsert("INSERT INTO ". TABLE_ERP_NFC ."  VALUE ('0',
                                                                         '". $CODE ."',
                                                                         '',
                                                                         '1',
                                                                         NOW(),
+                                                                        NOW(),
                                                                         '1',
+                                                                        '". $IDuser ."',
                                                                         '". $IDuser ."',
                                                                         '0',
                                                                         '0',
@@ -45,7 +52,8 @@ class QL_NFC Extends SQL  {
                                                                         '',
                                                                         '0',
                                                                         '',
-                                                                        '')");
+                                                                        '',
+                                                                        '". $COMPANY_ID ."' )");
         return $FNC;
     }
 
@@ -55,9 +63,11 @@ class QL_NFC Extends SQL  {
                                                 '. TABLE_ERP_NFC .'.CODE,
                                                 '. TABLE_ERP_NFC .'.LABEL,
                                                 '. TABLE_ERP_NFC .'.ETAT,
-                                                '. TABLE_ERP_NFC .'.DATE,
+                                                '. TABLE_ERP_NFC .'.CREATED,
+                                                '. TABLE_ERP_NFC .'.MODIFIED,
                                                 '. TABLE_ERP_NFC .'.TYPE,
-                                                '. TABLE_ERP_NFC .'.CREATEUR_ID,
+                                                '. TABLE_ERP_NFC .'.CREATOR_ID,
+                                                '. TABLE_ERP_NFC .'.MODIFIED_ID,
                                                 '. TABLE_ERP_NFC .'.CAUSED_BY_ID,
                                                 '. TABLE_ERP_NFC .'.SECTION_ID,
                                                 '. TABLE_ERP_NFC .'.RESSOURCE_ID,
@@ -68,10 +78,14 @@ class QL_NFC Extends SQL  {
                                                 '. TABLE_ERP_NFC .'.CORRECTION_ID,
                                                 '. TABLE_ERP_NFC .'.CORRECTION_COMMENT,
                                                 '. TABLE_ERP_NFC .'.COMMENT,
-                                                '. TABLE_ERP_EMPLOYEES .'.NOM,
-                                                '. TABLE_ERP_EMPLOYEES .'.PRENOM
+                                                '. TABLE_ERP_NFC .'.COMPANY_ID,
+                                                '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
+                                                '. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_CREATOR,
+                                                TABLE_MODIFIED.NOM AS NOM_MODIFIED,
+                                                TABLE_MODIFIED.PRENOM AS PRENOM_MODIFIED
                                             FROM `'. TABLE_ERP_NFC .'`
-                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_NFC .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser` 
+                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_NFC .'`.`CREATOR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser` 
+                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS TABLE_MODIFIED ON `'. TABLE_ERP_NFC .'`.`MODIFIED_ID` = TABLE_MODIFIED.`idUser` 
 								            WHERE '. TABLE_ERP_NFC .'.id=\''. $id_GET .'\'', true, 'App\Quality\QL_NFC');
         return $FNC;
     }

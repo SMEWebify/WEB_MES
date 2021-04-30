@@ -192,23 +192,14 @@
 									<?= $Form->input('hidden', 'id', $Maindata->id) ?>
 									<?= $langue->show_text('TableUserCreate') ?>
 								</td>
-								<td><?= $Maindata->NOM ?> <?= $Maindata->PRENOM ?></td>
+								<td><?= $Maindata->NOM_CREATOR ?> <?= $Maindata->PRENOM_CREATOR ?></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableSalesManager') ?></td>
-								<td>
-									<select name="RESP_COM_ID">
-										<?=$Employees->GETEmployeesList($Maindata->RESP_COM_ID) ?>
-									</select>
-								</td>
-							</tr>
+								<td><?= $Form->select('RESP_COM_ID', '',  $Maindata->RESP_COM_ID,$ActivateForm, $Maindata->NOM_RESP_COM .'  '.$Maindata->PRENOM_RESP_COM , $Employees->GETEmployeesList($Maindata->RESP_COM_ID, false) )  ?></td>	</tr>
 							<tr>
 								<td><?= $langue->show_text('TableTechnicalManager') ?></td>
-								<td>
-									<select name="RESP_TECH_ID">
-									<?=$Employees->GETEmployeesList($Maindata->RESP_TECH_ID) ?>
-									</select>
-								</td>
+								<td><?= $Form->select('RESP_TECH_ID', '',  $Maindata->RESP_TECH_ID,$ActivateForm, $Maindata->NOM_RESP_TECH .'  '.$Maindata->PRENOM_RESP_TECH , $Employees->GETEmployeesList($Maindata->RESP_TECH_ID, false) )  ?></td>
 							</tr>
 							<tr>
 								<td colspan="2" ><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>

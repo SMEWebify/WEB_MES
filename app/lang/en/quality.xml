@@ -54,8 +54,10 @@
  <!-- table -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Label</TableLabel>
-   <TableDATE>Date of object : </TableDATE>
-   <TableAuteur>Creator : </TableAuteur>
+   <TableCREATED>Date of created : </TableCREATED>
+   <TableMODIFIED>Date of modified: </TableMODIFIED>
+   <TableAuteur>Creator by : </TableAuteur>
+   <TableModified>Modified by : </TableModified>
    <TableType>Type : </TableType>
    <TableEtat>Etat : </TableEtat>
    <TableResp>Responsable : </TableResp>
@@ -69,6 +71,9 @@
    <TableAction>Action : </TableAction>
    <TableCorrection>Correction : </TableCorrection>
    <TableColor>Color</TableColor>
+   <TableCompany>Company :</TableCompany>
+   <TableNewFNCFor>Company :</TableNewFNCFor>
+   
 
    <TableRessource>Ressources</TableRessource>
    <TableUser>User</TableUser>

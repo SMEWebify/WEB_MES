@@ -32,8 +32,12 @@ class Order Extends SQL  {
     Public $QUOTE_ID;
     Public $QUOTE_CODE;
     Public $CUSTOMER_NAME;
-    Public $NOM;
-    Public $PRENOM;
+    Public $NOM_CREATOR;
+    Public $PRENOM_CREATOR;
+    Public $NOM_RESP_COM;
+    Public $PRENOM_RESP_COM;
+    Public $NOM_RESP_TECH;
+    Public $PRENOM_RESP_TECH;
 
     Public $Order;
 
@@ -90,8 +94,12 @@ class Order Extends SQL  {
                                         '. TABLE_ERP_ORDER .'.COMENT,
                                         '. TABLE_ERP_ORDER .'.QUOTE_ID,
                                         '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
-                                        '. TABLE_ERP_EMPLOYEES .'.NOM,
-                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM,
+                                        '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
+                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM  AS PRENOM_CREATOR,
+                                        TABLE_ERP_EMPPLOYEES_RESP_COM.NOM AS NOM_RESP_COM,
+                                        TABLE_ERP_EMPPLOYEES_RESP_COM.PRENOM  AS PRENOM_RESP_COM,
+                                        TABLE_ERP_EMPPLOYEES_RESP_TECH.NOM AS NOM_RESP_TECH,
+                                        TABLE_ERP_EMPPLOYEES_RESP_TECH.PRENOM  AS PRENOM_RESP_TECH,
                                         '. TABLE_ERP_QUOTE .'.CODE AS QUOTE_CODE,
                                         '. TABLE_ERP_CONDI_REG .'.LABEL AS COND_REG_LABEL,
                                         '. TABLE_ERP_MODE_REG .'.LABEL AS MODE_REG_LABEL,
@@ -100,6 +108,8 @@ class Order Extends SQL  {
                                         FROM `'. TABLE_ERP_ORDER .'`
                                             LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS  TABLE_ERP_EMPPLOYEES_RESP_COM ON `'. TABLE_ERP_ORDER .'`.`RESP_COM_ID` =  TABLE_ERP_EMPPLOYEES_RESP_COM.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS TABLE_ERP_EMPPLOYEES_RESP_TECH ON `'. TABLE_ERP_ORDER .'`.`RESP_TECH_ID` = TABLE_ERP_EMPPLOYEES_RESP_TECH.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_QUOTE .'` ON `'. TABLE_ERP_ORDER .'`.`QUOTE_ID` = `'. TABLE_ERP_QUOTE .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_ORDER .'`.`COND_REG_CUSTOMER_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_ORDER .'`.`MODE_REG_CUSTOMER_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`

@@ -35,18 +35,14 @@ class Form Extends SQL  {
 
             $option ='';
 
-            
-
             foreach($QueryResult as $line){
                 $option .= $this->option($line->id, $line->LABEL, $activate, selected($line->id, $TargetId) );  
             }
-
 
             return '<select name="'. $SelectName .'" >
                 '. $option .'
             </select>';
 
-            
         }
         else{
             return $NoSelectValue;

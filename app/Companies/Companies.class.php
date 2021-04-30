@@ -121,24 +121,19 @@ class Companies Extends SQL  {
         return  $this->ProviderCheckedList;
     }
 
-    public function GetCustomerList(array $IdData = null){
-        if($IdData != null){$IdData = explode(",", $IdData);}
+    public function GetCustomerList($IdData=0, $Select = true){
         $this->CustomerList = '';
         $query='SELECT id, NAME   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_CLIENT=1 ';
 
-		foreach ($this->GetQuery($query) as $data){
-            if($IdData != null){
-                if(in_array($data->id,$IdData)){
-                    $checked = 'checked';
-                }
-                else{
-                    $checked = '';
-                }
-            }
+        if($Select){
 
-			$this->CustomerList .='<option value="'. $data->id .'" '. $checked .'>'. $data->NAME .'</option>';
-		}
-        
-        return  $this->CustomerList;
+            foreach ($this->GetQuery($query) as $data){
+
+                $this->CustomerList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->NAME .'</option>';
+            }
+            return  $this->CustomerList;
+        }else {
+            return  $this->GetQuery($query);
+        } 
     }
 }

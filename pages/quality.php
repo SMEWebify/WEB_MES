@@ -2,6 +2,7 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use \App\Form;
+	use \App\Companies\Companies;
 	use \App\COMPANY\Employees;
 	use \App\COMPANY\Numbering;
 	use \App\Methods\Ressource;
@@ -22,6 +23,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	//init form class
 	$Form = new Form($_POST);
+	$Companies = new Companies();
 	$Employees = new Employees();
 	$Numbering = new Numbering();
 	$Ressource = new Ressource();
@@ -48,7 +50,7 @@
 			$CallOutBox->add_notification(array('3', $langue->show_text('UpdateFNC')));
 		}elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){	
 			//insert in DB new FNC
-			$IdQL_FNC = $QL_FNC->NewQL_FNC($_POST['CODE'], $User->idUSER);
+			$IdQL_FNC = $QL_FNC->NewQL_FNC($_POST['CODE'], $User->idUSER,$_POST['COMPANY_ID'] );
 			$Numbering->getIncrementNumbering(11);
 			$CallOutBox->add_notification(array('2',  $langue->show_text('AddFNC')));
 		}else{
@@ -147,8 +149,12 @@
 								<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
 							</tr>
 							<tr>
-								<td><?= $langue->show_text('TableDATE') ?><?= $Data->DATE ?></td>
-								<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM ?> <?= $Data->PRENOM ?></td>
+								<td><?= $langue->show_text('TableCREATED') ?><?= $Data->CREATED ?></td>
+								<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM_CREATOR ?> <?= $Data->PRENOM_CREATOR ?></td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableMODIFIED') ?><?= $Data->MODIFIED ?></td>
+								<td><?= $langue->show_text('TableModified') ?><?= $Data->NOM_MODIFIED ?> <?= $Data->PRENOM_MODIFIED ?></td>
 							</tr>
 							<tr>
 								<td>
@@ -189,6 +195,14 @@
 									<?= $langue->show_text('TableRessource') ?>
 									<select name="RESSOURCE_ID">
 										<?= $Ressource->GETRessourcesList($Data->RESSOURCE_ID) ?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<?= $langue->show_text('TableCompany') ?>
+									<select name="COMPANY_ID">
+										<?= $Companies->GetCustomerList($Data->COMPANY_ID) ?>
 									</select>
 								</td>
 							</tr>
@@ -247,6 +261,14 @@
 							<tr>
 								<td><?= $langue->show_text('TableNewFNC') ?></td>
 								<td><?= $Form->input('text', 'CODE', $Numbering->getCodeNumbering(11)) ?></td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableNewFNCFor') ?></td>
+								<td>
+									<select name="COMPANY_ID">
+										<?= $Companies->GetCustomerList() ?>
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2" >

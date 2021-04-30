@@ -157,7 +157,7 @@
 					$i = 1;
 					foreach ($Employees->GETEmployeesList($SteRESP_COM_ID , false) as $data): ?>
 						<tr>
-							<td><?= $i .''. $Form->input('hidden', 'id_membre[]',  $data->IdUser) ?></td>
+							<td><?= $i .''. $Form->input('hidden', 'id_membre[]',  $data->id) ?></td>
 							<td><?= format_temps($data->CONNEXION) ?></td>
 							<td><?= $Form->input('text', 'CODE[]',  $data->CODE) ?></td>
 							<td><?= $Form->input('text', 'NAME[]',  $data->NAME) ?></td>

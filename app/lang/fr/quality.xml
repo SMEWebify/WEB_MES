@@ -53,8 +53,10 @@
  <!-- table -->
    <TableCODE>CODE</TableCODE>
    <TableLabel>Libelé</TableLabel>
-   <TableDATE>Date de création : </TableDATE>
-   <TableAuteur>Auteur : </TableAuteur>
+  <TableCREATED>Date de création : </TableCREATED>
+   <TableMODIFIED>Date de modification: </TableMODIFIED>
+   <TableAuteur>Créer par : </TableAuteur>
+   <TableModified>Modifier par : </TableModified>
    <TableType>Type : </TableType>
    <TableEtat>Etat : </TableEtat>
    <TableResp>Responsable : </TableResp>
@@ -68,6 +70,8 @@
    <TableAction>Action : </TableAction>
    <TableCorrection>Correction : </TableCorrection>
    <TableColor>Couleur</TableColor>
+   <TableCompany>Client :</TableCompany>
+   <TableNewFNCFor>Client :</TableNewFNCFor>
 
    <TableRessource>Ressources</TableRessource>
    <TableUser>Utilisateur</TableUser>

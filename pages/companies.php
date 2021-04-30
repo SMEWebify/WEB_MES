@@ -135,7 +135,14 @@
 			<p>&#9742; <?= $data->NUMBER ?></p>
 			<p><button onClick="location.href=\'mailto:<?= $data->MAIL ?>\'">&#x2709; <?= $langue->show_text('ContactEmployees') ?></button></p>
 		</div>
+	
+		<div class="card">
+			<div id="map-container-google-1" class="z-depth-1-half map-container-5" style="height: 200px">
+				<iframe src="https://maps.google.com/maps?q=<?= $data->COUNTRY ?>-<?= $data->CITY ?>-<?= $data->ADRESSE ?>&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" style="border:0" allowfullscreen></iframe>
+		</div>
+		</div>
 	</div>
+	
 <?php $i++; endforeach; ?>
 </div>
 <div id="div3" class="tabcontent" >
