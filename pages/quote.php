@@ -111,8 +111,7 @@
 		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			//// DELETE LIGNE ////
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_TECH_CUT ." WHERE ARTICLE_ID='". addslashes($_GET['delete'])."'");
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_NOMENCLATURE ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_TASK ." WHERE QUOTE_LINE_ID='". addslashes($_GET['delete'])."'");
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_QUOTE_SUB_ASSEMBLY ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
 
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteQuoteLineNotification')));

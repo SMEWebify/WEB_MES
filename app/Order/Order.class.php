@@ -162,6 +162,10 @@ class OrderLines Extends Order  {
     Public $ARTICLE_CODE;
     Public $LABEL;
     Public $QT;
+    Public $DELIVERED_QTY;
+    Public $DELIVERED_REMAINING_QTY;
+    Public $INVOICED_QTY;
+    Public $INVOICED_REMAINING_QTY;
     Public $UNIT_ID;
     Public $ADRESSE_ID;
     Public $PRIX_U;
@@ -182,6 +186,10 @@ class OrderLines Extends Order  {
                                                                                         '". addslashes($ARTICLE_CODE) ."',
                                                                                         '". addslashes($LABEL) ."',
                                                                                         '". addslashes($QT) ."',
+                                                                                        '0',
+                                                                                        '". addslashes($QT) ."',
+                                                                                        '0',
+                                                                                        '". addslashes($QT) ."',
                                                                                         '". addslashes($UNIT_ID) ."',
                                                                                         '". addslashes($PRIX_U) ."',
                                                                                         '". addslashes($REMISE) ."',
@@ -192,13 +200,17 @@ class OrderLines Extends Order  {
                                                                                         '0')");
     }
 
-    public function NewOrderLineFromQuote($IdOrder,$IDQuoteLine){
+    public function NewOrderLineFromQuote($IdOrder,$IDQuoteLine, $UserID){
         
          $NewOrderLine = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_LIGNE ." (ORDER_ID,
                                                                                     ORDRE,
                                                                                     ARTICLE_CODE,
                                                                                     LABEL,
                                                                                     QT,
+                                                                                    DELIVERED_QTY,
+                                                                                    DELIVERED_REMAINING_QTY,
+                                                                                    INVOICED_QTY,
+                                                                                    INVOICED_REMAINING_QTY,
                                                                                     UNIT_ID,
                                                                                     PRIX_U,
                                                                                     REMISE,
@@ -213,6 +225,10 @@ class OrderLines Extends Order  {
                                                                                             ARTICLE_CODE,
                                                                                             LABEL,
                                                                                             QT,
+                                                                                            '0',
+                                                                                            QT,
+                                                                                            '0',
+                                                                                            QT,
                                                                                             UNIT_ID,
                                                                                             PRIX_U,
                                                                                             REMISE,
@@ -226,65 +242,39 @@ class OrderLines Extends Order  {
                                                                                     WHERE  
                                                                                     id = '". $IDQuoteLine ."'");
 
-        $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_TECH_CUT ." (ARTICLE_ID, 
-                                                                        ORDRE, 
-                                                                        PRESTA_ID, 
-                                                                        LABEL, 
-                                                                        TPS_PREP, 
-                                                                        TPS_PRO, 
-                                                                        COUT, 
-                                                                        PRIX,
-                                                                        ETAT) 
-                                                                            SELECT 
-                                                                                '". $NewOrderLine ."', 
-                                                                                ORDRE, 
-                                                                                PRESTA_ID, 
-                                                                                LABEL, 
-                                                                                TPS_PREP, 
-                                                                                TPS_PRO, 
-                                                                                COUT, 
-                                                                                PRIX,
-                                                                                '1' 
-                                                                            FROM 
-                                                                                    ". TABLE_ERP_QUOTE_TECH_CUT ." 
-                                                                            WHERE  
-                                                                            ARTICLE_ID = '". $IDQuoteLine ."'");
-         $query='SELECT  '. TABLE_ERP_ORDER_TECH_CUT .'.id,
-                         '. TABLE_ERP_ORDER_TECH_CUT .'.ARTICLE_ID
-                            FROM '. TABLE_ERP_ORDER_TECH_CUT .'
-                            WHERE  '. TABLE_ERP_ORDER_TECH_CUT .'.ARTICLE_ID=\''. $NewOrderLine  .'\' ';
-                                                            
-        foreach ($this->GetQuery($query) as $data){
-                                        
-            $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_DATE_PLAN_TASK ." VALUE ('0', 
-                                                                                    '".  $data->id ."',
-                                                                                    '".  $data->ARTICLE_ID ."', 
-                                                                                    '". time() ."',
-                                                                                    '". time() ."')
-                                                                                ");
-          }
-
-        $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_NOMENCLATURE ." (ORDRE, 
-                                                                        PARENT_ID, 
-                                                                        ARTICLE_ID,
-                                                                        LABEL,
-                                                                        QT,
-                                                                        UNIT_ID,
-                                                                        PRIX_U,
-                                                                        PRIX_ACHAT)
-                                                                        SELECT 
-                                                                            ORDRE,
-                                                                            '". $NewOrderLine ."', 
-                                                                            ARTICLE_ID,
-                                                                            LABEL,
-                                                                            QT,
-                                                                            UNIT_ID,
-                                                                            PRIX_U,
-                                                                            PRIX_ACHAT
-                                                                        FROM 
-                                                                            ". TABLE_ERP_QUOTE_NOMENCLATURE ." 
-                                                                        WHERE 
-                                                                        PARENT_ID= '". $IDQuoteLine ."'");
+        $this->GetInsert("INSERT INTO ". TABLE_ERP_TASK ." (`LABEL`, 
+                                                            `ORDER`, 
+                                                            `ORDER_LINE_ID`,
+                                                            `SERVICE_ID`, 
+                                                            `ARTICLE_ID`, 
+                                                            `SETING_TIME`, 
+                                                            `UNIT_TIME`, 
+                                                            `ETAT`, 
+                                                            `TYPE`,
+                                                            `QTY`,
+                                                            `UNIT_COST`,
+                                                            `UNIT_PRICE`,
+                                                            `UNIT_ID`,
+                                                            `CREATOR_ID`) 
+                                                                SELECT 
+                                                                `LABEL`,
+                                                                    `ORDER`, 
+                                                                    '". $NewOrderLine ."',
+                                                                    `SERVICE_ID`, 
+                                                                    `ARTICLE_ID`, 
+                                                                    `SETING_TIME`, 
+                                                                    `UNIT_TIME`, 
+                                                                    '1', 
+                                                                    `TYPE`,
+                                                                    `QTY`,
+                                                                    `UNIT_COST`,
+                                                                    `UNIT_PRICE`,
+                                                                    `UNIT_ID`,
+                                                                    '". $UserID ."'
+                                                                FROM 
+                                                                    ". TABLE_ERP_TASK ." 
+                                                                WHERE  
+                                                                    QUOTE_LINE_ID = '". $IDQuoteLine ."'");
 
          $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_SUB_ASSEMBLY ." ( PARENT_ID, 
                                                                             ORDRE, 

@@ -38,6 +38,9 @@
 	elseif(isset($_GET['prestation'])){
 		$ParDefautDiv4 = 'id="defaultOpen"';
 	}
+	elseif(isset($_GET['task'])){
+		$ParDefautDiv5 = 'id="defaultOpen"';
+	}
 	else{
 		$ParDefautDiv1 = 'id="defaultOpen"';
 	}
@@ -47,6 +50,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv4; ?>><?=$langue->show_text('Title4'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div5')" <?=$ParDefautDiv5; ?>><?=$langue->show_text('Title5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<div id="grand_calendrier">
@@ -251,21 +255,40 @@
 						for ($w = 0; $w <= 8; $w++): ?>
 							<th>W<?= strftime("%W", time())+$w ?></th>
 						<?php $i++; endfor; ?>
+						<th> No display</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 				$i = 1;
-				foreach ($Section->GetSectionList('',false) as $data): ?>
-				<tr>
-				<td style="background-color:<?= $data->COLOR  ?>"></td>
-					<td><a href="index.php?page=planning&section=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
-					<?php
-						for ($w = 0; $w <= 8; $w++): ?>
-							<td><a href="index.php?page=planning&section=<?= $data->Id ?>&w=<?= strftime("%W", time())+$w ?>">100 %</a></t>
-						<?php $i++; endfor; ?>
-				</tr>
-				<?php $i++; endforeach; ?>
+				foreach ($Section->GetSectionList('',false) as $data): 
+				$WorkLoad = $Task->GETWorkload($data->Id,'section'); ?>
+					<tr>
+						<td style="background-color:<?= $data->COLOR  ?>"></td>
+						<td><a href="index.php?page=planning&section=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+						<?php
+							$NotDisplay = 0;
+							$CurentColWeek = strftime("%W", time());
+							//var_dump($WorkLoad);
+							for ($w = 0; $w <= 8; $w++): 
+								
+								
+								$key = array_search($CurentColWeek, array_column($WorkLoad, 'WEEK'));
+								
+								if(false !== $key ):
+									echo '<td><a href="index.php?page=planning&section='. $data->Id .'&w='. $WorkLoad[$key]->WEEK .'">'. $WorkLoad[$key]->WORKLOAD  .'</a></td>';
+									$NotDisplay+= $WorkLoad[$key]->WORKLOAD;
+								else:
+									echo '<td>0</td>';
+									
+								endif;	
+								$CurentColWeek+=1;
+								
+							endfor;?>
+							
+							<td><?=  round(array_sum(array_column($WorkLoad, 'WORKLOAD'))-$NotDisplay,3) ?></td>
+					</tr>
+					<?php $i++; endforeach; ?>
 				
 			</tbody>
 			</table>
@@ -275,6 +298,7 @@
 			<table class="content-table">
 					<thead>
 						<tr>
+							<th>Week num</th>
 							<th>Stat Date</th>
 							<th>End Date</th>
 							<th>Task</th>
@@ -283,16 +307,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($Task->GETListTask($_GET['section'],'section') as $data): ?>
-						<tr>
-							<td></td>
-							<td><?= $data->DATE_START_TIMESTAMPS ?></td>
-							<td><?= $data->DATE_END_START_TIMESTAMPS ?></td>
-							<td><a href="index.php?page=planning&prestation=2&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE_ORDER ?> - <?= $data->LABEL_ORDER_LINE ?> - <?= $data->LABEL ?> - <?= $data->ORDRE ?></a></td>
-							<td><?= $data->TPS_PREP+$data->TPS_PRO*$data->QT ?></td>
-							<td></td>
-						</tr>
-						<?php $i++; endforeach;?>
+					<?= $Task->GETListTask($_GET['section'],'section', $_GET['w'],true)?>
 					</tbody>
 			</table>
 		</div>
@@ -303,27 +318,46 @@
 			<table class="content-table">
 				<thead>
 					<tr>
-					<th></th>
-					<th></th>
+						<th></th>
+						<th></th>
 						<?php
 						for ($w = 0; $w <= 8; $w++): ?>
 							<th>W<?= strftime("%W", time())+$w ?></th>
-						<?php $i++; endfor; ?>
+						<?php  endfor; ?>
+					<th> No display</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 				$i = 1;
-				foreach ($Ressource->GETRessourcesList('',false) as $data): ?>
-				<tr>
-					<td style="background-color:<?= $data->COLOR  ?>"></td>
-					<td><a href="index.php?page=planning&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
-					<?php
-						for ($w = 0; $w <= 8; $w++): ?>
-							<td><a href="index.php?page=planning&resources=<?= $data->Id ?>&w=<?= strftime("%W", time())+$w ?>">100 %</a></t>
-						<?php $i++; endfor; ?>
-				</tr>
-				<?php $i++; endforeach; ?>
+				foreach ($Ressource->GETRessourcesList('',false) as $data): 
+					$WorkLoad = $Task->GETWorkload($data->Id,'resources'); ?>
+					<tr>
+						<td style="background-color:<?= $data->COLOR  ?>"></td>
+						<td><a href="index.php?page=planning&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+						<?php
+							$NotDisplay = 0;
+							$CurentColWeek = strftime("%W", time());
+							//var_dump($WorkLoad);
+							for ($w = 0; $w <= 8; $w++): 
+								
+								
+								$key = array_search($CurentColWeek, array_column($WorkLoad, 'WEEK'));
+								
+								if(false !== $key ):
+									echo '<td><a href="index.php?page=planning&resources='. $data->Id .'&w='. $WorkLoad[$key]->WEEK .'">'. $WorkLoad[$key]->WORKLOAD  .'</a></td>';
+									$NotDisplay+= $WorkLoad[$key]->WORKLOAD;
+								else:
+									echo '<td>0</td>';
+									
+								endif;	
+								$CurentColWeek+=1;
+								
+							endfor;?>
+							
+							<td><?=  round(array_sum(array_column($WorkLoad, 'WORKLOAD'))-$NotDisplay,3) ?></td>
+					</tr>
+					<?php $i++; endforeach; ?>
 			</tbody>
 			</table>
 		</div>
@@ -332,21 +366,16 @@
 			<table class="content-table">
 					<thead>
 						<tr>
+							<th>Week num</th>
 							<th>Stat Date</th>
 							<th>End Date</th>
 							<th>Task</th>
+							<th>Total time</th>
 							<th>Remaining time</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($Task->GETListTask($_GET['resources'],'resources') as $data): ?>
-						<tr>
-							<td><?= $data->DATE_START_TIMESTAMPS ?></td>
-							<td><?= $data->DATE_END_START_TIMESTAMPS ?></td>
-							<td><a href="index.php?page=planning&prestation=2&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE_ORDER ?> - <?= $data->LABEL_ORDER_LINE ?> - <?= $data->LABEL ?> - <?= $data->ORDRE ?></a></td>
-							<td></td>
-						</tr>
-						<?php $i++; endforeach;  ?>
+					<?= $Task->GETListTask($_GET['resources'],'resources', $_GET['w'],true)?>
 					</tbody>
 			</table>
 		</div>
@@ -416,20 +445,29 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($Task->GETListTask($_GET['prestation'],false, $_GET['w']) as $data):
-						if(date('W', $data->START_TIMESTAMPS)<strftime("%W", time())) $color='red';
-						else $color='green' ?>
+					<?= $Task->GETListTask($_GET['prestation'],'service', $_GET['w'],true)?>
 					<tr>
-						<td style="background-color:<?= $color ?>;"><?= date('W', $data->START_TIMESTAMPS)  ?></td>
-						<td><?= $data->DATE_START_TIMESTAMPS ?></td>
-						<td><?= $data->DATE_END_START_TIMESTAMPS ?></td>
-						<td><a href="index.php?page=planning&prestation=2&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE_ORDER ?> - <?= $data->LABEL_ORDER_LINE ?> - <?= $data->LABEL ?> - <?= $data->ORDRE ?></a></td>
-						<td><?= $data->TPS_PREP+$data->TPS_PRO*$data->QT ?></td>	
 						<td></td>
+						<td></td>
+						<td></td>
+						<td style="text-align:right;">Total : </td>
+						<td><?= $TotalTaskTime ?>  mn</td>
+						<td>  mn</td>
 					</tr>
-					<?php $i++; endforeach;?>
 				</tbody>
 			</table>
 		</div>
 		<?php endif; ?>
+	</div>
+	<div id="div5" class="tabcontent" >
+		<div class="column">
+					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindTask') ?>">
+					<ul id="myUL">
+						<?php
+						//generate list for datalist find input
+						foreach ($Task->GETListTask(0,null, null, False) as $data):?>
+						<li><a href="index.php?page=planning&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE ?> - <?= $data->CODE_ORDER ?></a></li>
+						<?php $i++; endforeach; ?>
+					</ul>
+			</div>
 	</div>

@@ -39,7 +39,7 @@ class Form Extends SQL  {
                 $option .= $this->option($line->id, $line->LABEL, $activate, selected($line->id, $TargetId) );  
             }
 
-            return '<select name="'. $SelectName .'" >
+            return '<select name="'. $SelectName .'" id="'. $SelectId .'">
                 '. $option .'
             </select>';
 

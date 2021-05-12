@@ -181,7 +181,7 @@ class SQL extends PDO{
 	private function GestionException($message, $statement = false){        
 		$this->GetErrorMysql = $message;            
 		
-        if($this->AfficherMessException) echo '<p><br/>'.$message.'</p><p>'.$statement.'</p>';
+        if($this->AfficherMessException) echo '<p><br/><br/><br/><br/><br/><br/>'.$message.'</p><p>'.$statement.'</p>';
         // on ferme la connexion si $CloseMysqlAuto est TRUE
         if ($this->CloseMysqlAuto) {
             if(self::$pdo){

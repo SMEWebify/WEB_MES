@@ -294,6 +294,25 @@ span.psw {
 ul, #myUL {
 	list-style-type: none;
 }
+
+.map-container-5{
+  overflow:hidden;
+  padding-bottom:56.25%;
+  position:relative;
+  height:0;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+.map-container-5 iframe{
+  left:0;
+  top:0;
+  height:100%;
+  width:100%;
+  position:absolute;
+}
+
 /*--------------------------------------------*/
 /*-------------FIND LIST --------------*/
 /*--------------------------------------------*/
@@ -443,4 +462,57 @@ ul, #myUL {
 	height: 85px;
 	border: 1px solid gray; 
 	padding: 2px;
+}
+
+/*---------------------------------------------*/
+/*-------DRAG'N DROP FILE------------*/
+/*---------------------------------------------*/
+
+#drop_file_zone {
+  font-size: 1.25rem; /* 20 */
+  background-color: #c8dadf;
+  position: relative;
+  outline: 2px dashed #92b0b3;
+  outline-offset: -10px;
+}
+
+.upload-area{
+  width: 70%;
+  border: 2px solid lightgray;
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  text-align: center;
+  overflow: auto;
+}
+
+.upload-area:hover{
+  cursor: pointer;
+}
+
+.upload-area h1{
+  text-align: center;
+  font-weight: normal;
+  font-family: sans-serif;
+  line-height: 50px;
+  color: darkslategray;
+}
+
+#file{
+  display: none;
+}
+
+/* Thumbnail */
+.thumbnail{
+  width: 150px;
+  height: 150px;
+  padding: 50px;
+  border: 2px solid lightgray;
+  border-radius: 3px;
+  float: left;
+}
+
+.size{
+  font-size:12px;
 }

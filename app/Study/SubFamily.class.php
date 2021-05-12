@@ -42,7 +42,7 @@ class SubFamily Extends SQL  {
                         '. TABLE_ERP_PRESTATION .'.CODE AS CODE_PRESTATION,
                         '. TABLE_ERP_PRESTATION .'.LABEL AS LABEL_PRESTATION
                         FROM `'. TABLE_ERP_SOUS_FAMILLE .'`
-                        LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_SOUS_FAMILLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
+                           LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_SOUS_FAMILLE .'`.`PRESTATION_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
                         ORDER BY Id';
          if($Select){
 		     foreach ($this->GetQuery($query) as $data){

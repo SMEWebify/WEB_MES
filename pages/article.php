@@ -4,6 +4,7 @@
 	use \App\Form;
 	use \App\Study\Article;
 	use \App\Study\ArticleTreeStructure;
+	use \App\Planning\Task;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -14,6 +15,7 @@
 	//init form class
 	$Form = new Form($_POST);
 	$Article = new Article();
+	$Task = new Task();
 	$ArticleTreeStructure = new ArticleTreeStructure();
 
 	//Check if the user is authorized to view the page
@@ -48,14 +50,14 @@
 								<ul>
 								<?php
 									// FIRST RANK PART TECHNICAL CUT
-									foreach ($Article->GETTechnicalCut($_GET['id'], TABLE_ERP_STANDARD_TECH_CUT) as $data){
-										$TpsTotal = $data->TPS_PREP + $data->TPS_PRO;?>
-									<li><?= $TpsTotal ?> hrs - <?= $data->PRESTA_LABEL ?> </li>
+									foreach ($Task->GETTechnicalCut($_GET['id'], 'component') as $data){
+										$TpsTotal = $data->SETING_TIME + $data->	UNIT_TIME;?>
+									<li><?= $TpsTotal ?> hrs - <?= $data->LABEL_SERVICE ?> </li>
 
 								<?php }
 									// FIRST RANK PART NOMENCLATURE
-									foreach ($Article->GETNomenclature($_GET['id'], TABLE_ERP_STANDARD_NOMENCLATURE) as $data){ ?>
-									<li> <?= $data->QT ?> <?= $data->UNIT_LABEL ?> - <?= $data->ARTICLE_LABEL ?></li>
+									foreach ($Task->GETNomenclature($_GET['id'], 'component') as $data){ ?>
+									<li> <?= $data->QTY ?> <?= $data->UNIT_LABEL ?> - <?= $data->ARTICLE_LABEL ?></li>
 									<?php }
 
 									//LOOP ARTICLE
@@ -70,7 +72,7 @@
 					<div class="card">
 						<h3><?= $dataFirstRank->CODE ?></h3>
 						<h2><?= $dataFirstRank->LABEL ?></h2>
-						<p><?= $dataFirstRank->PRESTATION_LABEL ?></p>
+						<p><?= $dataFirstRank->LABEL_SERVICE ?></p>
 						<p><?= $dataFirstRank->FAMILLE_LABEL ?></p>
 						<img src="<?= PICTURE_FOLDER.STUDY_ARTICLE_FOLDER.$dataFirstRank->IMAGE ?>" title="Image Article" alt="Logo" Class="Image-Aricle"/>
 						<p><?= $dadataFirstRankta->COMMENT ?></p>

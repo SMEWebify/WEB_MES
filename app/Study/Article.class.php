@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Study;
-use \App\SQL;
+use \App\Planning\Task;
 
-class Article Extends SQL  {
+class Article Extends Task  {
 
     Public $id;
     Public $CODE;
@@ -28,7 +28,7 @@ class Article Extends SQL  {
     Public $COMMENT;
     Public $IMAGE;
     Public $UNIT_LABEL;
-    Public $PRESTATION_LABEL;
+    Public $LABEL_SERVICE;
     Public $TYPE;
     Public $FAMILLE_LABEL;
 
@@ -61,7 +61,7 @@ class Article Extends SQL  {
                                             '. TABLE_ERP_STANDARD_ARTICLE .'.COMMENT,
                                             '. TABLE_ERP_STANDARD_ARTICLE .'.IMAGE,
                                             '. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL,
-                                            '. TABLE_ERP_PRESTATION .'.LABEL AS PRESTATION_LABEL,
+                                            '. TABLE_ERP_PRESTATION .'.LABEL AS LABEL_SERVICE,
                                             '. TABLE_ERP_PRESTATION .'.TYPE,
                                             '. TABLE_ERP_SOUS_FAMILLE .'.LABEL AS FAMILLE_LABEL
                                             FROM '. TABLE_ERP_STANDARD_ARTICLE .'
@@ -82,53 +82,7 @@ class Article Extends SQL  {
         return $ArticleCount;
     }
 
-    public function GETTechnicalCut($id_GET, $TechnicalCutTable){
-
-        $AddSQL='';
-        if($TechnicalCutTable == TABLE_ERP_ORDER_TECH_CUT){
-            $AddSQL =TABLE_ERP_ORDER_TECH_CUT .".ETAT,";
-        }
-
-        $TechnicalCut = $this->GetQuery('SELECT '. $TechnicalCutTable .'.id,
-                                                '. $TechnicalCutTable .'.ARTICLE_ID,
-                                                '. $TechnicalCutTable .'.ORDRE,
-                                                '. $TechnicalCutTable .'.PRESTA_ID,
-                                                '. $TechnicalCutTable .'.LABEL,
-                                                '. $TechnicalCutTable .'.TPS_PREP,
-                                                '. $TechnicalCutTable .'.TPS_PRO,
-                                                '. $TechnicalCutTable .'.COUT,
-                                                '. $TechnicalCutTable .'.PRIX,
-                                                '. $AddSQL .'
-                                                '. TABLE_ERP_PRESTATION .'.CODE AS PRESTA_CODE,
-                                                '. TABLE_ERP_PRESTATION .'.LABEL AS PRESTA_LABEL
-                                                FROM `'. $TechnicalCutTable .'`
-                                                    LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. $TechnicalCutTable.'`.`PRESTA_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
-                                                WHERE '. $TechnicalCutTable .'.ARTICLE_ID = \''. addslashes($id_GET) .'\'
-                                                    ORDER BY '. $TechnicalCutTable .'.ORDRE');
-         return $TechnicalCut;
-    }
-
-    public function GETNomenclature($id_GET, $NomenclatureTable ){
-
-        $GETNomenclature = $this->GetQuery('SELECT '. $NomenclatureTable .'.id,
-                                                    '. $NomenclatureTable .'.ORDRE,
-                                                    '. $NomenclatureTable .'.PARENT_ID,
-                                                    '. $NomenclatureTable .'.ARTICLE_ID,
-                                                    '. $NomenclatureTable .'.LABEL,
-                                                    '. $NomenclatureTable .'.QT,
-                                                    '. $NomenclatureTable .'.UNIT_ID,
-                                                    '. $NomenclatureTable .'.PRIX_U,
-                                                    '. $NomenclatureTable .'.PRIX_ACHAT	,
-                                                    '. TABLE_ERP_STANDARD_ARTICLE .'.LABEL AS ARTICLE_LABEL,
-                                                    '. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL
-                                                    FROM `'. $NomenclatureTable .'`
-                                                        LEFT JOIN `'. TABLE_ERP_STANDARD_ARTICLE .'` ON `'. $NomenclatureTable .'`.`ARTICLE_ID` = `'. TABLE_ERP_STANDARD_ARTICLE .'`.`id`
-                                                        LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. $NomenclatureTable .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-                                                    WHERE '. $NomenclatureTable .'.PARENT_ID = \''.  addslashes($id_GET) .'\'
-                                                        ORDER BY '. $NomenclatureTable .'.ORDRE');
-         return $GETNomenclature;
-    }
-
+   
     public function GETSubAssembly($id_GET, $SubAssemblesTable){
         
             $GETSubAssembly = $this->GetQuery('SELECT '. $SubAssemblesTable .'.id,
@@ -175,20 +129,20 @@ class ArticleTreeStructure Extends Article  {
         {
             foreach(Article::GETSubAssembly($parent_id, TABLE_ERP_STANDARD_SUB_ASSEMBLY) as $data)
             {
-                echo '<li><span> '.  $data->QT .' x <a href="index.php?page=article&id='. $data->ARTICLE_ID .'">'.  $data->LABEL_ARTICLE .' </a></span> 
+                echo '<li><span> '.  $data->QT .' x <a href="index.php?page=article&id='. $data->ARTICLE_ID  .'">'.  $data->LABEL_ARTICLE 	 .' </a></span> 
                              <ul>';
       
                     // SECOND RANK PART TECHNICAL CUT
-                    foreach (Article::GETTechnicalCut($data->ARTICLE_ID, TABLE_ERP_STANDARD_TECH_CUT) as $dataTechnicalCutRank2){
+                    foreach (Article::GETTechnicalCut($data->ARTICLE_ID	, 'component') as $dataTechnicalCutRank2){
 
-                         $TpsTotal = $dataTechnicalCutRank2->TPS_PREP + $dataTechnicalCutRank2->TPS_PRO; 
-                         echo '<li>'. $TpsTotal .' hrs - '. $dataTechnicalCutRank2->PRESTA_LABEL .'</li>';
+                         $TpsTotal = $dataTechnicalCutRank2->SETING_TIME + $dataTechnicalCutRank2->UNIT_TIME; 
+                         echo '<li>'. $TpsTotal .' hrs - '. $dataTechnicalCutRank2->LABEL_SERVICE .'</li>';
                      }
 
                     // SECONDE RANK PART NOMENCLATURE
-                    foreach (Article::GETNomenclature($data->ARTICLE_ID, TABLE_ERP_STANDARD_NOMENCLATURE) as $dataNomenclatureRank2){  
+                    foreach (Article::GETNomenclature($data->ARTICLE_ID	, 'component') as $dataNomenclatureRank2){  
 
-                          echo '<li> '. $dataNomenclatureRank2->QT  .' '. $dataNomenclatureRank2->UNIT_LABEL  .' - '. $dataNomenclatureRank2->ARTICLE_LABEL .'</li>';
+                          echo '<li> '. $dataNomenclatureRank2->QTY  .' '. $dataNomenclatureRank2->UNIT_LABEL  .' - '. $dataNomenclatureRank2->ARTICLE_LABEL .'</li>';
                     }
 
                 $this->level = $this->level+1;

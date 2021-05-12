@@ -62,7 +62,7 @@ class Prestation Extends SQL  {
         if($Select){
             foreach ($this->GetQuery($query) as $data){
             
-                $this->PrestationList .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
+                $this->PrestationList .='<option value="'. $data->Id .'-'. $data->TYPE .'" '. selected($IdData, $data->Id) .'>'. $data->LABEL .'</option>';
             }
             
             return  $this->PrestationList;

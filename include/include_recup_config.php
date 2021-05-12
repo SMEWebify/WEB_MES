@@ -20,7 +20,6 @@ define('TABLE_ERP_ECHEANCIER_TYPE_LIGNE', 'ac_timeline_paiement_lines');
 
 //DATA
 define('TABLE_ERP_ATTACHED_DOCUMENT', 'attached_document');
-
 //DATA BASE COMPANIES
 define('TABLE_ERP_CLIENT_FOUR', 'companies');
 define('TABLE_ERP_ADRESSE', 'companies_addresses');
@@ -33,23 +32,24 @@ define('TABLE_ERP_EMPLOYEES', 'company_user');
 define('TABLE_ERP_EMAIL', 'company_email_type');
 define('TABLE_ERP_INFO_GENERAL', 'company_timeline'); 
 define('TABLE_ERP_NUM_DOC', 'company_document_numbering');
+
+//DATA BASE QUOTE
+define('TABLE_ERP_QUOTE', 'quote');
+define('TABLE_ERP_QUOTE_LIGNE', 'quote_lines');
+define('TABLE_ERP_QUOTE_SUB_ASSEMBLY', 'quote_sub_assembly');
 //DATA BASE ORDER
 define('TABLE_ERP_ORDER', 'orders');
 define('TABLE_ERP_ORDER_LIGNE', 'orders_lines');
-define('TABLE_ERP_ORDER_TECH_CUT', 'order_technical_cut');
-define('TABLE_ERP_ORDER_NOMENCLATURE', 'order_nomenclature');
 define('TABLE_ERP_ORDER_SUB_ASSEMBLY', 'order_sub_assembly');
-define('TABLE_ERP_ORDER_DATE_PLAN_TASK', 'order_date_plan_task');
-
-define('TABLE_ERP_ORDER_REMAINING_TIME', 'order_remaining_time');
-
 //DATA BASE ORDER ACKNOWLEGMENT
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT', 'order_acknowledgment');
 define('TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES', 'order_acknowledgment_lines');
 //DATA BASE ORDER DELERERY NOTE
 define('TABLE_ERP_ORDER_DELIVERY_NOTE', 'order_delivery_note');
 define('TABLE_ERP_ORDER_DELIVERY_NOTE_LINES', 'order_delivery_note_lines');
-
+// DATA PURCHASE REQUEST
+define('TABLE_ERP_PURCHASE_REQUEST', 'purchase_request');
+define('TABLE_ERP_PURCHASE_REQUEST_LINES', 'purchase_request_lines');
 
 //DATA BASE QUALITY
 define('TABLE_ERP_QL_ACTION', 'ql_action');
@@ -59,27 +59,24 @@ define('TABLE_ERP_QL_CORRECTIONS', 'ql_corrections');
 define('TABLE_ERP_DEFAUT', 'ql_defaut');
 define('TABLE_ERP_DEROGATION', 'ql_derogation');
 define('TABLE_ERP_NFC', 'ql_nfc');
-//DATA BASE QUOTE
-define('TABLE_ERP_QUOTE', 'quote');
-define('TABLE_ERP_QUOTE_LIGNE', 'quote_lines');
-define('TABLE_ERP_QUOTE_TECH_CUT', 'quote_technical_cut');
-define('TABLE_ERP_QUOTE_NOMENCLATURE', 'quote_nomenclature');
-define('TABLE_ERP_QUOTE_SUB_ASSEMBLY', 'quote_sub_assembly');
-// DATA PURCHASE REQUEST
-define('TABLE_ERP_PURCHASE_REQUEST', 'purchase_request');
-define('TABLE_ERP_PURCHASE_REQUEST_LINES', 'purchase_request_lines');
+
+
+//DATA BASE STOCK
+define('TABLE_ERP_STOCK', 'stock');
+define('TABLE_ERP_STOCK_LOCATION', 'stock_location');
+
 //DATA BASE STUDY
 define('TABLE_ERP_UNIT', 'study_unit');
 define('TABLE_ERP_SOUS_FAMILLE', 'study_sub_familly');
 define('TABLE_ERP_STANDARD_ARTICLE', 'study_standard_article');
-define('TABLE_ERP_STANDARD_TECH_CUT', 'study_standard_technical_cut');
 define('TABLE_ERP_STANDARD_SUB_ASSEMBLY', 'study_standard_sub_assembly');
-define('TABLE_ERP_STANDARD_NOMENCLATURE', 'study_standard_nomenclature');
+
 //DATA BASE METHODS
 define('TABLE_ERP_SECTION', 'methods_section');
 define('TABLE_ERP_RESSOURCE', 'methods_resource');
 define('TABLE_ERP_STOCK_ZONE', 'methods_stock_zone');
 define('TABLE_ERP_PRESTATION', 'methods_services');
+
 //DATA BASE TIME
 define('TABLE_ERP_DAILY_HOURLY_MODEL', 'time_daily_hourly_model');
 define('TABLE_ERP_DAILY_HOURLY_MODEL_LINES', 'time_daily_hourly_model_line');
@@ -88,6 +85,10 @@ define('TABLE_ERP_FERIER', 'time_bank_holiday');
 define('TABLE_ERP_EVENT_MACHINE', 'time_event_machine');
 define('TABLE_ERP_EVENT_IMPRODUC_TIME', 'time_improductive_activity');
 define('TABLE_ERP_ABS_HISTORY', 'time_absence_history');
+
+//DATA TASK
+define('TABLE_ERP_TASK', 'task');
+define('TABLE_ERP_TASK_REMAINING_TIME', 'order_remaining_time');
 
 //TOOL
 define('TABLE_ERP_TOOL', 'tool');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 05 avr. 2021 à 21:29
+-- Généré le : mer. 12 mai 2021 à 20:49
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -244,11 +244,40 @@ CREATE TABLE IF NOT EXISTS `ac_vat` (
 --
 
 INSERT INTO `ac_vat` (`id`, `CODE`, `LABEL`, `TAUX`) VALUES
-(1, '0%EX', 'TVA Exonérée', '0.000'),
-(2, '5%', 'TVA France réduite', '5.000'),
-(3, '10%', 'TVA France réduite', '10.000'),
-(4, '20%', 'TVA France', '20.000'),
+(1, '0%EX', '0% - TVA Exonérée', '0.000'),
+(2, '5%', '5% - TVA France réduite', '5.000'),
+(3, '10%', '10% -TVA France réduite', '10.000'),
+(4, '20%', '20% - TVA France', '20.000'),
 (5, 'NULL', 'Aucune', '0.000');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `attached_document`
+--
+
+DROP TABLE IF EXISTS `attached_document`;
+CREATE TABLE IF NOT EXISTS `attached_document` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `DATE` date NOT NULL,
+  `PATH_FILE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `SIZE` int(11) NOT NULL,
+  `CREATOR_USER_ID` int(11) NOT NULL,
+  `COMPANY_ID` int(11) DEFAULT NULL,
+  `QUOTE_ID` int(11) DEFAULT NULL,
+  `ORDER_ID` int(11) DEFAULT NULL,
+  `ORDER_ACKNOWLEDGMENT_ID` int(11) DEFAULT NULL,
+  `TASK_ID` int(11) DEFAULT NULL,
+  `DELIVERY_NOTE_ID` int(11) DEFAULT NULL,
+  `INVOICE_ID` int(11) DEFAULT NULL,
+  `DEROGATION_ID` int(11) DEFAULT NULL,
+  `ACTION_ID` int(11) DEFAULT NULL,
+  `MESURING_DEVICE_ID` int(11) DEFAULT NULL,
+  `COMPONENT_ID` int(11) DEFAULT NULL,
+  `RESSOURCE_ID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -261,19 +290,19 @@ CREATE TABLE IF NOT EXISTS `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `WEBSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `FBSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TWITTERSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LKDSITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `SIREN` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `APE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `WEBSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `FBSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `TWITTERSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `LKDSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `SIREN` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `APE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `TVA_INTRA` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `TVA_ID` int(11) NOT NULL,
   `LOGO` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `STATU_CLIENT` int(11) NOT NULL,
   `COND_REG_CLIENT_ID` int(11) DEFAULT NULL,
   `MODE_REG_CLIENT_ID` int(11) DEFAULT NULL,
-  `REMISE` int(11) NOT NULL,
+  `REMISE` int(11) DEFAULT NULL,
   `RESP_COM_ID` int(11) NOT NULL,
   `RESP_TECH_ID` int(11) NOT NULL,
   `COMPTE_GEN_CLIENT` int(11) DEFAULT '0',
@@ -285,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `companies` (
   `COMPTE_AUX_FOUR` int(11) NOT NULL DEFAULT '0',
   `CONTROLE_FOUR` int(11) NOT NULL,
   `DATE_CREA` date NOT NULL,
-  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` text COLLATE utf8_unicode_ci,
   `SECTOR_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=213 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -439,7 +468,7 @@ INSERT INTO `companies` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE
 (142, '392', 'Pellentesque Massa Limited', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '849207485', '2353', '5', 2, 'logo.png', 1, 3, 4, 9, 9, 1, 0, 0, 0, 3, 5, 0, 0, 2, '2019-12-29', 'Aucun', ''),
 (143, '604', 'Nullam LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '401137278', '3204', '7', 4, 'logo.png', 0, 4, 4, 1, 2, 7, 0, 0, 1, 3, 3, 0, 0, 1, '2021-10-12', 'Aucun', ''),
 (144, '464', 'Libero At Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '304716590', '4851', '3', 2, 'logo.png', 2, 3, 4, 8, 4, 1, 0, 0, 1, 3, 2, 0, 0, 0, '2019-12-26', 'Aucun', ''),
-(145, '383', 'A PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '595316571', '4799', '8', 2, 'logo.png', 1, 4, 3, 6, 1, 3, 0, 0, 1, 3, 1, 0, 0, 1, '2021-07-23', 'Aucun', '1'),
+(145, '383', 'A PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '595316571', '4799', '8', 2, 'logo.png', 1, 4, 3, 6, 49, 50, 0, 0, 1, 3, 1, 0, 0, 1, '2021-07-23', 'Aucun', '1'),
 (146, '847', 'Vitae Semper Corporation', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '848165163', '9513', '4', 1, 'logo.png', 0, 3, 5, 5, 1, 7, 0, 0, 0, 4, 1, 0, 0, 2, '2020-03-25', 'Aucun', ''),
 (147, '156', 'Risus Donec Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '323158493', '9623', '4', 3, 'logo.png', 1, 6, 3, 8, 1, 3, 0, 0, 1, 6, 3, 0, 0, 1, '2020-04-27', 'Aucun', ''),
 (148, '863', 'Scelerisque Scelerisque Dui Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '115258907', '5312', '2', 3, 'logo.png', 2, 5, 3, 5, 10, 10, 0, 0, 0, 4, 2, 0, 0, 0, '2020-11-12', 'Aucun', ''),
@@ -493,7 +522,7 @@ INSERT INTO `companies` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE
 (196, '903', 'Mi Felis LLC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '159690635', '1670', '3', 1, 'logo.png', 0, 5, 1, 1, 7, 1, 0, 0, 0, 6, 2, 0, 0, 2, '2020-01-16', 'Aucun', ''),
 (197, '72', 'Dolor Sit Amet Consulting', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '166582304', '6460', '3', 2, 'logo.png', 2, 6, 4, 2, 4, 1, 0, 0, 0, 4, 3, 0, 0, 1, '2020-07-29', 'Aucun', ''),
 (198, '861', 'Non Associates', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '833831019', '2448', '9', 3, 'logo.png', 1, 4, 4, 4, 8, 7, 0, 0, 1, 3, 5, 0, 0, 2, '2020-08-30', 'Aucun', ''),
-(199, '709', 'Placerat Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '698691540', '1510', '3', 1, 'logo.png', 1, 5, 2, 7, 7, 1, 0, 0, 0, 5, 4, 0, 0, 0, '2020-04-24', 'Aucun', ''),
+(199, '709', 'Placerat Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '698691540', '1510', '3', 1, 'logo.png', 1, 5, 2, 7, 7, 1, 0, 0, 0, 5, 4, 0, 0, 0, '2020-04-24', 'Aucun', '6'),
 (200, '439', 'Aliquam Eu Accumsan Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '948284005', '3674', '3', 2, 'logo.png', 0, 3, 3, 5, 1, 9, 0, 0, 1, 3, 2, 0, 0, 0, '2020-09-23', 'Aucun', ''),
 (201, '574', 'Sed Dui Incorporated', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '583829502', '8817', '3', 2, 'logo.png', 1, 5, 5, 9, 8, 6, 0, 0, 0, 5, 4, 0, 0, 1, '2020-01-21', 'Aucun', ''),
 (202, '158', 'Ligula Tortor Company', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '649814449', '2437', '5', 1, 'logo.png', 0, 6, 2, 5, 4, 1, 0, 0, 1, 5, 5, 0, 0, 2, '2020-11-25', 'Aucun', ''),
@@ -520,12 +549,12 @@ CREATE TABLE IF NOT EXISTS `companies_addresses` (
   `ID_COMPANY` int(11) NOT NULL,
   `ORDRE` int(11) NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `ADRESSE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `ZIPCODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `CITY` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COUNTRY` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NUMBER` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ADRESSE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ZIPCODE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `CITY` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `COUNTRY` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `NUMBER` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `MAIL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ADRESS_LIV` int(11) NOT NULL,
   `ADRESS_FAC` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -538,7 +567,7 @@ CREATE TABLE IF NOT EXISTS `companies_addresses` (
 INSERT INTO `companies_addresses` (`id`, `ID_COMPANY`, `ORDRE`, `LABEL`, `ADRESSE`, `ZIPCODE`, `CITY`, `COUNTRY`, `NUMBER`, `MAIL`, `ADRESS_LIV`, `ADRESS_FAC`) VALUES
 (1, 9, 2, 'LYON', '1 rue arcelor du mital', '69300', 'LYON', 'FRANCE', '02.64.354.546', 'lyon.arcelor@arcelor.com', 1, 1),
 (2, 9, 1, 'Grenoble', '2 rue mital du arcelor', '38100', 'GRENOBLE', 'FRANCE', '02.64.354.546', 'alienbackflip@gmail.com', 1, 1),
-(3, 1, 1, 'GRENOBLE', '1 rue de grenoble', '38100', 'Grenoble', 'France', '02.99.54.65.35', 'metalerie-grenoble@gmail.com', 1, 1),
+(3, 1, 1, 'GRENOBLE', '48 Avenue Léon Blum', '38100', 'Grenoble', 'France', '02.99.54.65.35', 'metalerie-grenoble@gmail.com', 1, 1),
 (5, 83, 40, '5534 Vestibulum Impasse', 'CP 389, 9116 Tempus Rd.', '10200', 'Perth', 'Malta', '07 54 91 38 05', 'Phasellus.dolor.elit@tempus.edu', 1, 1),
 (6, 108, 70, 'Appartement 240-2918 Purus Rd.', 'Appartement 110-7825 Nec Chemin', '23366-79737', 'Rosolini', 'Netherlands', '01 87 15 25 19', 'semper@aliquetmolestie.net', 0, 1),
 (7, 172, 80, '1264 At, Route', '876-5234 Dictum Route', '688568', 'Crieff', 'South Africa', '01 21 55 87 61', 'facilisi@sempercursus.edu', 0, 0),
@@ -856,11 +885,11 @@ CREATE TABLE IF NOT EXISTS `companies_contact` (
   `NOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `FONCTION` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ADRESSE_ID` int(11) NOT NULL,
-  `NUMBER` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MOBILE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NUMBER` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `MOBILE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `MAIL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `companies_contact`
@@ -870,7 +899,8 @@ INSERT INTO `companies_contact` (`id`, `ID_COMPANY`, `ORDRE`, `CIVILITE`, `PRENO
 (1, 9, 1, 0, 'Gérad', 'Normand', 'Acheteur', 1, '026497345', '', ''),
 (2, 9, 2, 2, 'Geraldine', 'Le marchand', 'Direction', 2, '0654976', '', ''),
 (3, 1, 1, 1, 'Julie', 'SOUCHIER', 'Acheteuse', 3, '02.64.25.25', '', ''),
-(4, 44, 10, 0, 'Romain', 'Le normand', 'Directeur', 173, '', '', '');
+(4, 44, 10, 0, 'Romain', 'Le normand', 'Directeur', 173, '', '', ''),
+(5, 199, 10, 0, 'Gérad', 'Duboitel', 'Directeur', 215, '333.3126.156', '0.3165.1654', '');
 
 -- --------------------------------------------------------
 
@@ -919,12 +949,12 @@ CREATE TABLE IF NOT EXISTS `company_document_numbering` (
 --
 
 INSERT INTO `company_document_numbering` (`id`, `DOC_TYPE`, `MODEL`, `DIGIT`, `COMPTEUR`) VALUES
-(1, 4, 'CDE<AA><MM><JJ>-<I>', 3, 27),
-(2, 12, 'AR<AA><MM><JJ>-<I>', 3, 20),
+(1, 4, 'CDE<AA><MM><JJ>-<I>', 3, 31),
+(2, 12, 'AR<AA><MM><JJ>-<I>', 3, 22),
 (3, 3, 'BL<AA><MM><JJ>-<I>', 3, 0),
 (4, 5, 'ST<AA><MM><JJ>-<I>', 3, 0),
-(5, 8, 'DV<AA><MM><JJ>-<I>', 2, 17),
-(6, 11, 'FNC<I>', 6, 5);
+(5, 8, 'Q<AA><MM><JJ>-<I>', 2, 18),
+(6, 11, 'FNC<I>', 6, 7);
 
 -- --------------------------------------------------------
 
@@ -1000,21 +1030,21 @@ CREATE TABLE IF NOT EXISTS `company_setting` (
   `ADDRESS` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `CITY` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ZIPCODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `REGION` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COUNTRY` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `PHONE_NUMBER` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `REGION` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `COUNTRY` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `PHONE_NUMBER` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `MAIL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `WEB_SITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `FACEBOOK_SITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TWITTER_SITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LKD_SITE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `FACEBOOK_SITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `TWITTER_SITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `LKD_SITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `PICTURE_COMPANY` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `SIREN` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `APE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `SIREN` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `APE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `TVA_INTRA` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `TAUX_TVA` int(11) NOT NULL,
-  `CAPITAL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `RCS` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `CAPITAL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `RCS` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1061,10 +1091,10 @@ CREATE TABLE IF NOT EXISTS `company_user` (
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `NOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `PRENOM` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `DATE_NAISSANCE` date NOT NULL,
-  `MAIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NUMERO_PERSO` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NUMERO_INTERNE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `DATE_NAISSANCE` date DEFAULT NULL,
+  `MAIL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `NUMERO_PERSO` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `NUMERO_INTERNE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `IMAGE_PROFIL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `STATU` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `CONNEXION` int(45) DEFAULT NULL,
@@ -1086,7 +1116,7 @@ INSERT INTO `company_user` (`idUSER`, `CODE`, `NOM`, `PRENOM`, `DATE_NAISSANCE`,
 (36, 'Z3', 'Elton', 'Stephens', '1977-01-18', 'sem.Nulla.interdum@odioPhasellusat.com', '06 42 10 41 36', '09 86 09 50 06', 'img_avatar.png', '1', 1591554783, 'Elton', 'a', '6', 1, 'fr'),
 (37, 'V4', 'Sean', 'Conway', '1979-02-12', 'ultricies.adipiscing@temporest.org', '06 02 61 47 58', '05 32 23 72 50', 'img_avatar.png', '1', 1618408924, 'Sean', 'a', '5', 6, 'fr'),
 (38, 'O5', 'Raphael', 'Combs', '1985-07-20', 'lectus.Nullam.suscipit@lorem.org', '06 59 72 42 60', '04 45 04 97 22', 'img_avatar.png', '1', 1599887950, 'Raphael', 'a', '6', 6, 'fr'),
-(39, 'K6', 'Courtney', 'Fox', '1983-11-04', 'at@Aeneangravidanunc.org', '06 08 31 53 49', '08 79 25 82 98', 'img_avatar.png', '1', 1588754342, 'Courtney', 'a', '4', 1, 'fr'),
+(39, 'K6', 'Courtney', 'Foxi', '1983-11-04', 'at@Aeneangravidanunc.org', '06 08 31 53 49', '08 79 25 82 98', 'img_avatar.png', '1', 1588754342, 'Courtney', 'a', '4', 1, 'fr'),
 (40, 'Y7', 'Aquila', 'Browning', '1987-02-18', 'vitae.sodales@dolor.org', '06 80 75 94 40', '03 99 60 94 56', 'img_avatar.png', '1', 1582903784, 'Aquila', 'a', '6', 6, 'fr'),
 (41, '77', 'Kane', 'Tanner', '1977-02-27', 'aliquam.eu@acmi.edu', '06 00 30 68 52', '08 11 80 68 48', 'img_avatar.png', '1', 1625204548, 'Kane', 'a', '7', 5, 'fr'),
 (42, 'W9', 'Dakota', 'Leonard', '2003-12-27', 'non@velitCraslorem.org', '06 50 07 07 62', '06 19 10 79 16', 'img_avatar.png', '1', 1601519187, 'Dakota', 'a', '4', 4, 'fr'),
@@ -1119,14 +1149,14 @@ CREATE TABLE IF NOT EXISTS `methods_resource` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `IMAGE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `IMAGE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `MASK_TIME` int(11) NOT NULL,
   `ORDRE` int(11) NOT NULL,
   `CAPACITY` decimal(11,0) NOT NULL,
   `SECTION_ID` int(11) NOT NULL,
   `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `PRESTATION_ID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1139,9 +1169,9 @@ INSERT INTO `methods_resource` (`id`, `CODE`, `LABEL`, `IMAGE`, `MASK_TIME`, `OR
 (2, 'LASER2', 'Laser Bystronic', 'images/Ressources/téléchargement (1).jpg', 1, 20, '70', 4, '#dd4b4b', '2', ''),
 (3, 'PLIEUSE1', 'PLieuse Perrot', 'images/Ressources/téléchargement.jpg', 0, 30, '35', 5, '#39a923', '6', ''),
 (4, 'PLIEUSE2', 'Plieuse Amada', 'images/Ressources/527.jpg', 0, 40, '35', 5, '#000000', '6', ''),
-(5, 'POINC', 'Poinçonneuse Primat', 'images/Ressources/7222.jpg', 1, 25, '30', 4, '#b56e2c', '', ''),
-(7, 'USI', 'Centre d\'usinage Mazak', 'images/Ressources/téléchargement (2).jpg', 0, 50, '25', 7, '#4ba7be', '', ''),
-(8, 'SOUD', 'Soudure MIG', 'images/Ressources/soudure-jpg5d405386fe9b670001920b04.jpg', 0, 60, '30', 6, '#db8814', '', ''),
+(5, 'POINC', 'Poinçonneuse Primat', 'images/Ressources/7222.jpg', 1, 25, '30', 4, '#b56e2c', '2', ''),
+(7, 'USI', 'Centre d\'usinage Mazak', 'images/Ressources/téléchargement (2).jpg', 0, 50, '25', 7, '#4ba7be', '10', ''),
+(8, 'SOUD', 'Soudure MIG', 'images/Ressources/soudure-jpg5d405386fe9b670001920b04.jpg', 0, 60, '30', 6, '#db8814', '9', ''),
 (9, 'SOUD2', 'Soudure TIG', 'images/Ressources/téléchargement (3).jpg', 0, 65, '30', 6, '#7c4c27', '8', ''),
 (10, 'EMB', 'Emballage', 'images/Ressources/product_9722964b.jpg', 0, 70, '32', 8, '#e9cd16', '11', ''),
 (11, 'ADMIN', 'Administratif', '', 0, 5, '35', 1, '#000000', '7,12,16', '');
@@ -1257,9 +1287,9 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `INDICE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `CUSTOMER_ID` int(11) NOT NULL,
   `CONTACT_ID` int(11) NOT NULL,
   `ADRESSE_ID` int(11) NOT NULL,
@@ -1269,22 +1299,22 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `CREATEUR_ID` int(11) NOT NULL,
   `RESP_COM_ID` int(11) NOT NULL,
   `RESP_TECH_ID` int(11) NOT NULL,
-  `REFERENCE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `REFERENCE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `COND_REG_CUSTOMER_ID` int(11) NOT NULL,
   `MODE_REG_CUSTOMER_ID` int(11) NOT NULL,
   `ECHEANCIER_ID` int(11) NOT NULL,
   `TRANSPORT_ID` int(11) NOT NULL,
-  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
-  `QUOTE_ID` int(11) NOT NULL,
+  `COMENT` text COLLATE utf8_unicode_ci,
+  `QUOTE_ID` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `orders`
 --
 
 INSERT INTO `orders` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CUSTOMER_ID`, `MODE_REG_CUSTOMER_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`, `QUOTE_ID`) VALUES
-(1, 'CDE201205-002', '1', '', '', 9, 2, 2, 1, '2020-12-05', 6, 1, 2, 0, '', 5, 3, 2, 0, 'test', 0),
+(1, 'CDE201205-002', '1', '', '', 9, 2, 2, 1, '2020-12-05', 2, 1, 1, 1, '', 5, 3, 2, 0, 'test', 0),
 (5, 'CDE210116-006', '1', '', '', 57, 0, 0, 0, '2021-01-16', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
 (6, 'CDE210119-007', '1', '', '', 13, 0, 0, 0, '2021-01-20', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
 (7, 'CDE210119-008', '1', '', '', 20, 0, 0, 0, '2021-01-20', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
@@ -1294,11 +1324,12 @@ INSERT INTO `orders` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER
 (15, 'CDE210227-015', '1', 'test label', '', 90, 0, 0, 0, '2021-02-27', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
 (17, 'CDE210301-017', '1', '', '', 20, 0, 0, 0, '2021-03-01', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
 (18, 'CDE210301-018', '1', '', '', 198, 0, 0, 0, '2021-03-01', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(21, 'CDE210305-021', '1', '', '', 193, 0, 0, 0, '2021-03-05', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(24, 'CDE210307-024', '1', '', '', 199, 0, 0, 0, '2021-03-08', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
+(21, 'CDE210305-021', '1', '', '', 193, 0, 0, 0, '2021-03-05', 1, 1, 44, 57, '', 9, 5, 0, 0, '', 0),
+(24, 'CDE210307-024', '1', '', '', 199, 0, 0, 0, '2021-03-08', 1, 1, 46, 53, '', 9, 5, 0, 0, '', 0),
 (23, 'CDE210305-023', '1', '', '', 201, 0, 0, 0, '2021-03-06', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
 (26, 'CDE210405-026', '1', '', '', 34, 0, 0, 0, '2021-04-05', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(27, 'CDE210405-027', '1', '', '', 47, 0, 0, 0, '2021-04-05', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0);
+(27, 'CDE210405-027', '1', '', '', 47, 0, 0, 0, '2021-04-05', 2, 1, 37, 56, '', 4, 2, 2, 2, '', 0),
+(28, 'CDE210509-028', '1', '', '', 199, 0, 0, 0, '2021-05-09', 2, 1, 0, 0, '', 4, 5, 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -1314,6 +1345,10 @@ CREATE TABLE IF NOT EXISTS `orders_lines` (
   `ARTICLE_CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `QT` int(11) NOT NULL,
+  `DELIVERED_QTY` int(11) DEFAULT '0',
+  `DELIVERED_REMAINING_QTY` int(11) DEFAULT '0',
+  `INVOICED_QTY` int(11) DEFAULT '0',
+  `INVOICED_REMAINING_QTY` int(11) DEFAULT '0',
   `UNIT_ID` int(11) NOT NULL,
   `PRIX_U` decimal(10,3) NOT NULL,
   `REMISE` decimal(10,3) NOT NULL,
@@ -1323,59 +1358,63 @@ CREATE TABLE IF NOT EXISTS `orders_lines` (
   `ETAT` int(11) NOT NULL,
   `AR` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=126 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=133 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `orders_lines`
 --
 
-INSERT INTO `orders_lines` (`id`, `ORDER_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS_INTERNE`, `DELAIS`, `ETAT`, `AR`) VALUES
-(27, 15, 10, '', 'capot bas', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(4, 1, 10, 'MARCHEBOIS', 'ararar', 1, 1, '10.000', '0.000', 4, '2021-03-31', '2021-03-30', 6, 1),
-(29, 15, 10, '', 'capot gauche', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(28, 15, 10, '', 'capot droite', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(8, 8, 10, '', 'Gousset', 5, 1, '25.000', '0.000', 1, '2021-02-25', '2021-06-30', 2, 1),
-(10, 12, 10, '', 'PLATINE 100x100', 4, 5, '100.000', '20.000', 3, '2020-10-29', '2021-10-29', 2, 1),
-(33, 17, 10, '', 'CHASSIS MECANO SOUDE', 1, 7, '10000.000', '0.000', 4, '2021-03-31', '2021-03-31', 2, 1),
-(32, 5, 10, '', 'CHASSIS MECANO SOUDE', 1, 1, '590.000', '5.000', 4, '2021-06-24', '2021-06-24', 2, 1),
-(15, 7, 2, '', 'Platine 2', 1, 1, '10.000', '0.000', 4, '2020-12-31', '2021-04-25', 2, 0),
-(16, 7, 1, '', 'platine 1', 1, 1, '10.000', '0.000', 4, '2020-12-31', '2021-04-25', 2, 0),
-(17, 7, 3, '', 'Platine 3', 1, 4, '0.000', '0.000', 4, '2020-11-05', '2021-04-25', 2, 0),
-(18, 7, 4, '', 'Platine 4', 1, 4, '0.000', '0.000', 4, '2020-11-05', '2021-04-25', 2, 0),
-(55, 7, 5, '', 'Emballage', 1, 1, '0.000', '0.000', 1, '2021-04-25', '2021-04-25', 2, 0),
-(31, 6, 10, '', 'Vis', 1000, 1, '1.000', '0.000', 2, '2021-06-30', '2021-06-30', 2, 1),
-(30, 16, 10, 'ESCALIER', 'test', 1, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 2, 1),
-(34, 18, 10, '', 'E135497AEZR', 100, 1, '1.320', '0.000', 4, '2021-03-31', '2021-03-31', 1, 0),
-(35, 18, 20, '', 'A2+6546547', 25, 7, '1.654', '0.000', 1, '2021-03-31', '2021-03-31', 1, 0),
-(36, 18, 20, '', 'E163544654', 3, 7, '0.245', '0.000', 1, '2021-03-31', '2021-03-31', 1, 0),
-(37, 18, 10, '', 'Urgency', 1, 7, '60.000', '0.000', 1, '2021-05-06', '2021-05-06', 1, 0),
-(38, 18, 10, '', 'Urgency', 1, 7, '60.000', '0.000', 1, '2021-04-06', '2021-04-06', 1, 0),
-(39, 15, 10, '', 'capot haut', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(40, 15, 10, '', 'capot bas', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(41, 15, 10, '', 'capot droite', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(42, 15, 10, '', 'capot gauche', 10, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
-(46, 21, 10, 'ESCALIER', 'test', 1, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
-(47, 21, 10, 'ESCALIER', 'test', 1, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
-(48, 21, 10, 'ESCALIER', 'test', 1, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
-(51, 21, 10, 'ESCALIER', 'test', 1, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
-(50, 23, 10, '', 'empty', 1, 1, '100.000', '0.000', 4, '2021-04-30', '2021-04-30', 1, 0),
-(52, 21, 10, 'ESCALIER', 'test', 1, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
-(53, 24, 10, '', 'test', 100, 1, '10.000', '0.000', 4, '2021-05-16', '2021-05-16', 1, 0),
-(54, 24, 10, '', 'test2', 100, 1, '10.000', '0.000', 4, '2021-05-16', '2021-05-16', 1, 0),
-(56, 7, 6, '', 'undefined', 1, 1, '50.000', '0.000', 1, '2021-04-25', '2021-04-25', 2, 0),
-(125, 26, 10, '', 'Rep A', 100, 7, '4.250', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(124, 26, 10, '', 'Rep K', 100, 7, '4.700', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(123, 26, 10, '', 'Rep J', 100, 7, '6.900', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(122, 26, 10, '', 'Rep I', 100, 7, '1.320', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(119, 26, 10, '', 'Rep F', 100, 7, '2.647', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(120, 26, 10, '', 'Rep G', 100, 7, '63.500', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(121, 26, 10, '', 'Rep H', 100, 7, '54.400', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(118, 26, 10, '', 'Rep E', 100, 7, '21.200', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(113, 27, 10, '', 'Tech 1', 10, 7, '10.000', '0.000', 1, '2021-06-30', '2021-06-30', 2, 1),
-(114, 27, 10, '', 'Tech 2', 100, 7, '100.000', '0.000', 1, '2021-06-30', '2021-06-30', 2, 1),
-(115, 26, 10, '', 'Rep B', 100, 7, '1.320', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(116, 26, 10, '', 'Rep C', 100, 7, '2.450', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(117, 26, 10, '', 'Rep D', 100, 7, '2.450', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0);
+INSERT INTO `orders_lines` (`id`, `ORDER_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `DELIVERED_QTY`, `DELIVERED_REMAINING_QTY`, `INVOICED_QTY`, `INVOICED_REMAINING_QTY`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS_INTERNE`, `DELAIS`, `ETAT`, `AR`) VALUES
+(27, 15, 10, '', 'capot bas', 10, NULL, NULL, NULL, NULL, 4, '10.000', '0.000', 1, '2021-05-29', '2021-05-29', 2, 1),
+(4, 1, 10, 'MARCHEBOIS', '123', 1, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-03-31', '2021-04-28', 2, 1),
+(29, 15, 10, '', 'capot gauche', 10, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 3, '2021-05-29', '2021-05-29', 2, 1),
+(28, 15, 10, '', 'capot droite', 10, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
+(8, 8, 10, '', 'Gousset', 5, NULL, NULL, NULL, NULL, 1, '25.000', '0.000', 1, '2021-02-25', '2021-06-30', 2, 1),
+(10, 12, 10, '', 'PLATINE 100x100', 4, NULL, NULL, NULL, NULL, 5, '100.000', '20.000', 3, '2020-10-29', '2021-10-29', 2, 1),
+(33, 17, 10, '', 'CHASSIS MECANO SOUDE', 1, NULL, NULL, NULL, NULL, 7, '10000.000', '0.000', 4, '2021-03-31', '2021-03-31', 2, 1),
+(32, 5, 10, '', 'CHASSIS MECANO SOUDE', 1, NULL, NULL, NULL, NULL, 1, '590.000', '5.000', 4, '2021-06-24', '2021-06-24', 2, 1),
+(15, 7, 2, '', 'Platine 2', 1, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2020-12-31', '2021-04-25', 2, 0),
+(16, 7, 1, '', 'platine 1', 1, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2020-12-31', '2021-04-25', 2, 0),
+(17, 7, 3, '', 'Platine 3', 1, NULL, NULL, NULL, NULL, 4, '0.000', '0.000', 4, '2020-11-05', '2021-04-25', 2, 0),
+(18, 7, 4, '', 'Platine 4', 1, NULL, NULL, NULL, NULL, 4, '0.000', '0.000', 4, '2020-11-05', '2021-04-25', 2, 0),
+(55, 7, 5, '', 'Emballage', 1, NULL, NULL, NULL, NULL, 1, '0.000', '0.000', 1, '2021-04-25', '2021-04-25', 2, 0),
+(31, 6, 10, '', 'Vis', 1000, NULL, NULL, NULL, NULL, 1, '1.000', '0.000', 2, '2021-06-30', '2021-06-30', 2, 1),
+(30, 16, 10, 'ESCALIER', 'test', 1, NULL, NULL, NULL, NULL, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 2, 1),
+(34, 18, 10, '', 'E135497AEZR', 100, NULL, NULL, NULL, NULL, 1, '1.320', '0.000', 4, '2021-03-31', '2021-03-31', 1, 0),
+(35, 18, 20, '', 'A2+6546547', 25, NULL, NULL, NULL, NULL, 7, '1.654', '0.000', 1, '2021-03-31', '2021-03-31', 1, 0),
+(36, 18, 20, '', 'E163544654', 3, NULL, NULL, NULL, NULL, 7, '0.245', '0.000', 1, '2021-03-31', '2021-03-31', 1, 0),
+(37, 18, 10, '', 'Urgency', 1, NULL, NULL, NULL, NULL, 7, '60.000', '0.000', 1, '2021-05-06', '2021-05-06', 1, 0),
+(38, 18, 10, '', 'Urgency', 1, NULL, NULL, NULL, NULL, 7, '60.000', '0.000', 1, '2021-04-06', '2021-04-06', 1, 0),
+(39, 15, 10, '', 'capot haut', 10, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
+(40, 15, 10, '', 'capot bas', 10, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
+(41, 15, 10, '', 'capot droite', 10, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
+(42, 15, 10, '', 'capot gauche', 10, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-29', '2021-05-29', 2, 1),
+(46, 21, 10, 'ESCALIER', 'test', 1, NULL, NULL, NULL, NULL, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
+(47, 21, 10, 'ESCALIER', 'test', 1, NULL, NULL, NULL, NULL, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
+(48, 21, 10, 'ESCALIER', 'test', 1, NULL, NULL, NULL, NULL, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
+(51, 21, 10, 'ESCALIER', 'test', 1, NULL, NULL, NULL, NULL, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
+(50, 23, 10, '', 'empty', 1, 0, NULL, NULL, NULL, 1, '100.000', '0.000', 4, '2021-04-30', '2021-04-30', 1, 0),
+(52, 21, 10, 'ESCALIER', 'test', 1, NULL, NULL, NULL, NULL, 1, '7653.500', '7.000', 1, '2021-04-30', '2021-04-30', 1, 1),
+(53, 24, 10, '', 'test', 100, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-16', '2021-05-16', 1, 1),
+(54, 24, 10, '', 'test2', 100, NULL, NULL, NULL, NULL, 1, '10.000', '0.000', 4, '2021-05-16', '2021-05-16', 1, 1),
+(56, 7, 6, '', 'undefined', 1, NULL, NULL, NULL, NULL, 1, '50.000', '0.000', 1, '2021-04-25', '2021-04-25', 2, 0),
+(125, 26, 10, '', 'Rep A', 100, NULL, NULL, NULL, NULL, 7, '4.250', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(124, 26, 10, '', 'Rep K', 100, NULL, NULL, NULL, NULL, 7, '4.700', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(123, 26, 10, '', 'Rep J', 100, NULL, NULL, NULL, NULL, 7, '6.900', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(122, 26, 10, '', 'Rep I', 100, NULL, NULL, NULL, NULL, 7, '1.320', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(119, 26, 10, '', 'Rep F', 100, NULL, NULL, NULL, NULL, 7, '2.647', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(120, 26, 10, '', 'Rep G', 100, NULL, NULL, NULL, NULL, 7, '63.500', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(121, 26, 10, '', 'Rep H', 100, NULL, NULL, NULL, NULL, 7, '54.400', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(118, 26, 10, '', 'Rep E', 100, NULL, NULL, NULL, NULL, 7, '21.200', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(113, 27, 10, '', 'Tech 1', 10, NULL, NULL, NULL, NULL, 7, '10.000', '0.000', 1, '2021-06-30', '2021-06-30', 2, 1),
+(114, 27, 20, '', 'Tech 2', 100, NULL, NULL, NULL, NULL, 7, '100.000', '0.000', 1, '2021-06-30', '2021-06-30', 2, 1),
+(115, 26, 10, '', 'Rep B', 100, NULL, NULL, NULL, NULL, 7, '1.320', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(116, 26, 10, '', 'Rep C', 100, NULL, NULL, NULL, NULL, 7, '2.450', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(117, 26, 10, '', 'Rep D', 100, NULL, NULL, NULL, NULL, 7, '2.450', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
+(126, 28, 10, '110.1264.156', 'platine', 22000, NULL, NULL, NULL, NULL, 1, '1.000', '2.000', 4, '2021-05-30', '2021-05-30', 2, 1),
+(130, 28, 10, '110.1264.157', 'platine', 22000, NULL, NULL, NULL, NULL, 1, '1.000', '2.000', 4, '2021-05-30', '2021-05-30', 2, 1),
+(131, 28, 10, '110.1264.159', 'platine', 22000, 0, 22000, 0, 22000, 1, '1.000', '2.000', 4, '2021-05-30', '2021-05-30', 2, 1),
+(132, 28, 10, '110.1264.155', 'platine', 22000, 0, 22000, 0, 22000, 1, '1.000', '2.000', 4, '2021-05-29', '2021-05-29', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -1395,7 +1434,7 @@ CREATE TABLE IF NOT EXISTS `order_acknowledgment` (
   `INCOTERM` int(11) NOT NULL,
   `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `order_acknowledgment`
@@ -1413,7 +1452,9 @@ INSERT INTO `order_acknowledgment` (`id`, `CODE`, `ORDER_ID`, `LABEL`, `DATE`, `
 (22, 'AR210404-017', 21, '', '2021-04-05', 1, 1, 1, ''),
 (23, 'AR210404-018', 21, '', '2021-04-05', 1, 1, 1, ''),
 (24, 'AR210405-019', 26, '', '2021-04-05', 1, 1, 1, ''),
-(25, 'AR210405-020', 27, '', '2021-04-05', 1, 1, 1, '');
+(25, 'AR210405-020', 27, '', '2021-04-05', 1, 1, 1, ''),
+(26, 'AR210430-021', 24, '', '2021-04-30', 1, 1, 1, ''),
+(27, 'AR210512-022', 28, '', '2021-05-12', 1, 1, 1, '');
 
 -- --------------------------------------------------------
 
@@ -1429,7 +1470,7 @@ CREATE TABLE IF NOT EXISTS `order_acknowledgment_lines` (
   `ORDRE` int(11) NOT NULL,
   `ORDER_LINE_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `order_acknowledgment_lines`
@@ -1467,181 +1508,71 @@ INSERT INTO `order_acknowledgment_lines` (`id`, `ORDER_ACKNOWLEGMENT_ID`, `ORDER
 (87, 24, 26, 10, 69),
 (88, 24, 26, 10, 68),
 (89, 25, 27, 10, 113),
-(90, 25, 27, 10, 114);
+(90, 25, 27, 10, 114),
+(91, 26, 24, 10, 53),
+(92, 26, 24, 10, 54),
+(93, 27, 28, 10, 126),
+(94, 27, 28, 10, 130),
+(95, 27, 28, 10, 131),
+(96, 27, 28, 10, 132);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `order_date_plan_task`
+-- Structure de la table `order_delivery_note`
 --
 
-DROP TABLE IF EXISTS `order_date_plan_task`;
-CREATE TABLE IF NOT EXISTS `order_date_plan_task` (
+DROP TABLE IF EXISTS `order_delivery_note`;
+CREATE TABLE IF NOT EXISTS `order_delivery_note` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ORDER_TECHNICAL_CUT_ID` int(11) NOT NULL,
-  `ORDER_LINE_ID` int(11) NOT NULL,
-  `START_TIMESTAMPS` int(11) NOT NULL,
-  `END_START_TIMESTAMPS` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `order_date_plan_task`
---
-
-INSERT INTO `order_date_plan_task` (`id`, `ORDER_TECHNICAL_CUT_ID`, `ORDER_LINE_ID`, `START_TIMESTAMPS`, `END_START_TIMESTAMPS`) VALUES
-(1, 28, 0, 1616796297, 1616796297),
-(2, 29, 0, 1616796354, 1616796354),
-(3, 30, 0, 1616796366, 1616796366),
-(4, 31, 0, 1616796375, 1616796375),
-(5, 27, 0, 1616796297, 1616796297),
-(6, 26, 0, 1616796354, 1616796354),
-(7, 25, 0, 1616796366, 1616796366),
-(8, 24, 0, 1616796375, 1616796375),
-(9, 15, 0, 1616796297, 1616796297),
-(10, 17, 0, 1616796354, 1616796354),
-(11, 18, 0, 1616796366, 1616796366),
-(12, 19, 0, 1616796375, 1616796375),
-(13, 20, 0, 1616796297, 1616796297),
-(14, 21, 0, 1616796354, 1616796354),
-(15, 22, 0, 1616796366, 1616796366),
-(16, 23, 0, 1616796375, 1616796375),
-(17, 3, 0, 1616796375, 1616796375),
-(18, 4, 0, 1616796375, 1616796375),
-(19, 5, 0, 1616796366, 1616796366),
-(20, 6, 0, 1616796354, 1616796354),
-(21, 10, 0, 1616796297, 1616796297),
-(22, 11, 0, 1616796297, 1616796297),
-(23, 12, 0, 1616796354, 1616796354),
-(24, 13, 0, 1616796366, 1616796366),
-(25, 14, 0, 1616796375, 1616796375),
-(31, 37, 39, 1617140244, 1617140244),
-(30, 36, 39, 1617140234, 1617140234),
-(29, 35, 39, 1617140227, 1617140227),
-(32, 38, 40, 1617140259, 1617140259),
-(33, 39, 40, 1617140266, 1617140266),
-(34, 40, 40, 1617140275, 1617140275),
-(35, 41, 41, 1617140289, 1617140289),
-(36, 42, 41, 1617140299, 1617140299),
-(37, 43, 41, 1617140309, 1617140309),
-(38, 44, 42, 1617140322, 1617140322),
-(39, 45, 42, 1617140328, 1617140328),
-(40, 46, 42, 1617140340, 1617140340),
-(41, 47, 30, 1617487252, 1617487252),
-(42, 48, 30, 1617487264, 1617487264),
-(43, 49, 30, 1617487275, 1617487275),
-(44, 50, 30, 1617487287, 1617487287),
-(45, 51, 30, 1617487300, 1617487300),
-(46, 52, 30, 1617487315, 1617487315),
-(47, 53, 33, 1617487436, 1617487436),
-(48, 54, 33, 1618619099, 1618619099),
-(49, 55, 33, 1618619099, 1618619099),
-(50, 56, 33, 1618619099, 1618619099),
-(51, 57, 4, 1618619099, 1618619099),
-(52, 58, 33, 1618619099, 1618619099),
-(92, 248, 113, 1617623567, 1617623567),
-(102, 258, 116, 1617623612, 1617623612),
-(101, 257, 116, 1617623612, 1617623612),
-(100, 256, 115, 1617623612, 1617623612),
-(99, 255, 115, 1617623612, 1617623612),
-(98, 254, 115, 1617623612, 1617623612),
-(93, 249, 113, 1617623567, 1617623567),
-(94, 250, 114, 1617623567, 1617623567),
-(95, 251, 114, 1617623567, 1617623567),
-(96, 252, 115, 1617623612, 1617623612),
-(97, 253, 115, 1617623612, 1617623612),
-(103, 259, 116, 1617623612, 1617623612),
-(104, 260, 116, 1617623612, 1617623612),
-(105, 261, 116, 1617623612, 1617623612),
-(106, 262, 117, 1617623612, 1617623612),
-(107, 263, 117, 1617623612, 1617623612),
-(108, 264, 117, 1617623612, 1617623612),
-(109, 265, 117, 1617623612, 1617623612),
-(110, 266, 117, 1617623612, 1617623612),
-(111, 267, 118, 1617623612, 1617623612),
-(112, 268, 118, 1617623612, 1617623612),
-(113, 269, 118, 1617623612, 1617623612),
-(114, 270, 118, 1617623612, 1617623612),
-(115, 271, 118, 1617623612, 1617623612),
-(116, 272, 119, 1617623612, 1617623612),
-(117, 273, 119, 1617623612, 1617623612),
-(118, 274, 119, 1617623612, 1617623612),
-(119, 275, 119, 1617623612, 1617623612),
-(120, 276, 119, 1617623612, 1617623612),
-(121, 277, 120, 1617623612, 1617623612),
-(122, 278, 120, 1617623612, 1617623612),
-(123, 279, 120, 1617623612, 1617623612),
-(124, 280, 120, 1617623612, 1617623612),
-(125, 281, 120, 1617623612, 1617623612),
-(126, 282, 121, 1617623612, 1617623612),
-(127, 283, 121, 1617623612, 1617623612),
-(128, 284, 121, 1617623612, 1617623612),
-(129, 285, 121, 1617623612, 1617623612),
-(130, 286, 121, 1617623612, 1617623612),
-(131, 287, 122, 1617623612, 1617623612),
-(132, 288, 122, 1617623612, 1617623612),
-(133, 289, 122, 1617623612, 1617623612),
-(134, 290, 122, 1617623612, 1617623612),
-(135, 291, 122, 1617623612, 1617623612),
-(136, 292, 123, 1617623612, 1617623612),
-(137, 293, 123, 1617623612, 1617623612),
-(138, 294, 123, 1617623612, 1617623612),
-(139, 295, 123, 1617623612, 1617623612),
-(140, 296, 123, 1617623612, 1617623612),
-(141, 297, 124, 1617623612, 1617623612),
-(142, 298, 124, 1617623612, 1617623612),
-(143, 299, 124, 1617623612, 1617623612),
-(144, 300, 124, 1617623612, 1617623612),
-(145, 301, 124, 1617623612, 1617623612),
-(146, 304, 125, 1617623612, 1617623612),
-(147, 302, 125, 1617623612, 1617623612),
-(148, 303, 125, 1617623612, 1617623612),
-(149, 305, 125, 1617623612, 1617623612),
-(150, 306, 125, 1617623612, 1617623612);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `order_nomenclature`
---
-
-DROP TABLE IF EXISTS `order_nomenclature`;
-CREATE TABLE IF NOT EXISTS `order_nomenclature` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ORDRE` int(11) NOT NULL,
-  `PARENT_ID` int(11) NOT NULL,
-  `ARTICLE_ID` int(11) NOT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ORDER_ID` int(11) NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `QT` decimal(10,3) NOT NULL,
-  `UNIT_ID` int(11) NOT NULL,
-  `PRIX_U` decimal(10,3) NOT NULL,
-  `PRIX_ACHAT` decimal(10,3) NOT NULL,
+  `CREATED` date NOT NULL,
+  `MODIFIED` date DEFAULT NULL,
+  `ETAT` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
+  `INCOTERM` int(11) NOT NULL,
+  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
 
 --
--- Déchargement des données de la table `order_nomenclature`
+-- Structure de la table `order_delivery_note_lines`
 --
 
-INSERT INTO `order_nomenclature` (`id`, `ORDRE`, `PARENT_ID`, `ARTICLE_ID`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `PRIX_ACHAT`) VALUES
-(4, 10, 47, 65, 'Tôle', '1.000', 5, '1.000', '1.000'),
-(5, 10, 48, 26, 'Vis', '2000.000', 1, '1.000', '1.000'),
-(6, 10, 49, 26, 'Vis', '2000.000', 1, '1.000', '1.000'),
-(7, 10, 51, 26, 'Vis', '2000.000', 1, '1.000', '1.000'),
-(8, 10, 52, 26, 'Vis', '2000.000', 1, '1.000', '1.000'),
-(9, 10, 32, 25, 'tube acier', '3.000', 1, '1.000', '2.000'),
-(10, 10, 31, 26, 'Vis', '1000.000', 1, '0.100', '0.500'),
-(65, 10, 125, 48, 'Tôle', '1.000', 4, '1.000', '1.000'),
-(64, 10, 124, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(63, 10, 123, 48, 'Tôle', '100.000', 4, '1.000', '1.000'),
-(62, 10, 122, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(61, 10, 121, 48, 'Tôle', '0.500', 4, '1.000', '1.000'),
-(60, 10, 120, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(59, 10, 119, 48, 'Tôle', '2.000', 4, '1.000', '1.000'),
-(58, 10, 118, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(57, 10, 117, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(56, 10, 116, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(55, 10, 115, 48, 'Tôle', '0.250', 4, '1.000', '1.000');
+DROP TABLE IF EXISTS `order_delivery_note_lines`;
+CREATE TABLE IF NOT EXISTS `order_delivery_note_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ORDER_DELEVERY_NOTE` int(11) NOT NULL,
+  `ORDER_ID` int(11) NOT NULL,
+  `ORDRE` int(11) NOT NULL,
+  `ORDER_LINE_ID` int(11) NOT NULL,
+  `QT` decimal(10,3) NOT NULL,
+  `ETAT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_remaining_time`
+--
+
+DROP TABLE IF EXISTS `order_remaining_time`;
+CREATE TABLE IF NOT EXISTS `order_remaining_time` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `USER_ID` int(11) NOT NULL,
+  `DATE` date NOT NULL,
+  `HOUR` time NOT NULL,
+  `COST` decimal(10,3) NOT NULL,
+  `TASK_ID` int(11) NOT NULL,
+  `QTY` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1673,141 +1604,6 @@ INSERT INTO `order_sub_assembly` (`id`, `PARENT_ID`, `ORDRE`, `ARTICLE_ID`, `QT`
 (8, 51, 20, 73, 10),
 (9, 52, 10, 71, 14),
 (10, 52, 20, 73, 10);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `order_technical_cut`
---
-
-DROP TABLE IF EXISTS `order_technical_cut`;
-CREATE TABLE IF NOT EXISTS `order_technical_cut` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `PRESTA_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TPS_PREP` decimal(10,3) NOT NULL,
-  `TPS_PRO` decimal(10,3) NOT NULL,
-  `COUT` decimal(10,3) NOT NULL,
-  `PRIX` decimal(10,3) NOT NULL,
-  `ETAT` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=307 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `order_technical_cut`
---
-
-INSERT INTO `order_technical_cut` (`id`, `ARTICLE_ID`, `ORDRE`, `PRESTA_ID`, `LABEL`, `TPS_PREP`, `TPS_PRO`, `COUT`, `PRIX`, `ETAT`) VALUES
-(3, 47, 10, 7, 'conception', '1.000', '0.000', '45.000', '0.000', 2),
-(4, 48, 10, 7, 'conception', '0.100', '0.100', '1.000', '1.000', 2),
-(5, 48, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(6, 48, 30, 11, 'emballage', '0.100', '0.100', '1.000', '1.000', 2),
-(10, 51, 10, 7, 'conception', '0.100', '0.100', '1.000', '1.000', 2),
-(11, 51, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(12, 51, 30, 11, 'emballage', '0.100', '0.100', '1.000', '1.000', 2),
-(13, 52, 10, 7, 'conception', '0.100', '0.100', '1.000', '1.000', 2),
-(14, 52, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(15, 52, 30, 11, 'emballage', '0.100', '0.100', '1.000', '1.000', 2),
-(17, 4, 10, 16, 'Achat article', '0.000', '0.000', '0.000', '7.000', 3),
-(18, 32, 10, 2, 'Platine', '1.000', '0.200', '1.000', '60.000', 2),
-(19, 32, 20, 9, 'Soudure MIG', '1.000', '0.200', '1.000', '150.000', 2),
-(20, 32, 5, 7, 'Etude', '1.000', '0.000', '1.000', '60.000', 2),
-(21, 32, 30, 11, 'emballage ', '0.000', '1.000', '1.000', '25.000', 2),
-(22, 32, 40, 12, 'fret', '0.000', '0.000', '1.000', '1.000', 2),
-(23, 27, 10, 7, 'Etude', '0.250', '0.000', '0.000', '0.000', 2),
-(29, 28, 10, 7, 'Etude', '0.100', '0.100', '0.100', '0.100', 2),
-(28, 29, 30, 6, 'Pliage', '0.100', '0.100', '0.000', '1.000', 2),
-(27, 29, 20, 2, 'Laser', '0.100', '0.100', '0.000', '1.000', 2),
-(30, 28, 20, 2, 'laser', '0.100', '0.100', '0.100', '0.100', 2),
-(24, 27, 20, 2, 'LAser', '0.100', '100.000', '0.000', '1.000', 2),
-(25, 27, 30, 6, 'Pliage', '0.100', '10.000', '0.000', '1.000', 2),
-(26, 29, 10, 7, 'Etude', '0.250', '0.000', '0.000', '1.000', 2),
-(31, 28, 30, 6, 'Pliage', '0.100', '0.100', '0.100', '0.100', 2),
-(37, 39, 30, 6, 'Pliage', '0.100', '0.100', '0.100', '0.100', 2),
-(36, 39, 20, 2, 'Laser', '0.100', '0.100', '0.100', '0.100', 2),
-(35, 39, 10, 7, 'Etude', '0.100', '0.100', '0.100', '0.100', 2),
-(38, 40, 10, 7, 'Etude', '0.100', '0.100', '0.100', '0.100', 2),
-(39, 40, 20, 2, 'Laser', '0.100', '0.100', '0.100', '0.100', 2),
-(40, 40, 30, 6, 'Pliage', '0.100', '0.100', '0.100', '0.100', 2),
-(41, 41, 10, 7, 'Etude', '0.100', '0.100', '0.100', '0.100', 2),
-(42, 41, 20, 2, 'Laser', '0.200', '0.200', '0.200', '0.200', 2),
-(43, 41, 30, 6, 'Pliage', '0.100', '0.100', '0.100', '0.100', 2),
-(44, 42, 10, 7, 'Etude', '0.100', '0.100', '0.100', '0.100', 2),
-(45, 42, 20, 6, 'Pliage', '0.100', '0.100', '0.100', '0.100', 2),
-(46, 42, 15, 2, 'Laser', '0.100', '0.100', '0.100', '0.100', 2),
-(47, 30, 10, 7, 'Etude', '100.000', '0.000', '1000.000', '1000.000', 2),
-(48, 30, 20, 2, 'Laser', '1.000', '10.000', '100.000', '100.000', 2),
-(49, 30, 30, 6, 'Pliage', '1.000', '10.000', '100.000', '100.000', 2),
-(50, 30, 40, 9, 'Soudure MIG', '1.000', '100.000', '10.000', '1000.000', 2),
-(51, 30, 50, 11, 'emballage', '1.000', '1.000', '10.000', '10.000', 2),
-(52, 30, 60, 12, 'FRET', '0.000', '0.000', '200.000', '200.000', 2),
-(53, 33, 10, 7, 'Etude', '200.000', '0.000', '200.000', '200.000', 2),
-(54, 33, 20, 2, 'Laser', '1.000', '2.000', '100.000', '200.000', 2),
-(55, 33, 30, 8, 'Soudure TIG', '1.000', '200.000', '100.000', '100.000', 2),
-(56, 33, 50, 12, 'FRET', '0.000', '0.000', '0.000', '200.000', 2),
-(57, 4, 10, 12, 'FRET', '0.000', '0.000', '0.000', '100.000', 3),
-(58, 33, 40, 10, 'Parachement', '1.000', '20.000', '100.000', '100.000', 2),
-(304, 125, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(248, 113, 10, 7, 'Etude', '10.000', '10.000', '10.000', '10.000', 2),
-(249, 113, 20, 2, 'Laser', '10.000', '10.000', '10.000', '10.000', 2),
-(250, 114, 10, 7, 'Etude', '10.000', '10.000', '10.000', '10.000', 2),
-(251, 114, 20, 2, 'Laser', '10.000', '10.000', '10.000', '10.000', 2),
-(252, 115, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(253, 115, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(254, 115, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(255, 115, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(256, 115, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(257, 116, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(258, 116, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(259, 116, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(260, 116, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(261, 116, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(262, 117, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(263, 117, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(264, 117, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(265, 117, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(266, 117, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(267, 118, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(268, 118, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(269, 118, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(270, 118, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(271, 118, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(272, 119, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(273, 119, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(274, 119, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(275, 119, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(276, 119, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(277, 120, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(278, 120, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(279, 120, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(280, 120, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(281, 120, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(282, 121, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(283, 121, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(284, 121, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(285, 121, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(286, 121, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(287, 122, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(288, 122, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(289, 122, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(290, 122, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(291, 122, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(292, 123, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(293, 123, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(294, 123, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(295, 123, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(296, 123, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(297, 124, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(298, 124, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(299, 124, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000', 2),
-(300, 124, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(301, 124, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2),
-(302, 125, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000', 2),
-(303, 125, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000', 2),
-(305, 125, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000', 2),
-(306, 125, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000', 2);
 
 -- --------------------------------------------------------
 
@@ -2018,9 +1814,11 @@ CREATE TABLE IF NOT EXISTS `ql_nfc` (
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ETAT` int(11) NOT NULL,
-  `DATE` date NOT NULL,
+  `CREATED` date NOT NULL,
+  `MODIFIED` date NOT NULL DEFAULT '2020-12-27',
   `TYPE` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) NOT NULL,
   `CAUSED_BY_ID` int(11) NOT NULL,
   `SECTION_ID` int(11) NOT NULL,
   `RESSOURCE_ID` int(11) NOT NULL,
@@ -2031,19 +1829,21 @@ CREATE TABLE IF NOT EXISTS `ql_nfc` (
   `CORRECTION_ID` int(11) NOT NULL,
   `CORRECTION_COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
   `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `ql_nfc`
 --
 
-INSERT INTO `ql_nfc` (`ID`, `CODE`, `LABEL`, `ETAT`, `DATE`, `TYPE`, `CREATEUR_ID`, `CAUSED_BY_ID`, `SECTION_ID`, `RESSOURCE_ID`, `DEFAUT_ID`, `DEFAUT_COMMENT`, `CAUSE_ID`, `CAUSE_COMMENT`, `CORRECTION_ID`, `CORRECTION_COMMENT`, `COMMENT`) VALUES
-(1, 'FNC000001', 'test', 1, '2020-12-27', 1, 1, 1, 7, 3, 1, 'test', 1, 'test', 4, 'test', 'test'),
-(2, 'FNC000002', 'test', 4, '2020-12-28', 2, 1, 1, 0, 0, 1, '', 1, '', 2, '', ''),
-(3, 'FNC000003', 'test numbering', 1, '2021-01-07', 1, 1, 1, 0, 0, 0, '', 0, '', 0, '', ''),
-(4, 'FNC000004', 'test numbering', 1, '2021-01-07', 1, 1, 1, 0, 0, 0, '', 0, '', 0, '', ''),
-(6, 'FNC000005', 'home test', 1, '2021-01-25', 1, 1, 1, 1, 1, 1, '', 1, '', 2, '', '');
+INSERT INTO `ql_nfc` (`ID`, `CODE`, `LABEL`, `ETAT`, `CREATED`, `MODIFIED`, `TYPE`, `CREATOR_ID`, `MODIFIED_ID`, `CAUSED_BY_ID`, `SECTION_ID`, `RESSOURCE_ID`, `DEFAUT_ID`, `DEFAUT_COMMENT`, `CAUSE_ID`, `CAUSE_COMMENT`, `CORRECTION_ID`, `CORRECTION_COMMENT`, `COMMENT`, `COMPANY_ID`) VALUES
+(1, 'FNC000001', 'test', 1, '2020-12-27', '2020-12-27', 1, 1, 0, 1, 7, 3, 1, 'test', 1, 'test', 4, 'test', 'test', 0),
+(2, 'FNC000002', 'test', 4, '2020-12-28', '2020-12-27', 2, 1, 0, 1, 0, 0, 1, '', 1, '', 2, '', '', 0),
+(3, 'FNC000003', 'test numbering', 1, '2021-01-07', '2020-12-27', 1, 1, 0, 37, 1, 11, 1, '', 1, '', 2, '', '', 13),
+(4, 'FNC000004', 'test numbering', 1, '2021-01-07', '2020-12-27', 1, 1, 0, 1, 0, 0, 0, '', 0, '', 0, '', '', 0),
+(6, 'FNC000005', 'home test', 1, '2021-01-25', '2020-12-27', 1, 1, 0, 1, 1, 1, 1, '', 1, '', 2, '', '', 24),
+(7, 'FNC000007', '456', 1, '2021-04-30', '2021-04-30', 1, 1, 35, 45, 1, 11, 1, '', 1, '', 2, '', '', 24);
 
 -- --------------------------------------------------------
 
@@ -2075,7 +1875,7 @@ CREATE TABLE IF NOT EXISTS `quote` (
   `TRANSPORT_ID` int(11) NOT NULL,
   `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `quote`
@@ -2091,11 +1891,12 @@ INSERT INTO `quote` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER_
 (10, 'DV210109-10', '1', '', '1', 201, 0, 0, 0, '2021-01-10', '2021-01-10', 3, 1, 0, 0, '', 3, 2, 0, 0, ''),
 (11, 'DV210117-11', '1', '', '', 198, 0, 0, 0, '2021-01-17', '2021-01-17', 3, 1, 0, 0, '', 6, 3, 0, 2, ''),
 (12, 'DV210119-12', '1', 'test', '', 20, 0, 0, 0, '2021-01-20', '2021-01-20', 3, 1, 0, 0, '', 9, 5, 0, 0, ''),
-(13, 'DV210227-13', '1', 'test label', 'first version', 90, 0, 0, 0, '2021-02-27', '2021-03-12', 3, 1, 51, 49, 'feb end test', 3, 1, 2, 2, 'test'),
+(13, 'DV210227-13', '1', 'test label', 'first version', 90, 0, 0, 0, '2021-02-27', '2021-03-12', 3, 1, 51, 44, 'feb end test', 3, 1, 2, 2, 'test'),
 (14, 'DV210227-14', '1', '', '', 193, 0, 0, 0, '2021-02-27', '2021-02-27', 3, 1, 0, 0, '', 4, 5, 1, 0, ''),
 (15, 'DV210301-15', '1', '', '', 198, 0, 0, 0, '2021-03-01', '2021-03-01', 3, 1, 47, 47, '', 9, 5, 0, 0, ''),
 (16, 'DV210405-16', '1', 'test label', 'A', 34, 0, 0, 0, '2021-04-05', '2021-04-30', 3, 1, 35, 52, 'test reference', 4, 3, 2, 2, 'test'),
-(17, 'DV210405-17', '1', '', '', 47, 0, 0, 0, '2021-04-05', '2021-04-05', 3, 1, 0, 0, '', 9, 5, 0, 0, '');
+(17, 'DV210405-17', '1', '', '', 47, 0, 0, 0, '2021-04-05', '2021-04-05', 3, 1, 37, 53, '', 9, 5, 0, 0, ''),
+(18, 'Q210509-18', '1', '', '', 199, 0, 0, 0, '2021-05-09', '2021-05-09', 3, 1, 0, 0, '', 5, 2, 1, 2, '');
 
 -- --------------------------------------------------------
 
@@ -2118,14 +1919,14 @@ CREATE TABLE IF NOT EXISTS `quote_lines` (
   `DELAIS` date NOT NULL,
   `ETAT` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `quote_lines`
 --
 
 INSERT INTO `quote_lines` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS`, `ETAT`) VALUES
-(1, 3, 10, 'PLATINE1', '', 4, 5, '100.000', '20.000', 3, '2020-10-29', 6),
+(1, 3, 10, 'PLATINE1', '', 4, 5, '100.000', '20.000', 1, '2020-10-29', 6),
 (2, 3, 20, 'super ligne', '', 5, 5, '100.000', '20.000', 4, '2020-11-20', 6),
 (43, 11, 10, '', 'E135497AEZR', 100, 1, '1.320', '0.000', 4, '2021-03-31', 1),
 (13, 6, 10, 'POTEAU_1M', '', 10, 1, '115.000', '10.000', 4, '2020-12-30', 2),
@@ -2175,47 +1976,8 @@ INSERT INTO `quote_lines` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `
 (66, 16, 10, '', 'Rep K', 100, 7, '4.700', '0.000', 4, '2021-05-31', 3),
 (67, 16, 10, '', 'Rep A', 100, 7, '4.250', '0.000', 4, '2021-05-31', 3),
 (68, 17, 10, '', 'Tech 1', 10, 7, '10.000', '0.000', 1, '2021-06-30', 3),
-(69, 17, 10, '', 'Tech 2', 100, 7, '100.000', '0.000', 1, '2021-06-30', 3);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `quote_nomenclature`
---
-
-DROP TABLE IF EXISTS `quote_nomenclature`;
-CREATE TABLE IF NOT EXISTS `quote_nomenclature` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ORDRE` int(11) NOT NULL,
-  `PARENT_ID` int(11) NOT NULL,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `QT` decimal(10,3) NOT NULL,
-  `UNIT_ID` int(11) NOT NULL,
-  `PRIX_U` decimal(10,3) NOT NULL,
-  `PRIX_ACHAT` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `quote_nomenclature`
---
-
-INSERT INTO `quote_nomenclature` (`id`, `ORDRE`, `PARENT_ID`, `ARTICLE_ID`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `PRIX_ACHAT`) VALUES
-(1, 10, 1, 22, 'Tôle', '0.220', 5, '0.100', '0.100'),
-(2, 10, 50, 65, 'Tôle', '1.000', 5, '1.000', '1.000'),
-(3, 10, 56, 26, 'Vis', '2000.000', 1, '1.000', '1.000'),
-(4, 10, 57, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(5, 10, 58, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(6, 10, 59, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(7, 10, 60, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(8, 10, 61, 48, 'Tôle', '2.000', 4, '1.000', '1.000'),
-(9, 10, 62, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(10, 10, 63, 48, 'Tôle', '0.500', 4, '1.000', '1.000'),
-(11, 10, 64, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(12, 10, 65, 48, 'Tôle', '100.000', 4, '1.000', '1.000'),
-(13, 10, 66, 48, 'Tôle', '0.250', 4, '1.000', '1.000'),
-(14, 10, 67, 48, 'Tôle', '1.000', 4, '1.000', '1.000');
+(69, 17, 10, '', 'Tech 2', 100, 7, '100.000', '0.000', 1, '2021-06-30', 3),
+(70, 18, 10, '110.1264.156', 'platine', 22000, 1, '1.000', '2.000', 4, '2021-05-29', 3);
 
 -- --------------------------------------------------------
 
@@ -2245,92 +2007,41 @@ INSERT INTO `quote_sub_assembly` (`id`, `PARENT_ID`, `ORDRE`, `ARTICLE_ID`, `QT`
 -- --------------------------------------------------------
 
 --
--- Structure de la table `quote_technical_cut`
+-- Structure de la table `stock`
 --
 
-DROP TABLE IF EXISTS `quote_technical_cut`;
-CREATE TABLE IF NOT EXISTS `quote_technical_cut` (
+DROP TABLE IF EXISTS `stock`;
+CREATE TABLE IF NOT EXISTS `stock` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `PRESTA_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TPS_PREP` decimal(10,3) NOT NULL,
-  `TPS_PRO` decimal(10,3) NOT NULL,
-  `COUT` decimal(10,3) NOT NULL,
-  `PRIX` decimal(10,3) NOT NULL,
+  `CREATED` date NOT NULL,
+  `MODIFIED` date DEFAULT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
 
 --
--- Déchargement des données de la table `quote_technical_cut`
+-- Structure de la table `stock_location`
 --
 
-INSERT INTO `quote_technical_cut` (`id`, `ARTICLE_ID`, `ORDRE`, `PRESTA_ID`, `LABEL`, `TPS_PREP`, `TPS_PRO`, `COUT`, `PRIX`) VALUES
-(1, 1, 10, 7, 'découpe', '0.100', '0.100', '0.100', '0.100'),
-(2, 50, 10, 7, 'conception', '1.000', '0.000', '45.000', '0.000'),
-(3, 56, 10, 7, 'conception', '0.100', '0.100', '1.000', '1.000'),
-(4, 56, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(5, 56, 30, 11, 'emballage', '0.100', '0.100', '1.000', '1.000'),
-(6, 57, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(7, 57, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(8, 57, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(9, 57, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(10, 57, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(11, 58, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(12, 58, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(13, 58, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(14, 58, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(15, 58, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(16, 59, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(17, 59, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(18, 59, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(19, 59, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(20, 59, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(21, 60, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(22, 60, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(23, 60, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(24, 60, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(25, 60, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(26, 61, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(27, 61, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(28, 61, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(29, 61, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(30, 61, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(31, 62, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(32, 62, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(33, 62, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(34, 62, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(35, 62, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(36, 63, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(37, 63, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(38, 63, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(39, 63, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(40, 63, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(41, 64, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(42, 64, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(43, 64, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(44, 64, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(45, 64, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(46, 65, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(47, 65, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(48, 65, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(49, 65, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(50, 65, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(51, 66, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(52, 66, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(53, 66, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(54, 66, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(55, 66, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(56, 67, 10, 7, 'Etude', '0.100', '0.000', '1.000', '1.000'),
-(57, 67, 20, 2, 'Laser', '0.100', '0.100', '1.000', '1.000'),
-(58, 67, 30, 10, 'Parachement', '0.100', '1.000', '1.000', '1.000'),
-(59, 67, 40, 11, 'emballage', '0.100', '1.000', '1.000', '1.000'),
-(60, 67, 50, 12, 'Transport ', '0.000', '0.000', '1.000', '1.000'),
-(61, 68, 10, 7, 'Etude', '10.000', '10.000', '10.000', '10.000'),
-(62, 68, 20, 2, 'Laser', '10.000', '10.000', '10.000', '10.000'),
-(63, 69, 10, 7, 'Etude', '10.000', '10.000', '10.000', '10.000'),
-(64, 69, 20, 2, 'Laser', '10.000', '10.000', '10.000', '10.000');
+DROP TABLE IF EXISTS `stock_location`;
+CREATE TABLE IF NOT EXISTS `stock_location` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CREATED` date NOT NULL,
+  `MODIFIED` date DEFAULT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `COMMENT` text COLLATE utf8_unicode_ci,
+  `STOCK_ID` int(11) NOT NULL,
+  `END_DATE` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2382,7 +2093,7 @@ INSERT INTO `study_standard_article` (`id`, `CODE`, `LABEL`, `IND`, `PRESTATION_
 (16, 'TOLE_S235_EP4', 'Tôle acier s235 ep 4', '1', 1, 0, 1, '1.000', 0, '0.000', 5, 'ACIER', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', 'steelsheetPNG.PNG'),
 (17, 'TOLE_304_EP1', 'Tôle inox 304L ep 1', '1', 0, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '1.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
 (26, 'VIS_ACIER_H_M10_LG100', 'Vis ACIER H M10 longueur 100mm', '1', 14, 3, 1, '0.001', 0, '0.000', 8, 'ACIER', '0.000', '10.000', '10.000', '100.000', '0.001', '0.000', '0.000', '0.000', '', 'vis-metaux-tete-hexagonale-th-classe-109-10x35-filetage-total-p12as5-acier.jpg'),
-(71, 'MARCHEBOIS', 'Marche bois chêne', '2', 15, 6, 1, '25.000', 1, '0.000', 1, 'BOIS', '0.000', '500.000', '50.000', '200.000', '0.000', '0.000', '0.000', '0.000', '', 'marche.PNG'),
+(71, 'MARCHEBOIS', 'Marche bois chêne', '2', 16, 6, 1, '25.000', 1, '0.000', 1, 'BOIS', '0.000', '500.000', '50.000', '200.000', '0.000', '0.000', '0.000', '0.000', '', 'marche.PNG'),
 (27, 'TOLE_304_EP2', 'Tôle inox 304L ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
 (28, 'TOLE_304_EP2', 'Tôle inox 304L ep 2', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
 (29, 'TOLE_304_EP2.5', 'Tôle inox 304L ep 2.5', '1', 1, 0, 1, '3.000', 0, '0.000', 0, 'INOX', '2.500', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '0.000', '', ''),
@@ -2434,35 +2145,6 @@ INSERT INTO `study_standard_article` (`id`, `CODE`, `LABEL`, `IND`, `PRESTATION_
 -- --------------------------------------------------------
 
 --
--- Structure de la table `study_standard_nomenclature`
---
-
-DROP TABLE IF EXISTS `study_standard_nomenclature`;
-CREATE TABLE IF NOT EXISTS `study_standard_nomenclature` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ORDRE` int(11) NOT NULL,
-  `PARENT_ID` int(11) NOT NULL,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `QT` decimal(10,3) NOT NULL,
-  `UNIT_ID` int(11) NOT NULL,
-  `PRIX_U` decimal(10,3) NOT NULL,
-  `PRIX_ACHAT` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `study_standard_nomenclature`
---
-
-INSERT INTO `study_standard_nomenclature` (`id`, `ORDRE`, `PARENT_ID`, `ARTICLE_ID`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `PRIX_ACHAT`) VALUES
-(1, 10, 23, 22, 'Tole', '1.000', 5, '2.000', '2.000'),
-(2, 10, 24, 25, 'Tube', '1.000', 1, '0.000', '1.000'),
-(3, 20, 24, 26, 'Vis', '4.000', 1, '0.000', '0.500');
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `study_standard_sub_assembly`
 --
 
@@ -2486,40 +2168,6 @@ INSERT INTO `study_standard_sub_assembly` (`id`, `PARENT_ID`, `ORDRE`, `ARTICLE_
 (3, 72, 20, 71, 14),
 (4, 72, 30, 73, 1),
 (5, 72, 40, 74, 1);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `study_standard_technical_cut`
---
-
-DROP TABLE IF EXISTS `study_standard_technical_cut`;
-CREATE TABLE IF NOT EXISTS `study_standard_technical_cut` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ARTICLE_ID` int(11) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
-  `PRESTA_ID` int(11) NOT NULL,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `TPS_PREP` decimal(10,3) NOT NULL,
-  `TPS_PRO` decimal(10,3) NOT NULL,
-  `COUT` decimal(10,3) NOT NULL,
-  `PRIX` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `study_standard_technical_cut`
---
-
-INSERT INTO `study_standard_technical_cut` (`id`, `ARTICLE_ID`, `ORDRE`, `PRESTA_ID`, `LABEL`, `TPS_PREP`, `TPS_PRO`, `COUT`, `PRIX`) VALUES
-(1, 23, 10, 7, 'Etude', '0.100', '0.100', '0.000', '1.000'),
-(3, 23, 20, 2, 'Laser', '0.100', '0.200', '0.000', '1.000'),
-(4, 24, 10, 9, 'Soudure MIG', '0.500', '0.250', '5.000', '5.000'),
-(5, 24, 20, 13, 'Peinture RAL 9010', '0.000', '0.000', '0.000', '5.000'),
-(6, 24, 30, 12, 'FRET', '0.250', '0.050', '0.000', '1.000'),
-(7, 71, 5, 16, 'Buy procduct', '0.000', '0.000', '15.000', '25.000'),
-(8, 72, 10, 11, 'emballage', '0.000', '30.000', '0.000', '0.000'),
-(9, 72, 20, 12, 'Transport fret', '0.000', '0.000', '50.000', '110.000');
 
 -- --------------------------------------------------------
 
@@ -2576,6 +2224,126 @@ INSERT INTO `study_unit` (`id`, `CODE`, `LABEL`, `TYPE`) VALUES
 (7, 'PCE', 'Pièce', 5),
 (1, 'UNI', 'Unité', 5),
 (9, 'MM', 'Milimètre', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `task`
+--
+
+DROP TABLE IF EXISTS `task`;
+CREATE TABLE IF NOT EXISTS `task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ORDER` int(11) NOT NULL,
+  `QUOTE_LINE_ID` int(11) DEFAULT NULL,
+  `ORDER_LINE_ID` int(11) DEFAULT NULL,
+  `COMPONENT_ID` int(11) DEFAULT NULL,
+  `SERVICE_ID` int(11) NOT NULL,
+  `ARTICLE_ID` int(11) DEFAULT NULL,
+  `SETING_TIME` decimal(10,3) DEFAULT NULL,
+  `UNIT_TIME` decimal(10,3) DEFAULT NULL,
+  `REMAINING_TIME` decimal(10,3) DEFAULT NULL,
+  `ADVANCEMENT` decimal(10,3) DEFAULT NULL,
+  `ETAT` int(11) DEFAULT NULL,
+  `TYPE` int(11) NOT NULL,
+  `DELAY` date DEFAULT NULL,
+  `QTY` int(11) DEFAULT NULL,
+  `QTY_INIT` int(11) DEFAULT NULL,
+  `QTY_AVIABLE` int(11) DEFAULT NULL,
+  `UNIT_COST` decimal(10,3) NOT NULL,
+  `UNIT_PRICE` decimal(10,3) NOT NULL,
+  `UNIT_ID` int(11) DEFAULT NULL,
+  `X_SIZE` decimal(10,3) DEFAULT NULL,
+  `Y_SIZE` decimal(10,3) DEFAULT NULL,
+  `Z_SIZE` decimal(10,3) DEFAULT NULL,
+  `X_OVERSIZE` decimal(10,3) DEFAULT NULL,
+  `Y_OVERSIZE` decimal(10,3) DEFAULT NULL,
+  `Z_OVERSIZE` decimal(10,3) DEFAULT NULL,
+  `TO_SCHEDULE` int(1) DEFAULT NULL,
+  `MATERIAL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `THICKNESS` decimal(10,3) DEFAULT NULL,
+  `WEIGHT` decimal(10,3) DEFAULT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
+  `MODIFIED` date DEFAULT NULL,
+  `QL_NFC_ID` int(11) DEFAULT NULL,
+  `TOOL_ID` int(11) DEFAULT NULL,
+  `START_TIMESTAMPS` int(11) DEFAULT NULL,
+  `END_TIMESTAMPS` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `task`
+--
+
+INSERT INTO `task` (`id`, `LABEL`, `ORDER`, `QUOTE_LINE_ID`, `ORDER_LINE_ID`, `COMPONENT_ID`, `SERVICE_ID`, `ARTICLE_ID`, `SETING_TIME`, `UNIT_TIME`, `REMAINING_TIME`, `ADVANCEMENT`, `ETAT`, `TYPE`, `DELAY`, `QTY`, `QTY_INIT`, `QTY_AVIABLE`, `UNIT_COST`, `UNIT_PRICE`, `UNIT_ID`, `X_SIZE`, `Y_SIZE`, `Z_SIZE`, `X_OVERSIZE`, `Y_OVERSIZE`, `Z_OVERSIZE`, `TO_SCHEDULE`, `MATERIAL`, `THICKNESS`, `WEIGHT`, `CREATOR_ID`, `MODIFIED_ID`, `MODIFIED`, `QL_NFC_ID`, `TOOL_ID`, `START_TIMESTAMPS`, `END_TIMESTAMPS`) VALUES
+(1, 'Tôle', 10, NULL, NULL, 23, 1, 22, NULL, NULL, NULL, NULL, NULL, 3, NULL, 1, NULL, NULL, '2.000', '2.000', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'Tube', 10, NULL, NULL, 24, 3, 25, NULL, NULL, NULL, NULL, NULL, 4, NULL, 1, NULL, NULL, '1.000', '1.000', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 'Vis', 20, NULL, NULL, 24, 14, 26, NULL, NULL, NULL, NULL, NULL, 6, NULL, 4, NULL, NULL, '0.100', '0.500', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'Etude', 10, NULL, NULL, 23, 7, NULL, '0.500', '0.000', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '0.100', '0.100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'Laser', 20, NULL, NULL, 23, 2, NULL, '0.100', '0.100', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '0.100', '0.200', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'Soudure MIG', 10, NULL, NULL, 24, 9, NULL, '0.500', '0.250', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '1.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'Peinture RAL 9010\r\n', 20, NULL, NULL, 24, 13, NULL, '0.000', '0.000', NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL, '5.000', '10.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'Buy procduct', 5, NULL, NULL, 71, 16, NULL, '0.000', '0.000', NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL, '15.000', '25.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'emballage', 10, NULL, NULL, 72, 11, NULL, '0.000', '30.000', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '0.000', '15.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'Transport fret', 15, NULL, NULL, 72, 12, NULL, '0.000', '0.000', NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL, '65.000', '110.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 'TEST', 10, 68, NULL, NULL, 16, NULL, '1.000', '1.000', NULL, NULL, 0, 7, NULL, NULL, NULL, NULL, '1.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 'Etude', 10, 42, NULL, NULL, 7, NULL, '4.000', '0.000', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '400.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 'Laser', 20, 42, NULL, NULL, 2, NULL, '1.000', '1.000', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '120.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, 'test', 10, NULL, 113, NULL, 7, NULL, '4.000', '0.000', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '4.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(15, 'TEST', 10, NULL, 113, NULL, 1, 65, NULL, NULL, NULL, NULL, 2, 3, NULL, 1, NULL, NULL, '1.000', '1.000', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 'Etude', 10, 70, NULL, NULL, 7, NULL, '4.000', '0.000', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '0.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(17, 'Laser', 20, 70, NULL, NULL, 2, NULL, '0.100', '0.200', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(18, 'Pliage', 30, 70, NULL, NULL, 6, NULL, '0.100', '0.200', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(19, 'Soudure TIG', 40, 70, NULL, NULL, 8, NULL, '0.100', '0.200', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(20, 'Soudure MIG', 50, 70, NULL, NULL, 9, NULL, '0.100', '0.200', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(21, 'Emballage', 60, 70, NULL, NULL, 11, NULL, '0.000', '0.100', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(22, 'Transport', 70, 70, NULL, NULL, 12, NULL, '0.000', '0.000', NULL, NULL, 0, 7, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(23, 'Tôle acier', 10, 70, NULL, NULL, 1, 44, NULL, NULL, NULL, NULL, 0, 3, NULL, 0, NULL, NULL, '0.000', '0.250', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(24, 'Etude', 10, NULL, 130, NULL, 7, NULL, '4.000', '0.000', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '0.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(25, 'Laser', 20, NULL, 130, NULL, 2, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(26, 'Pliage', 30, NULL, 130, NULL, 6, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(27, 'Soudure TIG', 40, NULL, 130, NULL, 8, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(28, 'Soudure MIG', 50, NULL, 130, NULL, 9, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(29, 'Emballage', 60, NULL, 130, NULL, 11, NULL, '0.000', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(30, 'Transport', 70, NULL, 130, NULL, 12, NULL, '0.000', '0.000', NULL, NULL, 2, 7, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(31, 'Tôle acier', 10, NULL, 130, NULL, 1, 44, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.250', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(32, 'Etude', 10, NULL, 131, NULL, 7, NULL, '4.000', '0.000', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '0.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(33, 'Laser', 20, NULL, 131, NULL, 2, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(34, 'Pliage', 30, NULL, 131, NULL, 6, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(35, 'Soudure TIG', 40, NULL, 131, NULL, 8, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(36, 'Soudure MIG', 50, NULL, 131, NULL, 9, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(37, 'Emballage', 60, NULL, 131, NULL, 11, NULL, '0.000', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(38, 'Transport', 70, NULL, 131, NULL, 12, NULL, '0.000', '0.000', NULL, NULL, 2, 7, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(39, 'Tôle acier', 10, NULL, 131, NULL, 1, 44, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.250', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(40, 'Etude', 10, NULL, 126, NULL, 7, NULL, '1.000', '0.000', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(41, 'Etude', 10, NULL, 132, NULL, 7, NULL, '4.000', '0.000', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '0.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(42, 'Laser', 20, NULL, 132, NULL, 2, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(43, 'Pliage', 30, NULL, 132, NULL, 6, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(44, 'Soudure TIG', 40, NULL, 132, NULL, 8, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(45, 'Soudure MIG', 50, NULL, 132, NULL, 9, NULL, '0.100', '0.200', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(46, 'Emballage', 60, NULL, 132, NULL, 11, NULL, '0.000', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(47, 'Transport', 70, NULL, 132, NULL, 12, NULL, '0.000', '0.000', NULL, NULL, 2, 7, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(48, 'Tôle acier', 10, NULL, 132, NULL, 1, 44, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.250', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(49, 'Tôle acier', 20, NULL, 132, NULL, 1, 49, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.000', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `time_absence_history`
+--
+
+DROP TABLE IF EXISTS `time_absence_history`;
+CREATE TABLE IF NOT EXISTS `time_absence_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `USER_ID` int(11) NOT NULL,
+  `absence_type_ID` int(11) NOT NULL,
+  `START_DATE` date NOT NULL,
+  `END_DATE` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2734,7 +2502,7 @@ INSERT INTO `time_event_machine` (`id`, `CODE`, `ORDRE`, `LABEL`, `MASK_TIME`, `
 DROP TABLE IF EXISTS `time_improductive_activity`;
 CREATE TABLE IF NOT EXISTS `time_improductive_activity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ETAT_MACHINE` int(11) NOT NULL,
   `RESSOURCE_NEC` int(11) NOT NULL,
   `MASK_TIME` int(11) NOT NULL,
@@ -2753,6 +2521,26 @@ INSERT INTO `time_improductive_activity` (`id`, `LABEL`, `ETAT_MACHINE`, `RESSOU
 (5, 'Formation machine', 1, 1, 0),
 (6, 'Activité interne', 1, 0, 0),
 (7, 'Panne', 1, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tool`
+--
+
+DROP TABLE IF EXISTS `tool`;
+CREATE TABLE IF NOT EXISTS `tool` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ETAT` int(11) NOT NULL,
+  `COST` int(11) NOT NULL,
+  `PICTURE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `END_DATE` date DEFAULT NULL,
+  `COMMENT` int(11) DEFAULT NULL,
+  `QTY` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

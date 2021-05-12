@@ -72,7 +72,7 @@
 			
 			$i=0;
 			foreach ($_POST['ADD_ORDER_LINE'] as $id_generation) {
-				$OrderLines->NewOrderLineFromQuote($Id,$id_generation);
+				$OrderLines->NewOrderLineFromQuote($Id,$id_generation, $User->idUSER);
 				$bdd->GetUpdatePOST(TABLE_ERP_QUOTE_LIGNE, array("ETAT"=>3), 'WHERE id=\''. $id_generation .'\'');
 				$i++;
 			}
@@ -118,10 +118,10 @@
 				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_LIGNE ." SET ETAT='". addslashes($_POST['ETAT']) ."'
 																WHERE 	ORDER_ID='". $Id ."'");
 
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_TECH_CUT ." 
-								LEFT JOIN `". TABLE_ERP_ORDER_LIGNE ."` ON `". TABLE_ERP_ORDER_LIGNE ."`.`id` = `". TABLE_ERP_ORDER_TECH_CUT ."`.`ARTICLE_ID`
-								SET ". TABLE_ERP_ORDER_TECH_CUT .".ETAT='". $_POST['ETAT'] ."'
-								WHERE 	". TABLE_ERP_ORDER_LIGNE .".ORDER_ID='". $Id ."'");
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_TASK ." 
+										LEFT JOIN `". TABLE_ERP_ORDER_LIGNE ."` ON `". TABLE_ERP_ORDER_LIGNE ."`.`id` = `". TABLE_ERP_TASK ."`.`ORDER_LINE_ID`
+											SET ". TABLE_ERP_TASK .".ETAT='". addslashes($_POST['ETAT']) ."'
+										WHERE 	". TABLE_ERP_ORDER_LIGNE .".ORDER_ID='". $Id ."'");
 
 				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
 			}
@@ -156,10 +156,8 @@
 			//// DELETE LIGNE ////
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_LIGNE ." WHERE id='". addslashes($_GET['delete'])."'");
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." WHERE ORDER_LINE_ID='". addslashes($_GET['delete'])."'");
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_TECH_CUT ." WHERE ARTICLE_ID='". addslashes($_GET['delete'])."'");
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_NOMENCLATURE ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_TASK ." WHERE ORDER_LINE_ID='". addslashes($_GET['delete'])."'");
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_SUB_ASSEMBLY ." WHERE PARENT_ID='". addslashes($_GET['delete'])."'");
-			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_DATE_PLAN_TASK ." WHERE ORDER_LINE_ID='". addslashes($_GET['delete'])."'");
 
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderLineNotification')));
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderAcknowledgmentLinesNotificationNotification')));
@@ -187,7 +185,6 @@
 		$Maindata= $Order->GETOrder($Id);
 	}
 	elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){
-
 		$Id = addslashes($_GET['OrderAcknowledgment']);
 
 		//If user create new Order Acknowledgment
@@ -211,7 +208,6 @@
 		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			//// DELETE LIGNE ////
 			$IdOrderLineToUpdate = $bdd->GetQuery('SELECT ORDER_LINE_ID FROM '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .' WHERE id='. addslashes($_GET['delete']).'',true);
-			var_dump($IdOrderLineToUpdate->ORDER_LINE_ID);
 			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("AR"=>0), 'WHERE id=\''. $IdOrderLineToUpdate->ORDER_LINE_ID .'\'');
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES ." WHERE id='". addslashes($_GET['delete'])."'");
 
@@ -219,6 +215,23 @@
 		}
 		//Load data
 		$Maindata= $OrderAcknowledgment->GETOrderAcknowledgment($Id);
+	}
+	elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){
+		$Id = addslashes($_GET['DeliveryNotes']);
+		
+		//If user create new Delevery note
+		if(isset($_POST['NewDeliveryNotes']) And !empty($_POST['NewDeliveryNotes'])){
+			// Create new Delivery note and keep id
+			$Id=$DeleveryNote->NewDeleveryNote($_POST['NewDeliveryNotes'], $_POST['ORDER_ID'], $User->idUSER);
+			//update increment in num sequence db
+			$Numbering->getIncrementNumbering(3);
+		}
+		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
+
+		}
+		//Load data
+		//$Maindata= $DeleveryNote->GETDeleveryNote($Id);
+
 	}
 	
 	
@@ -234,8 +247,10 @@
 		$ActivateForm=true;
 		$reqList = $Order->GETOrderList('',false);
 		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
-		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
 		$ARList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, $Id);
+		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
+		$DnList = $DeleveryNote->GETDeleveryNoteList('',false, $Id);
+		$MakeDn = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'id', 'WHERE ORDER_ID= '. $Id .' AND DELIVERED_QTY < QT');
 		
 		$GET = 'order';
 		$ParDefautDiv1 = '';
@@ -378,17 +393,17 @@ $(document).ready(function() {
 	<?php } elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<a href="index.php?page=document$type=OrderAcknowledgment&id=<?= $_GET['OrderAcknowledgment'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['DeliveryNotes'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php } elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title7'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<a href="index.php?page=document$type=Invoice&id=<?= $_GET['Invoice'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php }else{ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>

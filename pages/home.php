@@ -252,7 +252,7 @@
 			
 			<div class="dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $QL_FNC->GETQNFCCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
+				<h3><?= $QL_FNC->GETQNFCCount('',' WHERE MONTH(CREATED) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>Current month Non-compliance Record</p>
 			</div>	
 		</div>

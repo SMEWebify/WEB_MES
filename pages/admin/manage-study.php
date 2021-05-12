@@ -8,6 +8,7 @@
 	use \App\Study\Article;
 	use \App\Study\Unit;
 	use \App\Study\SubFamily;
+	use \App\Planning\Task;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -23,6 +24,7 @@
 	$Article = new Article();
 	$Unit = new Unit();
 	$SubFamily = new SubFamily();
+	$Task = new Task();
 	$date = new DateTime();
 
 	//Check if the user is authorized to view the page
@@ -35,27 +37,6 @@
 	
 	//if add or update Article
 	if(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){
-
-		if(isset($_GET['type']) AND $_GET['type'] === 'quote'){
-			$ArticleTable = '';
-			$TechnicalCutTable = TABLE_ERP_QUOTE_TECH_CUT;
-			$NomenclatureTable = TABLE_ERP_QUOTE_NOMENCLATURE;
-			$SubAssemblesTable = TABLE_ERP_QUOTE_SUB_ASSEMBLY;
-
-		}elseif(isset($_GET['type']) AND $_GET['type'] === 'order'){
-			$ArticleTable = '';
-			$TechnicalCutTable = TABLE_ERP_ORDER_TECH_CUT;
-			$NomenclatureTable = TABLE_ERP_ORDER_NOMENCLATURE;
-			$SubAssemblesTable = TABLE_ERP_ORDER_SUB_ASSEMBLY;
-		}
-		elseif(isset($_GET['type']) AND $_GET['type'] === 'study'){
-			$ArticleTable = '';
-			$TechnicalCutTable = TABLE_ERP_STANDARD_TECH_CUT;
-			$NomenclatureTable = TABLE_ERP_STANDARD_NOMENCLATURE;
-			$SubAssemblesTable = TABLE_ERP_STANDARD_SUB_ASSEMBLY;
-		}else{
-			header('Location: admin.php?page=manage-study');
-		}
 
 		//if is update standart article  
 		if(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
@@ -72,10 +53,12 @@
 				$AddSQL = ', IMAGE = \''. addslashes($fichier) .'\'';
 			}
 
+			$SERVICE = explode("-", $_POST['PRESTA_IDAtricle']);
+
 			//update article value
 			$bdd->GetUpdate("UPDATE  ". TABLE_ERP_STANDARD_ARTICLE ." SET 	LABEL='". addslashes($_POST['LABELAtricle']) ."',
 																			IND='". addslashes($_POST['INDArticle']) ."',
-																			PRESTATION_ID='". addslashes($_POST['PRESTA_IDAtricle']) ."',
+																			PRESTATION_ID='". addslashes($SERVICE[0]) ."',
 																			FAMILLE_ID='". addslashes($_POST['FAMILLE_IDArticle']) ."',
 																			ACHETER='". addslashes($_POST['ACHETERArticle']) ."',
 																			PRIX_ACHETER='". addslashes($_POST['PRIXACHArticle']) ."',
@@ -101,13 +84,13 @@
 			$dossier = PICTURE_FOLDER.STUDY_ARTICLE_FOLDER;
 			$fichier = basename($_FILES['FichierImageArticle']['name']);
 			move_uploaded_file($_FILES['FichierImageArticle']['tmp_name'], $dossier . $fichier);
-
+			$SERVICE = explode("-", $_POST['PRESTA_IDAtricle']);
 			//insert in db
 			$ArticleId = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_STANDARD_ARTICLE ." VALUE ('0',
 																				'". addslashes($_POST['CODEArticle']) ."',
 																				'". addslashes($_POST['LABELAtricle']) ."',
 																				'". addslashes($_POST['INDArticle']) ."',
-																				'". addslashes($_POST['PRESTA_IDAtricle']) ."',
+																				'". addslashes($SERVICE[0]) ."',
 																				'". addslashes($_POST['FAMILLE_IDArticle']) ."',
 																				'". addslashes($_POST['ACHETERArticle']) ."',
 																				'". addslashes($_POST['PRIXACHArticle']) ."',
@@ -129,42 +112,33 @@
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddArticleNotification')));
 		}
 
-		if(isset($_POST['AddORDREDecoupTech']) AND !empty($_POST['AddORDREDecoupTech'])){
+		if(isset($_GET['type']) AND $_GET['type'] === 'quote'){
+			$ArticleTable = '';
+			$SubAssemblesTable = TABLE_ERP_QUOTE_SUB_ASSEMBLY;
 
-			if(isset($_GET['type']) AND $_GET['type'] === 'order'){
-				$AddSql = ",'1'";
-			}
-
-			//// TECHNICAL CUT  ////
-			$req = $bdd->GetInsert("INSERT INTO ". $TechnicalCutTable ." VALUE ('0',
-																			'". addslashes($ArticleId) ."',
-																			'". addslashes($_POST['AddORDREDecoupTech']) ."',
-																			'". addslashes($_POST['AddPRESTADecoupTech']) ."',
-																			'". addslashes($_POST['AddLABELDecoupTech']) ."',
-																			'". addslashes($_POST['AddTPSPREPDecoupTech']) ."',
-																			'". addslashes($_POST['AddTPSPRODDecoupTech']) ."',
-																			'". addslashes($_POST['AddCOUTDecoupTech']) ."',
-																			'". addslashes($_POST['AddPRIXDecoupTech']) ."'
-																			". $AddSql .")");
-
-			if(isset($_GET['type']) AND $_GET['type'] === 'order'){
-				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_DATE_PLAN_TASK ." VALUE ('0', '". $req ."','". addslashes($ArticleId) ."', '". $date->getTimestamp() ."', '". $date->getTimestamp() ."')");
-			}
-
-			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTechnicalCutNotification')));
+		}elseif(isset($_GET['type']) AND $_GET['type'] === 'order'){
+			$ArticleTable = '';
+			$SubAssemblesTable = TABLE_ERP_ORDER_SUB_ASSEMBLY;
 		}
-		elseif(isset($_POST['AddORDRENomencl']) AND !empty($_POST['AddORDRENomencl'])){
-			//// NOMENCLATURE ////
-			$req = $bdd->GetInsert("INSERT INTO ". $NomenclatureTable ." VALUE ('0',
-																			'". addslashes($_POST['AddORDRENomencl']) ."',
-																			'". addslashes($ArticleId) ."',
-																			'". addslashes($_POST['AddARTICLENomencl']) ."',
-																			'". addslashes($_POST['AddLABELNomencl']) ."',
-																			'". addslashes($_POST['AddQTNomencl']) ."',
-																			'". addslashes($_POST['AddTUNITNomencl']) ."',
-																			'". addslashes($_POST['AddPRIXUNomencl']) ."',
-																			'". addslashes($_POST['AddPRIXACHATNomencl']) ."')");
-			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddNomenclatureNotification')));
+		elseif(isset($_GET['type']) AND $_GET['type'] === 'component'){
+			$ArticleTable = '';
+			$SubAssemblesTable = TABLE_ERP_STANDARD_SUB_ASSEMBLY;
+		}else{
+			header('Location: admin.php?page=manage-study');
+		}
+
+		if(isset($_POST['AddORDER']) AND !empty($_POST['AddORDER'])){
+				
+			if(isset($_POST['TaskType']) AND $_POST['TaskType'] == 'TechCut'){
+				// add tech
+				$Task->Addask($_GET['id'], $User->idUSER, $_POST, $_GET['type'] , True , false);
+				$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddTechnicalCutNotification')));
+			}
+			elseif(isset($_POST['TaskType']) AND $_POST['TaskType'] == 'BillCut'){
+				// add bill
+				$Task->Addask($_GET['id'], $User->idUSER, $_POST, $_GET['type'] , false , true);
+				$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddNomenclatureNotification')));
+			}
 		}
 		elseif(isset($_POST['AddORDRESousEns']) AND !empty($_POST['AddORDRESousEns'])){
 			//// SUB-ASSEMBLY ////
@@ -204,13 +178,16 @@
 					$AddSql = ",ETAT = '". addslashes($_POST['ETAT'][$i]) ."'";
 				}
 
-				$bdd->GetUpdate('UPDATE '. $TechnicalCutTable .' SET  ORDRE = \''. addslashes($_POST['ORDRE'][$i]) .'\',
-																	PRESTA_ID = \''. addslashes($_POST['PRESTA_ID'][$i]) .'\',
-																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
-																	TPS_PREP = \''. addslashes($_POST['TPS_PREP'][$i]) .'\',
-																	TPS_PRO = \''. addslashes($_POST['TPS_PRO'][$i]) .'\',
-																	COUT = \''. addslashes($_POST['COUT'][$i]) .'\',
-																	PRIX = \''. addslashes($_POST['PRIX'][$i]) .'\'
+				$SERVICE = explode("-", $_POST['SERVICE_ID'][$i]);
+
+				$bdd->GetUpdate('UPDATE '. TABLE_ERP_TASK .' SET  `ORDER` = \''. addslashes($_POST['ORDER'][$i]) .'\',
+																	`LABEL` = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	`SERVICE_ID` = \''. addslashes($SERVICE[0]) .'\',
+																	`SETING_TIME` = \''. addslashes($_POST['SETING_TIME'][$i]) .'\',
+																	`UNIT_TIME` = \''. addslashes($_POST['UNIT_TIME'][$i]) .'\',
+																	`TYPE` = \''. addslashes($SERVICE[1]) .'\',
+																	`UNIT_COST` = \''. addslashes($_POST['UNIT_COST'][$i]) .'\',
+																	`UNIT_PRICE` = \''. addslashes($_POST['UNIT_PRICE'][$i]) .'\'
 																	'. $AddSql .'
 																	WHERE Id IN ('. $id_generation . ')');
 				$i++;
@@ -221,14 +198,19 @@
 			//if update NOMENCLATURE
 			$i = 0;
 			foreach ($_POST['UpdateIdNomencl'] as $id_generation) {
+				$AddSql ='';
+				if(isset($_GET['type']) AND $_GET['type'] === 'order'){
+					$AddSql = ",ETAT = '". addslashes($_POST['ETAT'][$i]) ."'";
+				}
 
-				$bdd->GetUpdate('UPDATE '. $NomenclatureTable .' SET  ORDRE = \''. addslashes($_POST['ORDRE'][$i]) .'\',
-																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
-																	QT = \''. addslashes($_POST['QT'][$i]) .'\',
-																	UNIT_ID = \''. addslashes($_POST['UNIT_ID'][$i]) .'\',
-																	PRIX_U = \''. addslashes($_POST['PRIX_U'][$i]) .'\',
-																	PRIX_ACHAT = \''. addslashes($_POST['PRIX_ACHAT'][$i]) .'\'
-																	WHERE Id IN ('. $id_generation . ')');
+				$bdd->GetUpdate('UPDATE '. TABLE_ERP_TASK .' SET  `ORDER` = \''. addslashes($_POST['ORDER'][$i]) .'\',
+																	`LABEL` = \''. addslashes($_POST['LABEL'][$i]) .'\',
+																	`QTY` = \''. addslashes($_POST['QTY'][$i]) .'\',
+																	`UNIT_ID` = \''. addslashes($_POST['UNIT_ID'][$i]) .'\',
+																	`UNIT_COST` = \''. addslashes($_POST['UNIT_COST'][$i]) .'\',
+																	`UNIT_PRICE` = \''. addslashes($_POST['UNIT_PRICE'][$i]) .'\'
+																	'. $AddSql .'
+																	WHERE id IN ('. $id_generation . ')');
 				$i++;
 			}
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateNomenclatureNotification')));
@@ -276,7 +258,7 @@
 			$i = 0;
 			foreach ($_POST['id_sous_famille'] as $id_generation) {
 
-				$bdd->GetUpdate('UPDATE `'. TABLE_ERP_SOUS_FAMILLE .'` SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+				$bdd->GetUpdate('UPDATE '. TABLE_ERP_SOUS_FAMILLE .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
 																	LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
 																	PRESTATION_ID = \''. addslashes($_POST['PRESTATION_ID'][$i]) .'\'
 																	WHERE Id IN ('. $id_generation . ')');
@@ -311,7 +293,7 @@
 	}
 	else{
 		$titleOnglet1 = '<button class="tablinks" onclick="openDiv(event, \'div1\')" id="defaultOpen">'. $langue->show_text('TableAddArticleButton') .'</button>';
-		$actionForm = 'admin.php?page=manage-study$id=new&type=study';
+		$actionForm = 'admin.php?page=manage-study$id=new&type=component';
 		$DisplayCode ='<input type="text" name="CODEArticle" required="required">';
 	}
 
@@ -353,7 +335,7 @@
 				<?php
 				//generate list for datalist find input
 				foreach ($Article->GETArticleList('',false) as $data): ?>
-				<li><a href="admin.php?page=manage-study&id=<?= $data->id ?>&type=study"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
+				<li><a href="admin.php?page=manage-study&id=<?= $data->id ?>&type=component"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
 				<?php $i++; endforeach; ?>
 			</ul>
 		</div>
@@ -395,16 +377,17 @@
 								</select>
 							</td>
 							<td>
-								<select name="">
-									<option value="1" <?= selected($Articledata->TYPE, 1) ?> ><?= $langue->show_text('SelectProductive') ?></option>
-									<option value="2" <?= selected($Articledata->TYPE, 2) ?> ><?= $langue->show_text('SelectRawMat') ?></option>
-									<option value="3" <?= selected($Articledata->TYPE, 3) ?> ><?= $langue->show_text('SelectRawMatSheet') ?></option>
-									<option value="4" <?= selected($Articledata->TYPE, 4) ?> ><?= $langue->show_text('SelectRawMatProfil') ?></option>
-									<option value="5" <?= selected($Articledata->TYPE, 5) ?> ><?= $langue->show_text('SelectRawMatBlock') ?></option>
-									<option value="6" <?= selected($Articledata->TYPE, 6) ?> ><?= $langue->show_text('SelectSupplies') ?></option>
-									<option value="7" <?= selected($Articledata->TYPE, 7) ?> ><?= $langue->show_text('SelectSubcontracting') ?></option>
-									<option value="8" <?= selected($Articledata->TYPE, 8) ?> ><?= $langue->show_text('SelectCompoundItem') ?></option>
-								</select>
+								<?php
+									if($Articledata->TYPE == 1){ $Type = $langue->show_text('SelectProductive') ;}
+									if($Articledata->TYPE == 2){ $Type =  $langue->show_text('SelectRawMat') ;}
+									if($Articledata->TYPE == 3){ $Type =  $langue->show_text('SelectRawMatSheet') ;}
+									if($Articledata->TYPE == 4){ $Type = $langue->show_text('SelectRawMatProfil');}
+									if($Articledata->TYPE == 5){ $Type = $langue->show_text('SelectRawMatBlock') ;}
+									if($Articledata->TYPE == 6){ $Type = $langue->show_text('SelectSupplies') ;}
+									if($Articledata->TYPE == 7){ $Type = $langue->show_text('SelectSubcontracting');}
+									if($Articledata->TYPE == 8){ $Type = $langue->show_text('SelectCompoundItem') ;}
+									echo $Type;
+								?>
 							</td>
 						</tr>
 						<tr>
@@ -528,9 +511,7 @@
 								<th><?=$langue->show_text('TableProductTime'); ?></th>
 								<th><?=$langue->show_text('TableProductCost'); ?></th>
 								<th><?=$langue->show_text('TableSalePrice'); ?></th>
-								<?php if(isset($_GET['type']) AND $_GET['type'] === 'order' OR $_GET['type'] === 'quote'): ?>
 								<th><?=$langue->show_text('TableStatu'); ?></th>
-								<?php endif ?>
 							</tr>
 						</thead>
 						<tbody>
@@ -541,23 +522,23 @@
 								$TtCout = 0;
 								$TtPrix = 0;
 	
-								foreach ($Article->GETTechnicalCut($ArticleId, $TechnicalCutTable) as $data){?>
+								foreach ($Task->GETTechnicalCut($ArticleId, $_GET['type']) as $data){?>
 											<tr>
 												<td></td>
 												<td>
 													<input type="hidden" name="id_DecoupTech[]" id="id_DecoupTech" value="<?= $data->id  ?>">
-													<input type="number" name="ORDRE[]" value="<?=  $data->ORDRE  ?>" required="required">
+													<input type="number" name="ORDER[]" value="<?=  $data->ORDER  ?>" required="required">
 												</td>
 												<td>
-													<select name="PRESTA_ID[]">
-														<?= $Prestation->GetPrestationList($data->PRESTA_ID,true,"productive") ?>
+													<select name="SERVICE_ID[]">
+														<?= $Prestation->GetPrestationList($data->SERVICE_ID,true,"productive") ?>
 													</select>
 												</td>
 												<td><input type="text"  name="LABEL[]" value="<?=  $data->LABEL ?>" required="required"></td>
-												<td><input type="number"  name="TPS_PREP[]" value="<?=  $data->TPS_PREP  ?>" step=".001" required="required"></td>
-												<td><input type="number"  name="TPS_PRO[]" value="<?=  $data->TPS_PRO  ?>" step=".001" required="required"></td>
-												<td><input type="number"  name="COUT[]" value="<?=  $data->COUT  ?>" step=".001" required="required"></td>
-												<td><input type="number"  name="PRIX[]" value="<?=  $data->PRIX  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="SETING_TIME[]" value="<?=  $data->SETING_TIME  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="UNIT_TIME[]" value="<?=  $data->UNIT_TIME  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="UNIT_COST[]" value="<?=  $data->UNIT_COST  ?>" step=".001" required="required"></td>
+												<td><input type="number"  name="UNIT_PRICE[]" value="<?=  $data->UNIT_PRICE  ?>" step=".001" required="required"></td>
 												<?php if(isset($_GET['type']) AND $_GET['type'] === 'order'): ?>
 												<td>
 													<select  name="ETAT[]">
@@ -573,10 +554,10 @@
 											</tr>
 								<?php
 									$iDecoupTech++;
-									$TtTpsPrepa +=  $data->TPS_PREP;
-									$TtTpsProd +=  $data->TPS_PRO;
-									$TtCout +=  $data->COUT;
-									$TtPrix +=  $data->PRIX;
+									$TtTpsPrepa +=  $data->SETING_TIME;
+									$TtTpsProd +=  $data->UNIT_TIME;
+									$TtCout +=  $data->UNIT_COST;
+									$TtPrix +=  $data->UNIT_PRICE;
 								}
 	
 								if($iDecoupTech>=1){
@@ -600,17 +581,20 @@
 								?>
 								<tr>
 									<td><?=$langue->show_text('Addtext'); ?></td>
-									<td><input type="number" name="AddORDREDecoupTech" ></td>
 									<td>
-										<select name="AddPRESTADecoupTech">
+										<input type="hidden" name="TaskType" value="TechCut">
+										<input type="number" name="AddORDER" >
+									</td>
+									<td>
+										<select name="AddSERVICE_ID">
 											<?=$Prestation ->GetPrestationList(0,true,"productive") ?>
 										</select>
 									</td>
-									<td><input type="text"  name="AddLABELDecoupTech" ></td>
-									<td><input type="number"  name="AddTPSPREPDecoupTech" step=".001" ></td>
-									<td><input type="number"  name="AddTPSPRODDecoupTech" step=".001" ></td>
-									<td><input type="number"  name="AddCOUTDecoupTech" step=".001" ></td>
-									<td ><input type="number"  name="AddPRIXDecoupTech" step=".001" ></td>
+									<td><input type="text"  name="AddLABEL" ></td>
+									<td><input type="number"  name="AddSETING_TIME" step=".001" ></td>
+									<td><input type="number"  name="AddUNIT_TIME" step=".001" ></td>
+									<td><input type="number"  name="AddUNIT_COST" step=".001" ></td>
+									<td ><input type="number"  name="AddUNIT_PRICE" step=".001" ></td>
 									<td> - </td>
 								</tr>
 								<tr>
@@ -637,50 +621,66 @@
 									<th><?=$langue->show_text('TableUnit'); ?></th>
 									<th><?=$langue->show_text('TableUnitPrice'); ?></th>
 									<th><?=$langue->show_text('TablePurchaseUnit'); ?></th>
+									<th><?=$langue->show_text('TableStatu'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
 							<?php
 								$i = 0;
-								foreach ($Article->GETNomenclature($ArticleId, $NomenclatureTable) as $data): ?>
+								foreach ($Task->GETNomenclature($ArticleId, $_GET['type']) as $data): ?>
 									<tr>
 										<td></td>
 										<td>
-											<input type="hidden" name="UpdateIdNomencl[]" id="UpdateIdNomencl" value="<?= $data->Id ?>">
-											<input type="number" name="ORDRE[]" value="<?= $data->ORDRE ?>" required="required">
+											<input type="hidden" name="UpdateIdNomencl[]" id="UpdateIdNomencl" value="<?= $data->id ?>">
+											<input type="number" name="ORDER[]" value="<?= $data->ORDER ?>" required="required">
 										</td>
 										<td><?= $data->ARTICLE_LABEL  ?></td>
 										<td><input type="text"  name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
-										<td><input type="number"  name="QT[]" value="<?= $data->QT  ?>" step=".001" required="required"></td>
+										<td><input type="number"  name="QTY[]" value="<?= $data->QTY  ?>" step=".001" required="required"></td>
 										<td>
 										<select name="UNIT_ID[]">
 												<?= $Unit->GetUnitList($data->UNIT_ID, true) ?>
 											</select>
 										</td>
-										<td><input type="number"  name="PRIX_U[]" value="<?= $data->PRIX_U  ?>" step=".001" required="required"></td>
-										<td><input type="number"  name="PRIX_ACHAT[]" value="<?= $data->PRIX_ACHAT  ?>" step=".001" required="required"></td>
+										<td><input type="number"  name="UNIT_COST[]" value="<?= $data->UNIT_COST  ?>" step=".001" required="required"></td>
+										<td><input type="number"  name="UNIT_PRICE[]" value="<?= $data->UNIT_PRICE  ?>" step=".001" required="required"></td>
+										<?php if(isset($_GET['type']) AND $_GET['type'] === 'order'): ?>
+										<td>
+											<select  name="ETAT[]">
+												<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectCreated') ?></option>
+												<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectStarted') ?></option>
+												<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectInterrupted') ?></option>
+											</select>
+										</td>
+										<?php else : ?>
+										<td></td>
+										<?php endif ?>
 									</tr>
 								<?php $i++; endforeach; ?>
 								<tr>
 									<td><?=$langue->show_text('Addtext'); ?></td>
-									<td><input type="number" name="AddORDRENomencl" ></td>
 									<td>
-										<select name="AddARTICLENomencl">
+										<input type="hidden" name="TaskType" value="BillCut">
+										<input type="number" name="AddORDER" >
+									</td>
+									<td>
+										<select name="AddARTICLE_ID">
 											<?= $Article->GETArticleList() ?>
 										</select>
 									</td>
-									<td><input type="text"  name="AddLABELNomencl" ></td>
-									<td><input type="number"  name="AddQTNomencl" step=".001" ></td>
+									<td><input type="text"  name="AddLABEL" ></td>
+									<td><input type="number"  name="AddQTY" step=".001" ></td>
 									<td>
-										<select name="AddTUNITNomencl">
+										<select name="AddUNIT_ID">
 										<?= $Unit->GetUnitList('', true) ?>
 										</select>
 									</td>
-									<td><input type="number"  name="AddPRIXUNomencl" step=".001" ></td>
-									<td><input type="number"  name="AddPRIXACHATNomencl" step=".001" ></td>
+									<td><input type="number"  name="AddUNIT_COST" step=".001" ></td>
+									<td><input type="number"  name="AddUNIT_PRICE" step=".001" ></td>
+									<td> - </td>
 								</tr>
 								<tr>
-									<td colspan="8" >
+									<td colspan="9" >
 										<br/>
 										<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
 										<br/>
