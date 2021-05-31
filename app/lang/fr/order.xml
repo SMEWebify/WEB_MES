@@ -50,11 +50,10 @@
 
     <Title2>Commande</Title2>
     <Title5>Lignes de commande</Title5>
-    <Title3>Détail de la commande</Title3>
+    <Title3>Détail des lignes</Title3>
     
+    <Title5>Lignes de commande</Title5>
     <Title6>Accusés de reception</Title6>
-    <Title7>Détail de l'AR</Title7>
-
     <Title8>Bon de livraison</Title8>
     <Title9>Facture</Title9>
 
@@ -122,6 +121,7 @@
     <TableValidityDate>Date de validité :</TableValidityDate>  
     <TableStatu>Etat de la commande :</TableStatu>  
     <TableNewOrderAcknowledgment>Nouvel AR :</TableNewOrderAcknowledgment> 
+    <TableNewDeliveryNotes>Nouveau BL :</TableNewDeliveryNotes>
        
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
@@ -134,10 +134,13 @@
     <AddOrderNotification>Commande créée</AddOrderNotification>
     <AddOrderLineNotification> ligne(s) ajoutée(s) a la Commande</AddOrderLineNotification>
     <DeleteOrderLineNotification> ligne(s) suprimée(s) de la commande</DeleteOrderLineNotification>
-    <DeleteOrderAcknowledgmentLinesNotificationNotification> ligne(s) AR commande suprimée(s)</DeleteOrderAcknowledgmentLinesNotificationNotification>
-    <AddOrderAcknowledgmentNotificationNotification>Accusé de reception créer</AddOrderAcknowledgmentNotificationNotification>
-    <AddOrderAcknowledgmentLinesNotificationNotification> ligne(s) d'AR crée(s)</AddOrderAcknowledgmentLinesNotificationNotification>
-    
+    <DeleteOrderAcknowledgmentLinesNotification> ligne(s) d'AR commande suprimée(s)</DeleteOrderAcknowledgmentLinesNotification>
+    <AddOrderAcknowledgmentNotification>Accusé de reception créer</AddOrderAcknowledgmentNotification>
+    <AddOrderAcknowledgmentLinesNotification> ligne(s) d'AR crée(s)</AddOrderAcknowledgmentLinesNotification>
+    <AddDeliveryNoteNotification>Bon de livraison créer</AddDeliveryNoteNotification>
+    <AddDeliveryNoteLineNotification> Ligne(s) de BL crée(s)</AddDeliveryNoteLineNotification>
+    <DeleteDeliveryNoteLineNotification> Ligne(s) de BL suprimée(s)</DeleteDeliveryNoteLineNotification>
+
 <!-- Select-->
     <SelectOpen>Crée</SelectOpen>
     <SelectRun>Lancée</SelectRun>

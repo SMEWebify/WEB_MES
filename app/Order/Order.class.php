@@ -304,7 +304,7 @@ class OrderLines Extends Order  {
                                                                                         TVA_ID='". addslashes($TVA_ID) ."',
                                                                                         DELAIS='". addslashes($DELAIS) ."',
                                                                                         ETAT='". addslashes($ETAT) ."'
-                                                                                        WHERE id='". addslashes($id)."'");
+                                                                                    WHERE id='". addslashes($id)."'");
 
         return $UpdateOrderLine;
     }
@@ -325,6 +325,10 @@ class OrderLines Extends Order  {
                         '. TABLE_ERP_ORDER_LIGNE .'.ARTICLE_CODE,
                         '. TABLE_ERP_ORDER_LIGNE .'.LABEL,
                         '. TABLE_ERP_ORDER_LIGNE .'.QT,
+                        '. TABLE_ERP_ORDER_LIGNE .'.DELIVERED_QTY,
+                        '. TABLE_ERP_ORDER_LIGNE .'.DELIVERED_REMAINING_QTY,
+                        '. TABLE_ERP_ORDER_LIGNE .'.INVOICED_QTY,
+                        '. TABLE_ERP_ORDER_LIGNE .'.INVOICED_REMAINING_QTY,
                         '. TABLE_ERP_ORDER_LIGNE .'.UNIT_ID,
                         '. TABLE_ERP_ORDER_LIGNE .'.PRIX_U,
                         '. TABLE_ERP_ORDER_LIGNE .'.REMISE,

@@ -112,6 +112,10 @@
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 											<?php endif ?>
+											<?php if(isset($_GET['DeliveryNotes'])): ?>
+											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+											<?php endif ?>
 										</select>
 									</td>
 									<td><input type="checkbox" id="MajLigne" name="MajLigne" checked="checked"><label ><?= $langue->show_text('UpdateLine') ?></label></td>
@@ -132,7 +136,7 @@
 					<table class="content-table">
 						<thead>
 							<tr>
-								<th colspan="2" ><?=$langue->show_text('Title6'); ?></th>
+								<th colspan="2" ><?=$langue->show_text('TableCondiList'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -255,22 +259,23 @@
 					</table>
 				</div>
 			</form>
+
 			
-			<?php
-		//for converte ORDER TO ACKNOWLEGMENT 
-		if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
+			<?php if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
 			<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
 				<div>
 					<table class="content-table" >
 						<thead>
 							<tr>
-								<th colspan="12" >
-									<?= $langue->show_text('TableGeneralInfo') ?>
+								<th colspan="2" >
+									---------------------------------------------
 								</th>
 							</tr>
 						</thead>
 						<tbody>
-				<?php if( $MakeAR > 0){?>
+				<?php 
+					//for converte ORDER TO ACKNOWLEGMENT 
+					if( $MakeAR > 0){?>
 							<tr>
 								<td>
 									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewOrderAcknowledgment',  $Numbering->getCodeNumbering(12),'', $ActivateForm) ?>
@@ -283,7 +288,9 @@
 								</td>
 							</tr>
 						
-				<?php } if($ARList > 0){?>
+				<?php } 
+				//DISPLAY ACKNOWLEGMENT 
+				if($ARList > 0){?>
 				
 						<?php foreach ($ARList as $dataAr): ?>
 							<tr>
@@ -297,8 +304,49 @@
 					</table>
 				</div>
 			</form>
-			<?php } ?>
-
+			<form method="post" name="Coment" action="index.php?page=order&DeliveryNotes=new" class="content-form" >
+				<div>
+					<table class="content-table" >
+						<thead>
+							<tr>
+								<th colspan="2" >
+								---------------------------------------------
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+				<?php
+				//for converte ORDER TO DELEVERY NOTE 
+				if( $MakeDn > 0){?>
+							<tr>
+								<td>
+									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewDeliveryNotes',  $Numbering->getCodeNumbering(3),'', $ActivateForm) ?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ,'', $ActivateForm) ?>
+									<?= $Form->submit($langue->show_text('TableNewDeliveryNotes'), $ActivateForm) ?>
+								</td>
+							</tr>
+						
+				<?php } 
+				//DISPLAY  DELEVERY NOTE 
+				if($DnList > 0){?>
+				
+						<?php foreach ($DnList as $dataAr): ?>
+							<tr>
+								<td>
+								<a  href="index.php?page=order&DeliveryNotes=<?= $dataAr->id ?>"><?= $dataAr->CODE ?></a>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+				<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		<?php } ?>
 		</div>
 	</div>
 	<div id="div3" class="tabcontent">
@@ -339,11 +387,11 @@
 						</td>
 						<td><input type="text"  name="" id="AddLABELLigne" placeholder="Désignation"></td>
 						<td><input type="number"  name="" id="AddQTLigne" placeholder="1"  value="1"></td>
-						<td><?= $Form->select('', 'AddUNITLigne', '',$ActivateForm,'', $Unit->GetUnitList(0, false) )  ?></td>
+						<td><?= $Form->select('AddUNITLigne', 'AddUNITLigne', '',$ActivateForm,'', $Unit->GetUnitList(0, false) )  ?></td>
 						<td><input type="number"  name="" id="AAddPrixLigne" step=".001" placeholder="10 €"  value="0"></td>
 						<td><input type="number"  name="" id="AddRemiseLigne" min="0" max="100" step=".001" placeholder="0 %" value="0"></td>
 						<td></td>
-						<td><?= $Form->select('', 'AddTVALigne', '',$ActivateForm,'', $VAT->GETVATList(0, false) )  ?></td>
+						<td><?= $Form->select('AddTVALigne', 'AddTVALigne', '',$ActivateForm,'', $VAT->GETVATList(0, false) )  ?></td>
 						<td><input type="date" name="" id="AddDELAISigne"></td>
 						<td></td>
 					</tr>
@@ -433,6 +481,10 @@
 										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectStop') ?></option>
 										<?php endif ?>
 										<?php if(isset($_GET['OrderAcknowledgment'])): ?>
+										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+										<?php endif ?>
+										<?php if(isset($_GET['DeliveryNotes'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 										<?php endif ?>

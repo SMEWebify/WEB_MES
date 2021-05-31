@@ -45,17 +45,15 @@
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
 <!-- title page --> 
-	 <TiltePage>Order</TiltePage>
+	<TiltePage>Order</TiltePage>
+	<Title1back>Back home</Title1back>
+	
     <Title1>Home</Title1> 
-    <Title1back>Back home</Title1back> 
-
     <Title2>Order</Title2>
-    <Title3>Order detail</Title3>
-    <Title5>Order Lines</Title5>
+    <Title3>Detail lines</Title3>
 
+    <Title5>Order Lines</Title5>
     <Title6>Order Acknowledgment</Title6>
-    <Title7>Order Acknowledgment detail</Title7>
-    
     <Title8>Delivery notes</Title8>
     <Title9>Invoices</Title9>
 
@@ -122,7 +120,9 @@
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
     <TableStatu>Order statu :</TableStatu>  
-    <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>    
+    <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>
+    <TableNewDeliveryNotes>New Delevery Note :</TableNewDeliveryNotes>
+        
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
     <UpdateLineNotification> line(s) updated</UpdateLineNotification>
@@ -134,9 +134,13 @@
     <AddOrderNotification>Order created</AddOrderNotification>
     <AddOrderLineNotification> Line add to Order</AddOrderLineNotification>
     <DeleteOrderLineNotification> line delete to Order</DeleteOrderLineNotification>
-    <DeleteOrderAcknowledgmentLinesNotificationNotification> line Acknowledgment Order delete</DeleteOrderAcknowledgmentLinesNotificationNotification>
-    <AddOrderAcknowledgmentNotificationNotification>Order Acknowledgment added</AddOrderAcknowledgmentNotificationNotification>
-    <AddOrderAcknowledgmentLinesNotificationNotification> Order Acknowledgment lines added</AddOrderAcknowledgmentLinesNotificationNotification>
+    <DeleteOrderAcknowledgmentLinesNotification> line Acknowledgment Order delete</DeleteOrderAcknowledgmentLinesNotification>
+    <AddOrderAcknowledgmentNotification>Order Acknowledgment added</AddOrderAcknowledgmentNotification>
+    <AddOrderAcknowledgmentLinesNotification> Order Acknowledgment lines added</AddOrderAcknowledgmentLinesNotification>
+    <AddDeliveryNoteNotification>Delivery Note added</AddDeliveryNoteNotification>
+    <AddDeliveryNoteLineNotification> Delivery note lines added</AddDeliveryNoteLineNotification>
+    <DeleteDeliveryNoteLineNotification> Delivery note lines delete</DeleteDeliveryNoteLineNotification>
+    
 <!-- Select-->
     <SelectOpen>Created</SelectOpen>
     <SelectRun>Run</SelectRun>

@@ -10,7 +10,7 @@ I am unprofessional, any improvement discussion would be helpful.
 
 The goal is to have version 1 with a functional workflow up to invoicing.
 
-Currently, the quotation, orders, confirmation are finished.
+Currently, the quotation, orders, confirmation, Delivery notes are finished.
 
 -----------------
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Menu.PNG)

@@ -9,9 +9,12 @@ class DeleveryNote Extends SQL  {
     Public $CODE;
     Public $ORDER_ID;
     Public $LABEL;
-    Public $DATE;
+    Public $CREATED;
+    Public $MODIFIED;
     Public $ETAT;
-    Public $CREATEUR_ID;
+    Public $CREATOR_ID;
+    Public $MODIFIED_ID;
+    
     Public $INCOTERM;
     Public $COMMENT;
 
@@ -40,14 +43,17 @@ class DeleveryNote Extends SQL  {
     public function NewDeleveryNote($CODE, $ORDER_ID, $UserID){
 
         $NewDeleveryNote = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_DELIVERY_NOTE ." VALUE ('0',
-                                                                                    '". $CODE ."',
-                                                                                    '". $ORDER_ID ."',
-                                                                                    '',
-                                                                                    NOW(),
-                                                                                    '1',
-                                                                                    '". $UserID ."',
-                                                                                    '1',
-                                                                                    '')");
+                                                                                                    '". $CODE ."',
+                                                                                                    '". $ORDER_ID ."',
+                                                                                                    '',
+                                                                                                    '',
+                                                                                                    NOW(),
+                                                                                                    NOW(),
+                                                                                                    '1',
+                                                                                                    '". $UserID ."',
+                                                                                                    '". $UserID ."',
+                                                                                                    '1',
+                                                                                                    '')");
         return $NewDeleveryNote;
     }
 
@@ -59,9 +65,12 @@ class DeleveryNote Extends SQL  {
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.CODE,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.ORDER_ID,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.LABEL,
-                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.DATE,
+                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.LABEL_INDICE,
+                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.CREATED,
+                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.MODIFIED,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.ETAT,
-                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.CREATEUR_ID,
+                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.CREATOR_ID,
+                                        '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.MODIFIED_ID,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.INCOTERM,
                                         '. TABLE_ERP_ORDER_DELIVERY_NOTE .'.COMENT,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
@@ -88,7 +97,7 @@ class DeleveryNote Extends SQL  {
                                         '. TABLE_ERP_TRANSPORT .'.LABEL AS TRANSPORT_LABEL
                                         FROM `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`
                                            LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
-                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE .'`.`CREATOR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS  TABLE_ERP_EMPPLOYEES_RESP_COM ON `'. TABLE_ERP_ORDER .'`.`RESP_COM_ID` =  TABLE_ERP_EMPPLOYEES_RESP_COM.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS TABLE_ERP_EMPPLOYEES_RESP_TECH ON `'. TABLE_ERP_ORDER .'`.`RESP_TECH_ID` = TABLE_ERP_EMPPLOYEES_RESP_TECH.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
@@ -145,7 +154,7 @@ class DeleveryNote Extends SQL  {
 class DeleveryNoteLines Extends DeleveryNote  {
 
     Public $id;
-    Public $ORDER_DELEVERY_NOTE;
+    Public $ORDER_DELEVERY_NOTE_ID;
     Public $ORDER_ID;
     Public $ORDRE;
     Public $ORDER_LINE_ID;
@@ -162,16 +171,19 @@ class DeleveryNoteLines Extends DeleveryNote  {
     Public $TAUX;
     Public $LABEL_TVA;
     Public $LABEL_UNIT;
-
+    Public $ETAT;
+    
     Public $DeleveryNoteLines;
 
-    public function NewDeleveryNoteLines($IdDeleveryNote, $OrderID, $Order, $orderLineId){
+    public function NewDeleveryNoteLines($IdDeleveryNote, $OrderID, $Order, $orderLineId, $QT_ToDelyvery){
 
         $NewDeleveryNoteLines = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_DELIVERY_NOTE_LINES ." VALUE ('0',
                                                                                         '". $IdDeleveryNote ."',
                                                                                         '". addslashes($OrderID) ."',
                                                                                         '". addslashes($Order) ."',
-                                                                                        '". addslashes($orderLineId) ."')");
+                                                                                        '". addslashes($orderLineId) ."',
+                                                                                        '". addslashes($QT_ToDelyvery) ."',
+                                                                                        '1')");
 
 
         return $NewDeleveryNoteLines;
@@ -187,15 +199,16 @@ class DeleveryNoteLines Extends DeleveryNote  {
     public function GETDeleveryNoteLinesList($IdData=0, $Select = true, $IdDeleveryNote=0){
 
         $this->DeleveryNoteLinesList ='';
-        $Clause = 'WHERE '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDER_DELEVERY_NOTE = \''. $IdDeleveryNote.'\'';
+        $Clause = 'WHERE '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDER_DELEVERY_NOTE_ID = \''. $IdDeleveryNote.'\'';
         if($IdDeleveryNote===0){
             $Clause = '';
         }
         $query='SELECT  '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.id,
-                        '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDER_DELEVERY_NOTE,
+                        '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDER_DELEVERY_NOTE_ID,
                         '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDER_ID,
                         '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDRE,
                         '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDER_LINE_ID,
+                        '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ETAT,
                         '. TABLE_ERP_ORDER_LIGNE .'.ARTICLE_CODE,
                         '. TABLE_ERP_ORDER_LIGNE .'.LABEL,
                         '. TABLE_ERP_ORDER_LIGNE .'.QT,
@@ -214,7 +227,7 @@ class DeleveryNoteLines Extends DeleveryNote  {
                             LEFT JOIN `'. TABLE_ERP_ORDER_LIGNE .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'`.`ORDER_LINE_ID` = `'. TABLE_ERP_ORDER_LIGNE .'`.`id`
                             LEFT JOIN `'. TABLE_ERP_TVA .'` ON `'. TABLE_ERP_ORDER_LIGNE .'`.`TVA_ID` = `'. TABLE_ERP_TVA .'`.`id`
                             LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_ORDER_LIGNE .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'`.`ORDER_DELEVERY_NOTE` = `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`id` 
+                            LEFT JOIN `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'` ON `'. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'`.`ORDER_DELEVERY_NOTE_ID` = `'. TABLE_ERP_ORDER_ACKNOWLEGMENT .'`.`id` 
                             '. $Clause.'
                         ORDER BY '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .'.ORDRE ';
           

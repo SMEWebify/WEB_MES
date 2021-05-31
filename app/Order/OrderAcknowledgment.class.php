@@ -42,6 +42,7 @@ class OrderAcknowledgment Extends SQL  {
                                                                                     '". $CODE ."',
                                                                                     '". $ORDER_ID ."',
                                                                                     '',
+                                                                                    '',
                                                                                     NOW(),
                                                                                     '1',
                                                                                     '". $UserID ."',
@@ -58,6 +59,7 @@ class OrderAcknowledgment Extends SQL  {
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CODE,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ORDER_ID,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL,
+                                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.LABEL_INDICE,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.DATE,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.ETAT,
                                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT .'.CREATEUR_ID,
@@ -161,6 +163,7 @@ class OrderAcknowledgmentLines Extends OrderAcknowledgment  {
     Public $TAUX;
     Public $LABEL_TVA;
     Public $LABEL_UNIT;
+    Public $ETAT;
 
     Public $OrderAcknowledgmentLines;
 
@@ -170,7 +173,8 @@ class OrderAcknowledgmentLines Extends OrderAcknowledgment  {
                                                                                         '". $IdOrderAcknowledgment ."',
                                                                                         '". addslashes($OrderID) ."',
                                                                                         '". addslashes($Order) ."',
-                                                                                        '". addslashes($orderLineId) ."')");
+                                                                                        '". addslashes($orderLineId) ."',
+                                                                                        '1')");
 
 
         return $NewOrderacknowledgmentlines;
@@ -195,6 +199,7 @@ class OrderAcknowledgmentLines Extends OrderAcknowledgment  {
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_ID,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDRE,
                         '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ORDER_LINE_ID,
+                        '. TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES .'.ETAT,
                         '. TABLE_ERP_ORDER_LIGNE .'.ARTICLE_CODE,
                         '. TABLE_ERP_ORDER_LIGNE .'.LABEL,
                         '. TABLE_ERP_ORDER_LIGNE .'.QT,
