@@ -122,6 +122,7 @@
     <TableStatu>Order statu :</TableStatu>  
     <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>
     <TableNewDeliveryNotes>New Delevery Note :</TableNewDeliveryNotes>
+    <TableNewInvoiceOrder>New Invoice :</TableNewInvoiceOrder>        
         
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
@@ -131,16 +132,23 @@
     <UpdateInfoCustomerNotification>Customer information changed</UpdateInfoCustomerNotification>
     <UpdateSalesInfoNotification>Sales information changed</UpdateSalesInfoNotification>
     <UpdateGeneralNotification>Internal information changed</UpdateGeneralNotification>
+
     <AddOrderNotification>Order created</AddOrderNotification>
     <AddOrderLineNotification> Line add to Order</AddOrderLineNotification>
     <DeleteOrderLineNotification> line delete to Order</DeleteOrderLineNotification>
+
     <DeleteOrderAcknowledgmentLinesNotification> line Acknowledgment Order delete</DeleteOrderAcknowledgmentLinesNotification>
     <AddOrderAcknowledgmentNotification>Order Acknowledgment added</AddOrderAcknowledgmentNotification>
     <AddOrderAcknowledgmentLinesNotification> Order Acknowledgment lines added</AddOrderAcknowledgmentLinesNotification>
+
     <AddDeliveryNoteNotification>Delivery Note added</AddDeliveryNoteNotification>
     <AddDeliveryNoteLineNotification> Delivery note lines added</AddDeliveryNoteLineNotification>
     <DeleteDeliveryNoteLineNotification> Delivery note lines delete</DeleteDeliveryNoteLineNotification>
     
+
+    <AddInvoiceOrderNotification>Invoice added</AddInvoiceOrderNotification>
+    <AddInvoiceOrderLineNotification> Invoice lines added</AddInvoiceOrderLineNotification>
+    <DeleteInvoiceOrderLineNotification> Invoice lines delete</DeleteInvoiceOrderLineNotification>
 <!-- Select-->
     <SelectOpen>Created</SelectOpen>
     <SelectRun>Run</SelectRun>

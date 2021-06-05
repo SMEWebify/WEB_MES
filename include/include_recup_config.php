@@ -47,9 +47,16 @@ define('TABLE_ERP_ORDER_ACKNOWLEGMENT_LINES', 'order_acknowledgment_lines');
 //DATA BASE ORDER DELERERY NOTE
 define('TABLE_ERP_ORDER_DELIVERY_NOTE', 'order_delivery_note');
 define('TABLE_ERP_ORDER_DELIVERY_NOTE_LINES', 'order_delivery_note_lines');
+//DATA BASE ORDER INVOICE
+define('TABLE_ERP_ORDER_INVOICE', 'order_invoice');
+define('TABLE_ERP_ORDER_INVOICE_LINES', 'order_invoice_lines');
+
 // DATA PURCHASE REQUEST
 define('TABLE_ERP_PURCHASE_REQUEST', 'purchase_request');
 define('TABLE_ERP_PURCHASE_REQUEST_LINES', 'purchase_request_lines');
+
+
+
 
 //DATA BASE QUALITY
 define('TABLE_ERP_QL_ACTION', 'ql_action');

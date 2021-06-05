@@ -6,11 +6,15 @@
 Version 1 in progress - See the projects page to see the progress.
 https://github.com/billyboy35/WEB_MES/projects/2
 
-I am unprofessional, any improvement discussion would be helpful.
+I am unprofessional, any improvement discussion would be helpful (Help search for gantt planning creation).
 
 The goal is to have version 1 with a functional workflow up to invoicing.
 
-Currently, the quotation, orders, confirmation, Delivery notes are finished.
+* Currently, the quotation, orders, confirmation, Delivery notes, Invoice order are finished.
+
+* Next step : Purchase request, Purchase Order,AR, PO receipts, Supplier Invoice
+
+* Parallel work : planning, Stock | Inventory
 
 -----------------
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Menu.PNG)

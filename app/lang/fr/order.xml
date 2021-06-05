@@ -122,7 +122,8 @@
     <TableStatu>Etat de la commande :</TableStatu>  
     <TableNewOrderAcknowledgment>Nouvel AR :</TableNewOrderAcknowledgment> 
     <TableNewDeliveryNotes>Nouveau BL :</TableNewDeliveryNotes>
-       
+    <TableNewInvoiceOrder>Nouvelle facture :</TableNewInvoiceOrder>  
+
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
     <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>
@@ -131,16 +132,22 @@
     <UpdateInfoCustomerNotification>Information client mise à jours</UpdateInfoCustomerNotification>
     <UpdateSalesInfoNotification>Information commerciales mise à jours</UpdateSalesInfoNotification>
     <UpdateGeneralNotification>Mise à jours des information interne</UpdateGeneralNotification>
+
     <AddOrderNotification>Commande créée</AddOrderNotification>
     <AddOrderLineNotification> ligne(s) ajoutée(s) a la Commande</AddOrderLineNotification>
     <DeleteOrderLineNotification> ligne(s) suprimée(s) de la commande</DeleteOrderLineNotification>
+
     <DeleteOrderAcknowledgmentLinesNotification> ligne(s) d'AR commande suprimée(s)</DeleteOrderAcknowledgmentLinesNotification>
     <AddOrderAcknowledgmentNotification>Accusé de reception créer</AddOrderAcknowledgmentNotification>
     <AddOrderAcknowledgmentLinesNotification> ligne(s) d'AR crée(s)</AddOrderAcknowledgmentLinesNotification>
+
     <AddDeliveryNoteNotification>Bon de livraison créer</AddDeliveryNoteNotification>
     <AddDeliveryNoteLineNotification> Ligne(s) de BL crée(s)</AddDeliveryNoteLineNotification>
     <DeleteDeliveryNoteLineNotification> Ligne(s) de BL suprimée(s)</DeleteDeliveryNoteLineNotification>
 
+    <AddInvoiceOrderNotification>Facture créer</AddInvoiceOrderNotification>
+    <AddInvoiceOrderLineNotification> Ligne(s) de facture crée(s)</AddInvoiceOrderLineNotification>
+    <DeleteInvoiceOrderLineNotification> Ligne(s) de la facture suprimée(s)</DeleteInvoiceOrderLineNotification>
 <!-- Select-->
     <SelectOpen>Crée</SelectOpen>
     <SelectRun>Lancée</SelectRun>

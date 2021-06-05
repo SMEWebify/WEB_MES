@@ -12,18 +12,6 @@
 			}
 			document.getElementById(divId).style.display = "block";
 			evt.currentTarget.className += " active";
-			
-			
-		}
-		
-		//use for display manage menu
-		function openDivMenu(evt, divId) {
-		  var x = document.getElementById("DivAdminListe");
-		  if (x.style.display === "none") {
-			x.style.display = "block";
-		  } else {
-			x.style.display = "none";
-		  }
 		}
 		
 		//use for pring document page
@@ -31,9 +19,9 @@
 			window.print();
 		}
 
+		//use for display menu
 		window.onload=function(){
 			document.getElementById("defaultOpen").click();
-			//use for display menu
 			var OpenNav = document.getElementById("OpenNav");
 			var ClosenNav = document.getElementById("ClosenNav");
 			OpenNav.addEventListener("click", openNav);
@@ -43,15 +31,14 @@
 			var i;
 	
 				for (i = 0; i < close.length; i++) {
-				close[i].onclick = function(){
-					var div = this.parentElement;
-					div.style.opacity = "0";
-					setTimeout(function(){ div.style.display = "none"; }, 600);
-				}
+					close[i].onclick = function(){
+						var div = this.parentElement;
+						div.style.opacity = "0";
+						setTimeout(function(){ div.style.display = "none"; }, 600);
+					}
 				}
 		}
-
-		//use for display menu
+		
 		function openNav() {
 			document.getElementById("myNav").style.width = "100%";
 		}

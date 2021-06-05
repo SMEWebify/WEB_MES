@@ -152,6 +152,7 @@ class OrderAcknowledgmentLines Extends OrderAcknowledgment  {
     Public $ORDER_LINE_ID;
     Public $ARTICLE_CODE;
     Public $LABEL;
+    Public $LABEL_INDICE;
     Public $QT;
     Public $UNIT_ID;
     Public $PRIX_U;

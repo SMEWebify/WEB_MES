@@ -176,7 +176,7 @@ class OrderLines Extends Order  {
     Public $ETAT;
     Public $AR;
     
-    Public $OrderLine;
+    Public $OrderLine;              
 
     public function NewOrderLine($IdOrder, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $REMISE, $TVA_ID, $DELAIS,$IDQuoteLine){
         

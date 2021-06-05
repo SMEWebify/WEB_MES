@@ -496,7 +496,7 @@
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="AddModeleNum" ></td>
-							<td colspan="3" ><input type="number" class="input-moyen-vide" name="AddDigitNum" ></td>
+							<td colspan="3" ><input type="number" class="input-moyen-vide" name="AddDigitNum" value="3"></td>
 						</tr>
 						<tr>
 							<td colspan="6" >

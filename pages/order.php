@@ -16,6 +16,8 @@
 	use \App\Order\OrderAcknowledgmentLines;
 	use \App\Order\DeleveryNote;
 	use \App\Order\DeleveryNoteLines;
+	use \App\Order\InvoiceOrder;
+	use \App\Order\InvoiceOrderLines;
 	use \App\Accounting\Delevery;
 	use \App\Accounting\VAT;
 	use \App\Study\Unit;
@@ -42,6 +44,8 @@
 	$OrderAcknowledgmentLines = new OrderAcknowledgmentLines();
 	$DeleveryNote = new DeleveryNote();
 	$DeleveryNoteLines = new DeleveryNoteLines();
+	$InvoiceOrder = new InvoiceOrder();
+	$InvoiceOrderLines = new InvoiceOrderLines();
 	$Delevery = new Delevery();
 	$VAT = new VAT();
 	$Unit = new Unit();
@@ -287,13 +291,69 @@
 			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("DELIVERED_QTY"=>0, "DELIVERED_REMAINING_QTY"=>$IdOrderLineToUpdate->QT), 'WHERE id=\''. $IdOrderLineToUpdate->ORDER_LINE_ID .'\'');
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_DELIVERY_NOTE_LINES ." WHERE id='". addslashes($_GET['delete'])."'");
 
-			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteOrderAcknowledgmentLinesNotification')));
+			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteDeliveryNoteLineNotification')));
 		}
+		
 		//Load data
 		$Maindata= $DeleveryNote->GETDeleveryNote($Id);
-
 	}
+	elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){
+
+		$Id = addslashes($_GET['InvoiceOrder']);
+		
+		//If user create new Delevery note
+		if(isset($_POST['NewInvoiceOrder']) And !empty($_POST['NewInvoiceOrder'])){
+			// Create new Delivery note and keep id
+			$Id=$InvoiceOrder->NewInvoiceOrder($_POST['NewInvoiceOrder'], $_POST['ORDER_ID'], $User->idUSER);
+
+			//update increment in num sequence db
+			$Numbering->getIncrementNumbering(9);
+
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddInvoiceOrderNotification')));
+			$i=0;
+			//Select line who dont have an OA
+			foreach ($OrderLines->GETOrderLineList(0, false, $_POST['ORDER_ID'], ' AND DELIVERED_REMAINING_QTY = 0 AND INVOICED_REMAINING_QTY > 0') as $data){	
+				
+				//Create OA line
+				$InvoiceOrderLines->NewInvoiceOrderLines($Id, $_POST['ORDER_ID'], $data->ORDRE, $data->id, $data->INVOICED_REMAINING_QTY);
+				//update order line
+				$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("INVOICED_QTY"=>$data->INVOICED_REMAINING_QTY, "INVOICED_REMAINING_QTY"=>0), 'WHERE id=\''. $data->id .'\'');
+				$i++;
+			}
+			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddInvoiceOrderLineNotification')));
+		}
+		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
+			//// ORDER ACKNOWLEGMENT DETAIL UPDATE ////
+			
+			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
 	
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_INVOICE_LINES ." SET ETAT='". addslashes($_POST['ETAT']) ."'
+																					WHERE 	ORDER_INVOICE_ID	='". $Id ."'");
+
+				$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateStatuLineNotification')));
+			}
+			unset($_POST['MajLigne']);
+		
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_INVOICE, $_POST, 'WHERE id=\''. $Id .'\'');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateGeneralInfoNotification')));
+		}
+		elseif(isset($_POST['COMENT']) AND !empty($_POST['COMENT'])){
+			//// COMMMENT ////
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_INVOICE, $_POST, 'WHERE id=\''. $Id .'\'');
+			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCommentNotification')));
+		}
+		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
+			//// DELETE LIGNE ////
+			$IdOrderLineToUpdate = $bdd->GetQuery('SELECT ORDER_LINE_ID, QT FROM '. TABLE_ERP_ORDER_INVOICE_LINES .' WHERE id='. addslashes($_GET['delete']).'',true);
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("INVOICED_QTY"=>0, "INVOICED_REMAINING_QTY"=>$IdOrderLineToUpdate->QT), 'WHERE id=\''. $IdOrderLineToUpdate->ORDER_LINE_ID .'\'');
+			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_INVOICE_LINES ." WHERE id='". addslashes($_GET['delete'])."'");
+
+			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteInvoiceOrderLineNotification')));
+		}
+		
+		//Load data
+		$Maindata= $InvoiceOrder->GETInvoiceOrder($Id);
+	}
 	
 	$ListeArticleJava  ='"';
 	$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_STANDARD_ARTICLE ."  WHERE VENDU=1 ORDER BY LABEL";
@@ -307,11 +367,16 @@
 		$ActivateForm=true;
 		$reqList = $Order->GETOrderList('',false);
 		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
+		// IF OrderAcknowledgment is avaiable
 		$ARList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, $Id);
 		$MakeAR = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'AR', 'WHERE ORDER_ID='. $Id .'  AND AR=0');
+		// IF Delevery note is avaiable
 		$DnList = $DeleveryNote->GETDeleveryNoteList('',false, $Id);
 		$MakeDn = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'id', 'WHERE ORDER_ID= '. $Id .' AND DELIVERED_REMAINING_QTY > 0');
-		
+		// IF Inovice is avaiable
+		$IoList = $InvoiceOrder->GETInvoiceOrderList('',false, $Id);
+		$MakeIo = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'id', 'WHERE ORDER_ID= '. $Id .' AND DELIVERED_REMAINING_QTY = 0 AND INVOICED_REMAINING_QTY > 0');
+
 		$GET = 'order';
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
@@ -368,17 +433,17 @@
 			$ParDefautDiv5 = '';
 		}
 	}
-	elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){
+	elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){
 		$ActivateForm=false;
-		$reqList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0);
-		$reqLines = $OrderAcknowledgmentLines->GETOrderacknowledgmentlinesList('', false, $Id);
-		$GET = 'Invoice';
+		$reqList = $InvoiceOrderLines->GETInvoiceOrderList('',false, 0);
+		$reqLines = $InvoiceOrderLines->GETInvoiceOrderLinesList('', false, $Id);
+		$GET = 'InvoiceOrder';
 		$ParDefautDiv1 = '';
 		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
 		$ParDefautDiv4 = '';
 		$ParDefautDiv5 = '';
-		$actionForm = 'index.php?page=order&Invoice='.$Id  .'';
+		$actionForm = 'index.php?page=order&InvoiceOrder='.$Id  .'';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
@@ -460,11 +525,11 @@ $(document).ready(function() {
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title8'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['DeliveryNotes'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
-	<?php } elseif(isset($_GET['Invoice']) AND !empty($_GET['Invoice'])){?>
+	<?php } elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title9'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document$type=Invoice&id=<?= $_GET['Invoice'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<a href="index.php?page=document$type=InvoiceOrder&id=<?= $_GET['InvoiceOrder'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
 	<?php }else{ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title5'); ?></button>
@@ -475,7 +540,7 @@ $(document).ready(function() {
 	</div>
 	<?php
 
-	if(!isset($_GET['order']) && !isset($_GET['OrderAcknowledgment']) && !isset($_GET['DeliveryNotes'])  && !isset($_GET['Invoice'])){
+	if(!isset($_GET['order']) && !isset($_GET['OrderAcknowledgment']) && !isset($_GET['DeliveryNotes'])  && !isset($_GET['InvoiceOrder'])){
 		?>
 		<div id="div2" class="tabcontent">
 			<div class="column">
@@ -531,12 +596,12 @@ $(document).ready(function() {
 					<ul id="myUL">
 						<?php
 						//generate list for datalist find input
-						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
+						foreach ($InvoiceOrder->GETInvoiceOrderList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
 						elseif($data->ETAT == 2) $class="warning";
 						elseif($data->ETAT == 3) $class="success";
 						elseif($data->ETAT == 6) $class="alert";
 						else $class="normal";?>
-						<li><a class=<?= $class ?>  href="index.php?page=order&Invoice=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+						<li><a class=<?= $class ?>  href="index.php?page=order&InvoiceOrder=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
 						<?php $i++; endforeach; ?>
 					</ul>
 			</div>

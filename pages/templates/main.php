@@ -116,6 +116,10 @@
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 											<?php endif ?>
+											<?php if(isset($_GET['InvoiceOrder'])): ?>
+											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+											<?php endif ?>
 										</select>
 									</td>
 									<td><input type="checkbox" id="MajLigne" name="MajLigne" checked="checked"><label ><?= $langue->show_text('UpdateLine') ?></label></td>
@@ -258,10 +262,8 @@
 						</tbody>
 					</table>
 				</div>
-			</form>
-
-			
-			<?php if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
+			</form>	
+		<?php if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
 			<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
 				<div>
 					<table class="content-table" >
@@ -274,8 +276,8 @@
 						</thead>
 						<tbody>
 				<?php 
-					//for converte ORDER TO ACKNOWLEGMENT 
-					if( $MakeAR > 0){?>
+				//for converte ORDER TO ACKNOWLEGMENT 
+				if( $MakeAR > 0){?>
 							<tr>
 								<td>
 									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewOrderAcknowledgment',  $Numbering->getCodeNumbering(12),'', $ActivateForm) ?>
@@ -334,10 +336,52 @@
 				//DISPLAY  DELEVERY NOTE 
 				if($DnList > 0){?>
 				
-						<?php foreach ($DnList as $dataAr): ?>
+						<?php foreach ($DnList as $dataDn): ?>
 							<tr>
 								<td>
-								<a  href="index.php?page=order&DeliveryNotes=<?= $dataAr->id ?>"><?= $dataAr->CODE ?></a>
+								<a  href="index.php?page=order&DeliveryNotes=<?= $dataDn->id ?>"><?= $dataDn->CODE ?></a>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+				<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<form method="post" name="Coment" action="index.php?page=order&InvoiceOrder=new" class="content-form" >
+				<div>
+					<table class="content-table" >
+						<thead>
+							<tr>
+								<th colspan="2" >
+								---------------------------------------------
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+				<?php
+				//for converte Invoice 
+				if( $MakeIo > 0){?>
+							<tr>
+								<td>
+									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewInvoiceOrder',  $Numbering->getCodeNumbering(9),'', $ActivateForm) ?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ,'', $ActivateForm) ?>
+									<?= $Form->submit($langue->show_text('TableNewInvoiceOrder'), $ActivateForm) ?>
+								</td>
+							</tr>
+						
+				<?php } 
+				//DISPLAY  Invoice 
+				if($IoList > 0){?>
+				
+						<?php foreach ($IoList as $dataIn): ?>
+							<tr>
+								<td>
+								<a  href="index.php?page=order&InvoiceOrder=<?= $dataIn->id ?>"><?= $dataIn->CODE ?></a>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -372,7 +416,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php if(!isset($_GET['OrderAcknowledgment'])): ?>
+					<?php if(!isset($_GET['OrderAcknowledgment']) AND !isset($_GET['DeliveryNotes'] ) AND !isset($_GET['InvoiceOrder'] )): ?>
 					</tr>
 						<th colspan="12" ><?= $langue->show_text('Addline') ?></th>
 					</tr>
@@ -485,6 +529,10 @@
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 										<?php endif ?>
 										<?php if(isset($_GET['DeliveryNotes'])): ?>
+										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
+										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
+										<?php endif ?>
+										<?php if(isset($_GET['InvoiceOrder'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 										<?php endif ?>
