@@ -2,7 +2,7 @@
 	//phpinfo();
 	use \App\Autoloader;
 	use App\COMPANY\Employees;
-	use \App\Form;
+	use \App\UI\Form;
 	use \App\Methods\Section;
 
 	//auto load class

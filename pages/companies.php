@@ -1,7 +1,7 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\Form;
+	use \App\UI\Form;
 	use \App\Companies\Companies;
 	use \App\COMPANY\ActivitySector;
 	use \App\Companies\Contact;

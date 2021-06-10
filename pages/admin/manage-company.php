@@ -1,7 +1,7 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\Form;
+	use \App\UI\Form;
 	use \App\COMPANY\Numbering;
 	use \App\COMPANY\Company;
 	use \App\Company\ActivitySector;

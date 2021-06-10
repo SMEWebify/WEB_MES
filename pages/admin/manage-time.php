@@ -1,7 +1,7 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\Form;
+	use \App\UI\Form;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';

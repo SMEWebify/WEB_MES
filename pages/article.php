@@ -1,7 +1,7 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\Form;
+	use \App\UI\Form;
 	use \App\Study\Article;
 	use \App\Study\ArticleTreeStructure;
 	use \App\Planning\Task;

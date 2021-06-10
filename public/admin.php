@@ -9,7 +9,7 @@
     use \App\UI\CallOutBox;
     use \App\Language\Language;
 	use \App\Company\Company;
-    
+
 	//auto load class
 	require '../app/Autoload.class.php';
     App\Autoloader::register();

@@ -6,7 +6,7 @@
 	use \App\Methods\Section;
 	use \App\COMPANY\Employees;
 	use \App\Companies\Companies;
-	use \App\Form;
+	use \App\UI\Form;
 	use \App\Accounting\Allocations;
 
 	//auto load class
