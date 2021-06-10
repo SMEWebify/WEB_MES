@@ -50,6 +50,7 @@
     <Titre3>Contacts</Titre3>
     <Titre4>Secteur d'activité</Titre4>
     <Titre5>Commentaire</Titre5>
+    <Titre6>Fichiers</Titre6>
 <!-- table content --> 
     <TableNameUser>Nom :</TableNameUser>
     <TableNameCompany>Nom :</TableNameCompany>

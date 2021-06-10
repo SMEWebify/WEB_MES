@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\UI;
 use \App\SQL;
 
 class Form Extends SQL  {

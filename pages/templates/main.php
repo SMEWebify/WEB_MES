@@ -140,7 +140,7 @@
 					<table class="content-table">
 						<thead>
 							<tr>
-								<th colspan="2" ><?=$langue->show_text('TableCondiList'); ?></th>
+								<th colspan="2" ><?=$langue->show_text('Title2-3'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -172,7 +172,7 @@
 					<table class="content-table" >
 						<thead>
 							<tr>
-								<th><?=$langue->show_text('Title7'); ?></th>
+								<th><?=$langue->show_text('Title2-4'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -191,7 +191,7 @@
 					<table class="content-table">
 						<thead>
 							<tr>
-								<th colspan="2" ><?=$langue->show_text('Title4'); ?></th>
+								<th colspan="2" ><?=$langue->show_text('Title2-1'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -221,7 +221,7 @@
 					<table class="content-table" style="width: 100%;">
 						<thead>
 							<tr>
-								<th colspan="2" ><?=$langue->show_text('Title5'); ?></th>
+								<th colspan="2" ><?=$langue->show_text('Title2-2'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -586,6 +586,14 @@
 				</tbody>
 			</table>
 		</form>
+	</div>
+	<div id="div4" class="tabcontent">
+		<?php 
+			echo $Document->GETAjaxScript($DocumentType, $Maindata->id); 
+			echo $Document->GETDropZone(); 
+			$TitreTable = array($langue->show_text('TableArticle'), $langue->show_text('TableLabel'),  $langue->show_text('TableLabel'), $langue->show_text('TableQty'), $langue->show_text('TableUnit'));
+			echo $Document->GETDocumentList($DocumentType, $_GET['page'], $Maindata->id, $TitreTable ); 
+		?>
 	</div>
 	<?php
         }

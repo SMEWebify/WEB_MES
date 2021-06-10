@@ -1,6 +1,7 @@
 <?php
-namespace App;
-use\ArrayObject;
+namespace App\UI;
+
+use ArrayObject;
 
 class CallOutBox extends ArrayObject { 
     //inir constante

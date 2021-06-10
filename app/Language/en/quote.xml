@@ -45,19 +45,22 @@
     <SystemInfoLanguageDone>Language change</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
 <!-- title page --> 
-	<TiltePage>Order</TiltePage>
-	<Title1back>Back home</Title1back>
-	
+	<TiltePage>Quote</TiltePage>
     <Title1>Home</Title1> 
-    <Title2>Order</Title2>
+    <Title2>Quote</Title2>
+      <Title2-1>General</Title2-1>
+      <Title2-2>Customer detail</Title2-2>
+      <Title2-3>Commercial information</Title2-3>
+      <Title2-4>Comment</Title2-4>
+      <Title2-5>Document</Title2-5>
     <Title3>Detail lines</Title3>
+    <Title4>Files</Title4>
+    <Title5>Document</Title5>
 
-    <Title5>Order Lines</Title5>
-    <Title6>Order Acknowledgment</Title6>
-    <Title8>Delivery notes</Title8>
-    <Title9>Invoices</Title9>
+    <Title9>Order assistant</Title9>
+    <Title10>Quote line</Title10>
 
-    <Title4>Document</Title4>
+
 <!-- table content --> 
     <TableNameUser>Name :</TableNameUser>
     <TableNameCompany>Company name :</TableNameCompany>
@@ -71,25 +74,25 @@
     <TableOrder>Order</TableOrder>
     <Addline>Add line</Addline>
     <Deleteline>Delete line</Deleteline>
-    <UpdateLine>Update Order lines</UpdateLine>
+    <UpdateLine>Update quote lines</UpdateLine>
     <TableCondiList>Payment condition</TableCondiList>
     <TableMethodList>Payment choice</TableMethodList>
     <TableUpdateButton>Update</TableUpdateButton>
-    <TableNewButton>New Order</TableNewButton>
-    <TableNewOrderFor>Create a new Order for the customer:</TableNewOrderFor> 
+    <TableNewButton>New quote</TableNewButton>
+    <TableNewQuoteFor>Create a new quote for the customer:</TableNewQuoteFor> 
     <TimeLinePayement>TimeLine Payement</TimeLinePayement>
     <TableAdresseInvoice>Adresse Invoice</TableAdresseInvoice>
     <TableAdresseDelevery>Adresse Delevery</TableAdresseDelevery>
     <TableDeleveryMode>Delevery mode :</TableDeleveryMode> 
     <TableCustomerReference>Customer reference:</TableCustomerReference> 
     <TableCustomer>Customer :</TableCustomer> 
-    <TableDeleveryDate>Delay :</TableDeleveryDate>
+    <TableDeleveryDate>Delay</TableDeleveryDate>
     <TableNumberCustomerOrder>Customer order number</TableNumberCustomerOrder>
     <TableCreateOrder>Create new order</TableCreateOrder>
     <TableNewOrder>New order</TableNewOrder> 
     <TableSelectOrder>Create a new order or link to an existing one:</TableSelectOrder> 
-    <TableIndexOrder>version</TableIndexOrder> 
-    <TableNumberOrder>Order number </TableNumberOrder> 
+    <TableIndexQuote>version</TableIndexQuote> 
+    <TableNumberQuote>Quote number </TableNumberQuote> 
     <TableUnitPrice>Price U.H.T (€)</TableUnitPrice> 
     <TableQty>Qty</TableQty>
     <TableArticle>Article</TableArticle>
@@ -109,21 +112,17 @@
     <TotalWithOutTax>Total H.T. :</TotalWithOutTax>
     <TotalWithTax>Total T.T.C :</TotalWithTax>
     <TableFind>Find : </TableFind>
-    <TableFindOrder>Find Order: </TableFindOrder>
-    <TablenoOrder>No Order loaded</TablenoOrder>
+    <TableFindQuote>Find quote: </TableFindQuote>
+    <TablenoQuote>No quote loaded</TablenoQuote>
     <TableContact>Contacts</TableContact>
     <TableUserCreate>Creator</TableUserCreate>
-    <TableCodeLabel>Code and wording of the Order:</TableCodeLabel> 
-    <TableLabelplaceholder>Label of Order:</TableLabelplaceholder>      
+    <TableCodeLabel>Code and wording of the quote:</TableCodeLabel> 
+    <TableLabelplaceholder>Label of quote:</TableLabelplaceholder>      
     <TableLabelIndexplaceholder>Version index and label:</TableLabelIndexplaceholder> 
     <TableIndexLabel>Label index  :</TableIndexLabel>  
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
-    <TableStatu>Order statu :</TableStatu>  
-    <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>
-    <TableNewDeliveryNotes>New Delevery Note :</TableNewDeliveryNotes>
-    <TableNewInvoiceOrder>New Invoice :</TableNewInvoiceOrder>        
-        
+    <TableStatu>Quote statu :</TableStatu>     
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
     <UpdateLineNotification> line(s) updated</UpdateLineNotification>
@@ -132,32 +131,18 @@
     <UpdateInfoCustomerNotification>Customer information changed</UpdateInfoCustomerNotification>
     <UpdateSalesInfoNotification>Sales information changed</UpdateSalesInfoNotification>
     <UpdateGeneralNotification>Internal information changed</UpdateGeneralNotification>
-
-    <AddOrderNotification>Order created</AddOrderNotification>
-    <AddOrderLineNotification> Line add to Order</AddOrderLineNotification>
-    <DeleteOrderLineNotification> line delete to Order</DeleteOrderLineNotification>
-
-    <DeleteOrderAcknowledgmentLinesNotification> line Acknowledgment Order delete</DeleteOrderAcknowledgmentLinesNotification>
-    <AddOrderAcknowledgmentNotification>Order Acknowledgment added</AddOrderAcknowledgmentNotification>
-    <AddOrderAcknowledgmentLinesNotification> Order Acknowledgment lines added</AddOrderAcknowledgmentLinesNotification>
-
-    <AddDeliveryNoteNotification>Delivery Note added</AddDeliveryNoteNotification>
-    <AddDeliveryNoteLineNotification> Delivery note lines added</AddDeliveryNoteLineNotification>
-    <DeleteDeliveryNoteLineNotification> Delivery note lines delete</DeleteDeliveryNoteLineNotification>
-    
-
-    <AddInvoiceOrderNotification>Invoice added</AddInvoiceOrderNotification>
-    <AddInvoiceOrderLineNotification> Invoice lines added</AddInvoiceOrderLineNotification>
-    <DeleteInvoiceOrderLineNotification> Invoice lines delete</DeleteInvoiceOrderLineNotification>
+    <AddQuoteNotification>Quote created</AddQuoteNotification>
+    <AddQuoteLineNotification> Line add to quote</AddQuoteLineNotification>
+    <DeleteQuoteLineNotification> line delete to quote</DeleteQuoteLineNotification>
 <!-- Select-->
-    <SelectOpen>Created</SelectOpen>
-    <SelectRun>Run</SelectRun>
-    <SelectStop>Stop</SelectStop>
-    <SelecPartialDelivery>Partial Delivery</SelecPartialDelivery>
-    <SelectDelivered>Delivered</SelectDelivered>
-    <SelectInvoice>Invoice</SelectInvoice>
+    <SelectOpen>Open</SelectOpen>
+    <SelectRefuse>Refuse</SelectRefuse>
+    <SelectWin>Win</SelectWin>
     <SelectSend>Send</SelectSend>
-    
+    <SelectDecline>Decline</SelectDecline>
+    <SelectClosed>Closed</SelectClosed>
+    <SelectObsolete>Obsolete</SelectObsolete>
+
     <Yes>Oui</Yes>
     <No>Non</No>
 </langue>

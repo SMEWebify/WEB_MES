@@ -44,20 +44,21 @@
     <SystemInfoLanguageDone>Changement de la lange.</SystemInfoLanguageDone>
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
 <!-- title page --> 
-	<TiltePage>Commande</TiltePage>
-    <Title1>Accueil</Title1> 
-    <Title1back>Retour acceuil</Title1back> 
+   <TiltePage>Devis</TiltePage>
+   <Title1>Accueil</Title1> 
+    <Title2>Devis</Title2>
+      <Title2-1>Général</Title2-1>
+      <Title2-2>Détail client</Title2-2>
+      <Title2-3>Détail commerciales</Title2-3>
+      <Title2-4>Commentaire</Title2-4>
+      <Title2-5>Document</Title2-5>
+    <Title3>Détail des lines</Title3>
+    <Title4>Fichiers</Title4>
+    <Title5>Document</Title5>
 
-    <Title2>Commande</Title2>
-    <Title5>Lignes de commande</Title5>
-    <Title3>Détail des lignes</Title3>
-    
-    <Title5>Lignes de commande</Title5>
-    <Title6>Accusés de reception</Title6>
-    <Title8>Bon de livraison</Title8>
-    <Title9>Facture</Title9>
+    <Title9>Assistant de passage en commande</Title9>
+    <Title10>Ligne de devis</Title10>
 
-    <Title4>Document</Title4>
 <!-- table content --> 
     <TableNameUser>Nom :</TableNameUser>
     <TableNameCompany>Nom :</TableNameCompany>
@@ -71,25 +72,25 @@
     <TableOrder>Ordre</TableOrder>
     <Addline>Ajout de ligne</Addline>
     <Deleteline>Suprimer ligne(s)</Deleteline>
-    <UpdateOrderLine>Mettre à jours les lignes de la commande</UpdateOrderLine>
+    <UpdateLine>Mettre à jours les lignes du devis</UpdateLine>
     <TableCondiList>Condition de réglement</TableCondiList>
     <TableMethodList>Mode de réglement</TableMethodList>
     <TableUpdateButton>Mettre à jours</TableUpdateButton>
-    <TableNewButton>Mouvelle Commande</TableNewButton>
-    <TableNewOrderFor>Créer une nouvelle commande pour le client :</TableNewOrderFor> 
+    <TableNewButton>Mouveau devis</TableNewButton>
+    <TableNewQuoteFor>Créer un nouveau devis pour le client :</TableNewQuoteFor> 
     <TimeLinePayement>Echéancier types</TimeLinePayement>
     <TableAdresseInvoice>Adresse de facturation</TableAdresseInvoice>
     <TableAdresseDelevery>Adresse de livraison</TableAdresseDelevery>
     <TableDeleveryMode>Mode de livraison :</TableDeleveryMode> 
-    <TableCustomerReference>Référence client :</TableCustomerReference> 
+    <TableCustomerReference>Référence client</TableCustomerReference> 
     <TableCustomer>Client :</TableCustomer> 
     <TableDeleveryDate>Délais de livraison :</TableDeleveryDate>
-    <TableNumberCustomerOrder>N° de la commande client</TableNumberCustomerOrder>
-    <TableCreateOrder>Créer commande</TableCreateOrder>
-    <TableNewOrder>Nouvelle commande</TableNewOrder> 
+    <TableNumberCustomerOrder>N° de commande client</TableNumberCustomerOrder>
+    <TableCreateOrder>Créer commandes</TableCreateOrder>
+    <TableNewOrder>Nouvelle Commande</TableNewOrder> 
     <TableSelectOrder>Créer une nouvelle commande ou lier à une existante :</TableSelectOrder> 
-    <TableIndexOrder>version</TableIndexOrder> 
-    <TableNumberOrder>Commande numéro</TableNumberOrder> 
+    <TableIndexQuote>version</TableIndexQuote> 
+    <TableNumberQuote>Devis numéro</TableNumberQuote> 
     <TableUnitPrice>Prix U.H.T (€)</TableUnitPrice> 
     <TableQty>Quantité</TableQty>
     <TableArticle>Article</TableArticle>
@@ -109,21 +110,17 @@
     <TotalWithOutTax>Total H.T. :</TotalWithOutTax>
     <TotalWithTax>Total T.T.C :</TotalWithTax>
     <TableFind>Chercher : </TableFind>
-    <TableFindOrder>Chercher une Commande: </TableFindOrder>
-    <TablenoOrder> Aucune commande chargée</TablenoOrder>
+    <TableFindQuote>Chercher un devis: </TableFindQuote>
+    <TablenoQuote> Aucun devis chargé</TablenoQuote>
     <TableContact>Contacts</TableContact>
     <TableUserCreate>Créateur</TableUserCreate>
-    <TableCodeLabel>Code et libellé de la commande :</TableCodeLabel>  
-    <TableLabelplaceholder>Libellé de la commande:</TableLabelplaceholder>   
+    <TableCodeLabel>Code et libellé du devis :</TableCodeLabel>  
+    <TableLabelplaceholder>Libellé du devis:</TableLabelplaceholder>   
     <TableLabelIndexplaceholder>Indice et libellé de version  :</TableLabelIndexplaceholder>  
     <TableIndexLabel>Libellé de version  :</TableIndexLabel>  
     <TableCreationDate>Date de création :</TableCreationDate>  
     <TableValidityDate>Date de validité :</TableValidityDate>  
-    <TableStatu>Etat de la commande :</TableStatu>  
-    <TableNewOrderAcknowledgment>Nouvel AR :</TableNewOrderAcknowledgment> 
-    <TableNewDeliveryNotes>Nouveau BL :</TableNewDeliveryNotes>
-    <TableNewInvoiceOrder>Nouvelle facture :</TableNewInvoiceOrder>  
-
+    <TableStatu>Etat du devis :</TableStatu>     
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
     <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>
@@ -132,30 +129,18 @@
     <UpdateInfoCustomerNotification>Information client mise à jours</UpdateInfoCustomerNotification>
     <UpdateSalesInfoNotification>Information commerciales mise à jours</UpdateSalesInfoNotification>
     <UpdateGeneralNotification>Mise à jours des information interne</UpdateGeneralNotification>
-
-    <AddOrderNotification>Commande créée</AddOrderNotification>
-    <AddOrderLineNotification> ligne(s) ajoutée(s) a la Commande</AddOrderLineNotification>
-    <DeleteOrderLineNotification> ligne(s) suprimée(s) de la commande</DeleteOrderLineNotification>
-
-    <DeleteOrderAcknowledgmentLinesNotification> ligne(s) d'AR commande suprimée(s)</DeleteOrderAcknowledgmentLinesNotification>
-    <AddOrderAcknowledgmentNotification>Accusé de reception créer</AddOrderAcknowledgmentNotification>
-    <AddOrderAcknowledgmentLinesNotification> ligne(s) d'AR crée(s)</AddOrderAcknowledgmentLinesNotification>
-
-    <AddDeliveryNoteNotification>Bon de livraison créer</AddDeliveryNoteNotification>
-    <AddDeliveryNoteLineNotification> Ligne(s) de BL crée(s)</AddDeliveryNoteLineNotification>
-    <DeleteDeliveryNoteLineNotification> Ligne(s) de BL suprimée(s)</DeleteDeliveryNoteLineNotification>
-
-    <AddInvoiceOrderNotification>Facture créer</AddInvoiceOrderNotification>
-    <AddInvoiceOrderLineNotification> Ligne(s) de facture crée(s)</AddInvoiceOrderLineNotification>
-    <DeleteInvoiceOrderLineNotification> Ligne(s) de la facture suprimée(s)</DeleteInvoiceOrderLineNotification>
+    <AddQuoteNotification>Devis créé</AddQuoteNotification>
+    <AddQuoteLineNotification> ligne(s) ajoutée(s) au devis</AddQuoteLineNotification>
+    <DeleteQuoteLineNotification> ligne(s) suprimée(s) du devis</DeleteQuoteLineNotification>
 <!-- Select-->
-    <SelectOpen>Crée</SelectOpen>
-    <SelectRun>Lancée</SelectRun>
-    <SelectStop>Suspendu</SelectStop>
-    <SelecPartialDelivery>Livrée partiellement</SelecPartialDelivery>
-    <SelectDelivered>Livrée</SelectDelivered>
-    <SelectInvoice>Facturé</SelectInvoice>
+    <SelectOpen>En cours</SelectOpen>
+    <SelectRefuse>Refusé</SelectRefuse>
+    <SelectWin>Gagné</SelectWin>
     <SelectSend>Envoyé</SelectSend>
+    <SelectDecline>Décliné</SelectDecline>
+    <SelectClosed>Fermé</SelectClosed>
+    <SelectObsolete>Obselète</SelectObsolete>
+
 
     <Yes>Oui</Yes>
     <No>Non</No>

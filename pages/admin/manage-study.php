@@ -300,33 +300,20 @@
 ?>
 	<div class="tab">
 		<?=$titleOnglet1; ?>
-	<?php
-	if(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){
-	?>
+	<?php if(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?> ><?=$langue->show_text('Title2'); ?> <?=$iDecoupTech; ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?> <?=$iNomencl; ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?> <?=$iSousEns; ?></button>
-		<?php
-		if(isset($_GET['type']) AND $_GET['type']== 'study'){
-		?>	
+		<?php if(isset($_GET['type']) AND $_GET['type']== 'component'){ ?>	
 		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title5'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div7')"><?=$langue->show_text('Title7'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title8'); ?></button>
-
-		<?php
-		}
-		?>
-		
-	<?php
-	}
-	else{
-	?>
+		<?php } 
+	}else {?>
 		<button class="tablinks" onclick="openDiv(event, 'div9')" ><?= $langue->show_text('Title9'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div10')"><?= $langue->show_text('Title10'); ?></button>
-	<?php
-	}
-	?>
+	<?php } ?>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<div class="column">

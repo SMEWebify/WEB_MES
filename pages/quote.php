@@ -6,7 +6,6 @@
 	use \App\Companies\Companies;
 	use \App\Companies\Contact;
 	use \App\Companies\Address;
-	use \App\Form;
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
 	use \App\Accounting\PaymentSchedule;
@@ -15,6 +14,8 @@
 	use \App\Accounting\Delevery;
 	use \App\Accounting\VAT;
 	use \App\Study\Unit;
+	use \App\UI\Document;
+	use \App\UI\Form;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -38,6 +39,7 @@
 	$Delevery = new Delevery();
 	$VAT = new VAT();
 	$Unit = new Unit();
+	$Document = new Document();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -219,8 +221,10 @@ $(document).ready(function() {
 	<?php if(isset($_GET['quote']) AND !empty($_GET['quote'])){ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document$type=quote&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title8'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=quote&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Titre10'); ?></button>
 	<?php
 	}
 	else{?>
@@ -236,6 +240,7 @@ $(document).ready(function() {
 	$reqLines= $QuoteLines->GETQuoteLineList('', false, $Id);
 	$GET = 'quote';
 	$DocNum = 8;
+	$DocumentType = 'QUOTE_ID';
 	require '../pages/templates/main.php';
 
 

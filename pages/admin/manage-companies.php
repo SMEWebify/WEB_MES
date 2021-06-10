@@ -1,7 +1,6 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\Form;
 	use \App\Companies\Companies;
 	use \App\Companies\Contact;
 	use \App\Companies\Address;
@@ -10,7 +9,8 @@
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
 	use \App\Accounting\VAT;
-	use \App\Document;
+	use \App\UI\Document;
+	use \App\UI\Form;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -278,7 +278,7 @@
 	}
 	elseif(isset($_GET['deleteFile']) AND !empty($_GET['deleteFile'])){
 		//// DELETE LIGNE ////
-		$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ATTACHED_DOCUMENT ." WHERE id='". addslashes($_GET['deleteFile'])."'");
+		$Document->DeleteFile($_GET['deleteFile']);
 	}
 
 	// we cant change codeId of DB, he can be used on other table
@@ -370,7 +370,6 @@
 							<td ><input type="text" name="APESte" value="<?= $SteAPE;?>" size="10"></td>
 							<td ><input type="text" name="TVAINTRASte" value="<?= $SteTVA_INTRA;?>" size="10"></td>
 							<td >
-
 								<select name="TAUXTVASte">
 									<?= $VAT->GETVATList($SteTVA_ID) ?>
 								</select>
@@ -723,139 +722,12 @@
 			</form>
 		</div>
 		<div id="div6" class="tabcontent">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-       	 	<script type="text/javascript">
-				$(function() {
-
-					// preventing page from redirecting
-					$("html").on("dragover", function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						$("h1").text("Drag here");
-					});
-
-					$("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
-
-					// Drag enter
-					$('.upload-area').on('dragenter', function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-						$("h1").text("Drop");
-					});
-
-					// Drag over
-					$('.upload-area').on('dragover', function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-						$("h1").text("Drop");
-					});
-
-					// Drop
-					$('.upload-area').on('drop', function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-
-						$("h1").text("Upload");
-
-						var file = e.originalEvent.dataTransfer.files;
-						var fd = new FormData();
-
-						fd.append('file', file[0]);
-
-						uploadData(fd);
-					});
-
-					// Open file selector on div click
-					$("#uploadfile").click(function(){
-						$("#file").click();
-					});
-
-					// file selected
-					$("#file").change(function(){
-						var fd = new FormData();
-
-						var files = $('#file')[0].files[0];
-
-						fd.append('file',files);
-
-						uploadData(fd);
-					});
-					});
-
-					// Sending AJAX request and upload file
-					function uploadData(formdata){
-
-					$.ajax({
-						url: '../app/upload.php?type=COMPANY_ID&id=<?= $SteId ?>',
-						type: 'post',
-						data: formdata,
-						contentType: false,
-						processData: false,
-						dataType: 'json',
-						success: function(response){
-							addThumbnail(response);
-						}
-					});
-					}
-
-					// Added thumbnail
-					function addThumbnail(data){
-					$("#uploadfile h1").remove(); 
-					var len = $("#uploadfile div.thumbnail").length;
-
-					var num = Number(len);
-					num = num + 1;
-
-					var name = data.name;
-					var size = convertSize(data.size);
-					var src = data.src;
-
-					// Creating an thumbnail
-					$("#uploadfile").append('<div id="thumbnail_'+num+'" class="thumbnail"></div>');
-					$("#thumbnail_"+num).append('<img src="'+src+'" width="100%" height="78%">');
-					$("#thumbnail_"+num).append('<span class="size">'+size+'<span>');
-
-					}
-
-					// Bytes conversion
-					function convertSize(size) {
-					var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-					if (size == 0) return '0 Byte';
-					var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)));
-					return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
-					}
-					</script>
-
-			<div id="drop_file_zone">
-				<input type="file" name="file" id="file">
-				<div class="upload-area"  id="uploadfile">
-					<h1>Drag and Drop file here<br/>Or<br/>Click to select file</h1>
-				</div>
-			</div>
-			<table class="content-table">
-				<thead>
-					<tr>
-						<th></th>
-						<th><?=$langue->show_text('TableOrder'); ?></th>
-						<th><?=$langue->show_text('TableArticle'); ?></th>
-						<th><?=$langue->show_text('TableLabel'); ?></th>
-						<th><?=$langue->show_text('TableQty'); ?></th>
-						<th><?=$langue->show_text('TableUnit'); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php foreach ($Document->GETDocumentList('COMPANY_ID', $SteId ) as $data): ?>
-					<tr>
-						<td><a href="admin.php?page=manage-companies&id=<?= $SteId ?>&deleteFile=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a></td>
-						<td><?= $data->LABEL ?></td>
-						<td><?= $data->DATE ?></td>
-						<td><?= $data->PATH_FILE ?></td>
-						<td><?= $data->SIZE ?></td>
-						<td><?= $data->NOM ?> <?= $data->PRENOM ?></td>
-					</tr>
-				<?php $i++; endforeach; ?>
-				</tbody>
-			</table>
+			<?php 
+				echo $Document->GETAjaxScript('COMPANY_ID', $_GET['id']); 
+				echo $Document->GETDropZone(); 
+				$TitreTable = array($langue->show_text('TableArticle'), $langue->show_text('TableLabel'),  $langue->show_text('TableLabel'), $langue->show_text('TableQty'), $langue->show_text('TableUnit'));
+				echo $Document->GETDocumentList('COMPANY_ID', $_GET['page'], $_GET['id'], $TitreTable ); 
+			?>
 		</div>
 <?php
 	}

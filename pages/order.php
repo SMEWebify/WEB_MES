@@ -6,7 +6,6 @@
 	use \App\Companies\Companies;
 	use \App\Companies\Contact;
 	use \App\Companies\Address;
-	use \App\Form;
 	use \App\Accounting\PaymentMethod;
 	use \App\Accounting\PaymentCondition;
 	use \App\Accounting\PaymentSchedule;
@@ -21,11 +20,13 @@
 	use \App\Accounting\Delevery;
 	use \App\Accounting\VAT;
 	use \App\Study\Unit;
+	use \App\UI\Document;
+	use \App\UI\Form;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
 	Autoloader::register();
-	
+
 	session_start();
 	header( 'content-type: text/html; charset=utf-8' );
 	//init class
@@ -49,7 +50,8 @@
 	$Delevery = new Delevery();
 	$VAT = new VAT();
 	$Unit = new Unit();
-	
+	$Document = new Document();
+
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -384,6 +386,7 @@
 		$ParDefautDiv4 = '';
 		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&order='. $Id  .'';
+		$DocumentType = 'ORDER_ID';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
@@ -404,6 +407,7 @@
 		$ParDefautDiv4 = '';
 		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&OrderAcknowledgment='.$Id  .'';
+		$DocumentType = 'ORDER_ACKNOWLEDGMENT_ID';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
@@ -424,6 +428,7 @@
 		$ParDefautDiv4 = '';
 		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&DeliveryNotes='.$Id  .'';
+		$DocumentType = 'DELIVERY_NOTE_ID';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
@@ -444,6 +449,7 @@
 		$ParDefautDiv4 = '';
 		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&InvoiceOrder='.$Id  .'';
+		$DocumentType = 'INVOICE_ID';
 
 		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			$ParDefautDiv1 = '';
@@ -514,25 +520,29 @@ $(document).ready(function() {
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document$type=order&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=order&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>	
 	<?php } elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document$type=OrderAcknowledgment&id=<?= $_GET['OrderAcknowledgment'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=OrderAcknowledgment&id=<?= $_GET['OrderAcknowledgment'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 	<?php } elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title8'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['DeliveryNotes'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['DeliveryNotes'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 	<?php } elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title9'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<a href="index.php?page=document$type=InvoiceOrder&id=<?= $_GET['InvoiceOrder'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title4'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=InvoiceOrder&id=<?= $_GET['InvoiceOrder'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 	<?php }else{ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title5'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title10'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title8'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div5')"><?=$langue->show_text('Title9'); ?></button>	

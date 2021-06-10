@@ -1,13 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Language;
 
 class Language {
 	//Language by ISO 639 code (default: French)
 	private $_lang = 'fr';
 	
 	//Folder containing languages
-	private $_dirLangue = '../lang';
+	private $_dirLangue = '../Language';
 	
 	// Objet SimpleXML
 	private $_simpleXML = null;
@@ -18,7 +18,7 @@ class Language {
 			$this->_dirLangue = $dirLangue;
 		}
 		else {
-			$this->_dirLangue = 'ERP/../../app/lang';
+			$this->_dirLangue = 'ERP/../../app/Language';
 		}
 		
 		if($lang) {

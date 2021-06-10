@@ -1,7 +1,6 @@
 <?php 
 	//phpinfo();
 	use \App\Autoloader;
-	use \App\Form;
 	use \App\Companies\Companies;
 	use \App\COMPANY\Employees;
 	use \App\COMPANY\Numbering;
@@ -14,6 +13,8 @@
 	use \App\Quality\QL_Corrections;
 	use \App\Quality\QL_Devices;
 	use \App\Quality\QL_NFC;
+	use \App\UI\Document;
+	use \App\UI\Form;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -35,6 +36,7 @@
 	$QL_Corrections = new QL_Corrections();
 	$QL_Devices = new QL_Devices();
 	$QL_FNC = new QL_NFC();
+	$Document = new Document();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_6'] != '1'){
@@ -116,6 +118,9 @@
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?= $ParDefautDiv2 ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?= $ParDefautDiv3 ?>><?=$langue->show_text('Title3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')" <?= $ParDefautDiv4 ?>><?=$langue->show_text('Title4'); ?></button>
+		<?php if(isset($_GET['FNC']) or isset($_GET['action']) or isset($_GET['derogation']) or isset($_GET['device'])){?>
+		<button class="tablinks" onclick="openDiv(event, 'div5')" <?= $ParDefautDiv5 ?>><?=$langue->show_text('Title5'); ?></button>
+		<?php } ?>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<div class="column">
@@ -130,6 +135,7 @@
 			</ul>
 		</div>
 		<?php if(isset($_GET['FNC']) AND !empty($_GET['FNC'])):
+		$DocumentType = 'NC_ID';
 		$Data= $QL_FNC->GETQL_FNC($IdQL_FNC);?>
 		<form method="POST" action="index.php?page=quality&FNC=<?= $Data->id ?>" class="content-form">
 			<div class="column">
@@ -295,6 +301,7 @@
 			</ul>
 		</div>
 		<?php if(isset($_GET['action']) AND !empty($_GET['action'])):
+					$DocumentType = 'ACTION_ID';
 					$Data= $QL_Action->GETQL_Action($IdQL_Action);?>
 		<form method="POST" action="index.php?page=quality&action=<?= $Data->id ?>" class="content-form">
 			<div class="column">
@@ -424,6 +431,7 @@
 			</ul>
 		</div>
 		<?php if(isset($_GET['derogation']) AND !empty($_GET['derogation'])):
+					$DocumentType = 'DEROGATION_ID';
 					$Data= $QL_Derogation->GETQL_Derogation($IdQL_Derogation);?>
 		<form method="POST" action="index.php?page=quality&derogation=<?= $Data->id ?>" class="content-form">
 			<div class="column">
@@ -563,6 +571,7 @@
 			</ul>
 		</div>
 		<?php if(isset($_GET['device']) AND !empty($_GET['device'])):
+				$DocumentType = 'MESURING_DEVICE_ID';
 				$Data= $QL_Devices->GETQL_Devices($_GET['device']);?>
 		<div class="column">
 			<div class="card">
@@ -584,4 +593,13 @@
 			</div>
 		</div>
 		<?php endif; ?>
+	</div>
+
+	<div id="div5" class="tabcontent">
+		<?php 
+			echo $Document->GETAjaxScript($DocumentType, $Data->id); 
+			echo $Document->GETDropZone(); 
+			$TitreTable = array($langue->show_text('TableArticle'), $langue->show_text('TableLabel'),  $langue->show_text('TableLabel'), $langue->show_text('TableQty'), $langue->show_text('TableUnit'));
+			echo $Document->GETDocumentList($DocumentType, $_GET['page'], $Data->id, $TitreTable ); 
+		?>
 	</div>
