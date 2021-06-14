@@ -15,6 +15,7 @@
 	use \App\Quality\QL_NFC;
 	use \App\UI\Document;
 	use \App\UI\Form;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -37,6 +38,7 @@
 	$QL_Devices = new QL_Devices();
 	$QL_FNC = new QL_NFC();
 	$Document = new Document();
+	$SearchMenu = new SearchMenu();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_6'] != '1'){
@@ -123,476 +125,455 @@
 		<?php } ?>
 	</div>
 	<div id="div1" class="tabcontent" >
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindNFC'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_NFC ." ORDER BY LABEL";
-				foreach ($bdd->GetQuery($query) as $data): ?>
-				<li><a href="index.php?page=quality&FNC=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
-		</div>
-		<?php if(isset($_GET['FNC']) AND !empty($_GET['FNC'])):
-		$DocumentType = 'NC_ID';
-		$Data= $QL_FNC->GETQL_FNC($IdQL_FNC);?>
-		<form method="POST" action="index.php?page=quality&FNC=<?= $Data->id ?>" class="content-form">
-			<div class="column">
-				<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="2"><?= $Form->input('hidden', 'id',  $Data->id) ?><br/></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableCODE') ?></td>
-								<td><?= $Form->input('text', 'CODE',  $Data->CODE) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableLabel') ?></td>
-								<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableCREATED') ?><?= $Data->CREATED ?></td>
-								<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM_CREATOR ?> <?= $Data->PRENOM_CREATOR ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableMODIFIED') ?><?= $Data->MODIFIED ?></td>
-								<td><?= $langue->show_text('TableModified') ?><?= $Data->NOM_MODIFIED ?> <?= $Data->PRENOM_MODIFIED ?></td>
-							</tr>
-							<tr>
-								<td>
-									<?= $langue->show_text('TableType') ?>
-									<select name="TYPE">
-										<option value="1" <?= selected($Data->TYPE, 1) ?>><?= $langue->show_text('SelectInternal') ?></option>
-										<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectExternal') ?></option>
-									</select>
-								</td>
-								<td>
-									<?= $langue->show_text('TableEtat') ?>
-									<select name="ETAT">
-										<option value="1" <?= selected($Data->ETAT, 1) ?>><?= $langue->show_text('SelectInProgess') ?></option>
-										<option value="2" <?= selected($Data->ETAT, 2) ?>><?= $langue->show_text('SelectWaitingCustomerData') ?></option>
-										<option value="3" <?= selected($Data->ETAT, 3) ?>><?= $langue->show_text('SelectValidate') ?></option>
-										<option value="4" <?= selected($Data->ETAT, 4) ?>><?= $langue->show_text('SelectCanceled') ?></option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?= $langue->show_text('TableCausedBy') ?>
-									<select name="CAUSED_BY_ID">
-										<?=$Employees->GETEmployeesList($Data->CAUSED_BY_ID) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?= $langue->show_text('TableSection') ?>
-									<select name="SECTION_ID">
-										<?= $Section->GetSectionList($Data->SECTION_ID) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?= $langue->show_text('TableRessource') ?>
-									<select name="RESSOURCE_ID">
-										<?= $Ressource->GETRessourcesList($Data->RESSOURCE_ID) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?= $langue->show_text('TableCompany') ?>
-									<select name="COMPANY_ID">
-										<?= $Companies->GetCustomerList($Data->COMPANY_ID) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" >
-									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableUpdateButton') ?>" />
-								</td>
-							</tr>
-						</tbody>
-					</table>
+		<div class="row">
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($QL_FNC->GETQL_NFCList('', false), 'index.php?page=quality&FNC', $langue->show_text('FindNFC') ); ?>
 			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableCause') ?></p>
-					<select name="CAUSE_ID">
-						<?=  $QL_Causes->GETQL_CausesList($Data->CAUSE_ID) ?>
-					</select>
-					<textarea class="Comment" name="CAUSE_COMMENT" rows="10" ><?=  $Data->CAUSE_COMMENT ?></textarea>.
-				</div>	
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableDefaut') ?></p>
-					<select name="DEFAUT_ID">
-						<?=  $QL_Defaut->GETQL_DefautList($Data->DEFAUT_ID) ?>
-					</select>
-					<textarea class="Comment" name="DEFAUT_COMMENT" rows="10" ><?=  $Data->DEFAUT_COMMENT ?></textarea>
-				</div>
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableCorrection') ?></p>
-					<select name="CORRECTION_ID">
-					<?=  $QL_Corrections->GETQL_CorrectionsList($Data->CORRECTION_ID) ?>
-					</select>
-					<textarea class="Comment" name="CORRECTION_COMMENT" rows="10" ><?=  $Data->CORRECTION_COMMENT ?></textarea>
-				</div>
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableComment') ?></p>
-					<textarea class="Comment" name="COMMENT" rows="10" ><?=  $Data->COMMENT ?></textarea>
-				</div>
-			</div>
-		</form>
-		<?php else: ?>
-			<div class="column">
-				<form method="POST" action="index.php?page=quality&FNC=new" class="content-form">
-					<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="2"><br/></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableNewFNC') ?></td>
-								<td><?= $Form->input('text', 'CODE', $Numbering->getCodeNumbering(11)) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableNewFNCFor') ?></td>
-								<td>
-									<select name="COMPANY_ID">
-										<?= $Companies->GetCustomerList() ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" >
-									<br/>
-									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonFNC') ?>" /> <br/>
-									<br/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+			<?php if(isset($_GET['FNC']) AND !empty($_GET['FNC'])):
+				$DocumentType = 'NC_ID';
+				$Data= $QL_FNC->GETQL_FNC($IdQL_FNC);?>
+			<div class="column-large">
+				<form method="POST" action="index.php?page=quality&FNC=<?= $Data->id ?>" class="content-form">
+					<div class="row">
+						<div class="column">
+							<table class="content-table">
+									<thead>
+										<tr>
+											<th colspan="2"><?= $Form->input('hidden', 'id',  $Data->id) ?><br/></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><?= $langue->show_text('TableCODE') ?></td>
+											<td><?= $Form->input('text', 'CODE',  $Data->CODE) ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableLabel') ?></td>
+											<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableCREATED') ?><?= $Data->CREATED ?></td>
+											<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM_CREATOR ?> <?= $Data->PRENOM_CREATOR ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableMODIFIED') ?><?= $Data->MODIFIED ?></td>
+											<td><?= $langue->show_text('TableModified') ?><?= $Data->NOM_MODIFIED ?> <?= $Data->PRENOM_MODIFIED ?></td>
+										</tr>
+										<tr>
+											<td>
+												<?= $langue->show_text('TableType') ?>
+												<select name="TYPE">
+													<option value="1" <?= selected($Data->TYPE, 1) ?>><?= $langue->show_text('SelectInternal') ?></option>
+													<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectExternal') ?></option>
+												</select>
+											</td>
+											<td>
+												<?= $langue->show_text('TableEtat') ?>
+												<select name="ETAT">
+													<option value="1" <?= selected($Data->ETAT, 1) ?>><?= $langue->show_text('SelectInProgess') ?></option>
+													<option value="2" <?= selected($Data->ETAT, 2) ?>><?= $langue->show_text('SelectWaitingCustomerData') ?></option>
+													<option value="3" <?= selected($Data->ETAT, 3) ?>><?= $langue->show_text('SelectValidate') ?></option>
+													<option value="4" <?= selected($Data->ETAT, 4) ?>><?= $langue->show_text('SelectCanceled') ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<?= $langue->show_text('TableCausedBy') ?>
+												<select name="CAUSED_BY_ID">
+													<?=$Employees->GETEmployeesList($Data->CAUSED_BY_ID) ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<?= $langue->show_text('TableSection') ?>
+												<select name="SECTION_ID">
+													<?= $Section->GetSectionList($Data->SECTION_ID) ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<?= $langue->show_text('TableRessource') ?>
+												<select name="RESSOURCE_ID">
+													<?= $Ressource->GETRessourcesList($Data->RESSOURCE_ID) ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<?= $langue->show_text('TableCompany') ?>
+												<select name="COMPANY_ID">
+													<?= $Companies->GetCustomerList($Data->COMPANY_ID) ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2" >
+												<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableUpdateButton') ?>" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+						</div>
+						<div class="column">
+							<div class="card">
+								<p><?= $langue->show_text('TableCause') ?></p>
+								<select name="CAUSE_ID">
+									<?=  $QL_Causes->GETQL_CausesList($Data->CAUSE_ID) ?>
+								</select>
+								<textarea class="Comment" name="CAUSE_COMMENT" rows="10" ><?=  $Data->CAUSE_COMMENT ?></textarea>.
+							</div>
+							<div class="card">
+								<p><?= $langue->show_text('TableDefaut') ?></p>
+								<select name="DEFAUT_ID">
+									<?=  $QL_Defaut->GETQL_DefautList($Data->DEFAUT_ID) ?>
+								</select>
+								<textarea class="Comment" name="DEFAUT_COMMENT" rows="10" ><?=  $Data->DEFAUT_COMMENT ?></textarea>
+							</div>
+						</div>
+						<div class="column">
+							<div class="card">
+								<p><?= $langue->show_text('TableCorrection') ?></p>
+								<select name="CORRECTION_ID">
+								<?=  $QL_Corrections->GETQL_CorrectionsList($Data->CORRECTION_ID) ?>
+								</select>
+								<textarea class="Comment" name="CORRECTION_COMMENT" rows="10" ><?=  $Data->CORRECTION_COMMENT ?></textarea>
+							</div>
+							<div class="card">
+								<p><?= $langue->show_text('TableComment') ?></p>
+								<textarea class="Comment" name="COMMENT" rows="10" ><?=  $Data->COMMENT ?></textarea>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
-		<?php endif; ?>
+			<?php else: ?>
+				<div class="column">
+					<form method="POST" action="index.php?page=quality&FNC=new" class="content-form">
+						<table class="content-table">
+							<thead>
+								<tr>
+									<th colspan="2"><br/></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><?= $langue->show_text('TableNewFNC') ?></td>
+									<td><?= $Form->input('text', 'CODE', $Numbering->getCodeNumbering(11)) ?></td>
+								</tr>
+								<tr>
+									<td><?= $langue->show_text('TableNewFNCFor') ?></td>
+									<td>
+										<select name="COMPANY_ID">
+											<?= $Companies->GetCustomerList() ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" >
+										<br/>
+										<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonFNC') ?>" /> <br/>
+										<br/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
-	<div id="div2" class="tabcontent" >.
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindAction'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				foreach ($QL_Action->GETQL_ActionList('',false) as $data): ?>
-				<li><a href="index.php?page=quality&action=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
-		</div>
-		<?php if(isset($_GET['action']) AND !empty($_GET['action'])):
-					$DocumentType = 'ACTION_ID';
-					$Data= $QL_Action->GETQL_Action($IdQL_Action);?>
-		<form method="POST" action="index.php?page=quality&action=<?= $Data->id ?>" class="content-form">
-			<div class="column">
-				<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="2"><?= $Form->input('hidden', 'id',  $Data->id) ?><br/></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableCODE') ?></td>
-								<td><?= $Form->input('text', 'CODE',  $Data->CODE) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableLabel') ?></td>
-								<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableDATE') ?><?= $Data->DATE ?></td>
-								<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM ?> <?= $Data->PRENOM ?></td>
-							</tr>
-							<tr>
-								<td>
-									<?= $langue->show_text('TableType') ?>
-									<select name="TYPE">
-										<option value="1" <?= selected($Data->TYPE, 1) ?>><?= $langue->show_text('SelectPreventive') ?></option>
-										<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectCorrective') ?></option>
-										<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectImprovement') ?></option>
-										<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectOther') ?></option>
-									</select>
-								</td>
-								<td>
-									<?= $langue->show_text('TableEtat') ?>
-									<select name="STATU">
-										<option value="1" <?= selected($Data->STATU, 1) ?>><?= $langue->show_text('SelectInProgess') ?></option>
-										<option value="2" <?= selected($Data->STATU, 2) ?>><?= $langue->show_text('SelectWaitingCustomerData') ?></option>
-										<option value="3" <?= selected($Data->STATU, 3) ?>><?= $langue->show_text('SelectValidate') ?></option>
-										<option value="4" <?= selected($Data->STATU, 4) ?>><?= $langue->show_text('SelectCanceled') ?></option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?= $langue->show_text('TableResp') ?>
-									<select name="RESP_ID">
-										<?=$Employees->GETEmployeesList($Data->RESP_ID) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<?= $langue->show_text('Title1') ?>
-									<select name="NFC_ID">
-										<?=  $QL_FNC->GETQL_NFCList($Data->NFC_ID)?>
-									</select>
-								</td>
-								<td >
-									<?= $langue->show_text('TableColor') ?>
-									<?= $Form->input('color', 'COLOR',  $Data->COLOR) ?>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" >
-									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableUpdateButton') ?>" />
-								</td>
-							</tr>
-						</tbody>
-					</table>
+	<div id="div2" class="tabcontent" >
+		<div class="row">
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($QL_Action->GETQL_ActionList('', false), 'index.php?page=quality&action', $langue->show_text('FindAction') ); ?>
 			</div>
-			<div class="column">
-				<div class="card">
-				<p><?= $langue->show_text('TableLabelProb') ?></p>
-					<textarea class="Comment" name="PB_DESCP" rows="10" ><?=  $Data->PB_DESCP ?></textarea>.
-				</div>	
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableCause') ?></p>
-					<textarea class="Comment" name="CAUSE" rows="10" ><?=  $Data->CAUSE ?></textarea>
-				</div>
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableAction') ?></p>
-					<textarea class="Comment" name="ACTION" rows="10" ><?=  $Data->ACTION ?></textarea>
-				</div>
-			</div>
-		</form>
-		<?php else: 
-			//make num sequence
-			$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_QL_ACTION .'', 'ACT<I>' , 6) ?>
-			<div class="column">
-				<form method="POST" action="index.php?page=quality&action=new" class="content-form">
-					<table class="content-table">
-						<thead>
-							<tr><th colspan="2"><br/></th></tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableNewAct') ?></td>
-								<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
-							</tr>
-							<tr>
-								<td colspan="2" >
-									<br/>
-									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonAct') ?>" /> <br/>
-									<br/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+			<?php if(isset($_GET['action']) AND !empty($_GET['action'])):
+						$DocumentType = 'ACTION_ID';
+						$Data= $QL_Action->GETQL_Action($IdQL_Action);?>
+			
+			<div class="column-large">
+				<form method="POST" action="index.php?page=quality&action=<?= $Data->id ?>" class="content-form">
+					<div class="row">
+						<div class="column">
+							<table class="content-table">
+									<thead>
+										<tr>
+											<th colspan="2"><?= $Form->input('hidden', 'id',  $Data->id) ?><br/></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><?= $langue->show_text('TableCODE') ?></td>
+											<td><?= $Form->input('text', 'CODE',  $Data->CODE) ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableLabel') ?></td>
+											<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableDATE') ?><?= $Data->DATE ?></td>
+											<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM ?> <?= $Data->PRENOM ?></td>
+										</tr>
+										<tr>
+											<td>
+												<?= $langue->show_text('TableType') ?>
+												<select name="TYPE">
+													<option value="1" <?= selected($Data->TYPE, 1) ?>><?= $langue->show_text('SelectPreventive') ?></option>
+													<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectCorrective') ?></option>
+													<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectImprovement') ?></option>
+													<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectOther') ?></option>
+												</select>
+											</td>
+											<td>
+												<?= $langue->show_text('TableEtat') ?>
+												<select name="ETAT">
+													<option value="1" <?= selected($Data->ETAT, 1) ?>><?= $langue->show_text('SelectInProgess') ?></option>
+													<option value="2" <?= selected($Data->ETAT, 2) ?>><?= $langue->show_text('SelectWaitingCustomerData') ?></option>
+													<option value="3" <?= selected($Data->ETAT, 3) ?>><?= $langue->show_text('SelectValidate') ?></option>
+													<option value="4" <?= selected($Data->ETAT, 4) ?>><?= $langue->show_text('SelectCanceled') ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<?= $langue->show_text('TableResp') ?>
+												<select name="RESP_ID">
+													<?=$Employees->GETEmployeesList($Data->RESP_ID) ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<?= $langue->show_text('Title1') ?>
+												<select name="NFC_ID">
+													<?=  $QL_FNC->GETQL_NFCList($Data->NFC_ID)?>
+												</select>
+											</td>
+											<td >
+												<?= $langue->show_text('TableColor') ?>
+												<?= $Form->input('color', 'COLOR',  $Data->COLOR) ?>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2" >
+												<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableUpdateButton') ?>" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+						</div>
+						<div class="column">
+							<div class="card">
+								<p><?= $langue->show_text('TableLabelProb') ?></p>
+								<textarea class="Comment" name="PB_DESCP" rows="10" ><?=  $Data->PB_DESCP ?></textarea>.
+							</div>	
+							<div class="card">
+								<p><?= $langue->show_text('TableCause') ?></p>
+								<textarea class="Comment" name="CAUSE" rows="10" ><?=  $Data->CAUSE ?></textarea>
+							</div>
+							<div class="card">
+								<p><?= $langue->show_text('TableAction') ?></p>
+								<textarea class="Comment" name="ACTION" rows="10" ><?=  $Data->ACTION ?></textarea>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
-		<?php endif; ?>
+			<?php else: 
+				//make num sequence
+				$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_QL_ACTION .'', 'ACT<I>' , 6) ?>
+				<div class="column">
+					<form method="POST" action="index.php?page=quality&action=new" class="content-form">
+						<table class="content-table">
+							<thead>
+								<tr><th colspan="2"><br/></th></tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><?= $langue->show_text('TableNewAct') ?></td>
+									<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
+								</tr>
+								<tr>
+									<td colspan="2" >
+										<br/>
+										<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonAct') ?>" /> <br/>
+										<br/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 	<div id="div3" class="tabcontent" >
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindDerogation'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				$query="SELECT id, CODE, LABEL FROM ". TABLE_ERP_DEROGATION ." ORDER BY CODE";
-				foreach ($QL_Derogation->GETQL_DerogationListList('', false) as $data): ?>
-				<li><a href="index.php?page=quality&derogation=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
-		</div>
-		<?php if(isset($_GET['derogation']) AND !empty($_GET['derogation'])):
-					$DocumentType = 'DEROGATION_ID';
-					$Data= $QL_Derogation->GETQL_Derogation($IdQL_Derogation);?>
-		<form method="POST" action="index.php?page=quality&derogation=<?= $Data->id ?>" class="content-form">
-			<div class="column">
-				<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="2"><?= $Form->input('hidden', 'id',  $Data->id) ?><br/></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableCODE') ?></td>
-								<td><?= $Form->input('text', 'CODE',  $Data->CODE) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableLabel') ?></td>
-								<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableDATE') ?><?= $Data->DATE ?></td>
-								<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM ?> <?= $Data->PRENOM ?></td>
-							</tr>
-							<tr>
-								<td>
-									<?= $langue->show_text('TableType') ?>
-									<select name="TYPE">
-										<option value="1" <?= selected($Data->TYPE, 1) ?>><?= $langue->show_text('SelectInternal') ?></option>
-										<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectExternal') ?></option>
-									</select>
-								</td>
-								<td>
-									<?= $langue->show_text('TableEtat') ?>
-									<select name="ETAT">
-										<option value="1" <?= selected($Data->ETAT, 1) ?>><?= $langue->show_text('SelectInProgess') ?></option>
-										<option value="2" <?= selected($Data->ETAT, 2) ?>><?= $langue->show_text('SelectWaitingCustomerData') ?></option>
-										<option value="3" <?= selected($Data->ETAT, 3) ?>><?= $langue->show_text('SelectValidate') ?></option>
-										<option value="4" <?= selected($Data->ETAT, 4) ?>><?= $langue->show_text('SelectCanceled') ?></option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?= $langue->show_text('TableResp') ?>
-									<select name="RESP_ID">
-										<?=$Employees->GETEmployeesList($Data->RESP_ID) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<?= $langue->show_text('Title1') ?>
-									<select name="NFC_ID">
-										<?=  $QL_FNC->GETQL_NFCList($Data->NFC_ID)?>
-									</select>
-								</td>
-								<td >
-									<?= $langue->show_text('TableReply') ?>
-									<select name="REPLY">
-										<option value="1" <?= selected($Data->REPLY, 1) ?>><?= $langue->show_text('NoReply') ?></option>
-										<option value="2" <?= selected($Data->REPLY, 2) ?>><?= $langue->show_text('Accepted') ?></option>
-										<option value="3" <?= selected($Data->REPLY, 3) ?>><?= $langue->show_text('Refuse') ?></option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" >
-									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableUpdateButton') ?>" />
-								</td>
-							</tr>
-						</tbody>
-					</table>
+		<div class="row">
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($QL_Derogation->GETQL_DerogationListList('', false), 'index.php?page=quality&derogation', $langue->show_text('FindDerogation') ); ?>
 			</div>
-			<div class="column">
-				<div class="card">
-				<p><?= $langue->show_text('TableLabelProb') ?></p>
-					<textarea class="Comment" name="PB_DESCP" rows="10" ><?=  $Data->PB_DESCP ?></textarea>.
-				</div>	
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableProposal') ?></p>
-					<textarea class="Comment" name="PROPOSAL" rows="10" ><?=  $Data->PROPOSAL ?></textarea>
-				</div>
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableComment') ?></p>
-					<textarea class="Comment" name="COMMENT" rows="10" ><?=  $Data->COMMENT ?></textarea>
-				</div>
-			</div>
-			<div class="column">
-				<div class="card">
-					<p><?= $langue->show_text('TableDecision') ?></p>
-					<textarea class="Comment" name="DECISION" rows="10" ><?=  $Data->DECISION ?></textarea>
-				</div>
-			</div>
-		</form>
-		<?php else: 
-
-			//make num sequence
-			$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_DEROGATION .'', 'DER<I>' , 6) ?>
-			<div class="column">
-				<form method="POST" action="index.php?page=quality&derogation=new" class="content-form">
-					<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="2"><br/></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableNewDerog') ?></td>
-								<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
-							</tr>
-							<tr>
-								<td colspan="2" >
-									<br/>
-									<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonDerog') ?>" /> <br/>
-									<br/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+			<?php if(isset($_GET['derogation']) AND !empty($_GET['derogation'])):
+						$DocumentType = 'DEROGATION_ID';
+						$Data= $QL_Derogation->GETQL_Derogation($IdQL_Derogation);?>
+			<div class="column-large">
+				<form method="POST" action="index.php?page=quality&derogation=<?= $Data->id ?>" class="content-form">
+					<div class="row">
+						<div class="column">
+							<table class="content-table">
+									<thead>
+										<tr>
+											<th colspan="2"><?= $Form->input('hidden', 'id',  $Data->id) ?><br/></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><?= $langue->show_text('TableCODE') ?></td>
+											<td><?= $Form->input('text', 'CODE',  $Data->CODE) ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableLabel') ?></td>
+											<td><?= $Form->input('text', 'LABEL',  $Data->LABEL) ?></td>
+										</tr>
+										<tr>
+											<td><?= $langue->show_text('TableDATE') ?><?= $Data->DATE ?></td>
+											<td><?= $langue->show_text('TableAuteur') ?><?= $Data->NOM ?> <?= $Data->PRENOM ?></td>
+										</tr>
+										<tr>
+											<td>
+												<?= $langue->show_text('TableType') ?>
+												<select name="TYPE">
+													<option value="1" <?= selected($Data->TYPE, 1) ?>><?= $langue->show_text('SelectInternal') ?></option>
+													<option value="2" <?= selected($Data->TYPE, 2) ?>><?= $langue->show_text('SelectExternal') ?></option>
+												</select>
+											</td>
+											<td>
+												<?= $langue->show_text('TableEtat') ?>
+												<select name="ETAT">
+													<option value="1" <?= selected($Data->ETAT, 1) ?>><?= $langue->show_text('SelectInProgess') ?></option>
+													<option value="2" <?= selected($Data->ETAT, 2) ?>><?= $langue->show_text('SelectWaitingCustomerData') ?></option>
+													<option value="3" <?= selected($Data->ETAT, 3) ?>><?= $langue->show_text('SelectValidate') ?></option>
+													<option value="4" <?= selected($Data->ETAT, 4) ?>><?= $langue->show_text('SelectCanceled') ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<?= $langue->show_text('TableResp') ?>
+												<select name="RESP_ID">
+													<?=$Employees->GETEmployeesList($Data->RESP_ID) ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<?= $langue->show_text('Title1') ?>
+												<select name="NFC_ID">
+													<?=  $QL_FNC->GETQL_NFCList($Data->NFC_ID)?>
+												</select>
+											</td>
+											<td >
+												<?= $langue->show_text('TableReply') ?>
+												<select name="REPLY">
+													<option value="1" <?= selected($Data->REPLY, 1) ?>><?= $langue->show_text('NoReply') ?></option>
+													<option value="2" <?= selected($Data->REPLY, 2) ?>><?= $langue->show_text('Accepted') ?></option>
+													<option value="3" <?= selected($Data->REPLY, 3) ?>><?= $langue->show_text('Refuse') ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2" >
+												<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableUpdateButton') ?>" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+						</div>
+						<div class="column">
+							<div class="card">
+							<p><?= $langue->show_text('TableLabelProb') ?></p>
+								<textarea class="Comment" name="PB_DESCP" rows="10" ><?=  $Data->PB_DESCP ?></textarea>.
+							</div>	
+							<div class="card">
+								<p><?= $langue->show_text('TableProposal') ?></p>
+								<textarea class="Comment" name="PROPOSAL" rows="10" ><?=  $Data->PROPOSAL ?></textarea>
+							</div>
+						</div>
+						<div class="column">
+							<div class="card">
+								<p><?= $langue->show_text('TableComment') ?></p>
+								<textarea class="Comment" name="COMMENT" rows="10" ><?=  $Data->COMMENT ?></textarea>
+							</div>
+							<div class="card">
+								<p><?= $langue->show_text('TableDecision') ?></p>
+								<textarea class="Comment" name="DECISION" rows="10" ><?=  $Data->DECISION ?></textarea>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
-		<?php endif; ?>
+			<?php else: 
+
+				//make num sequence
+				$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_DEROGATION .'', 'DER<I>' , 6) ?>
+				<div class="column">
+					<form method="POST" action="index.php?page=quality&derogation=new" class="content-form">
+						<table class="content-table">
+							<thead>
+								<tr>
+									<th colspan="2"><br/></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><?= $langue->show_text('TableNewDerog') ?></td>
+									<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
+								</tr>
+								<tr>
+									<td colspan="2" >
+										<br/>
+										<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonDerog') ?>" /> <br/>
+										<br/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 	<div id="div4" class="tabcontent" >
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('Finddevice'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				foreach ($QL_Devices->GETQL_DevicesList('',false) as $data): ?>
-				<li><a href="index.php?page=quality&device=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?> - <?= $data->SERIAL_NUMBER ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
-		</div>
-		<?php if(isset($_GET['device']) AND !empty($_GET['device'])):
-				$DocumentType = 'MESURING_DEVICE_ID';
-				$Data= $QL_Devices->GETQL_Devices($_GET['device']);?>
-		<div class="column">
-			<div class="card">
-				<h3><?=$langue->show_text('TableCODE'); ?> <?= $Data->CODE ?></h3>
-				<h2><?=$langue->show_text('TableLabel'); ?> <?= $Data->LABEL ?></h2>
-				<p><strong><?=$langue->show_text('TableRessource'); ?></strong> : <?= $Data->LABEL_RESSOURCE ?></p>
-				<p><strong><?=$langue->show_text('TableUser'); ?></strong> : <?= $Data->NOM_USER ?> <?= $Data->PRENOM_USER ?></p>
-				<p><strong><?=$langue->show_text('TableImatNumber'); ?></strong> : <?= $Data->SERIAL_NUMBER  ?></p>
-				<p><strong><?=$langue->show_text('TableEndDate'); ?></strong> : <?= $Data->DATE ?></p>
+		<div class="row">
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($QL_Devices->GETQL_DevicesList('', false), 'index.php?page=quality&device', $langue->show_text('Finddevice') ); ?>
 			</div>
-		</div>
-		<div class="column">
-			<div class="card">
-				<form method="POST" action="index.php?page=quality&device=<?= $data->id ?>" class="content-form" enctype="multipart/form-data" >
-					<p><img src="<?= PICTURE_FOLDER.QUALITY_DEVICES_FOLDER.$Data->PICTURE_DEVICES ?>" title="Picture quality devices" alt="Picture quality devices" class="Image-Aricle"/></p>
-					<p><input type="file" name="PICTURE_DEVICES" id="PICTURE_DEVICES"  /></p>
-					<p><?= $Form->submit($langue->show_text('TableUpdateButton')) ?><br/><br/></p>
-				</form>
+			<?php if(isset($_GET['device']) AND !empty($_GET['device'])):
+					$DocumentType = 'MESURING_DEVICE_ID';
+					$Data= $QL_Devices->GETQL_Devices($_GET['device']);?>
+			<div class="column">
+				<div class="card">
+					<h3><?=$langue->show_text('TableCODE'); ?> <?= $Data->CODE ?></h3>
+					<h2><?=$langue->show_text('TableLabel'); ?> <?= $Data->LABEL ?></h2>
+					<p><strong><?=$langue->show_text('TableRessource'); ?></strong> : <?= $Data->LABEL_RESSOURCE ?></p>
+					<p><strong><?=$langue->show_text('TableUser'); ?></strong> : <?= $Data->NOM_USER ?> <?= $Data->PRENOM_USER ?></p>
+					<p><strong><?=$langue->show_text('TableImatNumber'); ?></strong> : <?= $Data->SERIAL_NUMBER  ?></p>
+					<p><strong><?=$langue->show_text('TableEndDate'); ?></strong> : <?= $Data->DATE ?></p>
+				</div>
 			</div>
+			<div class="column">
+				<div class="card">
+					<form method="POST" action="index.php?page=quality&device=<?= $data->id ?>" class="content-form" enctype="multipart/form-data" >
+						<p><img src="<?= PICTURE_FOLDER.QUALITY_DEVICES_FOLDER.$Data->PICTURE_DEVICES ?>" title="Picture quality devices" alt="Picture quality devices" class="Image-Aricle"/></p>
+						<p><input type="file" name="PICTURE_DEVICES" id="PICTURE_DEVICES"  /></p>
+						<p><?= $Form->submit($langue->show_text('TableUpdateButton')) ?><br/><br/></p>
+					</form>
+				</div>
+			</div>
+			<?php endif; ?>
 		</div>
-		<?php endif; ?>
 	</div>
 
 	<div id="div5" class="tabcontent">

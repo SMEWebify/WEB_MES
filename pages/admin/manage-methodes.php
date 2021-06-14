@@ -8,6 +8,7 @@
 	use \App\Companies\Companies;
 	use \App\UI\Form;
 	use \App\Accounting\Allocations;
+	use \App\Planning\Task;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -23,6 +24,7 @@
 	$Section = new Section();
 	$Companies = new Companies();
 	$Allocations = new Allocations();
+	$Task =  new Task();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -170,7 +172,7 @@
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
+						<th colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </th>
 					</tr>
 				</thead>
 				<tbody>
@@ -354,7 +356,7 @@
 			<table class="content-table">
 				<thead>
 					<tr>
-						<td colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
+						<th colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </th>
 					</tr>
 				</thead>
 				<tbody>
@@ -425,22 +427,26 @@
 		</form>
 	</div>
 	<div id="div3" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
+		<div class="column-half">
 			<table class="content-table">
-				<thead>
-					<tr>
-						<td colspan="3" ><?= $Data->LABEL?> - <?= $Data->CODE?> </td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-						
-						</td>
-					</tr>
-				</tbody>
+					<thead>
+						<tr>
+							<th colspan="6" ><?= $Data->LABEL?> - <?= $Data->CODE?> </th>
+						</tr>
+						<tr>
+							<th>Week num</th>
+							<th>Stat Date</th>
+							<th>End Date</th>
+							<th>Task</th>
+							<th>Total time</th>
+							<th>Remaining time</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?= $Task->GETListTask($_GET['resources'],'resources', $_GET['w'],true)?>
+					</tbody>
 			</table>
-		</form>
+		</div>
 	</div>
 	<div id="div4" class="tabcontent">
 		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">

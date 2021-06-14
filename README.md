@@ -1,8 +1,6 @@
 # WEB ERP MES
 ##  Ressource and Manufacturing execution system  Web
 
-![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Workflow.png)
-
 Version 1 in progress - See the projects page to see the progress.
 https://github.com/billyboy35/WEB_MES/projects/2
 
@@ -39,3 +37,7 @@ Few pages : quote - component - planning
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Item/Item_exemple.PNG)
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Planning/Task_list.PNG)
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Planning/Calendar.PNG)
+
+-----------------
+WorkFlow 
+![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Workflow.png)

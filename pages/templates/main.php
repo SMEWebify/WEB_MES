@@ -1,59 +1,62 @@
     <div id="div1" class="tabcontent">
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFind1') ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				foreach ($reqList as $data): 
-					if($data->ETAT == 1) $class="info";
-					elseif($data->ETAT == 2) $class="warning";
-					elseif($data->ETAT == 3) $class="success";
-					elseif($data->ETAT == 6) $class="alert";
-					else $class="normal";
-                 echo '<li><span ><a class='. $class .' href="index.php?page='. $_GET['page'] .'&'. $GET .'='. $data->id .'">'. $data->CODE .' - '. $data->NAME .'</a></span></li>';
-				$i++; endforeach; ?>
-			</ul>
-		</div>
-		<div class="column">
-			<form method="post" name="<?= $GET ?>" action="index.php?page=<?= $_GET['page'] ?>&<?= $GET ?>=new" class="content-form" enctype="multipart/form-data" >
-				<table class="content-table">
-					<thead>
-						<tr>
-							<th colspan="5"><br/></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?= $langue->show_text('TableNewQuoteFor') ?></td>
-							<td>
-								<select name="CUSTOMER_ID">
-									<?= $Companies->GetCustomerList() ?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td><?= $langue->show_text('TableNumberQuote') ?></td>
-							<td>
-								<?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering($DocNum),'', $ActivateForm) ?>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="6" >
-								<br/>
-								<?= $Form->submit($langue->show_text('TableNewButton'), $ActivateForm) ?>
-								<br/>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
+		<div class="row">
+			<div class="column-menu">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFind1') ?>">
+				<ul id="myUL">
+					<?php
+					//generate list for datalist find input
+					foreach ($reqList as $data): 
+						if($data->ETAT == 1) $class="info";
+						elseif($data->ETAT == 2) $class="warning";
+						elseif($data->ETAT == 3) $class="success";
+						elseif($data->ETAT == 6) $class="alert";
+						else $class="normal";
+					echo '<li><span ><a class='. $class .' href="index.php?page='. $_GET['page'] .'&'. $GET .'='. $data->id .'">'. $data->CODE .' - '. $data->NAME .'</a></span></li>';
+					$i++; endforeach; ?>
+				</ul>
+			</div>
+			<div class="column">
+				<form method="post" name="<?= $GET ?>" action="index.php?page=<?= $_GET['page'] ?>&<?= $GET ?>=new" class="content-form" enctype="multipart/form-data" >
+					<table class="content-table">
+						<thead>
+							<tr>
+								<th colspan="5"><br/></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?= $langue->show_text('TableNewQuoteFor') ?></td>
+								<td>
+									<select name="CUSTOMER_ID">
+										<?= $Companies->GetCustomerList() ?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableNumberQuote') ?></td>
+								<td>
+									<?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering($DocNum),'', $ActivateForm) ?>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="6" >
+									<br/>
+									<?= $Form->submit($langue->show_text('TableNewButton'), $ActivateForm) ?>
+									<br/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
 		</div>
 	</div>
 	<?php if(isset($_GET[$GET]) AND !empty($_GET[$GET])){   ?>
 	<div id="div2" class="tabcontent">
-		<div class="box">
-			<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-				<div>
+		<div class="row">
+			<div class="column">
+				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+				
 					<table class="content-table">
 							<thead>
 								<tr>
@@ -133,10 +136,8 @@
 								</tr>
 							</tbody>
 						</table>
-				</div>
-			</form>
-			<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-				<div>
+				</form>
+				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
 					<table class="content-table">
 						<thead>
 							<tr>
@@ -165,29 +166,10 @@
 							</tr>
 						</tbody>
 					</table>
-				</div>
-			</form>
-			<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-				<div  class="item1">
-					<table class="content-table" >
-						<thead>
-							<tr>
-								<th><?=$langue->show_text('Title2-4'); ?></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><textarea class="Comment" name="COMENT" id="COMENT" rows="20" ><?= $Maindata->COMENT ?></textarea></td>
-							</tr>
-							<tr>
-								<td><?= $Form->submit($langue->show_text('TableUpdateButton'), true) ?></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</form>
-			<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-				<div>
+				</form>
+			</div>
+			<div class="column">
+				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
 					<table class="content-table">
 						<thead>
 							<tr>
@@ -214,10 +196,8 @@
 							</tr>
 						</tbody>
 					</table>
-				</div>
-			</form>
-			<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-				<div>
+				</form>
+				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
 					<table class="content-table" style="width: 100%;">
 						<thead>
 							<tr>
@@ -261,11 +241,28 @@
 							</tr>
 						</tbody>
 					</table>
-				</div>
-			</form>	
+				</form>	
+			</div>
+			<div class="column">
+				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
+					<table class="content-table" >
+						<thead>
+							<tr>
+								<th><?=$langue->show_text('Title2-4'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><textarea class="Comment" name="COMENT" id="COMENT" rows="20" ><?= $Maindata->COMENT ?></textarea></td>
+							</tr>
+							<tr>
+								<td><?= $Form->submit($langue->show_text('TableUpdateButton'), true) ?></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
 		<?php if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
-			<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
-				<div>
+				<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
 					<table class="content-table" >
 						<thead>
 							<tr>
@@ -304,10 +301,9 @@
 				<?php } ?>
 						</tbody>
 					</table>
-				</div>
-			</form>
-			<form method="post" name="Coment" action="index.php?page=order&DeliveryNotes=new" class="content-form" >
-				<div>
+				</form>
+
+				<form method="post" name="Coment" action="index.php?page=order&DeliveryNotes=new" class="content-form" >
 					<table class="content-table" >
 						<thead>
 							<tr>
@@ -346,10 +342,9 @@
 				<?php } ?>
 						</tbody>
 					</table>
-				</div>
-			</form>
-			<form method="post" name="Coment" action="index.php?page=order&InvoiceOrder=new" class="content-form" >
-				<div>
+				</form>
+
+				<form method="post" name="Coment" action="index.php?page=order&InvoiceOrder=new" class="content-form" >
 					<table class="content-table" >
 						<thead>
 							<tr>
@@ -388,14 +383,15 @@
 				<?php } ?>
 						</tbody>
 					</table>
-				</div>
-			</form>
+				</form>
+
 		<?php } ?>
+			</div>
 		</div>
 	</div>
 	<div id="div3" class="tabcontent">
 		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-			<table class="content-table-devis" >
+			<table class="content-table" >
 				<thead>
 					<tr>
 						<th colspan="12" ><?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->INDICE  ?></th>
@@ -484,7 +480,7 @@
 								<td>'.   $TotalLigneHTEnCours .' € </td>
 								<td>'. $data->DELAIS .'</td>
 							</tr>';?>
-							<tr>
+							<tr class="clickable-row">
 								<td>
 									<input type="hidden" name="UpdateIdLigne[]" id="UpdateIdLigne" value="<?= $data->id ?>">
 									<a href="index.php?page=<?= $_GET['page'] ?>&amp;<?= $GET ?>=<?= $_GET[$GET] ?>&amp;delete=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a>
@@ -543,44 +539,29 @@
 					<?php $i++; endforeach; 
 					if($i != 0){ ?>
 					<tr>
-						<th></th>
-						<th></th>
-						<th></th>
+						<th colspan="3"></th>
 						<th colspan="2" ><?= $langue->show_text('TotalPriceWithOutTax')?></th>
 						<th ><?= $langue->show_text('TableRate')?></th>
 						<th colspan="2" ><?= $langue->show_text('TotalTax')?></th>
-						<th><?= $langue->show_text('TotalPriceWithTax')?></th>
-						<th></th>
-						<th></th>
-						<th></th>
+						<th colspan="4"><?= $langue->show_text('TotalPriceWithTax')?></th>
 					</tr>
 					<?php 
 					asort($tableauTVA);
 					foreach($tableauTVA as $key => $value):?>
 					<tr>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th colspan="2" ><?= $tableauTVA[$key][0] ?> €</th>
-						<th><?= $tableauTVA[$key][1] ?> %</th>
-						<th colspan="2" ><?= $tableauTVA[$key][2] ?> €</th>
-						<th><?= $tableauTVA[$key][3] ?> €</th>
-						<th></th>
-						<th></th>
-						<th></th>
+						<td colspan="3"></td>
+						<td colspan="2" ><?= $tableauTVA[$key][0] ?> €</td>
+						<td><?= $tableauTVA[$key][1] ?> %</td>
+						<td colspan="2" ><?= $tableauTVA[$key][2] ?> €</td>
+						<td colspan="4"><?= $tableauTVA[$key][3] ?> €</td>
 					</tr>
 					<?php $i++; endforeach; ?>
 					<tr>
-						<th></th>
-						<th></th>
-						<th><?= $langue->show_text('TotalWithOutTax') ?></th>
-						<th colspan="2"><?= $TotalLigneHT ?> €</th>
-						<th></th>
-						<th colspan="2" ><?= $langue->show_text('TotalWithTax') ?></th>
-						<th><?= $TotalLigneTTC ?> €</th>
-						<th></th>
-						<th></th>
-						<th></th>
+						<td colspan="3"><?= $langue->show_text('TotalWithOutTax') ?></td>
+						<td colspan="2"><?= $TotalLigneHT ?> €</td>
+						<td></td>
+						<td colspan="2" ><?= $langue->show_text('TotalWithTax') ?></td>
+						<td colspan="4"><?= $TotalLigneTTC ?> €</td>
 					<tr>
 					<?php } ?>
 				</tbody>

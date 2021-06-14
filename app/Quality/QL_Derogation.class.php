@@ -70,7 +70,7 @@ class QL_Derogation Extends SQL  {
     public function GETQL_DerogationListList($IdData=0, $Select = true){
 
         $this->QL_DerogationList ='';
-        $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_DEROGATION .' ORDER BY CODE';
+        $query='SELECT id, CODE, LABEL, ETAT   FROM '. TABLE_ERP_DEROGATION .' ORDER BY CODE';
 		if($Select){
             foreach ($this->GetQuery($query) as $data){
             

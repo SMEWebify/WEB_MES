@@ -77,19 +77,21 @@
 																NBR_MOIS = \''. addslashes($_POST['NBR_MOIS'][$i]) .'\',
 																NBR_JOURS = \''. addslashes($_POST['NBR_JOURS'][$i]) .'\',
 																FIN_MOIS = \''. addslashes($_POST['FIN_MOIS'][$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
+															WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCondiNotification')));
 	}
 	elseif(isset($_POST['id_ModeReg']) AND !empty($_POST['id_ModeReg'])){
 	//Update mode payement list
+	
 		$i = 0;
 		foreach ($_POST['id_ModeReg'] as $id_generation) {
-			$bdd->exec('UPDATE '. TABLE_ERP_MODE_REG .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
+			
+			$bdd->GetUpdate('UPDATE '. TABLE_ERP_MODE_REG .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
 																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
 																CODE_COMPTABLE = \''. addslashes($_POST['CODE_COMPTABLE'][$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
+															WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateModeNotification')));
@@ -101,7 +103,7 @@
 			$bdd->GetUpdate('UPDATE '. TABLE_ERP_TVA .' SET  CODE = \''. addslashes($_POST['CODE'][$i]) .'\',
 																LABEL = \''. addslashes($_POST['LABEL'][$i]) .'\',
 																TAUX = \''. addslashes($_POST['TAUX'][$i]) .'\'
-																WHERE Id IN ('. $id_generation . ')');
+															WHERE id IN ('. $id_generation . ')');
 			$i++;
 		}
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateTVANotification')));
@@ -195,10 +197,10 @@
 							foreach ($PaymentCondition->GETPaymentConditionList('', false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_CondiReg[]" id="id_CondiReg" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="number" name="NBR_MOIS[]" value="<?= $data->NBR_MOIS ?>" required="required"></td>
-							<td><input type="number" name="NBR_JOURS[]" value="<?= $data->NBR_JOURS ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
+							<td><input type="number" name="NBR_MOIS[]" value="<?= $data->NBR_MOIS ?>" ></td>
+							<td><input type="number" name="NBR_JOURS[]" value="<?= $data->NBR_JOURS ?>" ></td>
 							<td>
 								<select name="FIN_MOIS[]">
 									<option value="1" <?= selected($data->FIN_MOIS, "1") ?>><?= $langue->show_text('Yes') ?></option>
@@ -249,9 +251,9 @@
 						foreach ($PaymentMethod->GETPaymentMethodList('', false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_ModeReg[]" id="id_ModeReg" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="text" name="CODE_COMPTABLE[]" value="<?= $data->CODE_COMPTABLE ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
+							<td><input type="text" name="CODE_COMPTABLE[]" value="<?= $data->CODE_COMPTABLE ?>" ></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -289,9 +291,9 @@
 						foreach ($VAT->GETVATList('',False) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_TVA[]" id="id_TVA" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="text" name="TAUX[]" value="<?= $data->TAUX ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
+							<td><input type="text" name="TAUX[]" value="<?= $data->TAUX ?>" ></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -332,15 +334,15 @@
 						foreach ($Allocations->GETAllocationsList('', false) as $data): ?>
 						<tr>
 							<td><?= $i ?> <input type="hidden" name="id_IMPUT[]" id="id_IMPUT" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
 							<td>
 								<select name="TVA[]">
 									<?= $VAT->GETVATList($data->TVA) ?>
 								</select>
 							</td>
-							<td><input type="text" name="COMPTE_TVA[]" value="<?= $data->COMPTE_TVA ?>" required="required"></td>
-							<td><input type="text" name="CODE_COMPTA[]" value="<?= $data->CODE_COMPTA ?>" required="required"></td>
+							<td><input type="text" name="COMPTE_TVA[]" value="<?= $data->COMPTE_TVA ?>" ></td>
+							<td><input type="text" name="CODE_COMPTA[]" value="<?= $data->CODE_COMPTA ?>" ></td>
 							<td>
 								<select name="TYPE_IMPUTATION[]">
 									<option value="1" <?= selected($data->TYPE_IMPUTATION, 1) ?>><?= $langue->show_text('TableSelect1') ?></option>
@@ -404,8 +406,8 @@
 						foreach ($PaymentSchedule->GETPaymentScheduleList('', false) as $data): ?>
 						<tr>
 							<td><input type="hidden" name="UpdateIdEcheancier[]" id="UpdateIdEcheancier" value="<?= $data->id ?>"></td>
-							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
 							<td><a href="admin.php?page=manage-accounting&Echeancier=<?= $data->id ?>">--></a></td>
 						</tr>
 						<?php $i++; endforeach; ?>
@@ -431,7 +433,7 @@
 				//generate liste of detail timeline payement
 			?>
 			<form method="post" name="Section" action="admin.php?page=manage-accounting&Echeancier=<?= $_GET['Echeancier'] ?>" class="content-form" >
-				<table class="content-table-decal">
+				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>
@@ -451,10 +453,10 @@
 						foreach ($PaymentScheduleLine->GETPaymentScheduleLineList($_GET['Echeancier'],false) as $data){		
 						?>
 						<tr>
-							<td><input type="hidden" name="UpdateIdLigneEcheancier[]" id="UpdateIdLigneEcheancier" value="<?= $data->id ?>" required="required"></td>
-							<td><input type="text"  name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><input type="number" name="POURC_MONTANT[]" value="<?= $data->POURC_MONTANT ?>" step=".001" required="required"></td>
-							<td><input type="number"  name="POURC_TVA[]" value="<?= $data->POURC_TVA ?>" step=".001" required="required"></td>
+							<td><input type="hidden" name="UpdateIdLigneEcheancier[]" id="UpdateIdLigneEcheancier" value="<?= $data->id ?>" ></td>
+							<td><input type="text"  name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
+							<td><input type="number" name="POURC_MONTANT[]" value="<?= $data->POURC_MONTANT ?>" step=".001" ></td>
+							<td><input type="number"  name="POURC_TVA[]" value="<?= $data->POURC_TVA ?>" step=".001" ></td>
 							<td>
 								<select name="CONDI_REG_ID[]">
 									<?=$PaymentCondition->GETPaymentConditionList($data->CONDI_REG_ID)?>
@@ -465,7 +467,7 @@
 									<?=$PaymentMethod->GETPaymentMethodList($data->MODE_REG_ID); ?>
 								</select>
 							</td>
-							<td><input type="number" class="input-moyen-vide" name="DELAI[]" value="<?= $data->DELAI ?>" required="required"></td>
+							<td><input type="number" class="input-moyen-vide" name="DELAI[]" value="<?= $data->DELAI ?>" ></td>
 						</tr>
 						<?php $CondiListe1 = '';$RegListe1 = '';  $i++; 
 							}  ?>
@@ -517,8 +519,8 @@
 						foreach ($Delevery->GETDeleveryList('', false) as $data): ?>
 						<tr>
 							<td><input type="hidden" name="UpdateIdTransport[]" id="UpdateIdTransport" value="<?= $data->id ?>" ></td>
-							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" required="required"></td>
-							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" required="required"></td>
+							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
+							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>

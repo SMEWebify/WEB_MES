@@ -205,12 +205,12 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input type=\"date\" name=\"AddDELAISigne[]\"  value=\"" + AddDELAISigne+"\" required=\"required\"></td>";
 		var ligne = ligne + "<td></td>";
 		var ligne = ligne + "</tr>";
-        $("table.content-table-devis").append(ligne);
+        $("table.content-table").append(ligne);
     });
     $(".delete").click(function() {
-        $("table.content-table-devis").find('input[name="select"]').each(function() {
+        $("table.content-table").find('input[name="select"]').each(function() {
             if ($(this).is(":checked")) {
-                $(this).parents("table.content-table-devis tr").remove();
+                $(this).parents("table.content-table tr").remove();
             }
         });
     });
@@ -218,20 +218,20 @@ $(document).ready(function() {
 </script>
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
-	<?php if(isset($_GET['quote']) AND !empty($_GET['quote'])){ ?>
+		<?php if(isset($_GET['quote']) AND !empty($_GET['quote'])){ ?>
 		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
 		<a href="index.php?page=document$type=quote&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Titre10'); ?></button>
-	<?php
-	}
-	else{?>
+		<?php
+		}
+		else{?>
 		<button class="tablinks" onclick="openDiv(event, 'div9')"><?=$langue->show_text('Title10'); ?></button>
-	<?php
-	}
-	?>
+		<?php
+		}
+		?>
 	</div>
 	<?php
 	
@@ -248,7 +248,8 @@ $(document).ready(function() {
 	if(isset($_GET['quote']) && !empty($_GET['quote'])){?>
 					
 						<div id="div8" class="tabcontent">
-							<form method="post" name="Coment" action="index.php?page=order&order=new" class="content-form" >	
+							<form method="post" name="Coment" action="index.php?page=order&order=new" class="content-form" >
+								<div class="row">	
 									<div class="column">
 										<table class="content-table" >
 											<thead>
@@ -280,54 +281,55 @@ $(document).ready(function() {
 													<?= $langue->show_text('TableSelectOrder') ?>
 												</th>
 											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td><input type="radio" id="new" name="ADD_ORDER_FROM_QUOTE" value="new" checked="checked"><label for="new"><?= $langue->show_text('TableNewOrder') ?></label></td>
-											</tr>
-											<?php
-											$query='SELECT '. TABLE_ERP_ORDER .'.id,
-															'. TABLE_ERP_ORDER .'.CODE,
-															'. TABLE_ERP_ORDER .'.LABEL,
-															'. TABLE_ERP_CLIENT_FOUR .'.NAME
-													FROM '. TABLE_ERP_ORDER .'
-														LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-													ORDER BY '. TABLE_ERP_ORDER .'.id';
-											$i = 1;
-											foreach ($bdd->GetQuery($query) as $data): ?>
-											<tr>
-												<td>
-													<input type="radio" id="new<?= $data->id ?>" name="ADD_ORDER_FROM_QUOTE" value="<?= $data->id ?>"><label for="new<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></label>
-												</td>
-											</tr>
-											<?php $i++; endforeach; ?>
-										</tbody>
-									</table>
-								</div>
-								<div class="column">
-									<table class="content-table" >
-										<thead>
-											<tr>
-												<th colspan="12" >
-												<?= $langue->show_text('TableGeneralInfo') ?>
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>
-												<?= $Form->input('hidden', 'QUOTE_ID', $Maindata->id) ?>
-													<?= $Form->input('hidden', 'CUSTOMER_ID', $Maindata->CUSTOMER_ID) ?>
-													<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(4)) ?>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableCreateOrder') ?>" />
-												</td>
-											</tr>
-										</tbody>
-									</table>
+											</thead>
+											<tbody>
+												<tr>
+													<td><input type="radio" id="new" name="ADD_ORDER_FROM_QUOTE" value="new" checked="checked"><label for="new"><?= $langue->show_text('TableNewOrder') ?></label></td>
+												</tr>
+												<?php
+												$query='SELECT '. TABLE_ERP_ORDER .'.id,
+																'. TABLE_ERP_ORDER .'.CODE,
+																'. TABLE_ERP_ORDER .'.LABEL,
+																'. TABLE_ERP_CLIENT_FOUR .'.NAME
+														FROM '. TABLE_ERP_ORDER .'
+															LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+														ORDER BY '. TABLE_ERP_ORDER .'.id';
+												$i = 1;
+												foreach ($bdd->GetQuery($query) as $data): ?>
+												<tr>
+													<td>
+														<input type="radio" id="new<?= $data->id ?>" name="ADD_ORDER_FROM_QUOTE" value="<?= $data->id ?>"><label for="new<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></label>
+													</td>
+												</tr>
+												<?php $i++; endforeach; ?>
+											</tbody>
+										</table>
+									</div>
+									<div class="column">
+										<table class="content-table" >
+											<thead>
+												<tr>
+													<th colspan="12" >
+													<?= $langue->show_text('TableGeneralInfo') ?>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+													<?= $Form->input('hidden', 'QUOTE_ID', $Maindata->id) ?>
+														<?= $Form->input('hidden', 'CUSTOMER_ID', $Maindata->CUSTOMER_ID) ?>
+														<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(4)) ?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableCreateOrder') ?>" />
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -335,7 +337,7 @@ $(document).ready(function() {
 		}else{ 
 			?>
 			<div id="div9" class="tabcontent">
-				<div class="column">
+				<div class="column-menu">
 						<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindQuote') ?>">
 						<ul id="myUL">
 							<?php

@@ -213,60 +213,11 @@ span.psw {
   left: 0%;
   }
 }
+
+
 /*--------------------------------------------*/
-/*-------------GRID CARD--------------*/
+/*------------- CARD TYPE --------------*/
 /*--------------------------------------------*/
-/* Float four columns side by side */
-.column {
-	float: left;
-	width: 30%;
-	padding: 0 10px;
-	margin-bottom:30px;
-}
-.column-half {
-	float: left;
-	width: 45%;
-
-	margin-bottom:30px;
-}
-.box {
-  display: grid;
-  grid-template-columns:  auto auto auto;
-  grid-gap: 10px;
-  padding: 10px;
-}
-.box > div {
-  padding: 20px 0;
-
-}
-.item1 {
-  grid-area: 2 / 1 / span 1 / span 2;
-}
-
-.dashboard{
-  float: left;
-  width: 30%;
-  margin:10px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	text-align: center;
-	background-color: white;;
-}
-
-.row {margin: 0 -5px;}
-
-.row:after {
-	content: "";
-	display: table;
-	clear: both;
-}
-
-@media screen and (max-width: 800px) {
-	.column {
-		width: 100%;
-		display: block;
-		margin-bottom: 20px;
-	}
-}
 
 .card {
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -323,8 +274,7 @@ ul, #myUL {
   font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
-  margin-bottom: 12px;
-  width: 89%;
+  width: 90%;
 }
 
 #myUL {
@@ -426,30 +376,7 @@ ul, #myUL {
 /*-------GRAND_CALLENDRIER------------*/
 /*---------------------------------------------*/
 
-.content-table-decal .evenement h6{
-	font-size:0.9em ;
-	margin:0;
-	padding:0;
-}
-.content-table-decal .evenement{
-	font-weight:normal ;
-	border: 2px solid #60738B;
-	background-color: #ffffff; 
-	color: black; 
-	padding: 2px;
-	margin-top:1px;
-}
-
-.content-table-decal .today{
-	font-weight:bold ;
-	border: 1px solid black;
-}
-.content-table-decal .jour{
-	background-color: #52A19A;
-	display: block;
-	color: black; 
-}
- .jour_vide {
+.jour_vide {
  	border: 1px solid white;
  	background-color: white;
 	width: 100px;
@@ -457,10 +384,9 @@ ul, #myUL {
 	padding: 2px;
 }
 .eventslist{
- 	background-color: gray;
-	width: 100px;
+ 	background-color: rgb(253, 219, 219);
+	width: 100%;
 	height: 85px;
-	border: 1px solid gray; 
 	padding: 2px;
 }
 
@@ -515,4 +441,61 @@ ul, #myUL {
 
 .size{
   font-size:12px;
+}
+
+
+/*---------------------------------------------*/
+/*-------GRID TYPE------------*/
+/*---------------------------------------------*/
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  -ms-flex: 30%; /* IE10 */
+  flex: 30%;
+  margin: 0px 8px 8px 8px;
+}
+
+.column-menu {
+  -ms-flex: 30%; /* IE10 */
+  flex: 30%;
+  max-width:30%;
+  margin: 8px 8px 8px 8px;
+}
+.column-large {
+  -ms-flex: 60%; /* IE10 */
+  flex: 60%;
+  margin: 8px 8px 8px 8px;
+}
+
+.column table{
+  margin-top: 8px;
+  vertical-align: top;
+  width: 100%;
+}
+
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .column {
+    -ms-flex: 50%;
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    -ms-flex: 100%;
+    flex: 100%;
+    max-width: 100%;
+  }
 }

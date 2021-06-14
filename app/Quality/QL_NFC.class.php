@@ -100,15 +100,22 @@ class QL_NFC Extends SQL  {
         return $QuoteCount;
     }
 
-    public function GETQL_NFCList($IdData=0){
+    public function GETQL_NFCList($IdData=0,  $Select = true){
 
         $this->QL_NFC ='<option value="0">Aucune</option>';
-        $query='SELECT Id, CODE, LABEL   FROM '. TABLE_ERP_NFC .'';
-		foreach ($this->GetQuery($query) as $data){
-           
-			$this->QL_NFC .='<option value="'. $data->Id .'" '. selected($IdData, $data->Id) .'>'. $data->CODE .'</option>';
-		}
+        $query='SELECT id, CODE, LABEL, ETAT   FROM '. TABLE_ERP_NFC .'';
+        if($Select){
+            foreach ($this->GetQuery($query) as $data){
+            
+                $this->QL_NFC .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->CODE .'</option>';
+            }
+            
+            return  $this->QL_NFC;
+
+        }else {
+
+            return  $this->GetQuery($query);
+        }
         
-        return  $this->QL_NFC;
     }
 }

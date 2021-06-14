@@ -312,210 +312,212 @@
 ?>
 	</div>
 	<div id="div1" class="tabcontent">
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
-				foreach ($bdd->GetQuery($query) as $data): ?>
-				<li><a href="admin.php?page=manage-companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
-		</div>
-			<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
-				<table class="content-table">
-					<thead>
-						<tr>
-							<th colspan="7"> <br/></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td ><?=$langue->show_text('TableCODE'); ?> : <?=$DisplayCode;?></td>
-							<td colspan="3"><?=$langue->show_text('TableNameCompany'); ?> <input type="text" name="NameSte" value="<?=$SteNAME;?>"></td>
-							<td><?=$langue->show_text('TableDateCreation') .' '. $SteDATE_CREA ?> </td>
-							<td></td>
-							<td><input type="hidden" name="id" value="<?=$SteId; ?>" size="10"></td>
-						</tr>
-						<tr>
-							<td><?=$langue->show_text('TableWebSite'); ?></td>
-							<td><?=$langue->show_text('TableFacebook'); ?></td>
-							<td><?=$langue->show_text('TableTwitter'); ?></td>
-							<td><?=$langue->show_text('TableLinked'); ?></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><input type="text" name="WebSiteSte" value="<?= $SteWEBSITE;?>" size="20"></td>
-							<td><input type="text" name="FbSiteSte" value="<?= $SteFBSITE;?>" size="20"></td>
-							<td ><input type="text" name="TwitterSte" value="<?= $SteTWITTERSITE;?>" size="20"></td>
-							<td ><input type="text" name="LkdSte" value="<?= $SteLKDSITE;?>" size="20"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><?=$langue->show_text('TableSIREN'); ?></td>
-							<td><?=$langue->show_text('TableAPE'); ?></td>
-							<td><?=$langue->show_text('TableTVAINTRA'); ?></td>
-							<td><?=$langue->show_text('TableTVAType'); ?></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td ><input type="text" name="SIRENSte" value="<?= $SteSIREN;?>" size="10"></td>
-							<td ><input type="text" name="APESte" value="<?= $SteAPE;?>" size="10"></td>
-							<td ><input type="text" name="TVAINTRASte" value="<?= $SteTVA_INTRA;?>" size="10"></td>
-							<td >
-								<select name="TAUXTVASte">
-									<?= $VAT->GETVATList($SteTVA_ID) ?>
-								</select>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td colspan="7" >Logo : <input type="file" name="fichier_LOGOSte" /></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td colspan="5"><img src="<?=PICTURE_FOLDER.COMPANIES_FOLDER.$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
-							<td></td>
-						</tr>
-					</tbody>
-					<thead>
-						<tr>
-							<th colspan="7"><?=$langue->show_text('TableGeneralCustomer'); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?=$langue->show_text('TableCustomerStatus'); ?></td>
-							<td >
-								<select name="StatuSte">
-									<option value="0"  <?php  echo selected($SteSTATU_CLIENT, 0) ?>><?=$langue->show_text('SelectInactive'); ?></option>
-									<option value="1"  <?php  echo selected($SteSTATU_CLIENT, 1) ?>><?=$langue->show_text('SelectProspect'); ?></option>
-									<option value="2"  <?php  echo selected($SteSTATU_CLIENT, 2) ?>><?=$langue->show_text('SelectCustomer'); ?></option>
-								</select>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><?=$langue->show_text('TableCondiList'); ?></td>
-							<td><?=$langue->show_text('TableMethodList'); ?></td>
-							<td><?=$langue->show_text('TableDiscount'); ?></td>
-							<td colspan="2"><?=$langue->show_text('TableSalesManager'); ?></td>
-							<td colspan="2"></td>
-						</tr>
-						<tr>
-							<td >
-								<select name="CondiSte">
-									<?=$PaymentCondition->GETPaymentConditionList($SteCOND_REG_CLIENT_ID)?>
-								</select>
-							</td>
-							<td >
-								<select name="RegSte">
-									<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_CLIENT_ID); ?>
-								</select>
-							</td>
-							<td ><input type="number" name="RemiseSte" value="<?= $SteREMISE;?>" size="10"></td>
-							<td colspan="2">
-								<select name="RepsComSte">
-									<?=$Employees->GETEmployeesList($SteRESP_COM_ID) ?>
-								</select>
-							</td>
-							<td colspan="2">
-							</td>
-						</tr>
-						<tr>
-							<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
-							<td><?=$langue->show_text('TableSideAccount'); ?></td>
-							<td></td>
-							<td colspan="2"><?=$langue->show_text('TableTechnicalManager'); ?></td>
-							<td colspan="2"></td>
-						</tr>
-						<tr>
-							<td><input type="number" name="CompteGeSte" value="<?= $SteCOMPTE_GEN_CLIENT;?>"></td>
-							<td ><input type="number" name="CompteAuxSte" value="<?= $SteCOMPTE_AUX_CLIENT;?>" ></td>
-							<td></td>
-							<td colspan="2">
-								<select name="RespTechSte">
-									<?=$Employees->GETEmployeesList($SteRESP_TECH_ID) ?>
-								</select>
-							</td>
-							<td colspan="2"></td>
-						</tr>
-					</tbody>
-					<thead>
-						<tr>
-							<th colspan="7"><?=$langue->show_text('TableGeneralSupplier'); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td ><?=$langue->show_text('TableSupplierStatus'); ?></td>
-							<td >
-								<select name="StatuFour">
-									<option value="0" <?php  echo selected($SteSTATU_FOUR, 0) ?> ><?=$langue->show_text('SelectInactive'); ?></option>
-									<option value="1" <?php  echo selected($SteSTATU_FOUR, 1) ?> ><?=$langue->show_text('SelectSupllier'); ?></option>
-								</select>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><?=$langue->show_text('TableCondiList'); ?></td>
-							<td><?=$langue->show_text('TableMethodList'); ?></td>
-							<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
-							<td><?=$langue->show_text('TableSideAccount'); ?></td>
-							<td colspan="2"><?=$langue->show_text('TableReceptionControl'); ?></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td >
-								<select name="CondiFourSte">
-									<?=$PaymentCondition->GETPaymentConditionList($SteCOND_REG_FOUR_ID)?>
-								</select>
-							</td>
-							<td >
-								<select name="RegFourSte">
-									<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_FOUR_ID); ?>
-								</select>
-							</td>
-							<td ><input type="number" name="CompteGeFourSte" value="<?= $SteCOMPTE_GEN_FOUR;?>" ></td>
-							<td ><input type="number" name="CompteAuxFourSte" value="<?= $SteCOMPTE_AUX_FOUR;?>" ></td>
-							<td colspan="2">
-								<select name="ControlFour">
-									<option value="0" <?php  echo selected($SteCONTROLE_FOUR, 0) ?> ><?=$langue->show_text('SelectNoControl'); ?></option>
-									<option value="1" <?php  echo selected($SteCONTROLE_FOUR, 1) ?> ><?=$langue->show_text('SelectControlWithoutBlok'); ?></option>
-									<option value="2" <?php  echo selected($SteCONTROLE_FOUR, 2) ?> ><?=$langue->show_text('SelectControlWithBlok'); ?></option>
-								</select>
-							</td>
-							<td></td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td colspan="7" >
-								<br/>
-								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
-								<br/>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
+		<div class="row">
+			<div class="column-menu">
+				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
+				<ul id="myUL">
+					<?php
+					//generate list for datalist find input
+					$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
+					foreach ($bdd->GetQuery($query) as $data): ?>
+					<li><a href="admin.php?page=manage-companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
+					<?php $i++; endforeach; ?>
+				</ul>
+			</div>
+				<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
+					<table class="content-table">
+						<thead>
+							<tr>
+								<th colspan="7"> <br/></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td ><?=$langue->show_text('TableCODE'); ?> : <?=$DisplayCode;?></td>
+								<td colspan="3"><?=$langue->show_text('TableNameCompany'); ?> <input type="text" name="NameSte" value="<?=$SteNAME;?>"></td>
+								<td><?=$langue->show_text('TableDateCreation') .' '. $SteDATE_CREA ?> </td>
+								<td></td>
+								<td><input type="hidden" name="id" value="<?=$SteId; ?>" size="10"></td>
+							</tr>
+							<tr>
+								<td><?=$langue->show_text('TableWebSite'); ?></td>
+								<td><?=$langue->show_text('TableFacebook'); ?></td>
+								<td><?=$langue->show_text('TableTwitter'); ?></td>
+								<td><?=$langue->show_text('TableLinked'); ?></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><input type="text" name="WebSiteSte" value="<?= $SteWEBSITE;?>" size="20"></td>
+								<td><input type="text" name="FbSiteSte" value="<?= $SteFBSITE;?>" size="20"></td>
+								<td ><input type="text" name="TwitterSte" value="<?= $SteTWITTERSITE;?>" size="20"></td>
+								<td ><input type="text" name="LkdSte" value="<?= $SteLKDSITE;?>" size="20"></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><?=$langue->show_text('TableSIREN'); ?></td>
+								<td><?=$langue->show_text('TableAPE'); ?></td>
+								<td><?=$langue->show_text('TableTVAINTRA'); ?></td>
+								<td><?=$langue->show_text('TableTVAType'); ?></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td ><input type="text" name="SIRENSte" value="<?= $SteSIREN;?>" size="10"></td>
+								<td ><input type="text" name="APESte" value="<?= $SteAPE;?>" size="10"></td>
+								<td ><input type="text" name="TVAINTRASte" value="<?= $SteTVA_INTRA;?>" size="10"></td>
+								<td >
+									<select name="TAUXTVASte">
+										<?= $VAT->GETVATList($SteTVA_ID) ?>
+									</select>
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="7" >Logo : <input type="file" name="fichier_LOGOSte" /></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="5"><img src="<?=PICTURE_FOLDER.COMPANIES_FOLDER.$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
+								<td></td>
+							</tr>
+						</tbody>
+						<thead>
+							<tr>
+								<th colspan="7"><?=$langue->show_text('TableGeneralCustomer'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?=$langue->show_text('TableCustomerStatus'); ?></td>
+								<td >
+									<select name="StatuSte">
+										<option value="0"  <?php  echo selected($SteSTATU_CLIENT, 0) ?>><?=$langue->show_text('SelectInactive'); ?></option>
+										<option value="1"  <?php  echo selected($SteSTATU_CLIENT, 1) ?>><?=$langue->show_text('SelectProspect'); ?></option>
+										<option value="2"  <?php  echo selected($SteSTATU_CLIENT, 2) ?>><?=$langue->show_text('SelectCustomer'); ?></option>
+									</select>
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><?=$langue->show_text('TableCondiList'); ?></td>
+								<td><?=$langue->show_text('TableMethodList'); ?></td>
+								<td><?=$langue->show_text('TableDiscount'); ?></td>
+								<td colspan="2"><?=$langue->show_text('TableSalesManager'); ?></td>
+								<td colspan="2"></td>
+							</tr>
+							<tr>
+								<td >
+									<select name="CondiSte">
+										<?=$PaymentCondition->GETPaymentConditionList($SteCOND_REG_CLIENT_ID)?>
+									</select>
+								</td>
+								<td >
+									<select name="RegSte">
+										<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_CLIENT_ID); ?>
+									</select>
+								</td>
+								<td ><input type="number" name="RemiseSte" value="<?= $SteREMISE;?>" size="10"></td>
+								<td colspan="2">
+									<select name="RepsComSte">
+										<?=$Employees->GETEmployeesList($SteRESP_COM_ID) ?>
+									</select>
+								</td>
+								<td colspan="2">
+								</td>
+							</tr>
+							<tr>
+								<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
+								<td><?=$langue->show_text('TableSideAccount'); ?></td>
+								<td></td>
+								<td colspan="2"><?=$langue->show_text('TableTechnicalManager'); ?></td>
+								<td colspan="2"></td>
+							</tr>
+							<tr>
+								<td><input type="number" name="CompteGeSte" value="<?= $SteCOMPTE_GEN_CLIENT;?>"></td>
+								<td ><input type="number" name="CompteAuxSte" value="<?= $SteCOMPTE_AUX_CLIENT;?>" ></td>
+								<td></td>
+								<td colspan="2">
+									<select name="RespTechSte">
+										<?=$Employees->GETEmployeesList($SteRESP_TECH_ID) ?>
+									</select>
+								</td>
+								<td colspan="2"></td>
+							</tr>
+						</tbody>
+						<thead>
+							<tr>
+								<th colspan="7"><?=$langue->show_text('TableGeneralSupplier'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td ><?=$langue->show_text('TableSupplierStatus'); ?></td>
+								<td >
+									<select name="StatuFour">
+										<option value="0" <?php  echo selected($SteSTATU_FOUR, 0) ?> ><?=$langue->show_text('SelectInactive'); ?></option>
+										<option value="1" <?php  echo selected($SteSTATU_FOUR, 1) ?> ><?=$langue->show_text('SelectSupllier'); ?></option>
+									</select>
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><?=$langue->show_text('TableCondiList'); ?></td>
+								<td><?=$langue->show_text('TableMethodList'); ?></td>
+								<td><?=$langue->show_text('TableGeneralAccount'); ?></td>
+								<td><?=$langue->show_text('TableSideAccount'); ?></td>
+								<td colspan="2"><?=$langue->show_text('TableReceptionControl'); ?></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td >
+									<select name="CondiFourSte">
+										<?=$PaymentCondition->GETPaymentConditionList($SteCOND_REG_FOUR_ID)?>
+									</select>
+								</td>
+								<td >
+									<select name="RegFourSte">
+										<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_FOUR_ID); ?>
+									</select>
+								</td>
+								<td ><input type="number" name="CompteGeFourSte" value="<?= $SteCOMPTE_GEN_FOUR;?>" ></td>
+								<td ><input type="number" name="CompteAuxFourSte" value="<?= $SteCOMPTE_AUX_FOUR;?>" ></td>
+								<td colspan="2">
+									<select name="ControlFour">
+										<option value="0" <?php  echo selected($SteCONTROLE_FOUR, 0) ?> ><?=$langue->show_text('SelectNoControl'); ?></option>
+										<option value="1" <?php  echo selected($SteCONTROLE_FOUR, 1) ?> ><?=$langue->show_text('SelectControlWithoutBlok'); ?></option>
+										<option value="2" <?php  echo selected($SteCONTROLE_FOUR, 2) ?> ><?=$langue->show_text('SelectControlWithBlok'); ?></option>
+									</select>
+								</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="7" >
+									<br/>
+									<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+									<br/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
 		</div>
 <?php
 	// not display this content if we dont have customer load

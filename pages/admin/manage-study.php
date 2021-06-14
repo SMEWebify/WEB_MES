@@ -9,6 +9,7 @@
 	use \App\Study\Unit;
 	use \App\Study\SubFamily;
 	use \App\Planning\Task;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -26,6 +27,7 @@
 	$SubFamily = new SubFamily();
 	$Task = new Task();
 	$date = new DateTime();
+	$SearchMenu = new SearchMenu();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -316,171 +318,168 @@
 	<?php } ?>
 	</div>
 	<div id="div1" class="tabcontent" >
-		<div class="column">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindArticle'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				foreach ($Article->GETArticleList('',false) as $data): ?>
-				<li><a href="admin.php?page=manage-study&id=<?= $data->id ?>&type=component"><?= $data->CODE ?> - <?= $data->LABEL ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
+		<div class="row">
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($Article->GETArticleList('',false), 'admin.php?page=manage-study&id', $langue->show_text('FindArticle'), '&type=component' ); ?>
+			</div>
+			<div class="column">
+				<form method="post" name="Company" action="<?= $actionForm ?>" class="content-form" enctype="multipart/form-data" >
+					<table class="content-table">
+						<thead>
+							<tr>
+								<th colspan="6"> <br/></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?= $langue->show_text('TableCODE') ?></td>
+								<td><?= $langue->show_text('TableLabel') ?></td>
+								<td><?= $langue->show_text('Tableindex') ?></td>
+								<td><?= $langue->show_text('TableService') ?></td>
+								<td><?= $langue->show_text('TableFamilly') ?></td>
+								<td><?= $langue->show_text('TableType') ?></td>
+							</tr>
+							<tr>
+								<td >
+									<input type="hidden" name="IDArticle" value="<?= $ArticleId ?>">
+									<?= $DisplayCode ?>
+								</td>
+								<td >
+									<input type="text" name="LABELAtricle" value="<?= $Articledata->LABEL ?>" >
+								</td>
+								<td >
+									<input type="text" name="INDArticle" value="<?= $Articledata->IND ?>" size="10">
+								</td>
+								<td >
+									<select name="PRESTA_IDAtricle">
+										<?= $Prestation ->GetPrestationList($Articledata->PRESTATION_ID,true) ?>
+									</select>
+								</td>
+								<td >
+									<select name="FAMILLE_IDArticle">
+									<?= $SubFamily->GetSubFamilyList($Articledata->FAMILLE_ID, true) ?>
+									</select>
+								</td>
+								<td>
+									<?php
+										if($Articledata->TYPE == 1){ $Type = $langue->show_text('SelectProductive') ;}
+										if($Articledata->TYPE == 2){ $Type =  $langue->show_text('SelectRawMat') ;}
+										if($Articledata->TYPE == 3){ $Type =  $langue->show_text('SelectRawMatSheet') ;}
+										if($Articledata->TYPE == 4){ $Type = $langue->show_text('SelectRawMatProfil');}
+										if($Articledata->TYPE == 5){ $Type = $langue->show_text('SelectRawMatBlock') ;}
+										if($Articledata->TYPE == 6){ $Type = $langue->show_text('SelectSupplies') ;}
+										if($Articledata->TYPE == 7){ $Type = $langue->show_text('SelectSubcontracting');}
+										if($Articledata->TYPE == 8){ $Type = $langue->show_text('SelectCompoundItem') ;}
+										echo $Type;
+									?>
+								</td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableBuy') ?></td>
+								<td><?= $langue->show_text('TablePurchaseUnit') ?></td>
+								<td><?= $langue->show_text('TableSold') ?></td>
+								<td><?= $langue->show_text('TableSalePrice') ?></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td >
+									<select name="ACHETERArticle">
+										<option value="0" <?= selected($Articledata->ACHETER, 0) ?>><?= $langue->show_text('No') ?></option>
+										<option value="1" <?= selected($Articledata->ACHETER, 1) ?>><?= $langue->show_text('Yes') ?></option>
+									</select>
+								</td>
+								<td >
+									<input type="number" name="PRIXACHArticle" value="<?= $Articledata->PRIX_ACHETER ?>" step=".001" required="required">
+								</td>
+								<td >
+									<select name="VENDUArticle">
+										<option value="0" <?= selected($Articledata->VENDU, 0) ?>><?= $langue->show_text('No') ?></option>
+										<option value="1" <?= selected($Articledata->VENDU, 1) ?>><?= $langue->show_text('Yes') ?></option>
+									</select>
+								</td>
+								</td>
+								<td >
+									<input type="number" name="PRIXVENArticle" value="<?= $Articledata->PRIX_VENDU ?>" step=".001" required="required">
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableUnit') ?></td>
+								<td><?= $langue->show_text('TableMaterial') ?></td>
+								<td><?= $langue->show_text('TableThickness') ?></td>
+								<td><?= $langue->show_text('TableWeight') ?></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td >
+									<select name="UNITArticle">
+										<?= $Unit->GetUnitList($Articledata->UNITE_ID, true) ?>
+									</select>
+								</td>
+								<td >
+									<input type="text" name="MATIEREArticle" value="<?= $Articledata->MATIERE ?>" size="10">
+								</td>
+								<td >
+									<input type="number" name="EPArticle" value="<?= $Articledata->EP ?>" size="10" step=".001" required="required">
+								</td>
+								<td >
+									<input type="number" name="POIRDSArticle" value="<?= $Articledata->POIDS ?>" size="10" step=".001" required="required">
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><?= $langue->show_text('TableDimX') ?></td>
+								<td><?= $langue->show_text('TableDimY') ?></td>
+								<td><?= $langue->show_text('TableDimZ') ?></td>
+								<td><?= $langue->show_text('TableSurDimX') ?></td>
+								<td><?= $langue->show_text('TableSurDimY') ?></td>
+								<td><?= $langue->show_text('TableSurDimZ') ?></td>
+							</tr>
+							<tr>
+								<td >
+									<input type="number" name="DIMXArticle" value="<?= $Articledata->DIM_X ?>" required="required">
+								</td>
+								<td >
+									<input type="number" name="DIMYArticle" value="<?= $Articledata->DIM_Y?>" size="10" required="required">
+								</td>
+								<td >
+									<input type="number" name="DIMZArticle" value="<?= $Articledata->DIM_Z ?>" required="required">
+								</td>
+								<td >
+									<input type="number" name="SURDIMXArticle" value="<?= $Articledata->SUR_X ?>" size="10" required="required">
+								</td>
+								<td>
+									<input type="number" name="SURDIMYArticle" value="<?= $Articledata->SUR_Y ?>" required="required">
+								</td>
+								<td>
+									<input type="number" name="SURDIMZArticle" value="<?= $Articledata->SUR_Z ?>" size="10" required="required">
+								</td>
+							</tr>
+							<tr>
+								<td colspan=6"><?= $langue->show_text('TablePicture') ?></td>
+							</tr>
+							<tr>
+								<td colspan=6" ><input type="file" name="FichierImageArticle" /></td>
+							</tr>
+							<tr>
+								<td colspan=6"><img src="<?= PICTURE_FOLDER.STUDY_ARTICLE_FOLDER.$Articledata->IMAGE ?>" title="Image article" alt="Article" style="width: 400px;"/></td>
+							</tr>
+							<tr>
+								<td colspan="6" >
+									<br/>
+									<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
+									<br/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
 		</div>
-		<form method="post" name="Company" action="<?= $actionForm ?>" class="content-form" enctype="multipart/form-data" >
-				<table class="content-table">
-					<thead>
-						<tr>
-							<th colspan="6"> <br/></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?= $langue->show_text('TableCODE') ?></td>
-							<td><?= $langue->show_text('TableLabel') ?></td>
-							<td><?= $langue->show_text('Tableindex') ?></td>
-							<td><?= $langue->show_text('TableService') ?></td>
-							<td><?= $langue->show_text('TableFamilly') ?></td>
-							<td><?= $langue->show_text('TableType') ?></td>
-						</tr>
-						<tr>
-							<td >
-								<input type="hidden" name="IDArticle" value="<?= $ArticleId ?>">
-								<?= $DisplayCode ?>
-							</td>
-							<td >
-								<input type="text" name="LABELAtricle" value="<?= $Articledata->LABEL ?>" >
-							</td>
-							<td >
-								<input type="text" name="INDArticle" value="<?= $Articledata->IND ?>" size="10">
-							</td>
-							<td >
-								<select name="PRESTA_IDAtricle">
-									<?= $Prestation ->GetPrestationList($Articledata->PRESTATION_ID,true) ?>
-								</select>
-							</td>
-							<td >
-								<select name="FAMILLE_IDArticle">
-								<?= $SubFamily->GetSubFamilyList($Articledata->FAMILLE_ID, true) ?>
-								</select>
-							</td>
-							<td>
-								<?php
-									if($Articledata->TYPE == 1){ $Type = $langue->show_text('SelectProductive') ;}
-									if($Articledata->TYPE == 2){ $Type =  $langue->show_text('SelectRawMat') ;}
-									if($Articledata->TYPE == 3){ $Type =  $langue->show_text('SelectRawMatSheet') ;}
-									if($Articledata->TYPE == 4){ $Type = $langue->show_text('SelectRawMatProfil');}
-									if($Articledata->TYPE == 5){ $Type = $langue->show_text('SelectRawMatBlock') ;}
-									if($Articledata->TYPE == 6){ $Type = $langue->show_text('SelectSupplies') ;}
-									if($Articledata->TYPE == 7){ $Type = $langue->show_text('SelectSubcontracting');}
-									if($Articledata->TYPE == 8){ $Type = $langue->show_text('SelectCompoundItem') ;}
-									echo $Type;
-								?>
-							</td>
-						</tr>
-						<tr>
-							<td><?= $langue->show_text('TableBuy') ?></td>
-							<td><?= $langue->show_text('TablePurchaseUnit') ?></td>
-							<td><?= $langue->show_text('TableSold') ?></td>
-							<td><?= $langue->show_text('TableSalePrice') ?></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td >
-								<select name="ACHETERArticle">
-									<option value="0" <?= selected($Articledata->ACHETER, 0) ?>><?= $langue->show_text('No') ?></option>
-									<option value="1" <?= selected($Articledata->ACHETER, 1) ?>><?= $langue->show_text('Yes') ?></option>
-								</select>
-							</td>
-							<td >
-								<input type="number" name="PRIXACHArticle" value="<?= $Articledata->PRIX_ACHETER ?>" step=".001" required="required">
-							</td>
-							<td >
-								<select name="VENDUArticle">
-									<option value="0" <?= selected($Articledata->VENDU, 0) ?>><?= $langue->show_text('No') ?></option>
-									<option value="1" <?= selected($Articledata->VENDU, 1) ?>><?= $langue->show_text('Yes') ?></option>
-								</select>
-							</td>
-							</td>
-							<td >
-								<input type="number" name="PRIXVENArticle" value="<?= $Articledata->PRIX_VENDU ?>" step=".001" required="required">
-							</td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><?= $langue->show_text('TableUnit') ?></td>
-							<td><?= $langue->show_text('TableMaterial') ?></td>
-							<td><?= $langue->show_text('TableThickness') ?></td>
-							<td><?= $langue->show_text('TableWeight') ?></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td >
-								<select name="UNITArticle">
-									<?= $Unit->GetUnitList($Articledata->UNITE_ID, true) ?>
-								</select>
-							</td>
-							<td >
-								<input type="text" name="MATIEREArticle" value="<?= $Articledata->MATIERE ?>" size="10">
-							</td>
-							<td >
-								<input type="number" name="EPArticle" value="<?= $Articledata->EP ?>" size="10" step=".001" required="required">
-							</td>
-							<td >
-								<input type="number" name="POIRDSArticle" value="<?= $Articledata->POIDS ?>" size="10" step=".001" required="required">
-							</td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><?= $langue->show_text('TableDimX') ?></td>
-							<td><?= $langue->show_text('TableDimY') ?></td>
-							<td><?= $langue->show_text('TableDimZ') ?></td>
-							<td><?= $langue->show_text('TableSurDimX') ?></td>
-							<td><?= $langue->show_text('TableSurDimY') ?></td>
-							<td><?= $langue->show_text('TableSurDimZ') ?></td>
-						</tr>
-						<tr>
-							<td >
-								<input type="number" name="DIMXArticle" value="<?= $Articledata->DIM_X ?>" required="required">
-							</td>
-							<td >
-								<input type="number" name="DIMYArticle" value="<?= $Articledata->DIM_Y?>" size="10" required="required">
-							</td>
-							<td >
-								<input type="number" name="DIMZArticle" value="<?= $Articledata->DIM_Z ?>" required="required">
-							</td>
-							<td >
-								<input type="number" name="SURDIMXArticle" value="<?= $Articledata->SUR_X ?>" size="10" required="required">
-							</td>
-							<td>
-								<input type="number" name="SURDIMYArticle" value="<?= $Articledata->SUR_Y ?>" required="required">
-							</td>
-							<td>
-								<input type="number" name="SURDIMZArticle" value="<?= $Articledata->SUR_Z ?>" size="10" required="required">
-							</td>
-						</tr>
-						<tr>
-							<td colspan=6"><?= $langue->show_text('TablePicture') ?></td>
-						</tr>
-						<tr>
-							<td colspan=6" ><input type="file" name="FichierImageArticle" /></td>
-						</tr>
-						<tr>
-							<td colspan=6"><img src="<?= PICTURE_FOLDER.STUDY_ARTICLE_FOLDER.$Articledata->IMAGE ?>" title="Image article" alt="Article" style="width: 400px;"/></td>
-						</tr>
-						<tr>
-							<td colspan="6" >
-								<br/>
-								<?= $Form->submit($langue->show_text('TableUpdateButton')) ?> <br/>
-								<br/>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
 	</div>
 	<?php
 	if(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){

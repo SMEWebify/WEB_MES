@@ -11,7 +11,7 @@ class QL_Action Extends SQL  {
     Public $DATE;
     Public $CREATEUR_ID;
     Public $TYPE;
-    Public $STATU;
+    Public $ETAT;
     Public $RESP_ID;
     Public $PB_DESCP;
     Public $CAUSE;
@@ -49,7 +49,7 @@ class QL_Action Extends SQL  {
                                                 '. TABLE_ERP_QL_ACTION .'.DATE,
                                                 '. TABLE_ERP_QL_ACTION .'.CREATEUR_ID,
                                                 '. TABLE_ERP_QL_ACTION .'.TYPE,
-                                                '. TABLE_ERP_QL_ACTION .'.STATU,
+                                                '. TABLE_ERP_QL_ACTION .'.ETAT,
                                                 '. TABLE_ERP_QL_ACTION .'.RESP_ID,
                                                 '. TABLE_ERP_QL_ACTION .'.PB_DESCP,
                                                 '. TABLE_ERP_QL_ACTION .'.CAUSE,
@@ -67,7 +67,7 @@ class QL_Action Extends SQL  {
     public function GETQL_ActionList($IdData=0,  $Select = true){
 
         $this->QL_ACTIONList ='';
-        $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_QL_ACTION .' ORDER BY CODE';
+        $query='SELECT id, CODE, LABEL, ETAT   FROM '. TABLE_ERP_QL_ACTION .' ORDER BY CODE';
         if($Select){
             foreach ($this->GetQuery($query) as $data){
             

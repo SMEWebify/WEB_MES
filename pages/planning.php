@@ -54,7 +54,7 @@
 	</div>
 	<div id="div1" class="tabcontent" >
 		<div id="grand_calendrier">
-			<table class="content-table-decal">
+			<table class="content-table">
 			<thead>
 				<tr>
 					<th colspan="7">
@@ -187,7 +187,7 @@
 
 		if((substr(strftime('%A', $timestampreference), 0, 2)==$correspondancejourfr[$valeur] || strtolower(substr(strftime('%A', $timestampreference), 0, 2))==$correspondancejouren[$valeur])&& $jour<=$nombrejours){
 								echo "\n\t\t\t\t\t\t\t\t";
-								echo '<td' ;
+								echo '<td style="width:14%;" ' ;
 
 								if($timestampreference==mktime(0, 0, 0)){
 									echo 'class="today" ';
@@ -203,13 +203,13 @@
 
 								if(in_array($annee.'-'.$mois.'-'.$jour, $datesdebut) || in_array($annee.'-'.$mois.'-'.$jour, $datesfin)){
 									echo "\n\t\t\t\t\t\t\t\t\t\t";
-									echo '<div class="evenement">' ;
+									echo '<div class="evenement"><p>' ;
 									foreach($cles as $cle){
 										
-											echo '<h6><a href="index.php?page=order&order='.$id[$cle].'">'.$titres[$cle].'</a></h6>' ;
+											echo '<a href="index.php?page=order&order='.$id[$cle].'">'.$titres[$cle].'</a><br/>' ;
 									}
 									echo "\n\t\t\t\t\t\t\t\t\t\t";
-									echo '</div>' ;
+									echo '</p></div>' ;
 								}
 						echo "\n\t\t\t\t\t\t\t\t\t";
 						echo '</div>
@@ -460,7 +460,7 @@
 		<?php endif; ?>
 	</div>
 	<div id="div5" class="tabcontent" >
-		<div class="column">
+		<div class="column-menu">
 					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindTask') ?>">
 					<ul id="myUL">
 						<?php

@@ -185,91 +185,90 @@
 
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title3'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
-		<div class="timeline">
-		<?php
-		// Get general info for timeline
-		$query ='SELECT id, ETAT, TIMESTAMP, TEXT FROM '. TABLE_ERP_INFO_GENERAL .' WHERE ETAT =1 ORDER BY id DESC LIMIT 0, 10';
-
-		$class = array('left', 'right');
-		$nb = count($class);
-		$i = 0;
-		foreach ($bdd->GetQuery($query) as $data): ?>
-			<div class="container-timeline <?= $class[$i%$nb] ?>">
-				<div class="content-timeline">
-					<h2><?= format_temps($data->TIMESTAMP) ?></h2>
-					<p> <?= nl2br(htmlspecialchars($data->TEXT)) ?></p>
-				</div>
-			</div>
-		<?php $i++; endforeach; ?>
-		</div>
-	</div>
-	<div id="div2" class="tabcontent" >
-		<div class="column-half">
-			<div class="dashboard">
+		<div class="row">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $Companies->GETCompanieCount(); ?>+</h3>
 				<p>Clients</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $User->GETUserCount(); ?></h3>
 				<p>User</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3>+</h3>
 				<p>Empty</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>New month quote</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP) AND ETAT=3'); ?>+</h3>
 				<p>Win month quote</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3>+</h3>
 				<p>Empty</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $Order->GETOrderCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>New month order</p>
 			</div>
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3>+</h3>
 				<p>Empty</p>
 			</div>
 			
-			<div class="dashboard">
+			<div class="column">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $QL_FNC->GETQNFCCount('',' WHERE MONTH(CREATED) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>Current month Non-compliance Record</p>
 			</div>	
+			<div class="column">
+				<div id="chart_div" style="width: 100%; height: 400px;"></div>
+			</div>
+			<div class="column">
+				<div id="piechart" style="width: 100%; height: 300px;"></div>
+			</div>
+			<div class="column">
+				<div id="columnchart_values" style="width: 100%; height: 300px;"></div>
+			</div>
+			<div class="column">
+				<div id="barchart_values" style="width: 900px; height: 300px;"></div>
+			</div>
 		</div>
-		<div class="column-half">
-			<div id="chart_div" style="width: 100%; height: 400px;"></div>
-		</div>		
-		<div class="column">
-			<div id="piechart" style="width: 100%; height: 300px;"></div>
-		</div>
-		<div class="column">
-			<div id="columnchart_values" style="width: 100%; height: 300px;"></div>
-		</div>
-		<div class="column">
-			<div id="barchart_values" style="width: 900px; height: 300px;"></div>
-		</div>
+		<div class="row">
+			<div class="column">
+				<?php
+				// Get general info for timeline
+				$query ='SELECT id, ETAT, TIMESTAMP, TEXT FROM '. TABLE_ERP_INFO_GENERAL .' WHERE ETAT =1 ORDER BY id DESC LIMIT 0, 10';
+
+				$class = array('left', 'right');
+				$nb = count($class);
+				$i = 0;
+				foreach ($bdd->GetQuery($query) as $data): ?>
+					<div class="container-timeline <?= $class[$i%$nb] ?>">
+						<div class="content-timeline">
+							<h2><?= format_temps($data->TIMESTAMP) ?></h2>
+							<p> <?= nl2br(htmlspecialchars($data->TEXT)) ?></p>
+						</div>
+					</div>
+				<?php $i++; endforeach; ?>
+			</div>	
+		</div>	
 	</div>
-	<div id="div3" class="tabcontent" >
+	<div id="div2" class="tabcontent" >
 		<div class="row">
 		<?php
 		// get employees list

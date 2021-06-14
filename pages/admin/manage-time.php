@@ -584,7 +584,7 @@
 			?>
 			
 			<form method="post" name="Section" action="admin.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
-				<table class="content-table-decal">
+				<table class="content-table">
 					<thead>
 						<tr>
 							<th></th>

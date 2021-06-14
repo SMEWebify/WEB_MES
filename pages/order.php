@@ -22,6 +22,7 @@
 	use \App\Study\Unit;
 	use \App\UI\Document;
 	use \App\UI\Form;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -51,6 +52,7 @@
 	$VAT = new VAT();
 	$Unit = new Unit();
 	$Document = new Document();
+	$SearchMenu = new SearchMenu();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -503,12 +505,12 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input type=\"date\" name=\"AddDELAISigne[]\"  value=\"" + AddDELAISigne+"\" required=\"required\"></td>";
 		var ligne = ligne + "<td></td>";
 		var ligne = ligne + "</tr>";
-        $("table.content-table-devis").append(ligne);
+        $("table.content-table").append(ligne);
     });
     $(".delete").click(function() {
-        $("table.content-table-devis").find('input[name="select"]').each(function() {
+        $("table.content-table").find('input[name="select"]').each(function() {
             if ($(this).is(":checked")) {
-                $(this).parents("table.content-table-devis tr").remove();
+                $(this).parents("table.content-table tr").remove();
             }
         });
     });
@@ -553,67 +555,23 @@ $(document).ready(function() {
 	if(!isset($_GET['order']) && !isset($_GET['OrderAcknowledgment']) && !isset($_GET['DeliveryNotes'])  && !isset($_GET['InvoiceOrder'])){
 		?>
 		<div id="div2" class="tabcontent">
-			<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindQuote') ?>">
-					<ul id="myUL">
-						<?php
-						//generate list for datalist find input.
-						foreach ($OrderLines->GETOrderLineList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
-						elseif($data->ETAT == 2) $class="warning";
-						elseif($data->ETAT == 3) $class="success";
-						elseif($data->ETAT == 6) $class="alert";
-						else $class="normal";?>
-						<li><a class=<?= $class ?>  href="index.php?page=order&order=<?= $data->ORDER_ID ?>"><?= $data->ORDER_CODE ?> - <?= $data->ARTICLE_CODE ?> <?= $data->LABEL ?></a></li>
-						<?php $i++; endforeach; ?>
-					</ul>
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($OrderLines->GETOrderLineList('',false, 0), 'index.php?page=order&order', $langue->show_text('TableFindOrder') ); ?>
 			</div>
 		</div>
 		<div id="div3" class="tabcontent">
-			<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindOrder') ?>">
-					<ul id="myUL">
-						<?php
-						//generate list for datalist find input
-						foreach ($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
-						elseif($data->ETAT == 2) $class="warning";
-						elseif($data->ETAT == 3) $class="success";
-						elseif($data->ETAT == 6) $class="alert";
-						else $class="normal";?>
-						<li><a class=<?= $class ?>  href="index.php?page=order&OrderAcknowledgment=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-						<?php $i++; endforeach; ?>
-					</ul>
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0), 'index.php?page=order&OrderAcknowledgment', $langue->show_text('TableFindOrder') ); ?>
 			</div>
 		</div>
 		<div id="div4" class="tabcontent">
-			<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindDeliveryNotes') ?>">
-					<ul id="myUL">
-						<?php
-						//generate list for datalist find input
-						foreach ($DeleveryNote->GETDeleveryNoteList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
-						elseif($data->ETAT == 2) $class="warning";
-						elseif($data->ETAT == 3) $class="success";
-						elseif($data->ETAT == 6) $class="alert";
-						else $class="normal";?>
-						<li><a class=<?= $class ?>  href="index.php?page=order&DeliveryNotes=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-						<?php $i++; endforeach; ?>
-					</ul>
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($DeleveryNote->GETDeleveryNoteList('',false, 0), 'index.php?page=order&DeliveryNotes', $langue->show_text('TableFindDeliveryNotes') ); ?>
 			</div>
 		</div>
 		<div id="div5" class="tabcontent">
-			<div class="column">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindInvoice') ?>">
-					<ul id="myUL">
-						<?php
-						//generate list for datalist find input
-						foreach ($InvoiceOrder->GETInvoiceOrderList('',false, 0) as $data): if($data->ETAT == 1) $class="info";
-						elseif($data->ETAT == 2) $class="warning";
-						elseif($data->ETAT == 3) $class="success";
-						elseif($data->ETAT == 6) $class="alert";
-						else $class="normal";?>
-						<li><a class=<?= $class ?>  href="index.php?page=order&InvoiceOrder=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-						<?php $i++; endforeach; ?>
-					</ul>
+			<div class="column-menu">
+				<?php echo $SearchMenu->GetSearchMenu($InvoiceOrder->GETInvoiceOrderList('',false, 0), 'index.php?page=order&InvoiceOrder', $langue->show_text('TableFindInvoice') ); ?>
 			</div>
 		</div>
 	<?php 
