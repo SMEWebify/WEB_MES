@@ -7,7 +7,7 @@ class Companies Extends SQL  {
 
     Public $id;
     Public $CODE;
-    Public $NAME;
+    Public $LABEL;
     Public $WEBSITE;  
     Public $FBSITE;  
     Public $TWITTERSITE; 
@@ -46,7 +46,7 @@ class Companies Extends SQL  {
 
         $GETCompanie = $this->GetQuery('SELECT  '. TABLE_ERP_CLIENT_FOUR .'.id,
                                                 '. TABLE_ERP_CLIENT_FOUR .'.CODE,
-                                                '. TABLE_ERP_CLIENT_FOUR .'.NAME,
+                                                '. TABLE_ERP_CLIENT_FOUR .'.LABEL,
                                                 '. TABLE_ERP_CLIENT_FOUR .'.WEBSITE,  
                                                 '. TABLE_ERP_CLIENT_FOUR .'.FBSITE,  
                                                 '. TABLE_ERP_CLIENT_FOUR .'.TWITTERSITE, 
@@ -105,7 +105,7 @@ class Companies Extends SQL  {
     public function GetProviderCheckedList($IdData){
         $this->ProviderCheckedList = '';
         $IdData = explode(",", $IdData);
-        $query='SELECT id, CODE, NAME   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_FOUR=1 ';
+        $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_FOUR=1 ';
 
 		foreach ($this->GetQuery($query) as $data){
             if(in_array($data->id,$IdData)){
@@ -115,7 +115,7 @@ class Companies Extends SQL  {
                 $checked = '';
             }
 
-            $this->ProviderCheckedList .='<tr><td><input type="checkbox" '. $checked .' value="'. $data->id .'" name="PROVIDER_ID[]" /><label for="PROVIDER_ID">'. $data->CODE .' - '. $data->NAME .'</label></td></tr>';
+            $this->ProviderCheckedList .='<tr><td><input type="checkbox" '. $checked .' value="'. $data->id .'" name="PROVIDER_ID[]" /><label for="PROVIDER_ID">'. $data->CODE .' - '. $data->LABEL .'</label></td></tr>';
 		}
         
         return  $this->ProviderCheckedList;
@@ -123,13 +123,13 @@ class Companies Extends SQL  {
 
     public function GetCustomerList($IdData=0, $Select = true){
         $this->CustomerList = '';
-        $query='SELECT id, NAME   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_CLIENT=1 ';
+        $query='SELECT id, CODE, LABEL   FROM '. TABLE_ERP_CLIENT_FOUR .' WHERE STATU_CLIENT=1 ';
 
         if($Select){
 
             foreach ($this->GetQuery($query) as $data){
 
-                $this->CustomerList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->NAME .'</option>';
+                $this->CustomerList .='<option value="'. $data->id .'" '. selected($IdData, $data->id) .'>'. $data->LABEL .'</option>';
             }
             return  $this->CustomerList;
         }else {

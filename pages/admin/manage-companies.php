@@ -11,6 +11,7 @@
 	use \App\Accounting\VAT;
 	use \App\UI\Document;
 	use \App\UI\Form;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -29,6 +30,7 @@
 	$PaymentCondition = new PaymentCondition();
 	$VAT = new VAT();
 	$Document = new Document();
+	$SearchMenu = new SearchMenu();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -65,7 +67,7 @@
 
 				//update database with post
 				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODE']) ."',
-																				NAME='". addslashes($_POST['NameSte']) ."',
+																				LABEL='". addslashes($_POST['NameSte']) ."',
 																				WEBSITE='". addslashes($_POST['WebSiteSte']) ."',
 																				FBSITE='". addslashes($_POST['FbSiteSte']) ."',
 																				TWITTERSITE='". addslashes($_POST['TwitterSte']) ."',
@@ -155,7 +157,7 @@
 		// stock value in variable for dislpay on form
 		$SteId = $data->id;
 		$SteCODE = $data->CODE;
-		$SteNAME = $data->NAME;
+		$SteLABEL = $data->LABEL;
 
 		$SteWEBSITE = $data->WEBSITE;
 		$SteFBSITE = $data->FBSITE;
@@ -314,15 +316,7 @@
 	<div id="div1" class="tabcontent">
 		<div class="row">
 			<div class="column-menu">
-				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
-				<ul id="myUL">
-					<?php
-					//generate list for datalist find input
-					$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
-					foreach ($bdd->GetQuery($query) as $data): ?>
-					<li><a href="admin.php?page=manage-companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-					<?php $i++; endforeach; ?>
-				</ul>
+				<?php echo $SearchMenu->GetSearchMenu($Companies->GetCustomerList('',false), 'admin.php?page=manage-companies&id', $langue->show_text('FindCompany') ); ?>
 			</div>
 				<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
 					<table class="content-table">
@@ -334,37 +328,32 @@
 						<tbody>
 							<tr>
 								<td ><?=$langue->show_text('TableCODE'); ?> : <?=$DisplayCode;?></td>
-								<td colspan="3"><?=$langue->show_text('TableNameCompany'); ?> <input type="text" name="NameSte" value="<?=$SteNAME;?>"></td>
-								<td><?=$langue->show_text('TableDateCreation') .' '. $SteDATE_CREA ?> </td>
-								<td></td>
-								<td><input type="hidden" name="id" value="<?=$SteId; ?>" size="10"></td>
+								<td colspan="3"><?=$langue->show_text('TableNameCompany'); ?> <input type="text" name="NameSte" value="<?=$SteLABEL;?>"></td>
+								<td colspan="3">
+									<?=$langue->show_text('TableDateCreation') .' '. $SteDATE_CREA ?>
+									<input type="hidden" name="id" value="<?=$SteId; ?>" size="10">
+								</td>
 							</tr>
 							<tr>
 								<td><?=$langue->show_text('TableWebSite'); ?></td>
 								<td><?=$langue->show_text('TableFacebook'); ?></td>
 								<td><?=$langue->show_text('TableTwitter'); ?></td>
 								<td><?=$langue->show_text('TableLinked'); ?></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="3"></td>
 							</tr>
 							<tr>
 								<td><input type="text" name="WebSiteSte" value="<?= $SteWEBSITE;?>" size="20"></td>
 								<td><input type="text" name="FbSiteSte" value="<?= $SteFBSITE;?>" size="20"></td>
 								<td ><input type="text" name="TwitterSte" value="<?= $SteTWITTERSITE;?>" size="20"></td>
 								<td ><input type="text" name="LkdSte" value="<?= $SteLKDSITE;?>" size="20"></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="3"></td>
 							</tr>
 							<tr>
 								<td><?=$langue->show_text('TableSIREN'); ?></td>
 								<td><?=$langue->show_text('TableAPE'); ?></td>
 								<td><?=$langue->show_text('TableTVAINTRA'); ?></td>
 								<td><?=$langue->show_text('TableTVAType'); ?></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="3"></td>
 							</tr>
 							<tr>
 								<td ><input type="text" name="SIRENSte" value="<?= $SteSIREN;?>" size="10"></td>
@@ -375,17 +364,14 @@
 										<?= $VAT->GETVATList($SteTVA_ID) ?>
 									</select>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="3"></td>
 							</tr>
 							<tr>
 								<td colspan="7" >Logo : <input type="file" name="fichier_LOGOSte" /></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td colspan="5"><img src="<?=PICTURE_FOLDER.COMPANIES_FOLDER.$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
-								<td></td>
+								<td colspan="6"><img src="<?=PICTURE_FOLDER.COMPANIES_FOLDER.$SteLOGO; ?>" title="LOGO entreprise" alt="Logo" Class="Image-Logo"/></td>
 							</tr>
 						</tbody>
 						<thead>
@@ -684,7 +670,7 @@
 				<table class="content-table">
 					<thead>
 						<tr>
-						<td ><?= $Data->NAME?></td>
+						<td ><?= $Data->LABEL?></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -705,7 +691,7 @@
 				<table class="content-table"  style="width: 50%;">
 					<thead>
 						<tr>
-							<td ><?= $Data->NAME?></td>
+							<td ><?= $Data->LABEL?></td>
 						</tr>
 					</thead>
 					<tbody>

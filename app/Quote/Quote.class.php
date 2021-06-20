@@ -30,7 +30,7 @@ class Quote Extends SQL  {
     Public $TRANSPORT_ID;
     Public $TRANSPORT_LABEL;
     Public $COMMENT;
-    Public $CUSTOMER_NAME;
+    Public $CUSTOMER_LABEL;
     Public $NOM_CREATOR;
     Public $PRENOM_CREATOR;
     Public $NOM_RESP_COM;
@@ -73,7 +73,7 @@ class Quote Extends SQL  {
                                         '. TABLE_ERP_QUOTE .'.ECHEANCIER_ID,
                                         '. TABLE_ERP_QUOTE .'.TRANSPORT_ID,
                                         '. TABLE_ERP_QUOTE .'.COMENT,
-                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
+                                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
                                         '. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_CREATOR,
                                         TABLE_ERP_EMPPLOYEES_RESP_COM.NOM AS NOM_RESP_COM,
@@ -114,7 +114,7 @@ class Quote Extends SQL  {
                         '. TABLE_ERP_QUOTE .'.CODE,
                         '. TABLE_ERP_QUOTE .'.LABEL,
                         '. TABLE_ERP_QUOTE .'.ETAT,
-                        '. TABLE_ERP_CLIENT_FOUR .'.NAME
+                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL
                 FROM '. TABLE_ERP_QUOTE .'
                 LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_QUOTE .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                 ORDER BY  '. TABLE_ERP_QUOTE .'.id DESC';

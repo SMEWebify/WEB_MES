@@ -6,6 +6,7 @@
 	use \App\Methods\Ressource;
 	use \App\Methods\Section;
 	use \App\Planning\Task;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -19,6 +20,7 @@
 	$Prestation = new Prestation();
 	$Section = new Section();
 	$Task =  new Task();
+	$SearchMenu = new SearchMenu();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_2'] != '1'){
@@ -461,13 +463,6 @@
 	</div>
 	<div id="div5" class="tabcontent" >
 		<div class="column-menu">
-					<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindTask') ?>">
-					<ul id="myUL">
-						<?php
-						//generate list for datalist find input
-						foreach ($Task->GETListTask(0,null, null, False) as $data):?>
-						<li><a href="index.php?page=planning&task=<?= $data->id ?>">#<?= $data->id ?> - <?= $data->CODE ?> - <?= $data->CODE_ORDER ?></a></li>
-						<?php $i++; endforeach; ?>
-					</ul>
-			</div>
+			<?php echo $SearchMenu->GetSearchMenu($Task->GETListTask(0,null, null, False), 'index.php?page=planning&task', $langue->show_text('TableFindTask') ); ?>
+		</div>
 	</div>

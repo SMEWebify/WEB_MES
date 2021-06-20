@@ -1,19 +1,7 @@
     <div id="div1" class="tabcontent">
 		<div class="row">
 			<div class="column-menu">
-				<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFind1') ?>">
-				<ul id="myUL">
-					<?php
-					//generate list for datalist find input
-					foreach ($reqList as $data): 
-						if($data->ETAT == 1) $class="info";
-						elseif($data->ETAT == 2) $class="warning";
-						elseif($data->ETAT == 3) $class="success";
-						elseif($data->ETAT == 6) $class="alert";
-						else $class="normal";
-					echo '<li><span ><a class='. $class .' href="index.php?page='. $_GET['page'] .'&'. $GET .'='. $data->id .'">'. $data->CODE .' - '. $data->NAME .'</a></span></li>';
-					$i++; endforeach; ?>
-				</ul>
+				<?php echo $SearchMenu->GetSearchMenu($reqList, 'index.php?page='. $_GET['page'] .'&'. $GET , $langue->show_text('TableFind1') ); ?>
 			</div>
 			<div class="column">
 				<form method="post" name="<?= $GET ?>" action="index.php?page=<?= $_GET['page'] ?>&<?= $GET ?>=new" class="content-form" enctype="multipart/form-data" >
@@ -210,7 +198,7 @@
 									<input type="hidden" name="id" value="<?= $Maindata->id ?>">
 									<?= $langue->show_text('TableCustomer') ?>
 								</td>
-								<td><a href="index.php?page=companies&id=<?=  $Maindata->CUSTOMER_ID  ?>"><?=  $Maindata->CUSTOMER_NAME  ?></a></td>
+								<td><a href="index.php?page=companies&id=<?=  $Maindata->CUSTOMER_ID  ?>"><?=  $Maindata->CUSTOMER_LABEL  ?></a></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableContact') ?></td>
@@ -480,7 +468,8 @@
 								<td>'.   $TotalLigneHTEnCours .' € </td>
 								<td>'. $data->DELAIS .'</td>
 							</tr>';?>
-							<tr class="clickable-row">
+
+							<tr class="clickable-row" onclick="ShowTechnicalCut(<?= $i ?>)">
 								<td>
 									<input type="hidden" name="UpdateIdLigne[]" id="UpdateIdLigne" value="<?= $data->id ?>">
 									<a href="index.php?page=<?= $_GET['page'] ?>&amp;<?= $GET ?>=<?= $_GET[$GET] ?>&amp;delete=<?= $data->id ?>" title="Supprimer la ligne">&#10007;</a>
@@ -491,7 +480,6 @@
 									<datalist id="Article">
 										<?= $ListeArticle ?>
 									</datalist>
-									<a href="admin.php?page=manage-study&amp;id=<?= $data->id ?>&amp;type=<?= $GET ?>&amp;<?= $GET ?>Id=<?= $_GET[$GET] ?>" title="Découpage technique">&#10144;</a>
 								</td>
 								<td><?= $Form->input('text', 'UpdateLABELLigne[]', $data->LABEL,'', $ActivateForm) ?></td>
 								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT,'', $ActivateForm) ?></td>
@@ -535,7 +523,50 @@
 									</select>
 								</td>
 							</tr>	
-					</tr>
+							
+							<tr>			
+								<td colspan="12">
+									<table id="TechnicalCutRow<?= $i ?>" style="display : none;">
+										<thead>
+											<tr>
+												<th></th>
+												<th><?=$langue->show_text('TableLabel'); ?></th>
+												<th><?=$langue->show_text('TableService'); ?></th>
+												<th><?=$langue->show_text('TableSettingTime'); ?></th>
+												<th><?=$langue->show_text('TableProductTime'); ?></th>
+												<th><?=$langue->show_text('TableProductCost'); ?></th>
+												<th><?=$langue->show_text('TableSalePrice'); ?></th>
+												<th><?=$langue->show_text('TableStatu'); ?></th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php $j = 0; foreach ($Task->GETTechnicalCut($data->id, $_GET['page']) as $DataTechnicalCut): ?>
+											<tr>
+												<td>#<?=  $DataTechnicalCut->id ?></td>
+												<td><?=  $DataTechnicalCut->LABEL ?></td>
+												<td><?=  $DataTechnicalCut->LABEL_SERVICE ?></td>
+												<td><?=  $DataTechnicalCut->SETING_TIME ?></td>
+												<td><?=  $DataTechnicalCut->UNIT_TIME  ?></td>
+												<td><?=  $DataTechnicalCut->UNIT_COST  ?></td>
+												<td><?=  $DataTechnicalCut->UNIT_PRICE ?></td>
+												<td><?=  $DataTechnicalCut->ETAT ?></td>
+											</tr>
+											<?php $j++; endforeach; 
+											if($j == 0):  ?>
+												<tr>
+													<td colspan="8"><?=$langue->show_text('TableNoData'); ?></td>
+												</tr>
+											<?php endif?>
+											<tr>
+												<td colspan="8">	
+													<a href="admin.php?page=manage-study&amp;id=<?= $data->id ?>&amp;type=<?= $GET ?>&amp;<?= $GET ?>Id=<?= $_GET[$GET] ?>" title="Découpage technique">&#10144;</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>	
+									
 					<?php $i++; endforeach; 
 					if($i != 0){ ?>
 					<tr>

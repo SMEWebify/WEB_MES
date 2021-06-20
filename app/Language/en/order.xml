@@ -130,7 +130,13 @@
     <TableNewOrderAcknowledgment>New Order Acknowledgment :</TableNewOrderAcknowledgment>
     <TableNewDeliveryNotes>New Delevery Note :</TableNewDeliveryNotes>
     <TableNewInvoiceOrder>New Invoice :</TableNewInvoiceOrder>        
-        
+    <TableSalePrice>Sale price</TableSalePrice>
+    <TableProductCost>Product cost</TableProductCost>
+    <TableSettingTime>Setting time</TableSettingTime>
+    <TableProductTime>Product time</TableProductTime>
+    <TableService>Service</TableService>
+    <TableNoData>No data</TableNoData>
+
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
     <UpdateLineNotification> line(s) updated</UpdateLineNotification>

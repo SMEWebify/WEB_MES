@@ -66,6 +66,16 @@
 			}
 		}
 
+		function ShowTechnicalCut(TrKey) {
+			var x = document.getElementById("TechnicalCutRow"+ TrKey);
+			if (x.style.display === "none") {
+			  x.style.display = "block";
+			} else {
+			  x.style.display = "none";
+			}
+		}
+		
+
 		//for display passord
 		function DisplayPassword() {
 			var x = document.getElementById("mdp");

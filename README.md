@@ -34,8 +34,14 @@ The goal is to have version 1 with a functional workflow up to invoicing.
 Few pages : quote - component - planning
 
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Quote/Quote_home.PNG)
+-----------------
+Item description
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Item/Item_exemple.PNG)
+-----------------
+Task List
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Planning/Task_list.PNG)
+-----------------
+Order delivery schedule
 ![alt text](https://github.com/billyboy35/WEB_MES/blob/master/public/images/Doc/Planning/Calendar.PNG)
 
 -----------------

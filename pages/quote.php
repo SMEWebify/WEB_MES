@@ -11,11 +11,14 @@
 	use \App\Accounting\PaymentSchedule;
 	use \App\Quote\Quote;
 	use \App\Quote\QuoteLines;
+	use \App\Order\Order;
 	use \App\Accounting\Delevery;
 	use \App\Accounting\VAT;
 	use \App\Study\Unit;
 	use \App\UI\Document;
 	use \App\UI\Form;
+	use \App\Planning\Task;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -36,10 +39,13 @@
 	$PaymentSchedule = new PaymentSchedule();
 	$Quote = new Quote();
 	$QuoteLines = new QuoteLines();
+	$Order = new Order();
 	$Delevery = new Delevery();
 	$VAT = new VAT();
 	$Unit = new Unit();
 	$Document = new Document();
+	$Task = new Task();
+	$SearchMenu = new SearchMenu();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -287,18 +293,12 @@ $(document).ready(function() {
 													<td><input type="radio" id="new" name="ADD_ORDER_FROM_QUOTE" value="new" checked="checked"><label for="new"><?= $langue->show_text('TableNewOrder') ?></label></td>
 												</tr>
 												<?php
-												$query='SELECT '. TABLE_ERP_ORDER .'.id,
-																'. TABLE_ERP_ORDER .'.CODE,
-																'. TABLE_ERP_ORDER .'.LABEL,
-																'. TABLE_ERP_CLIENT_FOUR .'.NAME
-														FROM '. TABLE_ERP_ORDER .'
-															LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-														ORDER BY '. TABLE_ERP_ORDER .'.id';
+												
 												$i = 1;
-												foreach ($bdd->GetQuery($query) as $data): ?>
+												foreach ($Order->GETOrderList('',false) as $data): ?>
 												<tr>
 													<td>
-														<input type="radio" id="new<?= $data->id ?>" name="ADD_ORDER_FROM_QUOTE" value="<?= $data->id ?>"><label for="new<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></label>
+														<input type="radio" id="new<?= $data->id ?>" name="ADD_ORDER_FROM_QUOTE" value="<?= $data->id ?>"><label for="new<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->LABEL ?></label>
 													</td>
 												</tr>
 												<?php $i++; endforeach; ?>
@@ -333,24 +333,10 @@ $(document).ready(function() {
 								</div>
 							</form>
 						</div>
-		<?php
-		}else{ 
-			?>
+		<?php	}else{ ?>
 			<div id="div9" class="tabcontent">
 				<div class="column-menu">
-						<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?= $langue->show_text('TableFindQuote') ?>">
-						<ul id="myUL">
-							<?php
-							//generate list for datalist find input
-							foreach ($QuoteLines->GETQuoteLineList('',false, 0) as $data): 
-								if($data->ETAT == 1) $class="info";
-								elseif($data->ETAT == 2) $class="warning";
-								elseif($data->ETAT == 3) $class="success";
-								elseif($data->ETAT == 6) $class="alert";
-								else $class="normal";?>
-							<li><a class=<?= $class ?> href="index.php?page=quote&quote=<?= $data->DEVIS_ID ?>"><?= $data->QUOTE_CODE ?> - <?= $data->ARTICLE_CODE ?>  <?= $data->LABEL ?></a></li>
-							<?php $i++; endforeach; ?>
-						</ul>
-					</div>
+					<?php echo $SearchMenu->GetSearchMenu($QuoteLines->GETQuoteLineList('',false, 0), 'index.php?page=quote&quote', $langue->show_text('TableFindQuote') ); ?>
 				</div>
+			</div>
 		<?php }

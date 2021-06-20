@@ -120,7 +120,13 @@
     <TableIndexLabel>Libellé de version  :</TableIndexLabel>  
     <TableCreationDate>Date de création :</TableCreationDate>  
     <TableValidityDate>Date de validité :</TableValidityDate>  
-    <TableStatu>Etat du devis :</TableStatu>     
+    <TableStatu>Etat du devis :</TableStatu>   
+    <TableSalePrice>Prix de vente</TableSalePrice>
+    <TableProductCost>Coût de production</TableProductCost>
+    <TableSettingTime>Tps préaparation</TableSettingTime>
+    <TableProductTime>Tps de production</TableProductTime>  
+    <TableService>Prestation</TableService>
+    <TableNoData>Pas de données</TableNoData>
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
     <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>

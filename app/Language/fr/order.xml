@@ -76,7 +76,7 @@
     <TableOrder>Ordre</TableOrder>
     <Addline>Ajout de ligne</Addline>
     <Deleteline>Suprimer ligne(s)</Deleteline>
-    <UpdateOrderLine>Mettre à jours les lignes de la commande</UpdateOrderLine>
+    <UpdateLine>Mettre à jours les lignes de la commande</UpdateLine>
     <TableCondiList>Condition de réglement</TableCondiList>
     <TableMethodList>Mode de réglement</TableMethodList>
     <TableUpdateButton>Mettre à jours</TableUpdateButton>
@@ -128,7 +128,12 @@
     <TableNewOrderAcknowledgment>Nouvel AR :</TableNewOrderAcknowledgment> 
     <TableNewDeliveryNotes>Nouveau BL :</TableNewDeliveryNotes>
     <TableNewInvoiceOrder>Nouvelle facture :</TableNewInvoiceOrder>  
-
+    <TableSalePrice>Prix de vente</TableSalePrice>
+    <TableProductCost>Coût de production</TableProductCost>
+    <TableSettingTime>Tps préaparation</TableSettingTime>
+    <TableProductTime>Tps de production</TableProductTime>
+    <TableService>Prestation</TableService>
+    <TableNoData>Pas de données</TableNoData>
  <!-- notifications -->
     <UpdateCommentNotification>Commentaire mit à jours</UpdateCommentNotification>
     <UpdateLineNotification>Ligne(s) mise à jours</UpdateLineNotification>

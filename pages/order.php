@@ -23,6 +23,7 @@
 	use \App\UI\Document;
 	use \App\UI\Form;
 	use \App\UI\SearchMenu;
+	use \App\Planning\Task;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -53,7 +54,8 @@
 	$Unit = new Unit();
 	$Document = new Document();
 	$SearchMenu = new SearchMenu();
-
+	$Task = new Task();
+	
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');

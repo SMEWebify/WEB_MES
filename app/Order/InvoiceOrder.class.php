@@ -31,7 +31,7 @@ class InvoiceOrder Extends SQL  {
     Public $ECHEANCIER_LABEL;
     Public $TRANSPORT_ID;
     Public $TRANSPORT_LABEL;
-    Public $CUSTOMER_NAME;
+    Public $CUSTOMER_LABEL;
     Public $NOM_CREATOR;
     Public $PRENOM_CREATOR;
     Public $NOM_RESP_COM;
@@ -91,7 +91,7 @@ class InvoiceOrder Extends SQL  {
                                         '. TABLE_ERP_ORDER .'.MODE_REG_CUSTOMER_ID,
                                         '. TABLE_ERP_ORDER .'.ECHEANCIER_ID,
                                         '. TABLE_ERP_ORDER .'.TRANSPORT_ID,
-                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
+                                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL,
                                         '. TABLE_ERP_CONDI_REG .'.LABEL AS COND_REG_LABEL,
                                         '. TABLE_ERP_MODE_REG .'.LABEL AS MODE_REG_LABEL,
                                         '. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL AS ECHEANCIER_LABEL,
@@ -131,7 +131,7 @@ class InvoiceOrder Extends SQL  {
                         '. TABLE_ERP_ORDER_INVOICE .'.CODE,
                         '. TABLE_ERP_ORDER_INVOICE .'.LABEL,
                         '. TABLE_ERP_ORDER_INVOICE .'.ETAT,
-                        '. TABLE_ERP_CLIENT_FOUR .'.NAME
+                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL
                 FROM '. TABLE_ERP_ORDER_INVOICE .'
                   LEFT JOIN `'. TABLE_ERP_ORDER .'` ON `'. TABLE_ERP_ORDER_INVOICE .'`.`ORDER_ID` = `'. TABLE_ERP_ORDER .'`.`id`
                   LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`

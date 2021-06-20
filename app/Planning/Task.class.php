@@ -11,7 +11,7 @@ class Task Extends SQL  {
     Public $QUOTE_LINE_ID;
     Public $CODE_QUOTE;
     Public $ORDER_LINE_ID;
-    Public $CODE_ORDER;
+    Public $ORDER_CODE;
     Public $SERVICE_ID;
     Public $LABEL_SERVICE;
     Public $COLOR_SERVICE;
@@ -147,7 +147,7 @@ class Task Extends SQL  {
                         CAST(FROM_UNIXTIME('. TABLE_ERP_TASK .'.END_TIMESTAMPS) as date) as END_TIMESTAMPS,
                         '. TABLE_ERP_ORDER_LIGNE .'.QT,
                         '. TABLE_ERP_ORDER_LIGNE .'.LABEL AS LABEL_ORDER_LINE,
-                        '. TABLE_ERP_ORDER .'.CODE AS CODE_ORDER,
+                        '. TABLE_ERP_ORDER .'.CODE AS ORDER_CODE,
                         '. TABLE_ERP_PRESTATION .'.CODE,
                         '. TABLE_ERP_PRESTATION .'.ORDRE,
                         '. TABLE_ERP_PRESTATION .'.LABEL AS LABEL_SERVICE,
@@ -172,7 +172,7 @@ class Task Extends SQL  {
                                         <td style="background-color:'. $color .';">'. date('W', $data->START_TIMESTAMPS)  .'</td>
                                         <td>'. $data->DATE_START_TIMESTAMPS .'</td>
                                         <td>'. $data->END_TIMESTAMPS .'</td>
-                                        <td><a href="index.php?page=planning&task='. $data->id .'">#'. $data->id .' - '. $data->CODE_ORDER .' - '. $data->LABEL_ORDER_LINE .' - '. $data->LABEL .' - '. $data->ORDER .'</a></td>
+                                        <td><a href="index.php?page=planning&task='. $data->id .'">#'. $data->id .' - '. $data->ORDER_CODE .' - '. $data->LABEL_ORDER_LINE .' - '. $data->LABEL .' - '. $data->ORDER .'</a></td>
                                         <td>'. $TaskTime .'mn</td>	
                                         <td></td>
                                     </tr>';
@@ -232,7 +232,7 @@ class Task Extends SQL  {
                                                 '. TABLE_ERP_PRESTATION .'.LABEL AS LABEL_SERVICE,
                                                 '. TABLE_ERP_ORDER_LIGNE .'.QT,
                                                 '. TABLE_ERP_ORDER_LIGNE .'.LABEL AS LABEL_ORDER_LINE,
-                                                '. TABLE_ERP_ORDER .'.CODE AS CODE_ORDER
+                                                '. TABLE_ERP_ORDER .'.CODE AS ORDER_CODE
                                                 FROM `'. TABLE_ERP_TASK .'`
                                                     LEFT JOIN `'. TABLE_ERP_PRESTATION .'` ON `'. TABLE_ERP_TASK .'`.`SERVICE_ID` = `'. TABLE_ERP_PRESTATION .'`.`id`
                                                     LEFT JOIN '. TABLE_ERP_ORDER_LIGNE .' ON '. TABLE_ERP_TASK .'.ORDER_LINE_ID = '. TABLE_ERP_ORDER_LIGNE .'.id
@@ -280,7 +280,7 @@ class Task Extends SQL  {
                                                     '. TABLE_ERP_TASK .'.THICKNESS,
                                                     '. TABLE_ERP_TASK .'.WEIGHT,
                                                     '. TABLE_ERP_ORDER_LIGNE .'.LABEL AS LABEL_ORDER_LINE,
-                                                    '. TABLE_ERP_ORDER .'.CODE AS CODE_ORDER,
+                                                    '. TABLE_ERP_ORDER .'.CODE AS ORDER_CODE,
                                                     '. TABLE_ERP_STANDARD_ARTICLE .'.LABEL AS ARTICLE_LABEL,
                                                     '. TABLE_ERP_UNIT .'.LABEL AS UNIT_LABEL
                                                     FROM `'. TABLE_ERP_TASK .'`

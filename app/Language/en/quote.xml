@@ -122,7 +122,14 @@
     <TableIndexLabel>Label index  :</TableIndexLabel>  
     <TableCreationDate>Creation date :</TableCreationDate>  
     <TableValidityDate>Validity date :</TableValidityDate>  
-    <TableStatu>Quote statu :</TableStatu>     
+    <TableStatu>Quote statu :</TableStatu>  
+    <TableSalePrice>Sale price</TableSalePrice>
+    <TableProductCost>Product cost</TableProductCost>
+    <TableSettingTime>Setting time</TableSettingTime>
+    <TableProductTime>Product time</TableProductTime> 
+    <TableService>Service</TableService>
+    <TableNoData>No data</TableNoData>
+    
  <!-- notifications -->
     <UpdateCommentNotification>Comment updated</UpdateCommentNotification>
     <UpdateLineNotification> line(s) updated</UpdateLineNotification>

@@ -31,7 +31,7 @@ class Order Extends SQL  {
     Public $COMMENT;
     Public $QUOTE_ID;
     Public $QUOTE_CODE;
-    Public $CUSTOMER_NAME;
+    Public $CUSTOMER_LABEL;
     Public $NOM_CREATOR;
     Public $PRENOM_CREATOR;
     Public $NOM_RESP_COM;
@@ -93,7 +93,7 @@ class Order Extends SQL  {
                                         '. TABLE_ERP_ORDER .'.TRANSPORT_ID,
                                         '. TABLE_ERP_ORDER .'.COMENT,
                                         '. TABLE_ERP_ORDER .'.QUOTE_ID,
-                                        '. TABLE_ERP_CLIENT_FOUR .'.NAME AS CUSTOMER_NAME,
+                                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
                                         '. TABLE_ERP_EMPLOYEES .'.PRENOM  AS PRENOM_CREATOR,
                                         TABLE_ERP_EMPPLOYEES_RESP_COM.NOM AS NOM_RESP_COM,
@@ -136,7 +136,7 @@ class Order Extends SQL  {
                         '. TABLE_ERP_ORDER .'.CODE,
                         '. TABLE_ERP_ORDER .'.LABEL,
                         '. TABLE_ERP_ORDER .'.ETAT,
-                        '. TABLE_ERP_CLIENT_FOUR .'.NAME
+                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL
                 FROM '. TABLE_ERP_ORDER .'
                     LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
                 ORDER BY  '. TABLE_ERP_ORDER .'.id DESC';

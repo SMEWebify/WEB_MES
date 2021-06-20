@@ -6,6 +6,7 @@
 	use \App\COMPANY\ActivitySector;
 	use \App\Companies\Contact;
 	use \App\Companies\Address;
+	use \App\UI\SearchMenu;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -19,7 +20,8 @@
 	$ActivitySector = new ActivitySector();
 	$Contact =  new Contact();
 	$Address = new Address();
-
+	$SearchMenu = new SearchMenu();
+	
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_9'] != '1'){
 		stop($langue->show_text('SystemInfoAccessDenied'), 161, 'index.php?page=login');
@@ -36,15 +38,7 @@
 <div id="div1" class="tabcontent" >
 	<div class="row">
 		<div class="column-menu">
-			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="<?=$langue->show_text('FindCompany'); ?>">
-			<ul id="myUL">
-				<?php
-				//generate list for datalist find input
-				$query="SELECT id, CODE, NAME FROM ". TABLE_ERP_CLIENT_FOUR ." ORDER BY NAME";
-				foreach ($bdd->GetQuery($query) as $data): ?>
-				<li><a href="index.php?page=companies&id=<?= $data->id ?>"><?= $data->CODE ?> - <?= $data->NAME ?></a></li>
-				<?php $i++; endforeach; ?>
-			</ul>
+			<?php echo $SearchMenu->GetSearchMenu($Companies->GetCustomerList('',false), 'index.php?page=companies&id', $langue->show_text('FindCompany') ); ?>
 		</div>
 		<?php if(isset($_GET['id'])  AND  !empty($_GET['id'])){ ?>
 		<div class="column">
@@ -52,7 +46,7 @@
 				<table class="content-table">
 					<thead>
 						<tr>
-							<th><?= $Data->CODE ?> - <?= $Data->NAME ?></th>
+							<th><?= $Data->CODE ?> - <?= $Data->LABEL ?></th>
 						</tr>
 					</thead>
 					<tbody>

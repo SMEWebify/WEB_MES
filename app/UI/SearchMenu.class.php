@@ -19,7 +19,20 @@ class SearchMenu Extends SQL  {
 				elseif($data->ETAT == 6) $class="alert";
 				else $class="normal";
 
-				echo '<li><a class='. $class .'  href="'. $LinkPrefix .'='. $data->id .''. $LinkSuffix .'">'. $data->CODE .' - '. $data->LABEL .'</a></li>';
+				if($data->CUSTOMER_LABEL)$Label = $data->CUSTOMER_LABEL;
+				else $Label = $data->LABEL;
+
+				if($data->ORDER_CODE) $CODE = $data->ORDER_CODE;
+				elseif($data->QUOTE_CODE)  $CODE = $data->QUOTE_CODE;
+				else $CODE = $data->CODE;
+
+				if($data->DEVIS_ID) $id = $data->DEVIS_ID;
+				else $id = $data->id;
+				
+				if($data->ORDER_ID) $id = $data->ORDER_ID;
+				else $id = $data->id;
+				
+				echo '<li><a class='. $class .'  href="'. $LinkPrefix .'='. $id .''. $LinkSuffix .'">'. $CODE .' - '. $Label .'</a></li>';
 		endforeach;
 		
 		echo '</ul>';
