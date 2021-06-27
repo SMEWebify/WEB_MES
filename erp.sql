@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : sam. 05 juin 2021 à 21:10
+-- Généré le : Dim 27 juin 2021 à 21:43
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `ac_payment_method` (
 
 INSERT INTO `ac_payment_method` (`id`, `CODE`, `LABEL`, `CODE_COMPTABLE`) VALUES
 (1, 'VIR', 'VIREMENT', ''),
-(2, 'CHQ', 'CHEQUE', ''),
+(2, 'CHQ', 'CHEQUE', 'TEST'),
 (3, 'CB', 'CARTE BANCAIRE', ''),
 (4, 'CMPT', 'COMPTANT', ''),
 (5, 'NONDEF', 'Non définit', '');
@@ -272,12 +272,32 @@ CREATE TABLE IF NOT EXISTS `attached_document` (
   `DELIVERY_NOTE_ID` int(11) DEFAULT NULL,
   `INVOICE_ID` int(11) DEFAULT NULL,
   `DEROGATION_ID` int(11) DEFAULT NULL,
+  `NC_ID` int(11) DEFAULT NULL,
   `ACTION_ID` int(11) DEFAULT NULL,
   `MESURING_DEVICE_ID` int(11) DEFAULT NULL,
   `COMPONENT_ID` int(11) DEFAULT NULL,
   `RESSOURCE_ID` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `attached_document`
+--
+
+INSERT INTO `attached_document` (`id`, `LABEL`, `DATE`, `PATH_FILE`, `SIZE`, `CREATOR_USER_ID`, `COMPANY_ID`, `QUOTE_ID`, `ORDER_ID`, `ORDER_ACKNOWLEDGMENT_ID`, `TASK_ID`, `DELIVERY_NOTE_ID`, `INVOICE_ID`, `DEROGATION_ID`, `NC_ID`, `ACTION_ID`, `MESURING_DEVICE_ID`, `COMPONENT_ID`, `RESSOURCE_ID`) VALUES
+(14, 'test.png', '2021-06-06', '../public/Files/COMPANY/30/test.png', 6672, 1, 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(15, 'test.png', '2021-06-06', '../public/Files/ORDER/28/test.png', 6672, 1, NULL, NULL, 28, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 'test.jpg', '2021-06-06', '../public/Files/QUOTE/18/test.jpg', 24795, 1, NULL, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(17, 'test.png', '2021-06-06', '../public/Files/ORDER_ACKNOWLEDGMENT/30/test.png', 6672, 1, NULL, NULL, NULL, 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(18, 'test.jpg', '2021-06-06', '../public/Files/DELIVERY_NOTE/6/test.jpg', 24795, 1, NULL, NULL, NULL, NULL, NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(19, 'test.png', '2021-06-06', '../public/Files/INVOICE/4/test.png', 6672, 1, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL, NULL, NULL, NULL, NULL),
+(20, 'test.jpg', '2021-06-06', '../public/Files/NC/1/test.jpg', 24795, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL),
+(21, 'test.png', '2021-06-06', '../public/Files/ACTION/1/test.png', 6672, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL),
+(22, 'test.jpg', '2021-06-06', '../public/Files/DEROGATION/1/test.jpg', 24795, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(23, 'test.jpg', '2021-06-06', '../public/Files/MESURING_DEVICE/1/test.jpg', 24795, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL),
+(24, 'test.jpg', '2021-06-10', '../public/Files/QUOTE/18/test.jpg', 24795, 1, NULL, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(25, 'test.jpg', '2021-06-10', '../public/Files/QUOTE/18/test.jpg', 24795, 1, NULL, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(26, 'test.jpg', '2021-06-14', '../public/Files/QUOTE/18/test.jpg', 24795, 1, NULL, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -289,7 +309,7 @@ DROP TABLE IF EXISTS `companies`;
 CREATE TABLE IF NOT EXISTS `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `WEBSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `FBSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `TWITTERSITE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -302,7 +322,7 @@ CREATE TABLE IF NOT EXISTS `companies` (
   `STATU_CLIENT` int(11) NOT NULL,
   `COND_REG_CLIENT_ID` int(11) DEFAULT NULL,
   `MODE_REG_CLIENT_ID` int(11) DEFAULT NULL,
-  `REMISE` int(11) DEFAULT NULL,
+  `DISCOUNT` int(11) DEFAULT NULL,
   `RESP_COM_ID` int(11) NOT NULL,
   `RESP_TECH_ID` int(11) NOT NULL,
   `COMPTE_GEN_CLIENT` int(11) DEFAULT '0',
@@ -323,7 +343,7 @@ CREATE TABLE IF NOT EXISTS `companies` (
 -- Déchargement des données de la table `companies`
 --
 
-INSERT INTO `companies` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE`, `LKDSITE`, `SIREN`, `APE`, `TVA_INTRA`, `TVA_ID`, `LOGO`, `STATU_CLIENT`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `REMISE`, `RESP_COM_ID`, `RESP_TECH_ID`, `COMPTE_GEN_CLIENT`, `COMPTE_AUX_CLIENT`, `STATU_FOUR`, `COND_REG_FOUR_ID`, `MODE_REG_FOUR_ID`, `COMPTE_GEN_FOUR`, `COMPTE_AUX_FOUR`, `CONTROLE_FOUR`, `DATE_CREA`, `COMMENT`, `SECTOR_ID`) VALUES
+INSERT INTO `companies` (`id`, `CODE`, `LABEL`, `WEBSITE`, `FBSITE`, `TWITTERSITE`, `LKDSITE`, `SIREN`, `APE`, `TVA_INTRA`, `TVA_ID`, `LOGO`, `STATU_CLIENT`, `COND_REG_CLIENT_ID`, `MODE_REG_CLIENT_ID`, `DISCOUNT`, `RESP_COM_ID`, `RESP_TECH_ID`, `COMPTE_GEN_CLIENT`, `COMPTE_AUX_CLIENT`, `STATU_FOUR`, `COND_REG_FOUR_ID`, `MODE_REG_FOUR_ID`, `COMPTE_GEN_FOUR`, `COMPTE_AUX_FOUR`, `CONTROLE_FOUR`, `DATE_CREA`, `COMMENT`, `SECTOR_ID`) VALUES
 (1, 'METALI', 'METALERIE GRENOBLE ALPE', 'https://www.site.com/', '', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'images/ClientLogo/', 2, 8, 1, 0, 2, 1, 401000, 400000, 0, 8, 1, 401000, 400000, 1, '2020-10-28', '', ''),
 (2, 'LASERDEC ', 'LASER DECOUPE', 'https://www.decoupe.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, 'industrial-industry-automation-automatic.jpg', 2, 3, 2, 0, 1, 1, 401000, 400000, 0, 3, 1, 401000, 400000, 1, '2020-10-28', '', ''),
 (3, 'METALJ', 'METAL JOLI', 'https://www.jolie.com/', 'https://www.facebook.com/', 'https://twitter.com/', 'https://www.linkedin.com/', '12345679910', '350', '', 4, '', 2, 1, 1, 0, 1, 2, 401000, 400000, 0, 1, 1, 401000, 400000, 1, '2020-10-28', '', ''),
@@ -382,7 +402,7 @@ INSERT INTO `companies` (`id`, `CODE`, `NAME`, `WEBSITE`, `FBSITE`, `TWITTERSITE
 (56, '680', 'Pellentesque Massa Lobortis Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '054945258', '9027', '4', 2, 'logo.png', 2, 3, 1, 5, 3, 6, 0, 0, 1, 6, 2, 0, 0, 2, '2020-01-30', 'Aucun', ''),
 (57, '625', 'Donec Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '560856015', '5111', '8', 1, 'logo.png', 1, 4, 1, 1, 2, 6, 0, 0, 1, 3, 5, 0, 0, 0, '2021-11-24', 'Aucun', ''),
 (58, '980', 'Orci Lacus Inc.', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '006362560', '3328', '7', 1, 'logo.png', 1, 4, 4, 3, 1, 3, 0, 0, 0, 6, 2, 0, 0, 0, '2020-05-07', 'Aucun', ''),
-(59, '75', 'Ipsum Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '413896754', '2169', '9', 3, 'logo.png', 1, 6, 4, 7, 8, 5, 0, 0, 0, 5, 2, 0, 0, 1, '2021-04-16', 'Aucun', ''),
+(59, '75', 'Ipsum Institute', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '413896754', '2169', '9', 3, 'logo.png', 1, 6, 4, 7, 1, 1, 0, 0, 0, 5, 2, 0, 0, 1, '2021-04-16', 'Aucun', ''),
 (60, '415', 'Purus In Ltd', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '723579363', '8391', '5', 3, 'logo.png', 1, 3, 5, 2, 2, 6, 0, 0, 0, 4, 2, 0, 0, 1, '2020-05-02', 'Aucun', ''),
 (61, '563', 'Pellentesque Habitant LLP', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '522826320', '3190', '1', 2, 'logo.png', 0, 3, 5, 4, 8, 6, 0, 0, 0, 5, 4, 0, 0, 1, '2020-10-08', 'Aucun', ''),
 (62, '433', 'Donec PC', 'www.website.com', 'www.website.com', 'www.website.com', 'www.website.com', '398039693', '8159', '8', 2, 'logo.png', 0, 6, 1, 9, 2, 5, 0, 0, 0, 6, 5, 0, 0, 0, '2021-11-08', 'Aucun', ''),
@@ -942,7 +962,7 @@ CREATE TABLE IF NOT EXISTS `company_document_numbering` (
   `DIGIT` int(11) NOT NULL,
   `COMPTEUR` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `company_document_numbering`
@@ -953,9 +973,10 @@ INSERT INTO `company_document_numbering` (`id`, `DOC_TYPE`, `MODEL`, `DIGIT`, `C
 (2, 12, 'AR<AA><MM><JJ>-<I>', 3, 25),
 (3, 3, 'BL<AA><MM><JJ>-<I>', 3, 12),
 (4, 5, 'ST<AA><MM><JJ>-<I>', 3, 0),
-(5, 8, 'Q<AA><MM><JJ>-<I>', 2, 18),
-(6, 11, 'FNC<I>', 6, 8),
-(8, 9, 'IN<AA><MM><JJ>-<I>', 3, 4);
+(5, 8, 'Q<AA><MM><JJ>-<I>', 2, 19),
+(6, 11, 'FNC<I>', 6, 10),
+(8, 9, 'IN<AA><MM><JJ>-<I>', 3, 4),
+(9, 13, 'REQ<AA><MM><JJ>-<I>', 3, 17);
 
 -- --------------------------------------------------------
 
@@ -1291,18 +1312,19 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `INDICE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `CUSTOMER_ID` int(11) NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
   `CONTACT_ID` int(11) NOT NULL,
   `ADRESSE_ID` int(11) NOT NULL,
   `FACTURATION_ID` int(11) NOT NULL,
   `DATE` date NOT NULL,
   `ETAT` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
   `RESP_COM_ID` int(11) NOT NULL,
   `RESP_TECH_ID` int(11) NOT NULL,
   `REFERENCE` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `COND_REG_CUSTOMER_ID` int(11) NOT NULL,
-  `MODE_REG_CUSTOMER_ID` int(11) NOT NULL,
+  `COND_REG_COMPANY_ID` int(11) NOT NULL,
+  `MODE_REG_COMPANY_ID` int(11) NOT NULL,
   `ECHEANCIER_ID` int(11) NOT NULL,
   `TRANSPORT_ID` int(11) NOT NULL,
   `COMENT` text COLLATE utf8_unicode_ci,
@@ -1314,23 +1336,23 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- Déchargement des données de la table `orders`
 --
 
-INSERT INTO `orders` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CUSTOMER_ID`, `MODE_REG_CUSTOMER_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`, `QUOTE_ID`) VALUES
-(1, 'CDE201205-002', '1', '', '', 9, 2, 2, 1, '2020-12-05', 2, 1, 1, 1, '', 5, 3, 2, 0, 'test', 0),
-(5, 'CDE210116-006', '1', '', '', 57, 0, 0, 0, '2021-01-16', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(6, 'CDE210119-007', '1', '', '', 13, 0, 0, 0, '2021-01-20', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(7, 'CDE210119-008', '1', '', '', 20, 0, 0, 0, '2021-01-20', 2, 1, 0, 0, '', 9, 5, 0, 0, 'test', 0),
-(8, 'CDE210119-009', '1', '', '', 24, 0, 0, 0, '2021-01-20', 2, 1, 52, 1, '', 9, 5, 1, 0, '', 0),
-(12, 'CDE210123-012', '1', 'test label order', 'test label indix', 1, 0, 0, 0, '2021-01-23', 2, 1, 0, 0, 'test reference', 9, 5, 0, 0, '', 0),
-(16, 'CDE210227-016', '1', '', '', 193, 0, 0, 0, '2021-02-27', 2, 1, 51, 1, '', 9, 5, 0, 0, '', 0),
-(15, 'CDE210227-015', '1', 'test label', '', 90, 0, 0, 0, '2021-02-27', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(17, 'CDE210301-017', '1', '', '', 20, 0, 0, 0, '2021-03-01', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(18, 'CDE210301-018', '1', '', '', 198, 0, 0, 0, '2021-03-01', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(21, 'CDE210305-021', '1', '', '', 193, 0, 0, 0, '2021-03-05', 1, 1, 44, 57, '', 9, 5, 0, 0, '', 0),
-(24, 'CDE210307-024', '1', '', '', 199, 0, 0, 0, '2021-03-08', 1, 1, 46, 53, '', 9, 5, 0, 0, '', 0),
-(23, 'CDE210305-023', '1', '', '', 201, 0, 0, 0, '2021-03-06', 1, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(26, 'CDE210405-026', '1', '', '', 34, 0, 0, 0, '2021-04-05', 2, 1, 0, 0, '', 9, 5, 0, 0, '', 0),
-(27, 'CDE210405-027', '1', '', '', 47, 0, 0, 0, '2021-04-05', 2, 1, 37, 56, '', 4, 2, 2, 2, '', 0),
-(28, 'CDE210509-028', '1', '', '', 199, 0, 0, 0, '2021-05-09', 2, 1, 0, 0, '', 4, 5, 0, 0, '', 0);
+INSERT INTO `orders` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `COMPANY_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `ETAT`, `CREATOR_ID`, `MODIFIED_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_COMPANY_ID`, `MODE_REG_COMPANY_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`, `QUOTE_ID`) VALUES
+(1, 'CDE201205-002', '1', '', '', 9, 2, 2, 1, '2020-12-05', 2, 1, NULL, 1, 1, '', 5, 3, 2, 0, 'test', 0),
+(5, 'CDE210116-006', '1', '', '', 57, 0, 0, 0, '2021-01-16', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(6, 'CDE210119-007', '1', '', '', 13, 0, 0, 0, '2021-01-20', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(7, 'CDE210119-008', '1', '', '', 20, 0, 0, 0, '2021-01-20', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, 'test', 0),
+(8, 'CDE210119-009', '1', '', '', 24, 0, 0, 0, '2021-01-20', 2, 1, NULL, 52, 1, '', 9, 5, 1, 0, '', 0),
+(12, 'CDE210123-012', '1', 'test label order', 'test label indix', 1, 0, 0, 0, '2021-01-23', 2, 1, NULL, 0, 0, 'test reference', 9, 5, 0, 0, '', 0),
+(16, 'CDE210227-016', '1', '', '', 193, 0, 0, 0, '2021-02-27', 2, 1, NULL, 51, 1, '', 9, 5, 0, 0, '', 0),
+(15, 'CDE210227-015', '1', 'test label', '', 90, 0, 0, 0, '2021-02-27', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(17, 'CDE210301-017', '1', '', '', 20, 0, 0, 0, '2021-03-01', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(18, 'CDE210301-018', '1', '', '', 198, 0, 0, 0, '2021-03-01', 1, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(21, 'CDE210305-021', '1', '', '', 193, 0, 0, 0, '2021-03-05', 1, 1, NULL, 44, 57, '', 9, 5, 0, 0, '', 0),
+(24, 'CDE210307-024', '1', '', '', 199, 0, 0, 0, '2021-03-08', 1, 1, NULL, 46, 53, '', 9, 5, 0, 0, '', 0),
+(23, 'CDE210305-023', '1', '', '', 201, 0, 0, 0, '2021-03-06', 1, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(26, 'CDE210405-026', '1', '', '', 34, 0, 0, 0, '2021-04-05', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, '', 0),
+(27, 'CDE210405-027', '1', '', '', 47, 0, 0, 0, '2021-04-05', 2, 1, NULL, 37, 56, '', 4, 2, 2, 2, '', 0),
+(28, 'CDE210509-028', '1', '', '', 199, 0, 0, 0, '2021-05-09', 2, 1, NULL, 0, 0, '', 4, 5, 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -1352,7 +1374,7 @@ CREATE TABLE IF NOT EXISTS `orders_lines` (
   `INVOICED_REMAINING_QTY` int(11) DEFAULT '0',
   `UNIT_ID` int(11) NOT NULL,
   `PRIX_U` decimal(10,3) NOT NULL,
-  `REMISE` decimal(10,3) NOT NULL,
+  `DISCOUNT` decimal(10,3) NOT NULL,
   `TVA_ID` int(11) NOT NULL,
   `DELAIS_INTERNE` date NOT NULL,
   `DELAIS` date NOT NULL,
@@ -1365,7 +1387,7 @@ CREATE TABLE IF NOT EXISTS `orders_lines` (
 -- Déchargement des données de la table `orders_lines`
 --
 
-INSERT INTO `orders_lines` (`id`, `ORDER_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `DELIVERED_QTY`, `DELIVERED_REMAINING_QTY`, `INVOICED_QTY`, `INVOICED_REMAINING_QTY`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS_INTERNE`, `DELAIS`, `ETAT`, `AR`) VALUES
+INSERT INTO `orders_lines` (`id`, `ORDER_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `DELIVERED_QTY`, `DELIVERED_REMAINING_QTY`, `INVOICED_QTY`, `INVOICED_REMAINING_QTY`, `UNIT_ID`, `PRIX_U`, `DISCOUNT`, `TVA_ID`, `DELAIS_INTERNE`, `DELAIS`, `ETAT`, `AR`) VALUES
 (27, 15, 10, '', 'capot bas', 10, NULL, 10, NULL, 10, 4, '10.000', '0.000', 1, '2021-05-29', '2021-05-29', 2, 1),
 (4, 1, 10, 'MARCHEBOIS', '123', 1, NULL, 1, NULL, 1, 1, '10.000', '0.000', 4, '2021-03-31', '2021-04-28', 2, 1),
 (29, 15, 10, '', 'capot gauche', 10, NULL, 10, NULL, 10, 1, '10.000', '0.000', 3, '2021-05-29', '2021-05-29', 2, 1),
@@ -1412,7 +1434,7 @@ INSERT INTO `orders_lines` (`id`, `ORDER_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, 
 (115, 26, 10, '', 'Rep B', 100, NULL, 100, NULL, 100, 7, '1.320', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
 (116, 26, 10, '', 'Rep C', 100, NULL, 100, NULL, 100, 7, '2.450', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
 (117, 26, 10, '', 'Rep D', 100, NULL, 100, NULL, 100, 7, '2.450', '0.000', 4, '2021-05-31', '2021-05-31', 2, 0),
-(126, 28, 10, '110.1264.156', 'platine', 22000, 22000, 0, 22000, 0, 1, '1.000', '2.000', 4, '2021-05-30', '2021-05-30', 2, 1),
+(126, 28, 10, '110.1264.156', 'platine', 22000, 22000, 0, 22000, 0, 1, '1.000', '2.000', 3, '2021-05-30', '2021-05-30', 2, 1),
 (130, 28, 10, '110.1264.157', 'platine', 22000, 22000, 0, 22000, 0, 1, '1.000', '2.000', 4, '2021-05-30', '2021-05-30', 2, 1),
 (131, 28, 10, '110.1264.159', 'platine', 22000, 22000, 0, 22000, 0, 1, '1.000', '2.000', 4, '2021-05-30', '2021-05-30', 2, 1),
 (132, 28, 10, '110.1264.155', 'platine', 22000, 22000, 0, 22000, 0, 1, '1.000', '2.000', 4, '2021-05-29', '2021-05-29', 2, 1);
@@ -1432,7 +1454,7 @@ CREATE TABLE IF NOT EXISTS `order_acknowledgment` (
   `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `DATE` date NOT NULL,
   `ETAT` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
   `INCOTERM` int(11) NOT NULL,
   `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
@@ -1442,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `order_acknowledgment` (
 -- Déchargement des données de la table `order_acknowledgment`
 --
 
-INSERT INTO `order_acknowledgment` (`id`, `CODE`, `ORDER_ID`, `LABEL`, `LABEL_INDICE`, `DATE`, `ETAT`, `CREATEUR_ID`, `INCOTERM`, `COMENT`) VALUES
+INSERT INTO `order_acknowledgment` (`id`, `CODE`, `ORDER_ID`, `LABEL`, `LABEL_INDICE`, `DATE`, `ETAT`, `CREATOR_ID`, `INCOTERM`, `COMENT`) VALUES
 (16, 'AR210309-011', 5, '', '', '2021-03-10', 1, 1, 1, ''),
 (15, 'AR210301-010', 17, '', '', '2021-03-01', 1, 1, 1, ''),
 (14, 'AR210301-009', 1, '', '', '2021-03-01', 1, 1, 1, ''),
@@ -1609,7 +1631,7 @@ CREATE TABLE IF NOT EXISTS `order_invoice` (
 
 INSERT INTO `order_invoice` (`id`, `CODE`, `ORDER_ID`, `LABEL`, `LABEL_INDICE`, `CREATED`, `MODIFIED`, `ETAT`, `CREATOR_ID`, `MODIFIED_ID`, `INCOTERM`, `COMENT`) VALUES
 (3, 'IN210605-003', 28, '', '', '2021-06-05', '2021-06-05', 1, 1, 1, 1, ''),
-(4, 'IN210605-004', 28, '', '', '2021-06-05', '2021-06-05', 1, 1, 1, 1, '');
+(4, 'IN210605-004', 28, '', '', '2021-06-05', '2021-06-05', 2, 1, 1, 1, '');
 
 -- --------------------------------------------------------
 
@@ -1637,7 +1659,7 @@ INSERT INTO `order_invoice_lines` (`id`, `ORDER_INVOICE_ID`, `ORDER_ID`, `ORDRE`
 (6, 3, 28, 10, 126, '22000.000', 1),
 (7, 3, 28, 10, 130, '22000.000', 1),
 (8, 3, 28, 10, 131, '22000.000', 1),
-(10, 4, 28, 10, 132, '22000.000', 1);
+(10, 4, 28, 10, 132, '22000.000', 2);
 
 -- --------------------------------------------------------
 
@@ -1696,17 +1718,32 @@ INSERT INTO `order_sub_assembly` (`id`, `PARENT_ID`, `ORDRE`, `ARTICLE_ID`, `QT`
 
 DROP TABLE IF EXISTS `purchase_request`;
 CREATE TABLE IF NOT EXISTS `purchase_request` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
+  `CONTACT_ID` int(11) NOT NULL,
+  `ADRESSE_ID` int(11) NOT NULL,
+  `FACTURATION_ID` int(11) NOT NULL,
   `DATE` date NOT NULL,
   `DATE_REQUIREMENT` date NOT NULL,
   `ETAT` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
-  `COMENT` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
+  `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `purchase_request`
+--
+
+INSERT INTO `purchase_request` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `COMPANY_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `DATE_REQUIREMENT`, `ETAT`, `CREATOR_ID`, `MODIFIED_ID`, `COMENT`) VALUES
+(3, 'REQ210626-014', '', '', '', 13, 0, 0, 0, '2021-06-26', '2021-06-26', 1, 1, 0, ''),
+(2, 'REQ210626-014', '', '', '', 13, 0, 0, 0, '2021-06-26', '2021-06-26', 1, 1, 0, ''),
+(4, 'REQ210626-017', '', '', '', 13, 0, 0, 0, '2021-06-26', '2021-06-26', 1, 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -1718,14 +1755,16 @@ DROP TABLE IF EXISTS `purchase_request_lines`;
 CREATE TABLE IF NOT EXISTS `purchase_request_lines` (
   `id` int(11) NOT NULL,
   `PURCHASE_REQUEST_ID` int(11) NOT NULL,
-  `TASK_ID` int(11) NOT NULL,
+  `TASK_ID` int(11) DEFAULT NULL,
+  `ARTICLE_ID` int(11) DEFAULT NULL,
   `ORDRE` int(11) NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `TECHNICAL_SPECIFICATION` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `QT` int(11) NOT NULL,
   `UNIT_ID` int(11) NOT NULL,
   `PRIX_U` decimal(10,3) NOT NULL,
-  `ETAT` int(11) NOT NULL,
-  `ORDER_ID` int(11) NOT NULL
+  `DISCOUNT` decimal(10,3) NOT NULL,
+  `ETAT` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1740,9 +1779,9 @@ CREATE TABLE IF NOT EXISTS `ql_action` (
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `DATE` date NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
   `TYPE` int(11) NOT NULL,
-  `STATU` int(11) NOT NULL,
+  `ETAT` int(11) NOT NULL,
   `RESP_ID` int(11) NOT NULL,
   `PB_DESCP` text COLLATE utf8_unicode_ci NOT NULL,
   `CAUSE` text COLLATE utf8_unicode_ci NOT NULL,
@@ -1750,15 +1789,17 @@ CREATE TABLE IF NOT EXISTS `ql_action` (
   `COLOR` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `NFC_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `ql_action`
 --
 
-INSERT INTO `ql_action` (`id`, `CODE`, `LABEL`, `DATE`, `CREATEUR_ID`, `TYPE`, `STATU`, `RESP_ID`, `PB_DESCP`, `CAUSE`, `ACTION`, `COLOR`, `NFC_ID`) VALUES
-(1, 'ACT000001', 'test update', '2020-12-27', 1, 2, 2, 1, 'test', 'test', 'test', '#d10000', 1),
-(2, 'ACT000002', 'test création', '2020-12-27', 1, 1, 1, 1, '', '', '', '#000000', 0);
+INSERT INTO `ql_action` (`id`, `CODE`, `LABEL`, `DATE`, `CREATOR_ID`, `TYPE`, `ETAT`, `RESP_ID`, `PB_DESCP`, `CAUSE`, `ACTION`, `COLOR`, `NFC_ID`) VALUES
+(1, 'ACT000001', 'test update', '2020-12-27', 1, 2, 1, 1, 'test', 'test', 'test', '#d10000', 1),
+(2, 'ACT000002', 'test création', '2020-12-27', 1, 1, 1, 1, '', '', '', '#000000', 2),
+(3, 'ACT000003', '', '2021-06-13', 1, 1, 2, 1, '', '', '', '#000000', 0),
+(4, 'ACT000004', 'zt', '2021-06-26', 1, 1, 4, 1, '', '', '', '#000000', 0);
 
 -- --------------------------------------------------------
 
@@ -1785,7 +1826,7 @@ CREATE TABLE IF NOT EXISTS `ql_appareil_mesure` (
 
 INSERT INTO `ql_appareil_mesure` (`id`, `CODE`, `LABEL`, `RESSOURCE_ID`, `USER_ID`, `SERIAL_NUMBER`, `DATE`, `PICTURE_DEVICES`) VALUES
 (1, 'PIED', 'pied à coulisse', 2, 36, '1235467', '2020-10-31', '45921.jpg'),
-(2, 'PILCAL14', 'Pige de calage 14 x 125', 2, 47, '165477', '2021-02-28', 'pige-de-calage-14-x-125-micrometrique.jpg');
+(2, 'PILCAL14', 'Pige de calage 14 x 125', 1, 47, '165477', '2021-02-28', 'pige-de-calage-14-x-125-micrometrique.jpg');
 
 -- --------------------------------------------------------
 
@@ -1863,7 +1904,7 @@ CREATE TABLE IF NOT EXISTS `ql_derogation` (
   `CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `DATE` date NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
   `TYPE` int(11) NOT NULL,
   `ETAT` int(11) NOT NULL,
   `RESP_ID` int(11) NOT NULL,
@@ -1880,7 +1921,7 @@ CREATE TABLE IF NOT EXISTS `ql_derogation` (
 -- Déchargement des données de la table `ql_derogation`
 --
 
-INSERT INTO `ql_derogation` (`id`, `CODE`, `LABEL`, `DATE`, `CREATEUR_ID`, `TYPE`, `ETAT`, `RESP_ID`, `PB_DESCP`, `PROPOSAL`, `REPLY`, `COMMENT`, `NFC_ID`, `DECISION`) VALUES
+INSERT INTO `ql_derogation` (`id`, `CODE`, `LABEL`, `DATE`, `CREATOR_ID`, `TYPE`, `ETAT`, `RESP_ID`, `PB_DESCP`, `PROPOSAL`, `REPLY`, `COMMENT`, `NFC_ID`, `DECISION`) VALUES
 (1, 'DER000001', 'validation création', '2020-12-27', 1, 1, 1, 1, '', '', 1, '', 1, ''),
 (6, 'DER000006', 'validation numéro', '2020-12-27', 1, 1, 1, 1, '', '', 1, '', 0, ''),
 (5, 'DER000001', 'validation modification', '2020-12-27', 1, 1, 2, 1, 'test', 'test', 2, 'test', 0, 'test');
@@ -1914,7 +1955,7 @@ CREATE TABLE IF NOT EXISTS `ql_nfc` (
   `COMMENT` text COLLATE utf8_unicode_ci NOT NULL,
   `COMPANY_ID` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `ql_nfc`
@@ -1927,7 +1968,9 @@ INSERT INTO `ql_nfc` (`ID`, `CODE`, `LABEL`, `ETAT`, `CREATED`, `MODIFIED`, `TYP
 (4, 'FNC000004', 'test numbering', 1, '2021-01-07', '2020-12-27', 1, 1, 0, 1, 0, 0, 0, '', 0, '', 0, '', '', 0),
 (6, 'FNC000005', 'home test', 1, '2021-01-25', '2020-12-27', 1, 1, 0, 1, 1, 1, 1, '', 1, '', 2, '', '', 24),
 (7, 'FNC000007', '456', 1, '2021-04-30', '2021-04-30', 1, 1, 35, 45, 1, 11, 1, '', 1, '', 2, '', '', 24),
-(8, 'FNC000008', 'test id', 1, '2021-05-31', '2021-05-31', 1, 1, 1, 1, 1, 11, 1, '', 1, '', 2, '', '', 13);
+(8, 'FNC000008', 'test id', 1, '2021-05-31', '2021-05-31', 1, 1, 1, 1, 1, 11, 1, '', 1, '', 2, '', '', 13),
+(9, 'FNC000009', '123', 2, '2021-06-26', '2021-06-26', 2, 1, 1, 36, 1, 11, 1, 'zef', 1, 'ez', 4, 'zef', 'zfe', 13),
+(10, 'FNC000010', '', 1, '2021-06-26', '2021-06-26', 1, 1, 1, 0, 0, 0, 0, '', 0, '', 0, '', '', 13);
 
 -- --------------------------------------------------------
 
@@ -1942,45 +1985,47 @@ CREATE TABLE IF NOT EXISTS `quote` (
   `INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `LABEL_INDICE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `CUSTOMER_ID` int(11) NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
   `CONTACT_ID` int(11) NOT NULL,
   `ADRESSE_ID` int(11) NOT NULL,
   `FACTURATION_ID` int(11) NOT NULL,
   `DATE` date NOT NULL,
   `DATE_VALIDITE` date NOT NULL,
   `ETAT` int(11) NOT NULL,
-  `CREATEUR_ID` int(11) NOT NULL,
+  `CREATOR_ID` int(11) NOT NULL,
+  `MODIFIED_ID` int(11) DEFAULT NULL,
   `RESP_COM_ID` int(11) NOT NULL,
   `RESP_TECH_ID` int(11) NOT NULL,
   `REFERENCE` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `COND_REG_CUSTOMER_ID` int(11) NOT NULL,
-  `MODE_REG_CUSTOMER_ID` int(11) NOT NULL,
+  `COND_REG_COMPANY_ID` int(11) NOT NULL,
+  `MODE_REG_COMPANY_ID` int(11) NOT NULL,
   `ECHEANCIER_ID` int(11) NOT NULL,
   `TRANSPORT_ID` int(11) NOT NULL,
   `COMENT` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `quote`
 --
 
-INSERT INTO `quote` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `CUSTOMER_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `DATE_VALIDITE`, `ETAT`, `CREATEUR_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_CUSTOMER_ID`, `MODE_REG_CUSTOMER_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`) VALUES
-(3, 'DV201118-01', '1', '', '', 1, 3, 3, 3, '2020-11-18', '2020-11-21', 6, 1, 38, 1, '1er demande de metalerie', 8, 1, 2, 2, 'test\r\ntaettatt222'),
-(5, 'DV201128-03', '1', '', '', 3, 0, 0, 0, '2020-11-29', '2020-11-29', 7, 1, 1, 1, '', 9, 5, 0, 0, ''),
-(6, 'DV201205-04', '1', 'tzetzet2i', 'zetzeti', 2, 0, 196, 0, '2020-12-05', '2020-12-18', 2, 1, 37, 1, 'zetzet', 9, 5, 2, 0, ''),
-(7, 'DV201229-07', '1', '', '', 13, 0, 182, 89, '2020-12-29', '2020-12-29', 2, 1, 0, 0, '', 9, 5, 0, 0, ''),
-(8, 'DV210108-08', '1', '', '', 52, 0, 0, 0, '2021-01-08', '2021-01-08', 1, 1, 1, 1, '', 9, 5, 0, 0, ''),
-(9, 'DV210109-09', '1', '', '', 199, 0, 0, 0, '2021-01-09', '2021-01-09', 3, 1, 0, 0, '', 9, 1, 1, 0, ''),
-(10, 'DV210109-10', '1', '', '1', 201, 0, 0, 0, '2021-01-10', '2021-01-10', 3, 1, 0, 0, '', 3, 2, 0, 0, ''),
-(11, 'DV210117-11', '1', '', '', 198, 0, 0, 0, '2021-01-17', '2021-01-17', 3, 1, 0, 0, '', 6, 3, 0, 2, ''),
-(12, 'DV210119-12', '1', 'test', '', 20, 0, 0, 0, '2021-01-20', '2021-01-20', 3, 1, 0, 0, '', 9, 5, 0, 0, ''),
-(13, 'DV210227-13', '1', 'test label', 'first version', 90, 0, 0, 0, '2021-02-27', '2021-03-12', 3, 1, 51, 44, 'feb end test', 3, 1, 2, 2, 'test'),
-(14, 'DV210227-14', '1', '', '', 193, 0, 0, 0, '2021-02-27', '2021-02-27', 3, 1, 0, 0, '', 4, 5, 1, 0, ''),
-(15, 'DV210301-15', '1', '', '', 198, 0, 0, 0, '2021-03-01', '2021-03-01', 3, 1, 47, 47, '', 9, 5, 0, 0, ''),
-(16, 'DV210405-16', '1', 'test label', 'A', 34, 0, 0, 0, '2021-04-05', '2021-04-30', 3, 1, 35, 52, 'test reference', 4, 3, 2, 2, 'test'),
-(17, 'DV210405-17', '1', '', '', 47, 0, 0, 0, '2021-04-05', '2021-04-05', 3, 1, 37, 53, '', 9, 5, 0, 0, ''),
-(18, 'Q210509-18', '1', '', '', 199, 0, 0, 0, '2021-05-09', '2021-05-09', 3, 1, 0, 0, '', 5, 2, 1, 2, '');
+INSERT INTO `quote` (`id`, `CODE`, `INDICE`, `LABEL`, `LABEL_INDICE`, `COMPANY_ID`, `CONTACT_ID`, `ADRESSE_ID`, `FACTURATION_ID`, `DATE`, `DATE_VALIDITE`, `ETAT`, `CREATOR_ID`, `MODIFIED_ID`, `RESP_COM_ID`, `RESP_TECH_ID`, `REFERENCE`, `COND_REG_COMPANY_ID`, `MODE_REG_COMPANY_ID`, `ECHEANCIER_ID`, `TRANSPORT_ID`, `COMENT`) VALUES
+(3, 'DV201118-01', '1', '', '', 1, 3, 3, 3, '2020-11-18', '2020-11-21', 6, 1, NULL, 38, 1, '1er demande de metalerie', 8, 1, 2, 2, 'test\r\ntaettatt222'),
+(5, 'DV201128-03', '1', '', '', 3, 0, 0, 0, '2020-11-29', '2020-11-29', 7, 1, NULL, 1, 1, '', 9, 5, 0, 0, ''),
+(6, 'DV201205-04', '1', 'tzetzet2i', 'zetzeti', 2, 0, 196, 0, '2020-12-05', '2020-12-18', 2, 1, NULL, 37, 1, 'zetzet', 9, 5, 2, 0, ''),
+(7, 'DV201229-07', '1', '', '', 13, 0, 182, 89, '2020-12-29', '2020-12-29', 2, 1, NULL, 0, 0, '', 9, 5, 0, 0, ''),
+(8, 'DV210108-08', '1', '', '', 52, 0, 0, 0, '2021-01-08', '2021-01-08', 1, 1, NULL, 1, 1, '', 9, 5, 0, 0, ''),
+(9, 'DV210109-09', '1', '', '', 199, 0, 0, 0, '2021-01-09', '2021-01-09', 3, 1, NULL, 0, 0, '', 9, 1, 1, 0, ''),
+(10, 'DV210109-10', '1', '', '1', 201, 0, 0, 0, '2021-01-10', '2021-01-10', 3, 1, NULL, 0, 0, '', 3, 2, 0, 0, ''),
+(11, 'DV210117-11', '1', '', '', 198, 0, 0, 0, '2021-01-17', '2021-01-17', 3, 1, NULL, 0, 0, '', 6, 3, 0, 2, ''),
+(12, 'DV210119-12', '1', 'test', '', 20, 0, 0, 0, '2021-01-20', '2021-01-20', 3, 1, NULL, 0, 0, '', 9, 5, 0, 0, ''),
+(13, 'DV210227-13', '1', 'test label', 'first version', 90, 0, 0, 0, '2021-02-27', '2021-03-12', 3, 1, NULL, 51, 44, 'feb end test', 3, 1, 2, 2, 'test'),
+(14, 'DV210227-14', '1', '', '', 193, 0, 0, 0, '2021-02-27', '2021-02-27', 3, 1, NULL, 0, 0, '', 4, 5, 1, 0, ''),
+(15, 'DV210301-15', '1', '', '', 198, 0, 0, 0, '2021-03-01', '2021-03-01', 3, 1, NULL, 47, 47, '', 9, 5, 0, 0, ''),
+(16, 'DV210405-16', '1', 'test label', 'A', 34, 0, 0, 0, '2021-04-05', '2021-04-30', 3, 1, NULL, 35, 52, 'test reference', 4, 3, 2, 2, 'test'),
+(17, 'DV210405-17', '1', '', '', 47, 0, 0, 0, '2021-04-05', '2021-04-05', 3, 1, NULL, 37, 53, '', 9, 5, 0, 0, ''),
+(18, 'Q210509-18', '1', '', '', 199, 0, 0, 0, '2021-05-09', '2021-05-09', 3, 1, NULL, 0, 0, '', 5, 2, 1, 2, ''),
+(19, 'Q210626-19', '1', '', '', 13, 0, 0, 0, '2021-06-26', '2021-06-26', 1, 1, 1, 0, 0, '', 9, 5, 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -1998,18 +2043,18 @@ CREATE TABLE IF NOT EXISTS `quote_lines` (
   `QT` int(11) NOT NULL,
   `UNIT_ID` int(11) NOT NULL,
   `PRIX_U` decimal(10,3) NOT NULL,
-  `REMISE` decimal(10,3) NOT NULL,
+  `DISCOUNT` decimal(10,3) NOT NULL,
   `TVA_ID` int(11) NOT NULL,
   `DELAIS` date NOT NULL,
   `ETAT` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `quote_lines`
 --
 
-INSERT INTO `quote_lines` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `REMISE`, `TVA_ID`, `DELAIS`, `ETAT`) VALUES
+INSERT INTO `quote_lines` (`id`, `DEVIS_ID`, `ORDRE`, `ARTICLE_CODE`, `LABEL`, `QT`, `UNIT_ID`, `PRIX_U`, `DISCOUNT`, `TVA_ID`, `DELAIS`, `ETAT`) VALUES
 (1, 3, 10, 'PLATINE1', '', 4, 5, '100.000', '20.000', 1, '2020-10-29', 6),
 (2, 3, 20, 'super ligne', '', 5, 5, '100.000', '20.000', 4, '2020-11-20', 6),
 (43, 11, 10, '', 'E135497AEZR', 100, 1, '1.320', '0.000', 4, '2021-03-31', 1),
@@ -2328,7 +2373,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `SETING_TIME` decimal(10,3) DEFAULT NULL,
   `UNIT_TIME` decimal(10,3) DEFAULT NULL,
   `REMAINING_TIME` decimal(10,3) DEFAULT NULL,
-  `ADVANCEMENT` decimal(10,3) DEFAULT NULL,
+  `ADVANCEMENT` decimal(10,3) DEFAULT '0.000',
   `ETAT` int(11) DEFAULT NULL,
   `TYPE` int(11) NOT NULL,
   `DELAY` date DEFAULT NULL,
@@ -2356,7 +2401,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `START_TIMESTAMPS` int(11) DEFAULT NULL,
   `END_TIMESTAMPS` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `task`
@@ -2411,7 +2456,11 @@ INSERT INTO `task` (`id`, `LABEL`, `ORDER`, `QUOTE_LINE_ID`, `ORDER_LINE_ID`, `C
 (46, 'Emballage', 60, NULL, 132, NULL, 11, NULL, '0.000', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (47, 'Transport', 70, NULL, 132, NULL, 12, NULL, '0.000', '0.000', NULL, NULL, 2, 7, NULL, NULL, NULL, NULL, '0.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (48, 'Tôle acier', 10, NULL, 132, NULL, 1, 44, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.250', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
-(49, 'Tôle acier', 20, NULL, 132, NULL, 1, 49, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.000', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+(49, 'Tôle acier', 20, NULL, 132, NULL, 1, 49, NULL, NULL, NULL, NULL, 2, 3, NULL, 0, NULL, NULL, '0.000', '0.000', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(50, 'Etude', 10, NULL, 27, NULL, 7, NULL, '0.100', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.100', '0.100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(51, 'Laser', 20, NULL, 27, NULL, 2, NULL, '0.100', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.100', '0.100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(52, 'Pliage', 30, NULL, 27, NULL, 6, NULL, '0.100', '0.100', NULL, NULL, 2, 1, NULL, NULL, NULL, NULL, '0.100', '0.100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(53, 'Laser', 20, NULL, 126, NULL, 2, NULL, '1.000', '1.000', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, '1.000', '1.000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 

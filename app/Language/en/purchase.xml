@@ -46,9 +46,30 @@
     <SystemInfoAccessDenied>Acces Denied.</SystemInfoAccessDenied>
 <!-- title page --> 
 	<TiltePage>Purchases</TiltePage>
-   <Title1>Consultation</Title1> 
-   <Title2>Purchase order</Title2>
-   <Title3>Supplier reception</Title3>
-   <Title4>Delevery form</Title4>
-   <Title5>Invoice</Title5>
+	<Title1back>Back home</Title1back>
+	
+    <Title1>Home</Title1> 
+    <Title2>Purchase request</Title2>
+      <Title2-1>General</Title2-1>
+      <Title2-2>Customer detail</Title2-2>
+      <Title2-3>Commercial information</Title2-3>
+      <Title2-4>Comment</Title2-4>
+    <Title3>Detail lines</Title3>
+    <Title4>Files</Title4>
+    <Title5>Document</Title5>
+
+    <Title10>Purchase orders</Title10>
+    <Title6>Supplier reception</Title6>
+    <Title8>Delevery form</Title8>
+    <Title9>Invoice</Title9>
+
+<!-- table content --> 
+   <TableNew>New document for :</TableNew> 
+  <TableNumber>Document number :</TableNumber> 
+  <TableNewButton>Go !!</TableNewButton>
+  <TableFindPurchaseRequest>Find Purchase Request</TableFindPurchaseRequest>
+  <TableFindPurchaseOrder>Find Purchase Order</TableFindPurchaseOrder>
+  <TableFindSupplierReception>Find Supplier Reception</TableFindSupplierReception>
+  <TableFindDeleveryForm>Find Delevery Form</TableFindDeleveryForm>
+  <TableFindSupplierInvoice>Find Supplier Invoice</TableFindSupplierInvoice>
  </langue>

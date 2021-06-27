@@ -91,10 +91,10 @@
     <TableDeleveryDate>Délais de livraison :</TableDeleveryDate>
     <TableNumberCustomerOrder>N° de la commande client</TableNumberCustomerOrder>
     <TableCreateOrder>Créer commande</TableCreateOrder>
-    <TableNewOrder>Nouvelle commande</TableNewOrder> 
+    <TableNew>Nouvelle commande</TableNew> 
     <TableSelectOrder>Créer une nouvelle commande ou lier à une existante :</TableSelectOrder> 
     <TableIndexOrder>version</TableIndexOrder> 
-    <TableNumberOrder>Commande numéro</TableNumberOrder> 
+    <TableNumber>Commande numéro</TableNumber> 
     <TableUnitPrice>Prix U.H.T (€)</TableUnitPrice> 
     <TableQty>Quantité</TableQty>
     <TableArticle>Article</TableArticle>

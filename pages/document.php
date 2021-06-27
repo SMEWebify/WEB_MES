@@ -93,7 +93,7 @@
 			$tableauTVA = array();
 			foreach ($reqLines as $data){
 							
-							$TotalLigneHTEnCours = ($data->QT*$data->PRIX_U)-($data->QT*$data->PRIX_U)*($data->REMISE/100); 
+							$TotalLigneHTEnCours = ($data->QT*$data->PRIX_U)-($data->QT*$data->PRIX_U)*($data->DISCOUNT/100); 
 							$TotalLigneTVAEnCours =  $TotalLigneHTEnCours*($data->TAUX/100) ;
 							$TotalLigneTTCEnCours = $TotalLigneTVAEnCours+$TotalLigneHTEnCours;
 							
@@ -115,7 +115,7 @@
 								<td>'. $data->QT .'</td>
 								<td>'. $data->PRIX_U .'</td>
 								<td>'. $data->LABEL_UNIT .'</td>
-								<td>'. $data->REMISE .' %</td>
+								<td>'. $data->DISCOUNT .' %</td>
 								<td>'. $TotalLigne .' €</td>
 								<td>'. $data->DELAIS .'</td>
 							</tr>';

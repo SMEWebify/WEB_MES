@@ -79,7 +79,7 @@
     <TableMethodList>Payment choice</TableMethodList>
     <TableUpdateButton>Update</TableUpdateButton>
     <TableNewButton>New quote</TableNewButton>
-    <TableNewQuoteFor>Create a new quote for the customer:</TableNewQuoteFor> 
+    <TableNew>Create a new quote for the customer:</TableNew> 
     <TimeLinePayement>TimeLine Payement</TimeLinePayement>
     <TableAdresseInvoice>Adresse Invoice</TableAdresseInvoice>
     <TableAdresseDelevery>Adresse Delevery</TableAdresseDelevery>
@@ -92,7 +92,7 @@
     <TableNewOrder>New order</TableNewOrder> 
     <TableSelectOrder>Create a new order or link to an existing one:</TableSelectOrder> 
     <TableIndexQuote>version</TableIndexQuote> 
-    <TableNumberQuote>Quote number </TableNumberQuote> 
+    <TableNumber>Quote number </TableNumber> 
     <TableUnitPrice>Price U.H.T (€)</TableUnitPrice> 
     <TableQty>Qty</TableQty>
     <TableArticle>Article</TableArticle>

@@ -93,10 +93,10 @@
     <TableDeleveryDate>Delay :</TableDeleveryDate>
     <TableNumberCustomerOrder>Customer order number</TableNumberCustomerOrder>
     <TableCreateOrder>Create new order</TableCreateOrder>
-    <TableNewOrder>New order</TableNewOrder> 
+    <TableNew>New order</TableNew> 
     <TableSelectOrder>Create a new order or link to an existing one:</TableSelectOrder> 
     <TableIndexOrder>version</TableIndexOrder> 
-    <TableNumberOrder>Order number </TableNumberOrder> 
+    <TableNumber>Order number </TableNumber> 
     <TableUnitPrice>Price U.H.T (€)</TableUnitPrice> 
     <TableQty>Qty</TableQty>
     <TableArticle>Article</TableArticle>

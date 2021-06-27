@@ -2,7 +2,7 @@
 namespace App\UI;
 use \App\SQL;
 
-class SearchMenu Extends SQL  {
+class UI Extends SQL  {
 
     Public $SearchMenu;
 
@@ -27,10 +27,11 @@ class SearchMenu Extends SQL  {
 				else $CODE = $data->CODE;
 
 				if($data->DEVIS_ID) $id = $data->DEVIS_ID;
+				elseif($data->ORDER_ID) $id = $data->ORDER_ID;
 				else $id = $data->id;
 				
-				if($data->ORDER_ID) $id = $data->ORDER_ID;
-				else $id = $data->id;
+				
+
 				
 				echo '<li><a class='. $class .'  href="'. $LinkPrefix .'='. $id .''. $LinkSuffix .'">'. $CODE .' - '. $Label .'</a></li>';
 		endforeach;
@@ -39,4 +40,37 @@ class SearchMenu Extends SQL  {
 
     }
 
+	Public Function GetNewDocument($TableNew, $TableNumber , $CompaniesList = null, $Form, $submit){
+
+			if($CompaniesList != null) {
+				$ContentTableCompanies='<tr>
+										<td>'.$TableNew  .'</td>
+										<td>
+											<select name="COMPANY_ID">
+											'. $CompaniesList .'
+											</select>
+										</td>
+									</tr>';
+
+
+			}
+					echo'<table class="content-table">
+						<thead>
+							<tr>
+								<th colspan="2"><br/></th>
+							</tr>
+						</thead>
+						<tbody>
+							'. $ContentTableCompanies .'
+							<tr>
+								<td>'. $TableNumber .'</td>
+								<td>'. $Form .'</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td >'.  $submit .'</td>
+							</tr>
+						</tbody>
+					</table>';
+	}
 }

@@ -133,7 +133,8 @@
     <SelectINVOICE>Facture</SelectINVOICE>
     <SelectINVOICESUP>Facture fournisseur</SelectINVOICESUP>
     <SelectNONCONF>Fiche non conformité</SelectNONCONF>
-    
+    <SelectBUYREQUEST>Demande de prix</SelectBUYREQUEST>
+
     <SelectDatabaseBackupMode1>Table Structure</SelectDatabaseBackupMode1>
     <SelectDatabaseBackupMode2>Table Structure + données</SelectDatabaseBackupMode2>
     <SelectDatabaseBackupMode3>Drop + Table Structure + données</SelectDatabaseBackupMode3>

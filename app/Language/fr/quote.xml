@@ -77,7 +77,7 @@
     <TableMethodList>Mode de réglement</TableMethodList>
     <TableUpdateButton>Mettre à jours</TableUpdateButton>
     <TableNewButton>Mouveau devis</TableNewButton>
-    <TableNewQuoteFor>Créer un nouveau devis pour le client :</TableNewQuoteFor> 
+    <TableNew>Créer un nouveau devis pour le client :</TableNew> 
     <TimeLinePayement>Echéancier types</TimeLinePayement>
     <TableAdresseInvoice>Adresse de facturation</TableAdresseInvoice>
     <TableAdresseDelevery>Adresse de livraison</TableAdresseDelevery>
@@ -90,7 +90,7 @@
     <TableNewOrder>Nouvelle Commande</TableNewOrder> 
     <TableSelectOrder>Créer une nouvelle commande ou lier à une existante :</TableSelectOrder> 
     <TableIndexQuote>version</TableIndexQuote> 
-    <TableNumberQuote>Devis numéro</TableNumberQuote> 
+    <TableNumber>Devis numéro</TableNumber> 
     <TableUnitPrice>Prix U.H.T (€)</TableUnitPrice> 
     <TableQty>Quantité</TableQty>
     <TableArticle>Article</TableArticle>

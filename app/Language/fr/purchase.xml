@@ -45,9 +45,31 @@
     <SystemInfoAccessDenied>L'accès vous est interdit.</SystemInfoAccessDenied>
 <!-- title page --> 
 	<TiltePage>Achats</TiltePage>
-  <Title1>Consultation</Title1> 
-  <Title2>Commande achat</Title2>
-  <Title3>Réception fournisseurs</Title3>
-  <Title4>Bon de livraison fournisseurs</Title4>
-  <Title5>Facture fournisseurs</Title5>
+	<Title1back>Back home</Title1back>
+	
+    <Title1>Accueil</Title1> 
+    <Title2>Consultation</Title2>
+      <Title2-1>General</Title2-1>
+      <Title2-2>Customer detail</Title2-2>
+      <Title2-3>Commercial information</Title2-3>
+      <Title2-4>Comment</Title2-4>
+    <Title3>Détail des lignes</Title3>
+    <Title4>Fichiers</Title4>
+    <Title5>Document</Title5>
+
+    <Title10>Commande achat</Title10>
+    <Title6>Réception fournisseurs</Title6>
+    <Title8>Bon de livraison fournisseurs</Title8>
+    <Title9>Facture fournisseurs</Title9>
+
+<!-- table content --> 
+  <TableNew>Créer un nouveau document pour le client :</TableNew> 
+  <TableNumber>Document numéro</TableNumber> 
+  <TableNewButton>Go !!</TableNewButton>
+  <TableFindPurchaseRequest>Trouvé la demande de prix</TableFindPurchaseRequest>
+  <TableFindPurchaseOrder>Trouvé la commande achat</TableFindPurchaseOrder>
+  <TableFindSupplierReception>Trouvé reception de commande</TableFindSupplierReception>
+  <TableFindDeleveryForm>Trouvé le bon de livraison marchandise</TableFindDeleveryForm>
+  <TableFindSupplierInvoice>Trouvé la facture fournisseur</TableFindSupplierInvoice>
+
 </langue>

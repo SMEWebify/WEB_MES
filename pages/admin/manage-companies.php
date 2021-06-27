@@ -11,7 +11,7 @@
 	use \App\Accounting\VAT;
 	use \App\UI\Document;
 	use \App\UI\Form;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -30,7 +30,7 @@
 	$PaymentCondition = new PaymentCondition();
 	$VAT = new VAT();
 	$Document = new Document();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -66,7 +66,7 @@
 				}
 
 				//update database with post
-				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_CLIENT_FOUR ." SET 		CODE='". addslashes($_POST['CODE']) ."',
+				$bdd->GetUpdate("UPDATE  ". TABLE_ERP_COMPANES ." SET 		CODE='". addslashes($_POST['CODE']) ."',
 																				LABEL='". addslashes($_POST['NameSte']) ."',
 																				WEBSITE='". addslashes($_POST['WebSiteSte']) ."',
 																				FBSITE='". addslashes($_POST['FbSiteSte']) ."',
@@ -80,7 +80,7 @@
 																				STATU_CLIENT='". addslashes($_POST['StatuSte']) ."',
 																				COND_REG_CLIENT_ID='". addslashes($_POST['CondiSte']) ."',
 																				MODE_REG_CLIENT_ID='". addslashes($_POST['RegSte']) ."',
-																				REMISE='". addslashes($_POST['RemiseSte']) ."',
+																				DISCOUNT='". addslashes($_POST['RemiseSte']) ."',
 																				RESP_COM_ID='". addslashes($_POST['RepsComSte']) ."',
 																				RESP_TECH_ID='". addslashes($_POST['RespTechSte']) ."',
 																				COMPTE_GEN_CLIENT='". addslashes($_POST['CompteGeSte']) ."',
@@ -106,7 +106,7 @@
 				move_uploaded_file($_FILES['fichier_LOGOSte']['tmp_name'], PICTURE_FOLDER.COMPANIES_FOLDER . $fichier);
 
 				//add to sql db
-				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_CLIENT_FOUR ." VALUE ('0',
+				$req = $bdd->GetInsert("INSERT INTO ". TABLE_ERP_COMPANES ." VALUE ('0',
 																				'". addslashes($_POST['CODE']) ."',
 																				'". addslashes($_POST['NameSte']) ."',
 																				'". addslashes($_POST['WebSiteSte']) ."',
@@ -173,7 +173,7 @@
 		$SteSTATU_CLIENT = $data->STATU_CLIENT;
 		$SteCOND_REG_CLIENT_ID = $data->COND_REG_CLIENT_ID;
 		$SteMODE_REG_CLIENT_ID = $data->MODE_REG_CLIENT_ID;
-		$SteREMISE = $data->REMISE;
+		$SteDISCOUNT = $data->DISCOUNT;
 		$SteRESP_COM_ID = $data->RESP_COM_ID;
 		$SteRESP_TECH_ID = $data->RESP_TECH_ID;
 		$SteCOMPTE_GEN_CLIENT = $data->COMPTE_GEN_CLIENT;
@@ -266,7 +266,7 @@
 	}
 	elseif(isset($_POST['COMMENT']) && !empty($_POST['COMMENT'])){
 		// if udpdate comment 
-		$bdd->GetUpdatePOST(TABLE_ERP_CLIENT_FOUR, $_POST, 'WHERE id IN ('. $_GET['id'] . ')');
+		$bdd->GetUpdatePOST(TABLE_ERP_COMPANES, $_POST, 'WHERE id IN ('. $_GET['id'] . ')');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 	}
 	elseif(isset($_POST['SECTOR_ID']) && !empty($_POST['SECTOR_ID'])){
@@ -275,7 +275,7 @@
 			$SECTOR_ID .= $Value .',';
 		}
 		$UpdateSECTOR_ID = array('SECTOR_ID' => substr($SECTOR_ID, 0, -1));
-		$bdd->GetUpdatePOST(TABLE_ERP_CLIENT_FOUR, $UpdateSECTOR_ID, 'WHERE id IN ('. $_GET['id'] . ')');
+		$bdd->GetUpdatePOST(TABLE_ERP_COMPANES, $UpdateSECTOR_ID, 'WHERE id IN ('. $_GET['id'] . ')');
 		$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateCompanyNotification')));
 	}
 	elseif(isset($_GET['deleteFile']) AND !empty($_GET['deleteFile'])){
@@ -316,7 +316,7 @@
 	<div id="div1" class="tabcontent">
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($Companies->GetCustomerList('',false), 'admin.php?page=manage-companies&id', $langue->show_text('FindCompany') ); ?>
+				<?php echo $UI->GetSearchMenu($Companies->GetCustomerList('',false), 'admin.php?page=manage-companies&id', $langue->show_text('FindCompany') ); ?>
 			</div>
 				<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
 					<table class="content-table">
@@ -413,7 +413,7 @@
 										<?=$PaymentMethod->GETPaymentMethodList($SteMODE_REG_CLIENT_ID); ?>
 									</select>
 								</td>
-								<td ><input type="number" name="RemiseSte" value="<?= $SteREMISE;?>" size="10"></td>
+								<td ><input type="number" name="RemiseSte" value="<?= $SteDISCOUNT;?>" size="10"></td>
 								<td colspan="2">
 									<select name="RepsComSte">
 										<?=$Employees->GETEmployeesList($SteRESP_COM_ID) ?>

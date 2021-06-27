@@ -74,4 +74,10 @@ class Contact Extends SQL  {
             
         } 
     }
+
+    public function GETContactCount(){
+        
+        $ContactCount =  $this->GetCount(TABLE_ERP_CONTACT,'id', '');
+        return $ContactCount;
+    }
 }

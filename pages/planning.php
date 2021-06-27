@@ -6,7 +6,7 @@
 	use \App\Methods\Ressource;
 	use \App\Methods\Section;
 	use \App\Planning\Task;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -20,7 +20,7 @@
 	$Prestation = new Prestation();
 	$Section = new Section();
 	$Task =  new Task();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_2'] != '1'){
@@ -463,6 +463,6 @@
 	</div>
 	<div id="div5" class="tabcontent" >
 		<div class="column-menu">
-			<?php echo $SearchMenu->GetSearchMenu($Task->GETListTask(0,null, null, False), 'index.php?page=planning&task', $langue->show_text('TableFindTask') ); ?>
+			<?php echo $UI->GetSearchMenu($Task->GETListTask(0,null, null, False), 'index.php?page=planning&task', $langue->show_text('TableFindTask') ); ?>
 		</div>
 	</div>

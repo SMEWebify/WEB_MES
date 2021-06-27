@@ -162,8 +162,7 @@
 				<table class="content-table">
 					<thead>
 						<tr>
-							<th colspan="5"><br/></th>
-							<th></th>
+							<th colspan="6"><br/></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -469,6 +468,7 @@
 									<option value="10" <?= selected($data->DOC_TYPE, 10) ?>><?= $langue->show_text('SelectINVOICESUP') ?></option>
 									<option value="11" <?= selected($data->DOC_TYPE, 11) ?>><?= $langue->show_text('SelectNONCONF') ?></option>
 									<option value="12" <?= selected($data->DOC_TYPE, 12) ?>><?= $langue->show_text('SelectAR') ?></option>
+									<option value="13" <?= selected($data->DOC_TYPE, 13) ?>><?= $langue->show_text('SelectBUYREQUEST') ?></option>
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="MODEL[]" value="<?= $data->MODEL ?>" ></td>
@@ -493,6 +493,7 @@
 									<option value="9"><?=$langue->show_text('SelectINVOICE'); ?></option>
 									<option value="10"><?=$langue->show_text('SelectINVOICESUP'); ?></option>
 									<option value="11"><?=$langue->show_text('SelectNONCONF'); ?></option>
+									<option value="13"><?= $langue->show_text('SelectBUYREQUEST') ?></option>
 								</select>
 							</td>
 							<td><input type="text" class="input-moyen-vide" name="AddModeleNum" ></td>

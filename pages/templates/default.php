@@ -3,14 +3,19 @@
 <head>
 	<title><?=$Company->NAME ?> - <?=$langue->show_text('TiltePage') ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- CSS for user interface -->
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/ui.css" />
+	<!-- CSS for content pages -->
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/content.css" />
+	<!-- CSS for printing - not used now -->
 	<link rel="stylesheet" media="print" type="text/css"  href="../public/css/print.css" />
+	<!-- CSS for all table balise -->
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/tableaux.css" />
+	<!-- CSS for all form balise -->
 	<link rel="stylesheet" media="screen" type="text/css" title="deco" href="../public/css/forms.css" />
-	
+	<!-- favicon is missing  -->
 	<link rel="shortcut icon" type="image/x-icon" href="../public/image/favicon.ico" />
-	
+	<!-- java scipt file  -->
 	<script src="../public/js/divers.js"></script>
 </head>
 <body>
@@ -18,12 +23,16 @@
 <?php 
 	if(isset($_SESSION['mdp'])){
 ?>
+	<!-- USER INTERFACE START -->
+	<!-- Navigation bar MENU | RETURN | HOME -->
 	<div class="navbar">
 		<a href="#" id="OpenNav" >&#9783; <?=$langue->show_text('MenuLinkPage') ; ?></a>
 		<a href="<?=$_SERVER['HTTP_REFERER'] ?>">&#8634; <?=  $langue->show_text('ReturnLinkPage') ; ?></a>
 		<a href="index.php?page=home">Home</a>
 		<span class="profil-nav"><a  href="index.php?page=profil"><?=$User->NAME ?>  <img src="<?= PICTURE_FOLDER.PROFIL_FOLDER.$User->IMAGE_PROFIL ?>" title="Photo profil" alt="Photo" style="border-radius: 50%; width: 30px; vertical-align: middle;" /></a></span>
 	</div>
+	<!-- MENU START -->
+	<!-- Navigation slide, depend of user right -->
 	<div id="myNav" class="overlay">
 		<a href="javascript:void(0)" class="closebtn" id="ClosenNav">&times;</a>
 		<div class="overlay-content">
@@ -69,12 +78,18 @@
 			}
 		}
 ?>
+
 			</div>
 		</div>
 	</div>
+	<!-- MENU END -->
+	<!-- START PAGE CONTAIN -->
 <?php
+	// variable is call on admin.php and index.php when buffer is end $content = ob_get_clean();
 	echo $content;
+	// after end contain work we call notification box
 	$CallOutBox->display_notification();
 ?>
+	<!-- END PAGE CONTAIN -->
 </body>
 </html>

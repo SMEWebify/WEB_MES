@@ -1,50 +1,8 @@
-    <div id="div1" class="tabcontent">
-		<div class="row">
-			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($reqList, 'index.php?page='. $_GET['page'] .'&'. $GET , $langue->show_text('TableFind1') ); ?>
-			</div>
-			<div class="column">
-				<form method="post" name="<?= $GET ?>" action="index.php?page=<?= $_GET['page'] ?>&<?= $GET ?>=new" class="content-form" enctype="multipart/form-data" >
-					<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="5"><br/></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableNewQuoteFor') ?></td>
-								<td>
-									<select name="CUSTOMER_ID">
-										<?= $Companies->GetCustomerList() ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableNumberQuote') ?></td>
-								<td>
-									<?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering($DocNum),'', $ActivateForm) ?>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="6" >
-									<br/>
-									<?= $Form->submit($langue->show_text('TableNewButton'), $ActivateForm) ?>
-									<br/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</form>
-			</div>
-		</div>
-	</div>
-	<?php if(isset($_GET[$GET]) AND !empty($_GET[$GET])){   ?>
-	<div id="div2" class="tabcontent">
+	<!-- Start Document General information -->
+	<div id="div1" class="tabcontent">
 		<div class="row">
 			<div class="column">
 				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-				
 					<table class="content-table">
 							<thead>
 								<tr>
@@ -135,11 +93,11 @@
 						<tbody>
 							<tr>
 								<td><?= $langue->show_text('TableCondiList') ?></td>
-								<td><?= $Form->select('COND_REG_CUSTOMER_ID', '',  $Maindata->COND_REG_CUSTOMER_ID,$ActivateForm,$Maindata->COND_REG_LABEL, $PaymentCondition->GETPaymentConditionList(0, false))  ?></td>
+								<td><?= $Form->select('COND_REG_COMPANY_ID', '',  $Maindata->COND_REG_COMPANY_ID,$ActivateForm,$Maindata->COND_REG_LABEL, $PaymentCondition->GETPaymentConditionList(0, false))  ?></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableMethodList') ?></td>
-								<td><?= $Form->select('MODE_REG_CUSTOMER_ID', '',  $Maindata->MODE_REG_CUSTOMER_ID,$ActivateForm,$Maindata->MODE_REG_LABEL, $PaymentMethod->GETPaymentMethodList(0, false))  ?></td>
+								<td><?= $Form->select('MODE_REG_COMPANY_ID', '',  $Maindata->MODE_REG_COMPANY_ID,$ActivateForm,$Maindata->MODE_REG_LABEL, $PaymentMethod->GETPaymentMethodList(0, false))  ?></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TimeLinePayement') ?></td>
@@ -198,13 +156,13 @@
 									<input type="hidden" name="id" value="<?= $Maindata->id ?>">
 									<?= $langue->show_text('TableCustomer') ?>
 								</td>
-								<td><a href="index.php?page=companies&id=<?=  $Maindata->CUSTOMER_ID  ?>"><?=  $Maindata->CUSTOMER_LABEL  ?></a></td>
+								<td><a href="index.php?page=companies&id=<?=  $Maindata->COMPANY_ID  ?>"><?=  $Maindata->CUSTOMER_LABEL  ?></a></td>
 							</tr>
 							<tr>
 								<td><?= $langue->show_text('TableContact') ?></td>
 								<td>
 									<select name="CONTACT_ID">
-										<?=  $Contact->GETContactList($Maindata->CONTACT_ID, true, $Maindata->CUSTOMER_ID )  ?>
+										<?=  $Contact->GETContactList($Maindata->CONTACT_ID, true, $Maindata->COMPANY_ID )  ?>
 									</select>
 								</td>
 							</tr>
@@ -212,7 +170,7 @@
 								<td><?= $langue->show_text('TableAdresseDelevery') ?></td>
 								<td>
 									<select name="ADRESSE_ID">
-									<?=  $Address->GETAddressList($Maindata->ADRESSE_ID, true, $Maindata->CUSTOMER_ID,'AND ADRESS_LIV=\'1\'' ) ?>
+									<?=  $Address->GETAddressList($Maindata->ADRESSE_ID, true, $Maindata->COMPANY_ID,'AND ADRESS_LIV=\'1\'' ) ?>
 									</select>
 								</td>
 							</tr>
@@ -220,7 +178,7 @@
 								<td><?= $langue->show_text('TableAdresseInvoice') ?></td>
 								<td>
 									<select name="FACTURATION_ID">
-										<?=  $Address->GETAddressList($Maindata->FACTURATION_ID, true, $Maindata->CUSTOMER_ID,'AND ADRESS_FAC=\'1\'' ) ?>
+										<?=  $Address->GETAddressList($Maindata->FACTURATION_ID, true, $Maindata->COMPANY_ID,'AND ADRESS_FAC=\'1\'' ) ?>
 									</select>
 								</td>
 							</tr>
@@ -377,9 +335,11 @@
 			</div>
 		</div>
 	</div>
-	<div id="div3" class="tabcontent">
+	<!-- End Document General information -->
+	<!-- Start Detail line -->
+	<div id="div2" class="tabcontent">
 		<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-			<table class="content-table" >
+			<table class="content-table-Adding" >
 				<thead>
 					<tr>
 						<th colspan="12" ><?= $langue->show_text('TableNumberQuote')  ?> <?= $Maindata->CODE  ?> <?= $langue->show_text('TableIndexQuote')  ?>  <?= $Maindata->INDICE  ?></th>
@@ -399,13 +359,12 @@
 						<th><?= $langue->show_text('TableStatu')?></th>
 					</tr>
 				</thead>
+				<?php 
+				////DO NOT POSSIBLE TO ADD LINE ON BELLOW MODE ////
+				if(!isset($_GET['OrderAcknowledgment']) AND !isset($_GET['DeliveryNotes'] ) AND !isset($_GET['InvoiceOrder'] )): ?>
 				<tbody>
-					<?php if(!isset($_GET['OrderAcknowledgment']) AND !isset($_GET['DeliveryNotes'] ) AND !isset($_GET['InvoiceOrder'] )): ?>
-					</tr>
-						<th colspan="12" ><?= $langue->show_text('Addline') ?></th>
-					</tr>
 					<tr>
-						<td></td>
+						<td>+</td>
 						<td><input type="number" name="" id="AddORDRELigne" placeholder="10"  value="10"></td>
 						<td>
 							<input list="Article" name="AddARTICLELigne" id="AddARTICLELigne">
@@ -421,23 +380,26 @@
 						<td></td>
 						<td><?= $Form->select('AddTVALigne', 'AddTVALigne', '',$ActivateForm,'', $VAT->GETVATList(0, false) )  ?></td>
 						<td><input type="date" name="" id="AddDELAISigne"></td>
-						<td></td>
+						<td><input type="button" class="add" value="<?= $langue->show_text('Addline') ?>"></td>
 					</tr>
 					<tr>
 						<td colspan="12" >
-							<input type="button" class="add" value="<?= $langue->show_text('Addline') ?>">
 							<input type="button" class="delete" value="<?= $langue->show_text('Deleteline') ?>">
-							<?= $Form->submit($langue->show_text('UpdateLine'), $ActivateForm) ?>
 						</td>
+					</tr>
+				</table>
+				<table class="content-table" >
+					<tr>
+						<th colspan="12" ></th>
 					</tr>
 					<?php endif ?>
 					<?php
-						////LIGNE LIST  ////
+						////LIGNE LIST FOR QUOTE CONVERT TO ORDER  ////
 						$i =0;
 						$tableauTVA = array();
 						foreach ($reqLines as $data): 
 
-							$TotalLigneHTEnCours = ($data->QT*$data->PRIX_U)-($data->QT*$data->PRIX_U)*($data->REMISE/100);
+							$TotalLigneHTEnCours = ($data->QT*$data->PRIX_U)-($data->QT*$data->PRIX_U)*($data->DISCOUNT/100);
 							$TotalLigneTVAEnCours =  $TotalLigneHTEnCours*($data->TAUX/100) ;
 							$TotalLigneTTCEnCours = $TotalLigneTVAEnCours+$TotalLigneHTEnCours;
 
@@ -464,7 +426,7 @@
 								<td>'. $data->LABEL .'</td>
 								<td>'. $data->QT .'</td>
 								<td>'. $data->PRIX_U .' €</td>
-								<td>'. $data->REMISE .' %</td>
+								<td>'. $data->DISCOUNT .' %</td>
 								<td>'.   $TotalLigneHTEnCours .' € </td>
 								<td>'. $data->DELAIS .'</td>
 							</tr>';?>
@@ -485,7 +447,7 @@
 								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT,'', $ActivateForm) ?></td>
 								<td><?= $Form->select('UpdateUNITLigne[]', '',  $data->UNIT_ID,$ActivateForm,$data->LABEL_UNIT, $Unit->GetUnitList($data->UNIT_ID, false) )  ?></td>
 								<td><?= $Form->input('number', 'UpdatePrixLigne[]', $data->PRIX_U,'', $ActivateForm, ' step=".001"') ?></td>
-								<td><?= $Form->input('number', 'UpdateRemiseLigne[]', $data->REMISE,'', $ActivateForm, ' min="0" max="100" step=".001"') ?></td>
+								<td><?= $Form->input('number', 'UpdateRemiseLigne[]', $data->DISCOUNT,'', $ActivateForm, ' min="0" max="100" step=".001"') ?></td>
 								<td><?= $TotalLigneHTEnCours ?> €</td>
 								<td><?= $Form->select('UpdateTVALigne[]', '',  $data->TVA_ID,$ActivateForm,$data->LABEL_TVA, $VAT->GETVATList($data->TVA_ID, false) )  ?></td>
 								<td><?= $Form->input('date', 'UpdateDELAISLigne[]',  $data->DELAIS,'', $ActivateForm) ?></td>
@@ -565,10 +527,14 @@
 										</tbody>
 									</table>
 								</td>
-							</tr>	
-									
-					<?php $i++; endforeach; 
-					if($i != 0){ ?>
+							</tr>
+					<?php $i++; endforeach; ?>
+					<tr>
+						<td colspan="12" ><?= $Form->submit($langue->show_text('UpdateLine'), $ActivateForm) ?></td>
+					</tr>
+			</table>
+			<table class="content-table">
+				<thead>	
 					<tr>
 						<th colspan="3"></th>
 						<th colspan="2" ><?= $langue->show_text('TotalPriceWithOutTax')?></th>
@@ -594,12 +560,13 @@
 						<td colspan="2" ><?= $langue->show_text('TotalWithTax') ?></td>
 						<td colspan="4"><?= $TotalLigneTTC ?> €</td>
 					<tr>
-					<?php } ?>
 				</tbody>
 			</table>
 		</form>
 	</div>
-	<div id="div4" class="tabcontent">
+	<!-- End Detail line -->
+	<!-- Start File stockage -->
+	<div id="div3" class="tabcontent">
 		<?php 
 			echo $Document->GETAjaxScript($DocumentType, $Maindata->id); 
 			echo $Document->GETDropZone(); 
@@ -607,6 +574,4 @@
 			echo $Document->GETDocumentList($DocumentType, $_GET['page'], $Maindata->id, $TitreTable ); 
 		?>
 	</div>
-	<?php
-        }
-
+	<!-- End File stockage -->

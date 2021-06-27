@@ -18,7 +18,7 @@
 	use \App\UI\Document;
 	use \App\UI\Form;
 	use \App\Planning\Task;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -45,7 +45,7 @@
 	$Unit = new Unit();
 	$Document = new Document();
 	$Task = new Task();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -57,10 +57,10 @@
 		$Id = addslashes($_GET['quote']);
 
 		//If user create new quote
-		if(isset($_POST['CUSTOMER_ID']) And !empty($_POST['CUSTOMER_ID'])){
+		if(isset($_POST['COMPANY_ID']) And !empty($_POST['COMPANY_ID'])){
 			$ParDefautDiv2 = 'id="defaultOpen"';
 			//insert in DB new quote
-			$Id = $Quote->NewQuote(addslashes($_POST['CODE']), addslashes($_POST['CUSTOMER_ID']), $User->idUSER);
+			$Id = $Quote->NewQuote(addslashes($_POST['CODE']), addslashes($_POST['COMPANY_ID']), $User->idUSER);
 			
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddQuoteNotification')));
 			//update increment in num sequence db
@@ -111,7 +111,7 @@
 																WHERE id='". $Id ."'");
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateInfoCustomerNotification')));
 		}
-		elseif(isset($_POST['COND_REG_CUSTOMER_ID']) AND !empty($_POST['COND_REG_CUSTOMER_ID'])){
+		elseif(isset($_POST['COND_REG_COMPANY_ID']) AND !empty($_POST['COND_REG_COMPANY_ID'])){
 			//// COMMERCIAL UPDATE ////
 			$bdd->GetUpdatePOST(TABLE_ERP_QUOTE, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
@@ -145,6 +145,7 @@
 	
 		//Load data
 		$Maindata= $Quote->GETQuote($Id);
+		$reqLines= $QuoteLines->GETQuoteLineList('', false, $Id);
 	}
 
 	$ListeArticleJava  ='"';
@@ -158,24 +159,16 @@
 	//Adtape default display from isset type
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
 		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = '';
-		$ParDefautDiv3 = 'id="defaultOpen"';
+		$ParDefautDiv2 = 'id="defaultOpen"';
 		$actionForm = 'index.php?page=quote&quote='. $Id .'';
 
 	}
 	elseif(isset($_GET['quote']) AND !empty($_GET['quote'])){
-		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = 'id="defaultOpen"';
-		$ParDefautDiv3 = '';
+		$ParDefautDiv1 = 'id="defaultOpen"';
+		$ParDefautDiv2 = '';
 		$actionForm = 'index.php?page=quote&quote='. $Id .'';
 		$titleOnglet1 = $langue->show_text('TableUpdateButton');
 
-	}
-	else{
-		$ParDefautDiv3 = '';
-		$ParDefautDiv2 = '';
-		$ParDefautDiv1 = 'id="defaultOpen"';
-		$actionForm = 'index.php?page=quote&quote=new';
 	}
 ?>
 
@@ -211,29 +204,30 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input type=\"date\" name=\"AddDELAISigne[]\"  value=\"" + AddDELAISigne+"\" required=\"required\"></td>";
 		var ligne = ligne + "<td></td>";
 		var ligne = ligne + "</tr>";
-        $("table.content-table").append(ligne);
+        $("table.content-table-Adding").append(ligne);
     });
     $(".delete").click(function() {
-        $("table.content-table").find('input[name="select"]').each(function() {
+        $("table.content-table-Adding").find('input[name="select"]').each(function() {
             if ($(this).is(":checked")) {
-                $(this).parents("table.content-table tr").remove();
+                $(this).parents("table.content-table-Adding tr").remove();
             }
         });
     });
 });
 </script>
 	<div class="tab">
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
+		
 		<?php if(isset($_GET['quote']) AND !empty($_GET['quote'])){ ?>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
-		<a href="index.php?page=document$type=quote&id=<?= $_GET['quote'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=quote';"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=quote&id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 		<button class="tablinks" onclick="openDiv(event, 'div8')"><?=$langue->show_text('Title9'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div6')"><?=$langue->show_text('Titre10'); ?></button>
 		<?php
 		}
 		else{?>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div9')"><?=$langue->show_text('Title10'); ?></button>
 		<?php
 		}
@@ -242,18 +236,14 @@ $(document).ready(function() {
 	<?php
 	
 	$ActivateForm=true;
-	$reqList = $Quote->GETQuoteList('',false);
-	$reqLines= $QuoteLines->GETQuoteLineList('', false, $Id);
 	$GET = 'quote';
-	$DocNum = 8;
 	$DocumentType = 'QUOTE_ID';
-	require '../pages/templates/main.php';
-
 
 	//for converte QUOTE TO ORDER
-	if(isset($_GET['quote']) && !empty($_GET['quote'])){?>
-					
-						<div id="div8" class="tabcontent">
+	if(isset($_GET['quote']) && !empty($_GET['quote'])){
+		require '../pages/templates/MainSales.php';
+	?>
+			<div id="div8" class="tabcontent">
 							<form method="post" name="Coment" action="index.php?page=order&order=new" class="content-form" >
 								<div class="row">	
 									<div class="column">
@@ -318,7 +308,7 @@ $(document).ready(function() {
 												<tr>
 													<td>
 													<?= $Form->input('hidden', 'QUOTE_ID', $Maindata->id) ?>
-														<?= $Form->input('hidden', 'CUSTOMER_ID', $Maindata->CUSTOMER_ID) ?>
+														<?= $Form->input('hidden', 'COMPANY_ID', $Maindata->COMPANY_ID) ?>
 														<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(4)) ?>
 													</td>
 												</tr>
@@ -330,13 +320,33 @@ $(document).ready(function() {
 											</tbody>
 										</table>
 									</div>
-								</div>
-							</form>
-						</div>
+							</div>
+				</form>
+			</div>
 		<?php	}else{ ?>
-			<div id="div9" class="tabcontent">
-				<div class="column-menu">
-					<?php echo $SearchMenu->GetSearchMenu($QuoteLines->GETQuoteLineList('',false, 0), 'index.php?page=quote&quote', $langue->show_text('TableFindQuote') ); ?>
+			<!-- Start list quote or new quote -->
+			<div id="div1" class="tabcontent">
+				<div class="row">
+					<!-- Start list quote -->
+					<div class="column-menu">
+						<?php echo $UI->GetSearchMenu($reqList = $Quote->GETQuoteList('',false), 'index.php?page=quote&quote' , $langue->show_text('TableFindQuote') ); ?>
+					</div>
+					<!-- End list quote -->
+					<!-- Start new quote -->
+					<div class="column">
+						<form method="post" name="<?= $GET ?>" action="index.php?page=quote&quote=new" class="content-form" enctype="multipart/form-data" >
+							<?php $UI->GetNewDocument($langue->show_text('TableNew'), $langue->show_text('TableNumber'), $Companies->GetCustomerList(), $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(8)), $Form->submit($langue->show_text('TableNewButton'))); ?>
+						</form>
+					</div>
+					<!-- End new quote -->
 				</div>
 			</div>
+			<!-- End list quote or new quote -->
+			<!-- Start list quote lines -->
+			<div id="div9" class="tabcontent">
+				<div class="column-menu">
+					<?php echo $UI->GetSearchMenu($QuoteLines->GETQuoteLineList('',false, 0), 'index.php?page=quote&quote', $langue->show_text('TableFindQuote') ); ?>
+				</div>
+			</div>
+			<!-- End list quote lines -->
 		<?php }

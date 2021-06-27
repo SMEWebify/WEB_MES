@@ -9,7 +9,7 @@
 	use \App\Study\Unit;
 	use \App\Study\SubFamily;
 	use \App\Planning\Task;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -27,7 +27,7 @@
 	$SubFamily = new SubFamily();
 	$Task = new Task();
 	$date = new DateTime();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_10'] != '1'){
@@ -320,7 +320,7 @@
 	<div id="div1" class="tabcontent" >
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($Article->GETArticleList('',false), 'admin.php?page=manage-study&id', $langue->show_text('FindArticle'), '&type=component' ); ?>
+				<?php echo $UI->GetSearchMenu($Article->GETArticleList('',false), 'admin.php?page=manage-study&id', $langue->show_text('FindArticle'), '&type=component' ); ?>
 			</div>
 			<div class="column">
 				<form method="post" name="Company" action="<?= $actionForm ?>" class="content-form" enctype="multipart/form-data" >

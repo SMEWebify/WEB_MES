@@ -10,19 +10,19 @@ class Order Extends SQL  {
     Public $INDICE;
     Public $LABEL;
     Public $LABEL_INDICE;
-    Public $CUSTOMER_ID;
+    Public $COMPANY_ID;
     Public $CONTACT_ID;
     Public $ADRESSE_ID;
     Public $FACTURATION_ID;
     Public $DATE;
     Public $ETAT;
-    Public $CREATEUR_ID;
+    Public $CREATOR_ID;
     Public $RESP_COM_ID;
     Public $RESP_TECH_ID;
     Public $REFERENCE;
-    Public $COND_REG_CUSTOMER_ID;
+    Public $COND_REG_COMPANY_ID;
     Public $COND_REG_LABEL;
-    Public $MODE_REG_CUSTOMER_ID;
+    Public $MODE_REG_COMPANY_ID;
     Public $MODE_REG_LABEL;
     Public $ECHEANCIER_ID;
     Public $ECHEANCIER_LABEL;
@@ -41,7 +41,7 @@ class Order Extends SQL  {
 
     Public $Order;
 
-    public function NewOrder($CODE, $LABEL='',$CutomerID, $CONTACT_ID='0' , $ADRESSE_ID=0 , $FACTURATION_ID=0 , $UserID, $RESP_COM_ID=0 ,$RESP_TECH_ID=0 ,$COND_REG_CUSTOMER_ID=9 ,$MODE_REG_CUSTOMER_ID=5 ,$ECHEANCIER_ID=0 ,$TRANSPORT_ID=0, $QUOTE_ID=0){
+    public function NewOrder($CODE, $LABEL='',$CutomerID, $CONTACT_ID='0' , $ADRESSE_ID=0 , $FACTURATION_ID=0 , $UserID, $RESP_COM_ID=0 ,$RESP_TECH_ID=0 ,$COND_REG_COMPANY_ID=9 ,$MODE_REG_COMPANY_ID=5 ,$ECHEANCIER_ID=0 ,$TRANSPORT_ID=0, $QUOTE_ID=0){
 
         $NewOrder = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER ." VALUE ('0',
                                                                                     '". $CODE ."',
@@ -55,11 +55,12 @@ class Order Extends SQL  {
                                                                                     NOW(),
                                                                                     '1',
                                                                                     '". $UserID ."',
+                                                                                    '". $UserID ."',
                                                                                     '". $RESP_COM_ID ."',
                                                                                     '". $RESP_TECH_ID ."',
                                                                                     '',
-                                                                                    '". $COND_REG_CUSTOMER_ID ."',
-                                                                                    '". $MODE_REG_CUSTOMER_ID ."',
+                                                                                    '". $COND_REG_COMPANY_ID ."',
+                                                                                    '". $MODE_REG_COMPANY_ID ."',
                                                                                     '". $ECHEANCIER_ID ."',
                                                                                     '". $TRANSPORT_ID ."',
                                                                                     '',
@@ -77,23 +78,23 @@ class Order Extends SQL  {
                                         '. TABLE_ERP_ORDER .'.INDICE,
                                         '. TABLE_ERP_ORDER .'.LABEL,
                                         '. TABLE_ERP_ORDER .'.LABEL_INDICE,
-                                        '. TABLE_ERP_ORDER .'.CUSTOMER_ID,
+                                        '. TABLE_ERP_ORDER .'.COMPANY_ID,
                                         '. TABLE_ERP_ORDER .'.CONTACT_ID,
                                         '. TABLE_ERP_ORDER .'.ADRESSE_ID,
                                         '. TABLE_ERP_ORDER .'.FACTURATION_ID,
                                         '. TABLE_ERP_ORDER .'.DATE,
                                         '. TABLE_ERP_ORDER .'.ETAT,
-                                        '. TABLE_ERP_ORDER .'.CREATEUR_ID,
+                                        '. TABLE_ERP_ORDER .'.CREATOR_ID,
                                         '. TABLE_ERP_ORDER .'.RESP_COM_ID,
                                         '. TABLE_ERP_ORDER .'.RESP_TECH_ID,
                                         '. TABLE_ERP_ORDER .'.REFERENCE,
-                                        '. TABLE_ERP_ORDER .'.COND_REG_CUSTOMER_ID,
-                                        '. TABLE_ERP_ORDER .'.MODE_REG_CUSTOMER_ID,
+                                        '. TABLE_ERP_ORDER .'.COND_REG_COMPANY_ID,
+                                        '. TABLE_ERP_ORDER .'.MODE_REG_COMPANY_ID,
                                         '. TABLE_ERP_ORDER .'.ECHEANCIER_ID,
                                         '. TABLE_ERP_ORDER .'.TRANSPORT_ID,
                                         '. TABLE_ERP_ORDER .'.COMENT,
                                         '. TABLE_ERP_ORDER .'.QUOTE_ID,
-                                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL,
+                                        '. TABLE_ERP_COMPANES .'.LABEL As CUSTOMER_LABEL,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
                                         '. TABLE_ERP_EMPLOYEES .'.PRENOM  AS PRENOM_CREATOR,
                                         TABLE_ERP_EMPPLOYEES_RESP_COM.NOM AS NOM_RESP_COM,
@@ -106,13 +107,13 @@ class Order Extends SQL  {
                                         '. TABLE_ERP_ECHEANCIER_TYPE .'.LABEL AS ECHEANCIER_LABEL,
                                         '. TABLE_ERP_TRANSPORT .'.LABEL AS TRANSPORT_LABEL
                                         FROM `'. TABLE_ERP_ORDER .'`
-                                            LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
-                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_COMPANES .'` ON `'. TABLE_ERP_ORDER .'`.`COMPANY_ID` = `'. TABLE_ERP_COMPANES .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_ORDER .'`.`CREATOR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS  TABLE_ERP_EMPPLOYEES_RESP_COM ON `'. TABLE_ERP_ORDER .'`.`RESP_COM_ID` =  TABLE_ERP_EMPPLOYEES_RESP_COM.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS TABLE_ERP_EMPPLOYEES_RESP_TECH ON `'. TABLE_ERP_ORDER .'`.`RESP_TECH_ID` = TABLE_ERP_EMPPLOYEES_RESP_TECH.`idUSER`
                                             LEFT JOIN `'. TABLE_ERP_QUOTE .'` ON `'. TABLE_ERP_ORDER .'`.`QUOTE_ID` = `'. TABLE_ERP_QUOTE .'`.`id`
-                                            LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_ORDER .'`.`COND_REG_CUSTOMER_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
-                                            LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_ORDER .'`.`MODE_REG_CUSTOMER_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_CONDI_REG .'` ON `'. TABLE_ERP_ORDER .'`.`COND_REG_COMPANY_ID` = `'. TABLE_ERP_CONDI_REG .'`.`id`
+                                            LEFT JOIN `'. TABLE_ERP_MODE_REG .'` ON `'. TABLE_ERP_ORDER .'`.`MODE_REG_COMPANY_ID` = `'. TABLE_ERP_MODE_REG .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_ECHEANCIER_TYPE .'` ON `'. TABLE_ERP_ORDER .'`.`ECHEANCIER_ID` = `'. TABLE_ERP_ECHEANCIER_TYPE .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_TRANSPORT .'` ON `'. TABLE_ERP_ORDER .'`.`TRANSPORT_ID` = `'. TABLE_ERP_TRANSPORT .'`.`id`
                                         WHERE '. TABLE_ERP_ORDER .'.id = \''. $id_GET.'\' ', true, 'App\Order\Order');
@@ -136,9 +137,9 @@ class Order Extends SQL  {
                         '. TABLE_ERP_ORDER .'.CODE,
                         '. TABLE_ERP_ORDER .'.LABEL,
                         '. TABLE_ERP_ORDER .'.ETAT,
-                        '. TABLE_ERP_CLIENT_FOUR .'.LABEL As CUSTOMER_LABEL
+                        '. TABLE_ERP_COMPANES .'.LABEL As CUSTOMER_LABEL
                 FROM '. TABLE_ERP_ORDER .'
-                    LEFT JOIN `'. TABLE_ERP_CLIENT_FOUR .'` ON `'. TABLE_ERP_ORDER .'`.`CUSTOMER_ID` = `'. TABLE_ERP_CLIENT_FOUR .'`.`id`
+                    LEFT JOIN `'. TABLE_ERP_COMPANES .'` ON `'. TABLE_ERP_ORDER .'`.`COMPANY_ID` = `'. TABLE_ERP_COMPANES .'`.`id`
                 ORDER BY  '. TABLE_ERP_ORDER .'.id DESC';
         if($Select){
             foreach ($this->GetQuery($query) as $data){
@@ -169,7 +170,7 @@ class OrderLines Extends Order  {
     Public $UNIT_ID;
     Public $ADRESSE_ID;
     Public $PRIX_U;
-    Public $REMISE;
+    Public $DISCOUNT;
     Public $TVA_ID;
     Public $DELAIS_INTERNE;
     Public $DELAIS;
@@ -178,7 +179,7 @@ class OrderLines Extends Order  {
     
     Public $OrderLine;              
 
-    public function NewOrderLine($IdOrder, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $REMISE, $TVA_ID, $DELAIS,$IDQuoteLine){
+    public function NewOrderLine($IdOrder, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $DISCOUNT, $TVA_ID, $DELAIS,$IDQuoteLine){
         
         $NewOrderLine = $this->GetInsert("INSERT INTO ". TABLE_ERP_ORDER_LIGNE ." VALUE ('0',
                                                                                         '". $IdOrder ."',
@@ -192,7 +193,7 @@ class OrderLines Extends Order  {
                                                                                         '". addslashes($QT) ."',
                                                                                         '". addslashes($UNIT_ID) ."',
                                                                                         '". addslashes($PRIX_U) ."',
-                                                                                        '". addslashes($REMISE) ."',
+                                                                                        '". addslashes($DISCOUNT) ."',
                                                                                         '". addslashes($TVA_ID) ."',
                                                                                         '". addslashes($DELAIS) ."',
                                                                                         '". addslashes($DELAIS) ."',
@@ -213,7 +214,7 @@ class OrderLines Extends Order  {
                                                                                     INVOICED_REMAINING_QTY,
                                                                                     UNIT_ID,
                                                                                     PRIX_U,
-                                                                                    REMISE,
+                                                                                    DISCOUNT,
                                                                                     TVA_ID,
                                                                                     DELAIS_INTERNE,
                                                                                     DELAIS,
@@ -231,7 +232,7 @@ class OrderLines Extends Order  {
                                                                                             QT,
                                                                                             UNIT_ID,
                                                                                             PRIX_U,
-                                                                                            REMISE,
+                                                                                            DISCOUNT,
                                                                                             TVA_ID,
                                                                                             DELAIS,
                                                                                             DELAIS,
@@ -292,7 +293,7 @@ class OrderLines Extends Order  {
         return $NewOrderLine;
     }
 
-    public function UpdateOrderLine($id, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $REMISE, $TVA_ID, $DELAIS, $ETAT){
+    public function UpdateOrderLine($id, $ORDRE, $ARTICLE_CODE, $LABEL, $QT, $UNIT_ID, $PRIX_U, $DISCOUNT, $TVA_ID, $DELAIS, $ETAT){
 
         $UpdateOrderLine = $this->GetUpdate("UPDATE  ". TABLE_ERP_ORDER_LIGNE ." SET 	ORDRE='". addslashes($ORDRE) ."',
                                                                                         ARTICLE_CODE='". addslashes($ARTICLE_CODE) ."',
@@ -300,7 +301,7 @@ class OrderLines Extends Order  {
                                                                                         QT='". addslashes($QT) ."',
                                                                                         UNIT_ID='". addslashes($UNIT_ID) ."',
                                                                                         PRIX_U='". addslashes($PRIX_U) ."',
-                                                                                        REMISE='". addslashes($REMISE) ."',
+                                                                                        DISCOUNT='". addslashes($DISCOUNT) ."',
                                                                                         TVA_ID='". addslashes($TVA_ID) ."',
                                                                                         DELAIS='". addslashes($DELAIS) ."',
                                                                                         ETAT='". addslashes($ETAT) ."'
@@ -331,7 +332,7 @@ class OrderLines Extends Order  {
                         '. TABLE_ERP_ORDER_LIGNE .'.INVOICED_REMAINING_QTY,
                         '. TABLE_ERP_ORDER_LIGNE .'.UNIT_ID,
                         '. TABLE_ERP_ORDER_LIGNE .'.PRIX_U,
-                        '. TABLE_ERP_ORDER_LIGNE .'.REMISE,
+                        '. TABLE_ERP_ORDER_LIGNE .'.DISCOUNT,
                         '. TABLE_ERP_ORDER_LIGNE .'.TVA_ID,
                         '. TABLE_ERP_ORDER_LIGNE .'.DELAIS_INTERNE,
                         '. TABLE_ERP_ORDER_LIGNE .'.DELAIS,

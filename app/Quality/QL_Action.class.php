@@ -9,7 +9,7 @@ class QL_Action Extends SQL  {
     Public $CODE;
     Public $LABEL;
     Public $DATE;
-    Public $CREATEUR_ID;
+    Public $CREATOR_ID;
     Public $TYPE;
     Public $ETAT;
     Public $RESP_ID;
@@ -47,7 +47,7 @@ class QL_Action Extends SQL  {
                                                 '. TABLE_ERP_QL_ACTION .'.CODE,
                                                 '. TABLE_ERP_QL_ACTION .'.LABEL,
                                                 '. TABLE_ERP_QL_ACTION .'.DATE,
-                                                '. TABLE_ERP_QL_ACTION .'.CREATEUR_ID,
+                                                '. TABLE_ERP_QL_ACTION .'.CREATOR_ID,
                                                 '. TABLE_ERP_QL_ACTION .'.TYPE,
                                                 '. TABLE_ERP_QL_ACTION .'.ETAT,
                                                 '. TABLE_ERP_QL_ACTION .'.RESP_ID,
@@ -59,7 +59,7 @@ class QL_Action Extends SQL  {
                                                 '. TABLE_ERP_EMPLOYEES .'.NOM,
                                                 '. TABLE_ERP_EMPLOYEES .'.PRENOM
                                             FROM `'. TABLE_ERP_QL_ACTION .'`
-                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_ACTION .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser` 
+                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_QL_ACTION .'`.`CREATOR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser` 
 								            WHERE id=\''. $id_GET .'\'', true, 'App\Quality\QL_Action');
         return $Action;
     }

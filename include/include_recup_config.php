@@ -21,7 +21,7 @@ define('TABLE_ERP_ECHEANCIER_TYPE_LIGNE', 'ac_timeline_paiement_lines');
 //DATA
 define('TABLE_ERP_ATTACHED_DOCUMENT', 'attached_document');
 //DATA BASE COMPANIES
-define('TABLE_ERP_CLIENT_FOUR', 'companies');
+define('TABLE_ERP_COMPANES', 'companies');
 define('TABLE_ERP_ADRESSE', 'companies_addresses');
 define('TABLE_ERP_CONTACT', 'companies_contact');
 //DATA BASE COMPANY

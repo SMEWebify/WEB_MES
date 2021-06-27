@@ -462,7 +462,16 @@ ul, #myUL {
   flex: 30%;
   margin: 0px 8px 8px 8px;
 }
-
+.column-dashboard {
+  text-align: center;
+  box-shadow: 1px 1px 15px rgb(192 192 192 / 20%);
+  border: 1px solid #e9e9e9;
+  -ms-flex: 20%; /* IE10 */
+  flex: 20%;
+  margin: 0px 8px 8px 8px;
+  background-color: white;
+  border-radius: 0 0 0 20px;
+}
 .column-menu {
   -ms-flex: 30%; /* IE10 */
   flex: 30%;

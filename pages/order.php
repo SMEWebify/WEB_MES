@@ -22,7 +22,7 @@
 	use \App\Study\Unit;
 	use \App\UI\Document;
 	use \App\UI\Form;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 	use \App\Planning\Task;
 
 	//auto load class
@@ -53,7 +53,7 @@
 	$VAT = new VAT();
 	$Unit = new Unit();
 	$Document = new Document();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 	$Task = new Task();
 	
 	//Check if the user is authorized to view the page
@@ -71,7 +71,7 @@
 			$Id = $_POST['ADD_ORDER_FROM_QUOTE'];
 			if($_POST['ADD_ORDER_FROM_QUOTE'] === 'new'){ 
 			//insert in DB new order
-				$Id = $Order->NewOrder(addslashes($_POST['CODE']), '',addslashes($_POST['CUSTOMER_ID']), 0 , 0 , 0 , $User->idUSER, 0 ,0 ,9 ,5 ,0 ,0,0);
+				$Id = $Order->NewOrder(addslashes($_POST['CODE']), '',addslashes($_POST['COMPANY_ID']), 0 , 0 , 0 , $User->idUSER, 0 ,0 ,9 ,5 ,0 ,0,0);
 				$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderNotification')));
 				//update increment in num sequence db
 				$Numbering->getIncrementNumbering(4);
@@ -91,11 +91,11 @@
 
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderLineNotification')));
 		}
-		elseif(isset($_POST['CUSTOMER_ID']) And !empty($_POST['CUSTOMER_ID'])){
+		elseif(isset($_POST['COMPANY_ID']) And !empty($_POST['COMPANY_ID'])){
 			//If user create new order
 			$ParDefautDiv2 = 'id="defaultOpen"';
 			//insert in DB new order
-			$Id = $Order->NewOrder(addslashes($_POST['CODE']), '',addslashes($_POST['CUSTOMER_ID']), 0 , 0 , 0 , $User->idUSER, 0 ,0 ,9 ,5 ,0 ,0,0);
+			$Id = $Order->NewOrder(addslashes($_POST['CODE']), '',addslashes($_POST['COMPANY_ID']), 0 , 0 , 0 , $User->idUSER, 0 ,0 ,9 ,5 ,0 ,0,0);
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddOrderNotification')));
 			//update increment in num sequence db
 			$Numbering->getIncrementNumbering(4);
@@ -157,7 +157,7 @@
 																WHERE id='". $Id ."'");
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateInfoCustomerNotification')));
 		}
-		elseif(isset($_POST['COND_REG_CUSTOMER_ID']) AND !empty($_POST['COND_REG_CUSTOMER_ID'])){
+		elseif(isset($_POST['COND_REG_COMPANY_ID']) AND !empty($_POST['COND_REG_COMPANY_ID'])){
 			//// COMMERCIAL UPDATE ////
 			$bdd->GetUpdatePOST(TABLE_ERP_ORDER, $_POST, 'WHERE id=\''. $Id .'\'');
 			$CallOutBox->add_notification(array('3', $i . $langue->show_text('UpdateSalesInfoNotification')));
@@ -367,7 +367,11 @@
 		$ListeArticle  .= '<option  value="'. $data->CODE .'" >';
 		$ListeArticleJava  .= '<option  value=\"'. $data->CODE .'\" >';
 	}
+
 	$ListeArticleJava  .='"';
+	$ParDefautDiv1 = 'id="defaultOpen"';
+	$ParDefautDiv2 = '';
+	$ParDefautDiv3 = '';
 
 	if(isset($_GET['order']) AND !empty($_GET['order'])){
 		$ActivateForm=true;
@@ -384,95 +388,43 @@
 		$MakeIo = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'id', 'WHERE ORDER_ID= '. $Id .' AND DELIVERED_REMAINING_QTY = 0 AND INVOICED_REMAINING_QTY > 0');
 
 		$GET = 'order';
-		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = 'id="defaultOpen"';
-		$ParDefautDiv3 = '';
-		$ParDefautDiv4 = '';
-		$ParDefautDiv5 = '';
+
 		$actionForm = 'index.php?page=order&order='. $Id  .'';
 		$DocumentType = 'ORDER_ID';
-
-		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-			$ParDefautDiv1 = '';
-			$ParDefautDiv2 = '';
-			$ParDefautDiv3 = 'id="defaultOpen"';
-			$ParDefautDiv4 = '';
-			$ParDefautDiv5 = '';
-		}
 	}
 	elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){
 		$ActivateForm=false;
 		$reqList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0);
 		$reqLines = $OrderAcknowledgmentLines->GETOrderacknowledgmentlinesList('', false, $Id);
 		$GET = 'OrderAcknowledgment';
-		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = 'id="defaultOpen"';
-		$ParDefautDiv3 = '';
-		$ParDefautDiv4 = '';
-		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&OrderAcknowledgment='.$Id  .'';
 		$DocumentType = 'ORDER_ACKNOWLEDGMENT_ID';
-
-		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-			$ParDefautDiv1 = '';
-			$ParDefautDiv2 = '';
-			$ParDefautDiv3 = 'id="defaultOpen"';
-			$ParDefautDiv4 = '';
-			$ParDefautDiv5 = '';
-		}
 	}
 	elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){
 		$ActivateForm=false;
 		$reqList = $DeleveryNoteLines->GETDeleveryNoteList('',false, 0);
 		$reqLines = $DeleveryNoteLines->GETDeleveryNoteLinesList('', false, $Id);
 		$GET = 'DeliveryNotes';
-		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = 'id="defaultOpen"';
-		$ParDefautDiv3 = '';
-		$ParDefautDiv4 = '';
-		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&DeliveryNotes='.$Id  .'';
 		$DocumentType = 'DELIVERY_NOTE_ID';
-
-		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-			$ParDefautDiv1 = '';
-			$ParDefautDiv2 = '';
-			$ParDefautDiv3 = 'id="defaultOpen"';
-			$ParDefautDiv4 = '';
-			$ParDefautDiv5 = '';
-		}
 	}
 	elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){
 		$ActivateForm=false;
 		$reqList = $InvoiceOrderLines->GETInvoiceOrderList('',false, 0);
 		$reqLines = $InvoiceOrderLines->GETInvoiceOrderLinesList('', false, $Id);
 		$GET = 'InvoiceOrder';
-		$ParDefautDiv1 = '';
-		$ParDefautDiv2 = 'id="defaultOpen"';
-		$ParDefautDiv3 = '';
-		$ParDefautDiv4 = '';
-		$ParDefautDiv5 = '';
 		$actionForm = 'index.php?page=order&InvoiceOrder='.$Id  .'';
 		$DocumentType = 'INVOICE_ID';
-
-		if(isset($_GET['delete']) AND !empty($_GET['delete'])){
-			$ParDefautDiv1 = '';
-			$ParDefautDiv2 = '';
-			$ParDefautDiv3 = 'id="defaultOpen"';
-			$ParDefautDiv4 = '';
-			$ParDefautDiv5 = '';
-		}
 	}
 	else{
 		$ActivateForm=true;
 		$GET = 'order';
-		$reqList = $Order->GETOrderList('',false);
-		$ParDefautDiv1 = 'id="defaultOpen"';
-		$ParDefautDiv2 = '';
+	}
+
+	if(isset($_GET['delete']) AND !empty($_GET['delete'])){
+		$ParDefautDiv1 = '';
+		$ParDefautDiv2 = 'id="defaultOpen"';
 		$ParDefautDiv3 = '';
-		$ParDefautDiv4 = '';
-		$ParDefautDiv5 = '';
-		$actionForm = 'index.php?page=order&order=new';
 	}
 ?>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -507,45 +459,44 @@ $(document).ready(function() {
 		var ligne = ligne + "<td><input type=\"date\" name=\"AddDELAISigne[]\"  value=\"" + AddDELAISigne+"\" required=\"required\"></td>";
 		var ligne = ligne + "<td></td>";
 		var ligne = ligne + "</tr>";
-        $("table.content-table").append(ligne);
+        $("table.content-table-Adding").append(ligne);
     });
     $(".delete").click(function() {
-        $("table.content-table").find('input[name="select"]').each(function() {
+        $("table.content-table-Adding").find('input[name="select"]').each(function() {
             if ($(this).is(":checked")) {
-                $(this).parents("table.content-table tr").remove();
+                $(this).parents("table.content-table-Adding tr").remove();
             }
         });
     });
 });
 </script>
-	<div class="tab">
-		
+	<div class="tab">		
 	<?php if(isset($_GET['order']) AND !empty($_GET['order'])){ ?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title2'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
-		<a href="index.php?page=document$type=order&id=<?= $_GET['order'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>	
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title2'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=order&id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>	
 	<?php } elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title6'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
-		<a href="index.php?page=document$type=OrderAcknowledgment&id=<?= $_GET['OrderAcknowledgment'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title6'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=OrderAcknowledgment&id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 	<?php } elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title8'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
-		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['DeliveryNotes'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title8'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=DeliveryNotes&id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 	<?php } elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){?>
 		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=order';"><?=$langue->show_text('Title1back'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title9'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title3'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div4')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
-		<a href="index.php?page=document$type=InvoiceOrder&id=<?= $_GET['InvoiceOrder'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title9'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" <?=$ParDefautDiv2; ?>><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')" <?=$ParDefautDiv3; ?>><?=$langue->show_text('Title4'); ?></button>
+		<a href="index.php?page=document$type=InvoiceOrder&id=<?= $_GET['id'] ?>" target="_blank"><button class="tablinks" ><?=$langue->show_text('Title5'); ?></button></a>
 	<?php }else{ ?>
-		<button class="tablinks" onclick="openDiv(event, 'div1')" <?=$ParDefautDiv1; ?>><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen" ><?=$langue->show_text('Title1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title10'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title6'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title8'); ?></button>
@@ -553,31 +504,52 @@ $(document).ready(function() {
 	<?php } ?>
 	</div>
 	<?php
-
-	if(!isset($_GET['order']) && !isset($_GET['OrderAcknowledgment']) && !isset($_GET['DeliveryNotes'])  && !isset($_GET['InvoiceOrder'])){
-		?>
+	if(isset($_GET[$GET]) AND !empty($_GET[$GET])){ 
+		require '../pages/templates/MainSales.php';
+	}
+	else{
+	?>
+		<!-- Start list order or new order -->
+		<div id="div1" class="tabcontent">
+			<div class="row">
+				<div class="column-menu">
+					<?php echo $UI->GetSearchMenu($Order->GETOrderList('',false), 'index.php?page='. $_GET['page'] .'&'. $GET , $langue->show_text('TableFindOrder') ); ?>
+				</div>
+				<div class="column">
+					<form method="post" name="<?= $GET ?>" action="index.php?page=<?= $_GET['page'] ?>&<?= $GET ?>=new" class="content-form" enctype="multipart/form-data" >
+						<?php $UI->GetNewDocument($langue->show_text('TableNew'), $langue->show_text('TableNumber'), $Companies->GetCustomerList(), $Form->input('text', 'CODE',  $Numbering->getCodeNumbering(4)), $Form->submit($langue->show_text('TableNewButton'))); ?>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- End list order or new order -->
+		<!-- Start list order lines -->
 		<div id="div2" class="tabcontent">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($OrderLines->GETOrderLineList('',false, 0), 'index.php?page=order&order', $langue->show_text('TableFindOrder') ); ?>
+				<?php echo $UI->GetSearchMenu($OrderLines->GETOrderLineList('',false, 0), 'index.php?page=order&order', $langue->show_text('TableFindOrder') ); ?>
 			</div>
 		</div>
+		<!-- End list order lines -->
+		<!-- Start list Order Acknowledgment -->
 		<div id="div3" class="tabcontent">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0), 'index.php?page=order&OrderAcknowledgment', $langue->show_text('TableFindOrder') ); ?>
+				<?php echo $UI->GetSearchMenu($OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0), 'index.php?page=order&OrderAcknowledgment', $langue->show_text('TableFindOrder') ); ?>
 			</div>
 		</div>
+		<!-- End list Order Acknowledgment -->
+		<!-- Start list Delevery Note -->
 		<div id="div4" class="tabcontent">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($DeleveryNote->GETDeleveryNoteList('',false, 0), 'index.php?page=order&DeliveryNotes', $langue->show_text('TableFindDeliveryNotes') ); ?>
+				<?php echo $UI->GetSearchMenu($DeleveryNote->GETDeleveryNoteList('',false, 0), 'index.php?page=order&DeliveryNotes', $langue->show_text('TableFindDeliveryNotes') ); ?>
 			</div>
 		</div>
+		<!-- End list Delevery Note -->
+		<!-- Start list Invoice Order -->
 		<div id="div5" class="tabcontent">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($InvoiceOrder->GETInvoiceOrderList('',false, 0), 'index.php?page=order&InvoiceOrder', $langue->show_text('TableFindInvoice') ); ?>
+				<?php echo $UI->GetSearchMenu($InvoiceOrder->GETInvoiceOrderList('',false, 0), 'index.php?page=order&InvoiceOrder', $langue->show_text('TableFindInvoice') ); ?>
 			</div>
 		</div>
+		<!-- End list Invoice Order -->
 	<?php 
 	}
-
-	$DocNum = 4;
-	require '../pages/templates/main.php';

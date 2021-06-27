@@ -7,6 +7,10 @@
 	use \App\Quality\QL_NFC;
 	use \App\Methods\Ressource;
 	use App\COMPANY\Employees;
+	use \App\Companies\Contact;
+	use \App\Study\Article;
+	use \App\Order\DeleveryNote;
+	use \App\Order\InvoiceOrder;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -22,6 +26,10 @@
 	$QL_FNC = new QL_NFC();
 	$Ressource = new Ressource();
 	$Employees= new Employees();
+	$Contact =  new Contact();
+	$Article = new Article();
+	$DeleveryNote =  new DeleveryNote();
+	$InvoiceOrder = new InvoiceOrder();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_1'] != '1'){
@@ -119,156 +127,83 @@
       chart.draw(view, options);
   }
   </script>
-
-<script type="text/javascript">
-      google.charts.load('current', {'packages':['gauge']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-
-        var data = google.visualization.arrayToDataTable([
-			['Label', 'Value']
-			<?php foreach ($Ressource->GETRessourcesList('',false) as $data): 
-				echo ", ['". espace_url($data->LABEL) ."', 50]";
-			
-		 	 endforeach; ?>
-        ]);
-
-        var options = {
-          width: 400, height: 300,
-          redFrom: 90, redTo: 100,
-          yellowFrom:75, yellowTo: 90,
-          minorTicks: 5
-        };
-
-        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-
-		chart.draw(data, options);
-
-		
-
-      }
-    </script>
-
-<script type="text/javascript">
-    google.charts.load("current", {packages:["corechart"]});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-		var data = google.visualization.arrayToDataTable([
-        ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-         'Western', 'Literature', { role: 'annotation' } ],
-        ['2010', 10, 24, 20, 32, 18, 5, ''],
-        ['2020', 16, 22, 23, 30, 16, 9, ''],
-        ['2030', 28, 19, 29, 30, 12, 13, '']
-      ]);
-
-      var view = new google.visualization.DataView(data);
-      view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" },
-                       2]);
-
-	 var options = {
-		title: "Density of Precious Metals, in g/cm^3",
-        width: 400,
-        height: 300,
-        legend: { position: 'top', maxLines: 3 },
-        bar: { groupWidth: '75%' },
-        isStacked: true
-      };
-      var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
-      chart.draw(view, options);
-  }
-  </script>
-
 	<div class="tab">
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
-		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title3'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div2')" id="defaultOpen"><?=$langue->show_text('Title1'); ?></button>
+		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('Title3'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
 		<div class="row">
-			<div class="column">
+			<div class="column-dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $Companies->GETCompanieCount(); ?>+</h3>
+				<h3><?= $Companies->GETCompanieCount(); ?></h3>
 				<p>Clients</p>
 			</div>
-			<div class="column">
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $Companies->GETCompanieCount('', 'AND STATU_CLIENT = 1'); ?></h3>
+				<p>Fournisseur</p>
+			</div>
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $Contact->GETContactCount(); ?></h3>
+				<p>Contact</p>
+			</div>
+			<div class="column-dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $User->GETUserCount(); ?></h3>
 				<p>User</p>
 			</div>
-			<div class="column">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
-				<p>Empty</p>
-			</div>
-			<div class="column">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
-				<p>New month quote</p>
-			</div>
-			<div class="column">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $Quote->GETQuoteCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP) AND ETAT=3'); ?>+</h3>
-				<p>Win month quote</p>
-			</div>
-			<div class="column">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
-				<p>Empty</p>
-			</div>
-			<div class="column">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3><?= $Order->GETOrderCount('',' WHERE MONTH(DATE) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
-				<p>New month order</p>
-			</div>
-			<div class="column">
-				<p><i class="fa fa-smile-o"></i></p>
-				<h3>+</h3>
-				<p>Empty</p>
-			</div>
 			
-			<div class="column">
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $Article->GETArticleCount(); ?></h3>
+				<p>Article</p>
+			</div>
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $Quote->GETQuoteCount(); ?></h3>
+				<p>Quote</p>
+			</div>
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $Order->GETOrderCount(); ?></h3>
+				<p>Order</p>
+			</div>
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $DeleveryNote->GETDeleveryNoteCount(); ?></h3>
+				<p>Delevery Note</p>
+			</div>
+
+
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3><?= $InvoiceOrder->GETInvoiceOrderCount(); ?></h3>
+				<p>Invoice Order</p>
+			</div>
+			<div class="column-dashboard">
+				<p><i class="fa fa-smile-o"></i></p>
+				<h3>+</h3>
+				<p>Empty</p>
+			</div>
+			<div class="column-dashboard">
 				<p><i class="fa fa-smile-o"></i></p>
 				<h3><?= $QL_FNC->GETQNFCCount('',' WHERE MONTH(CREATED) = MONTH(CURRENT_TIMESTAMP)'); ?>+</h3>
 				<p>Current month Non-compliance Record</p>
 			</div>	
-			<div class="column">
-				<div id="chart_div" style="width: 100%; height: 400px;"></div>
-			</div>
-			<div class="column">
+  		</div>
+		<div class="row">
+			<div class="column-dashboard">
 				<div id="piechart" style="width: 100%; height: 300px;"></div>
 			</div>
-			<div class="column">
+			<div class="column-dashboard">
 				<div id="columnchart_values" style="width: 100%; height: 300px;"></div>
 			</div>
-			<div class="column">
-				<div id="barchart_values" style="width: 900px; height: 300px;"></div>
-			</div>
 		</div>
-		<div class="row">
-			<div class="column">
-				<?php
-				// Get general info for timeline
-				$query ='SELECT id, ETAT, TIMESTAMP, TEXT FROM '. TABLE_ERP_INFO_GENERAL .' WHERE ETAT =1 ORDER BY id DESC LIMIT 0, 10';
-
-				$class = array('left', 'right');
-				$nb = count($class);
-				$i = 0;
-				foreach ($bdd->GetQuery($query) as $data): ?>
-					<div class="container-timeline <?= $class[$i%$nb] ?>">
-						<div class="content-timeline">
-							<h2><?= format_temps($data->TIMESTAMP) ?></h2>
-							<p> <?= nl2br(htmlspecialchars($data->TEXT)) ?></p>
-						</div>
-					</div>
-				<?php $i++; endforeach; ?>
-			</div>	
-		</div>	
+		
 	</div>
-	<div id="div2" class="tabcontent" >
+	<div id="div3" class="tabcontent" >
 		<div class="row">
 		<?php
 		// get employees list

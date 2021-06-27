@@ -5,7 +5,7 @@
 	use \App\Study\Article;
 	use \App\Study\ArticleTreeStructure;
 	use \App\Planning\Task;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -18,7 +18,7 @@
 	$Article = new Article();
 	$Task = new Task();
 	$ArticleTreeStructure = new ArticleTreeStructure();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_5'] != '1'){
@@ -33,7 +33,7 @@
 <div id="div1" class="tabcontent" >
 	<div class="row">
 		<div class="column-menu">
-			<?php echo $SearchMenu->GetSearchMenu($Article->GETArticleList('',false), 'index.php?page=article&id', $langue->show_text('FindArticle') ); ?>
+			<?php echo $UI->GetSearchMenu($Article->GETArticleList('',false), 'index.php?page=article&id', $langue->show_text('FindArticle') ); ?>
 		</div>
 		<?php
 			if(isset($_GET['id'])){

@@ -9,7 +9,7 @@ class QL_Derogation Extends SQL  {
     Public $CODE;
     Public $LABEL;
     Public $DATE;
-    Public $CREATEUR_ID;
+    Public $CREATOR_ID;
     Public $TYPE;
     Public $ETAT;
     Public $RESP_ID;
@@ -49,7 +49,7 @@ class QL_Derogation Extends SQL  {
                                                 '. TABLE_ERP_DEROGATION .'.CODE,
                                                 '. TABLE_ERP_DEROGATION .'.LABEL,
                                                 '. TABLE_ERP_DEROGATION .'.DATE,
-                                                '. TABLE_ERP_DEROGATION .'.CREATEUR_ID,
+                                                '. TABLE_ERP_DEROGATION .'.CREATOR_ID,
                                                 '. TABLE_ERP_DEROGATION .'.TYPE,
                                                 '. TABLE_ERP_DEROGATION .'.ETAT,
                                                 '. TABLE_ERP_DEROGATION .'.RESP_ID,
@@ -62,7 +62,7 @@ class QL_Derogation Extends SQL  {
                                                 '. TABLE_ERP_EMPLOYEES .'.NOM,
                                                 '. TABLE_ERP_EMPLOYEES .'.PRENOM
                                             FROM `'. TABLE_ERP_DEROGATION .'`
-                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_DEROGATION .'`.`CREATEUR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser` 
+                                                LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_DEROGATION .'`.`CREATOR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUser` 
 								            WHERE '. TABLE_ERP_DEROGATION .'.id=\''. $id_GET .'\'', true, 'App\Quality\QL_Derogation');
         return $Derogation;
     }

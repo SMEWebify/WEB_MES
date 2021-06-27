@@ -15,7 +15,7 @@
 	use \App\Quality\QL_NFC;
 	use \App\UI\Document;
 	use \App\UI\Form;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -38,7 +38,7 @@
 	$QL_Devices = new QL_Devices();
 	$QL_FNC = new QL_NFC();
 	$Document = new Document();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_6'] != '1'){
@@ -127,7 +127,7 @@
 	<div id="div1" class="tabcontent" >
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($QL_FNC->GETQL_NFCList('', false), 'index.php?page=quality&FNC', $langue->show_text('FindNFC') ); ?>
+				<?php echo $UI->GetSearchMenu($QL_FNC->GETQL_NFCList('', false), 'index.php?page=quality&FNC', $langue->show_text('FindNFC') ); ?>
 			</div>
 			<?php if(isset($_GET['FNC']) AND !empty($_GET['FNC'])):
 				$DocumentType = 'NC_ID';
@@ -252,34 +252,7 @@
 			<?php else: ?>
 				<div class="column">
 					<form method="POST" action="index.php?page=quality&FNC=new" class="content-form">
-						<table class="content-table">
-							<thead>
-								<tr>
-									<th colspan="2"><br/></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><?= $langue->show_text('TableNewFNC') ?></td>
-									<td><?= $Form->input('text', 'CODE', $Numbering->getCodeNumbering(11)) ?></td>
-								</tr>
-								<tr>
-									<td><?= $langue->show_text('TableNewFNCFor') ?></td>
-									<td>
-										<select name="COMPANY_ID">
-											<?= $Companies->GetCustomerList() ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2" >
-										<br/>
-										<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonFNC') ?>" /> <br/>
-										<br/>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+						<?php $UI->GetNewDocument($langue->show_text('TableNewFNC'), $langue->show_text('TableNewFNCFor'), $Companies->GetCustomerList(), $Form->input('text', 'CODE', $Numbering->getCodeNumbering(11)), $Form->submit($langue->show_text('TableNewButtonFNC'))); ?>
 					</form>
 				</div>
 			<?php endif; ?>
@@ -288,7 +261,7 @@
 	<div id="div2" class="tabcontent" >
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($QL_Action->GETQL_ActionList('', false), 'index.php?page=quality&action', $langue->show_text('FindAction') ); ?>
+				<?php echo $UI->GetSearchMenu($QL_Action->GETQL_ActionList('', false), 'index.php?page=quality&action', $langue->show_text('FindAction') ); ?>
 			</div>
 			<?php if(isset($_GET['action']) AND !empty($_GET['action'])):
 						$DocumentType = 'ACTION_ID';
@@ -384,27 +357,10 @@
 			</div>
 			<?php else: 
 				//make num sequence
-				$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_QL_ACTION .'', 'ACT<I>' , 6) ?>
+				$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_QL_ACTION .'', 'ACT<I>' , 6); ?>
 				<div class="column">
 					<form method="POST" action="index.php?page=quality&action=new" class="content-form">
-						<table class="content-table">
-							<thead>
-								<tr><th colspan="2"><br/></th></tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><?= $langue->show_text('TableNewAct') ?></td>
-									<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
-								</tr>
-								<tr>
-									<td colspan="2" >
-										<br/>
-										<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonAct') ?>" /> <br/>
-										<br/>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+						<?php $UI->GetNewDocument('', $langue->show_text('TableNewAct') , null, $Form->input('text', 'CODE',  $CODE), $Form->submit($langue->show_text('TableNewButtonAct'))); ?>
 					</form>
 				</div>
 			<?php endif; ?>
@@ -413,7 +369,7 @@
 	<div id="div3" class="tabcontent" >
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($QL_Derogation->GETQL_DerogationListList('', false), 'index.php?page=quality&derogation', $langue->show_text('FindDerogation') ); ?>
+				<?php echo $UI->GetSearchMenu($QL_Derogation->GETQL_DerogationListList('', false), 'index.php?page=quality&derogation', $langue->show_text('FindDerogation') ); ?>
 			</div>
 			<?php if(isset($_GET['derogation']) AND !empty($_GET['derogation'])):
 						$DocumentType = 'DEROGATION_ID';
@@ -520,26 +476,7 @@
 				$CODE = $Numbering->getCodeNumbering(0, 'SELECT MAX(id) AS max_id FROM '. TABLE_ERP_DEROGATION .'', 'DER<I>' , 6) ?>
 				<div class="column">
 					<form method="POST" action="index.php?page=quality&derogation=new" class="content-form">
-						<table class="content-table">
-							<thead>
-								<tr>
-									<th colspan="2"><br/></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><?= $langue->show_text('TableNewDerog') ?></td>
-									<td><?= $Form->input('text', 'CODE',  $CODE) ?></td>
-								</tr>
-								<tr>
-									<td colspan="2" >
-										<br/>
-										<input type="submit" class="input-moyen" value="<?= $langue->show_text('TableNewButtonDerog') ?>" /> <br/>
-										<br/>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+						<?php $UI->GetNewDocument('', $langue->show_text('TableNewDerog') , null, $Form->input('text', 'CODE',  $CODE), $Form->submit($langue->show_text('TableNewButtonDerog'))); ?>
 					</form>
 				</div>
 			<?php endif; ?>
@@ -548,7 +485,7 @@
 	<div id="div4" class="tabcontent" >
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $SearchMenu->GetSearchMenu($QL_Devices->GETQL_DevicesList('', false), 'index.php?page=quality&device', $langue->show_text('Finddevice') ); ?>
+				<?php echo $UI->GetSearchMenu($QL_Devices->GETQL_DevicesList('', false), 'index.php?page=quality&device', $langue->show_text('Finddevice') ); ?>
 			</div>
 			<?php if(isset($_GET['device']) AND !empty($_GET['device'])):
 					$DocumentType = 'MESURING_DEVICE_ID';

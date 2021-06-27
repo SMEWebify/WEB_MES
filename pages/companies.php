@@ -6,7 +6,7 @@
 	use \App\COMPANY\ActivitySector;
 	use \App\Companies\Contact;
 	use \App\Companies\Address;
-	use \App\UI\SearchMenu;
+	use \App\UI\UI;
 
 	//auto load class
 	require_once '../app/Autoload.class.php';
@@ -20,7 +20,7 @@
 	$ActivitySector = new ActivitySector();
 	$Contact =  new Contact();
 	$Address = new Address();
-	$SearchMenu = new SearchMenu();
+	$UI = new UI();
 	
 	//Check if the user is authorized to view the page
 	if($_SESSION['page_9'] != '1'){
@@ -38,7 +38,7 @@
 <div id="div1" class="tabcontent" >
 	<div class="row">
 		<div class="column-menu">
-			<?php echo $SearchMenu->GetSearchMenu($Companies->GetCustomerList('',false), 'index.php?page=companies&id', $langue->show_text('FindCompany') ); ?>
+			<?php echo $UI->GetSearchMenu($Companies->GetCustomerList('',false), 'index.php?page=companies&id', $langue->show_text('FindCompany') ); ?>
 		</div>
 		<?php if(isset($_GET['id'])  AND  !empty($_GET['id'])){ ?>
 		<div class="column">

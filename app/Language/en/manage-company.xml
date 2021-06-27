@@ -134,6 +134,8 @@
     <SelectINVOICE>Invoice</SelectINVOICE>
     <SelectINVOICESUP>Invoice supllier</SelectINVOICESUP>
     <SelectNONCONF>Non-compliance sheet</SelectNONCONF>
+    <SelectBUYREQUEST>Purchase Request</SelectBUYREQUEST>
+    
     
     <SelectDatabaseBackupMode1>Table Structure</SelectDatabaseBackupMode1>
     <SelectDatabaseBackupMode2>Table Structure + Datas</SelectDatabaseBackupMode2>
