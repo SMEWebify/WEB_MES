@@ -14,7 +14,6 @@ class PurchaseRequest Extends SQL  {
     Public $COMPANY_ID;
     Public $CONTACT_ID;
     Public $ADRESSE_ID;
-    Public $FACTURATION_ID;
     Public $DATE;
     Public $DATE_REQUIREMENT;
     Public $ETAT;
@@ -23,13 +22,19 @@ class PurchaseRequest Extends SQL  {
     Public $COMENT;
     Public $NOM_CREATOR;
     Public $PRENOM_CREATOR;
+    Public $NOM_MODIFIED;
+    Public $PRENOM_MODIFIED;   
+    Public $NOM_BUYER;
+    Public $PRENOM_BUYER;   
+    Public $BUYER_ID;
+    
 
     Public $PurchaseRequest;
 
     public function NewPurchaseRequest($CODE, $CompanyId, $UserID){
 
-        $NewPurchaseRequest = $this->GetInsert("INSERT INTO ". TABLE_ERP_PURCHASE_REQUEST ." VALUE ('0', '". $CODE ."','','','','". $CompanyId ."','0','0','0',
-																				NOW(),NOW(),'1','". $UserID ."','0','')");
+        $NewPurchaseRequest = $this->GetInsert("INSERT INTO ". TABLE_ERP_PURCHASE_REQUEST ." VALUE ('0', '". $CODE ."','','','','". $CompanyId ."','0','0',
+																				NOW(),NOW(),'1','". $UserID ."','0','0','')");
 
         return $NewPurchaseRequest;
     }
@@ -46,20 +51,26 @@ class PurchaseRequest Extends SQL  {
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.COMPANY_ID,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.CONTACT_ID,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.ADRESSE_ID,
-                                        '. TABLE_ERP_PURCHASE_REQUEST .'.FACTURATION_ID,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.DATE,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.DATE_REQUIREMENT,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.ETAT,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.CREATOR_ID,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.MODIFIED_ID,
+                                        '. TABLE_ERP_PURCHASE_REQUEST .'.BUYER_ID,
                                         '. TABLE_ERP_PURCHASE_REQUEST .'.COMENT,
                                         '. TABLE_ERP_COMPANES .'.LABEL As CUSTOMER_LABEL,
                                         '. TABLE_ERP_EMPLOYEES .'.NOM AS NOM_CREATOR,
-                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_CREATOR
+                                        '. TABLE_ERP_EMPLOYEES .'.PRENOM AS PRENOM_CREATOR,
+                                        '. TABLE_ERP_EMPLOYEES .'_MODIFIED.NOM AS NOM_MODIFIED,
+                                        '. TABLE_ERP_EMPLOYEES .'_MODIFIED.PRENOM  AS PRENOM_MODIFIED,
+                                        '. TABLE_ERP_EMPLOYEES .'_BUYER.NOM AS NOM_BUYER,
+                                        '. TABLE_ERP_EMPLOYEES .'_BUYER.PRENOM  AS PRENOM_BUYER
                                         FROM `'. TABLE_ERP_PURCHASE_REQUEST .'`
                                             LEFT JOIN `'. TABLE_ERP_COMPANES .'` ON `'. TABLE_ERP_PURCHASE_REQUEST .'`.`COMPANY_ID` = `'. TABLE_ERP_COMPANES .'`.`id`
                                             LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` ON `'. TABLE_ERP_PURCHASE_REQUEST .'`.`CREATOR_ID` = `'. TABLE_ERP_EMPLOYEES .'`.`idUSER`
-                                          WHERE '. TABLE_ERP_PURCHASE_REQUEST .'.id = \''. $id_GET.'\' ', true, 'App\Quote\Quote');
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS '. TABLE_ERP_EMPLOYEES .'_MODIFIED ON `'. TABLE_ERP_PURCHASE_REQUEST .'`.`MODIFIED_ID` =  '. TABLE_ERP_EMPLOYEES .'_MODIFIED.`idUSER`
+                                            LEFT JOIN `'. TABLE_ERP_EMPLOYEES .'` AS '. TABLE_ERP_EMPLOYEES .'_BUYER ON `'. TABLE_ERP_PURCHASE_REQUEST .'`.`BUYER_ID` = '. TABLE_ERP_EMPLOYEES .'_BUYER.`idUSER`
+                                          WHERE '. TABLE_ERP_PURCHASE_REQUEST .'.id = \''. $id_GET.'\' ', true, 'App\Purchase\PurchaseRequest');
         return $PurchaseRequest;
     }
 
@@ -103,6 +114,7 @@ class PurchaseRequestLines Extends PurchaseRequest  {
     Public $id;
     Public $PURCHASE_REQUEST_ID;
     Public $TASK_ID;
+    Public $ARTICLE_ID;
     Public $ORDRE;
     Public $LABEL;
     Public $QT;
@@ -113,7 +125,7 @@ class PurchaseRequestLines Extends PurchaseRequest  {
     
     Public $PurchaseRequestLines;
 
-    public function NewPurchaseRequestLines($IdPurchaseRequest, $ORDRE, $ARTICLE_ID, $TASK_ID, $LABEL,$TECHNICAL_SPECIFICATION, $QT, $UNIT_ID, $PRIX_U, $DISCOUNT, $ETAT){
+    public function NewPurchaseRequestLines($IdPurchaseRequest, $TASK_ID, $ARTICLE_ID, $ORDRE,   $LABEL,$TECHNICAL_SPECIFICATION, $QT, $UNIT_ID, $PRIX_U, $DISCOUNT, $ETAT = 1){
 
         $NewPurchaseRequestLines = $this->GetInsert("INSERT INTO ". TABLE_ERP_PURCHASE_REQUEST_LINES ." VALUE ('0',
                                                                                         '". $IdPurchaseRequest ."',
@@ -133,7 +145,7 @@ class PurchaseRequestLines Extends PurchaseRequest  {
         return $NewPurchaseRequestLines;
     }
 
-    public function UpdatePurchaseRequestLines($id, $ORDRE, $TASK_ID, $ARTICLE_ID, $LABEL, $TECHNICAL_SPECIFICATION, $QT, $UNIT_ID, $PRIX_U, $DISCOUNT, $TVA_ID, $DELAIS, $ETAT){
+    public function UpdatePurchaseRequestLines($id,  $TASK_ID, $ARTICLE_ID, $ORDRE, $LABEL, $TECHNICAL_SPECIFICATION, $QT, $UNIT_ID, $PRIX_U, $DISCOUNT, $ETAT){
 
         $UpdatePurchaseRequestLines = $this->GetUpdate("UPDATE  ". TABLE_ERP_PURCHASE_REQUEST_LINES ." SET 	
                                                                                         TASK_ID='". addslashes($TASK_ID) ."',
@@ -154,7 +166,7 @@ class PurchaseRequestLines Extends PurchaseRequest  {
     public function GETPurchaseRequestLinesList($IdData=0, $Select = true, $IdPurchaseRequest=0){
 
         $this->PurchaseRequestLinesList ='';
-        $Clause = 'WHERE '. TABLE_ERP_PURCHASE_REQUEST_LINES .'.	PURCHASE_REQUEST_ID = \''. $IdPurchaseRequest.'\'';
+        $Clause = 'WHERE '. TABLE_ERP_PURCHASE_REQUEST_LINES .'.PURCHASE_REQUEST_ID = \''. $IdPurchaseRequest.'\'';
         if($IdPurchaseRequest===0){
             $Clause = '';
         }
@@ -174,7 +186,7 @@ class PurchaseRequestLines Extends PurchaseRequest  {
                         '. TABLE_ERP_UNIT .'.LABEL AS LABEL_UNIT
                         FROM '. TABLE_ERP_PURCHASE_REQUEST_LINES .'
                             LEFT JOIN `'. TABLE_ERP_UNIT .'` ON `'. TABLE_ERP_PURCHASE_REQUEST_LINES .'`.`UNIT_ID` = `'. TABLE_ERP_UNIT .'`.`id`
-                            LEFT JOIN `'. TABLE_ERP_PURCHASE_REQUEST .'` ON `'. TABLE_ERP_PURCHASE_REQUEST_LINES .'`.`	PURCHASE_REQUEST_ID` = `'. TABLE_ERP_PURCHASE_REQUEST .'`.`id`
+                            LEFT JOIN `'. TABLE_ERP_PURCHASE_REQUEST .'` ON `'. TABLE_ERP_PURCHASE_REQUEST_LINES .'`.`PURCHASE_REQUEST_ID` = `'. TABLE_ERP_PURCHASE_REQUEST .'`.`id`
                             '. $Clause.'
                         ORDER BY '. TABLE_ERP_PURCHASE_REQUEST_LINES .'.ORDRE ';
         if($Select){

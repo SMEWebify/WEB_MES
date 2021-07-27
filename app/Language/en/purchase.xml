@@ -15,7 +15,7 @@
       <SubOrderLinkPage>Sales Order | Order lines | AR | Delivery notes | Invoice</SubOrderLinkPage>
       <SubPlanningLinkPage>Calendar | Ressource | Section | Service</SubPlanningLinkPage>
       <SubCompaniesLinkPage>Companies | Adresse | Contacts | Activity Sector | Coment</SubCompaniesLinkPage>
-      <SubPurchaseLinkPage>Purchase request | Purchase Order | AR | PO receipts | Supplier Invoice</SubPurchaseLinkPage>
+      <SubPurchaseLinkPage>Purchase request | Purchase Order | PO receipts | Supplier Invoice</SubPurchaseLinkPage>
       <SubArticleLinkPage>Article | Stock | Inventory</SubArticleLinkPage>
       <SubQualityLinkPage>NCR | Action | Derogations | Devices</SubQualityLinkPage>
       <SubLogOutLinkPage>This disconnect from the application</SubLogOutLinkPage>
@@ -51,17 +51,16 @@
     <Title1>Home</Title1> 
     <Title2>Purchase request</Title2>
       <Title2-1>General</Title2-1>
-      <Title2-2>Customer detail</Title2-2>
+      <Title2-2>Supplier detail</Title2-2>
       <Title2-3>Commercial information</Title2-3>
       <Title2-4>Comment</Title2-4>
     <Title3>Detail lines</Title3>
     <Title4>Files</Title4>
     <Title5>Document</Title5>
 
-    <Title10>Purchase orders</Title10>
-    <Title6>Supplier reception</Title6>
-    <Title8>Delevery form</Title8>
-    <Title9>Invoice</Title9>
+    <Title6>Purchase orders</Title6>
+    <Title10>Supplier reception</Title10>
+    <Title8>Invoice</Title8>
 
 <!-- table content --> 
    <TableNew>New document for :</TableNew> 
@@ -72,4 +71,66 @@
   <TableFindSupplierReception>Find Supplier Reception</TableFindSupplierReception>
   <TableFindDeleveryForm>Find Delevery Form</TableFindDeleveryForm>
   <TableFindSupplierInvoice>Find Supplier Invoice</TableFindSupplierInvoice>
+
+    <TableTVAType>VAT</TableTVAType> 
+    <TableCODE>CODE</TableCODE>
+    <TableLabel>Label</TableLabel>
+    <TableOrder>Order</TableOrder>
+    <Addline>Add line</Addline>
+    <Deleteline>Delete line</Deleteline>
+    <UpdateLine>Update lines</UpdateLine>
+    <TableUpdateButton>Update</TableUpdateButton>
+    <TableSupplier>Supplier :</TableSupplier> 
+    <TableDeleveryDate>Delay</TableDeleveryDate>
+    <TableNumberCustomerOrder>Customer order number</TableNumberCustomerOrder>
+    <TableCreateOrder>Create new order</TableCreateOrder>
+
+    <TableNewOrder>New Purchase Order</TableNewOrder> 
+    <TableSelectOrder>Create a new Purchase Order or link to an existing one:</TableSelectOrder> 
+
+    <TableIndexQuote>version</TableIndexQuote> 
+    <TableUnitPrice>Price U.H.T (€)</TableUnitPrice> 
+    <TableQty>Qty</TableQty>
+    
+    
+    <TableTecSpecif>Technical spécification</TableTecSpecif>
+    <TableTask>Task</TableTask>
+    <TableArticle>Article</TableArticle>
+    <TableGeneralInfo>General information</TableGeneralInfo> 
+    <TableTotal>Total</TableTotal> 
+    <TableBuyer>Buyer</TableBuyer> 
+    <TableTVAType>VAT</TableTVAType>
+    <TableStatu>Etat</TableStatu>
+    <TableDelay>Delay</TableDelay> 
+    <TableUnit>Unit</TableUnit>
+    <TableDiscount>Discount %</TableDiscount> 
+    <TableRate>Rate</TableRate>
+    <TotalTax>Total VAT</TotalTax> 
+    <TableAdresseSupplier>Supplier adresse</TableAdresseSupplier> 
+    
+    <TotalPriceWithTax>Amount H.T.</TotalPriceWithTax>
+    <TotalPriceWithOutTax>Amount T.T.C :</TotalPriceWithOutTax> 
+    <TotalWithOutTax>Total H.T. :</TotalWithOutTax>
+    <TotalWithTax>Total T.T.C :</TotalWithTax>
+    <TableFind>Find : </TableFind>
+    <TableContact>Contacts</TableContact>
+    <TableUserCreate>Creator</TableUserCreate>
+    <TableCodeLabel>Code and label :</TableCodeLabel> 
+    <TableLabelplaceholder>Label :</TableLabelplaceholder>      
+    <TableLabelIndexplaceholder>Version index and label:</TableLabelIndexplaceholder> 
+    <TableIndexLabel>Label index  :</TableIndexLabel>  
+    <TableCreationDate>Creation date :</TableCreationDate>  
+    <TableValidityDate>Validity date :</TableValidityDate>  
+    <TableStatu>Statu :</TableStatu>  
+    <TableSalePrice>Sale price</TableSalePrice>
+    <TableProductCost>Product cost</TableProductCost>
+    <TableSettingTime>Setting time</TableSettingTime>
+    <TableProductTime>Product time</TableProductTime> 
+    <TableService>Service</TableService>
+    <TableNoData>No data</TableNoData>
+
+<!-- Select-->
+    <SelectOpen>Open</SelectOpen>>
+    <SelectSend>Send</SelectSend>
+
  </langue>

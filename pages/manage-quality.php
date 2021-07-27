@@ -126,7 +126,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-quality" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-quality" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -192,7 +192,7 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-quality" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-quality" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -229,7 +229,7 @@
 			</form>
 	</div>
 	<div id="div3" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-quality" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-quality" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -266,7 +266,7 @@
 			</form>
 	</div>
 	<div id="div4" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-quality" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-quality" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>

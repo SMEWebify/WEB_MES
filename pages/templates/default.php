@@ -59,21 +59,21 @@
 				echo '
 			</div>
 			<div style=" margin-left:500px; border-left:1px solid #ccc;">
-				<a class="" href="admin.php?page=manage-company">'. $langue->show_text('GeneralSettingLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-company">'. $langue->show_text('GeneralSettingLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubGeneralSettingLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-companies">'. $langue->show_text('CustoProvidLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-companies">'. $langue->show_text('CustoProvidLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubCustoProvidLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-time">'. $langue->show_text('SettingTimeLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-time">'. $langue->show_text('SettingTimeLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubSettingTimeLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-users">'. $langue->show_text('EmployeesLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-users">'. $langue->show_text('EmployeesLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubEmployeesLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-methodes">'. $langue->show_text('MethodLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-methodes">'. $langue->show_text('MethodLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubMethodLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-study">'. $langue->show_text('StudyLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-study">'. $langue->show_text('StudyLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubStudyLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-quality">'. $langue->show_text('QualitySettingLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-quality">'. $langue->show_text('QualitySettingLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubQualitySettingLinkPage') .'</i>
-				<a class="" href="admin.php?page=manage-accounting">'. $langue->show_text('AccountingLinkPage') .'</a><br/>
+				<a class="" href="index.php?page=manage-accounting">'. $langue->show_text('AccountingLinkPage') .'</a><br/>
 				<i>'. $langue->show_text('SubAccountingLinkPage') .'</i>';
 			}
 		}
@@ -85,7 +85,7 @@
 	<!-- MENU END -->
 	<!-- START PAGE CONTAIN -->
 <?php
-	// variable is call on admin.php and index.php when buffer is end $content = ob_get_clean();
+	// variable is call on index.php and index.php when buffer is end $content = ob_get_clean();
 	echo $content;
 	// after end contain work we call notification box
 	$CallOutBox->display_notification();

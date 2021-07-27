@@ -329,7 +329,7 @@ $(document).ready(function() {
 				<div class="row">
 					<!-- Start list quote -->
 					<div class="column-menu">
-						<?php echo $UI->GetSearchMenu($reqList = $Quote->GETQuoteList('',false), 'index.php?page=quote&quote' , $langue->show_text('TableFindQuote') ); ?>
+						<?php echo $UI->GetSearchMenu($Quote->GETQuoteList('',false), 'index.php?page=quote&quote' , $langue->show_text('TableFindQuote') ); ?>
 					</div>
 					<!-- End list quote -->
 					<!-- Start new quote -->

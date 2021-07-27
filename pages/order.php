@@ -260,19 +260,19 @@
 
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeliveryNoteNotification')));
 			$i=0;
-			//Select line who dont have an OA
+			//Select line who dont have an DN
 			foreach ($OrderLines->GETOrderLineList(0, false, $_POST['ORDER_ID'], ' AND DELIVERED_REMAINING_QTY > 0') as $data){	
 				
 				//Create OA line
 				$DeleveryNoteLines->NewDeleveryNoteLines($Id, $_POST['ORDER_ID'], $data->ORDRE, $data->id, $data->DELIVERED_REMAINING_QTY);
 				//update order line
-				$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("DELIVERED_QTY"=>$data->DELIVERED_REMAINING_QTY, "DELIVERED_REMAINING_QTY"=>0), 'WHERE id=\''. $data->id .'\'');
+				$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("DELIVERED_QTY"=>$data->DELIVERED_REMAINING_QTY, "DELIVERED_REMAINING_QTY"=>0, "ETAT"=>4), 'WHERE id=\''. $data->id .'\'');
 				$i++;
 			}
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddDeliveryNoteLineNotification')));
 		}
 		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
-			//// ORDER ACKNOWLEGMENT DETAIL UPDATE ////
+			//// DELEVERY NOTE DETAIL UPDATE ////
 			
 			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
 	
@@ -294,7 +294,7 @@
 		elseif(isset($_GET['delete']) AND !empty($_GET['delete'])){
 			//// DELETE LIGNE ////
 			$IdOrderLineToUpdate = $bdd->GetQuery('SELECT ORDER_LINE_ID, QT FROM '. TABLE_ERP_ORDER_DELIVERY_NOTE_LINES .' WHERE id='. addslashes($_GET['delete']).'',true);
-			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("DELIVERED_QTY"=>0, "DELIVERED_REMAINING_QTY"=>$IdOrderLineToUpdate->QT), 'WHERE id=\''. $IdOrderLineToUpdate->ORDER_LINE_ID .'\'');
+			$bdd->GetUpdatePOST(TABLE_ERP_ORDER_LIGNE, array("DELIVERED_QTY"=>0, "DELIVERED_REMAINING_QTY"=>$IdOrderLineToUpdate->QT, "ETAT"=>2 ), 'WHERE id=\''. $IdOrderLineToUpdate->ORDER_LINE_ID .'\'');
 			$bdd->GetDelete("DELETE FROM ". TABLE_ERP_ORDER_DELIVERY_NOTE_LINES ." WHERE id='". addslashes($_GET['delete'])."'");
 
 			$CallOutBox->add_notification(array('4', $i . $langue->show_text('DeleteDeliveryNoteLineNotification')));
@@ -317,7 +317,7 @@
 
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddInvoiceOrderNotification')));
 			$i=0;
-			//Select line who dont have an OA
+			//Select line who dont have an Inv
 			foreach ($OrderLines->GETOrderLineList(0, false, $_POST['ORDER_ID'], ' AND DELIVERED_REMAINING_QTY = 0 AND INVOICED_REMAINING_QTY > 0') as $data){	
 				
 				//Create OA line
@@ -329,7 +329,7 @@
 			$CallOutBox->add_notification(array('2', $i . $langue->show_text('AddInvoiceOrderLineNotification')));
 		}
 		elseif(isset($_POST['CODE']) AND !empty($_POST['CODE'])){
-			//// ORDER ACKNOWLEGMENT DETAIL UPDATE ////
+			//// INVOICE DETAIL UPDATE ////
 			
 			if(isset($_POST['MajLigne']) AND !empty($_POST['MajLigne'])){
 	
@@ -372,10 +372,11 @@
 	$ParDefautDiv1 = 'id="defaultOpen"';
 	$ParDefautDiv2 = '';
 	$ParDefautDiv3 = '';
+	$ActivateForm=false;
+	$GET = 'order';
 
 	if(isset($_GET['order']) AND !empty($_GET['order'])){
 		$ActivateForm=true;
-		$reqList = $Order->GETOrderList('',false);
 		$reqLines = $OrderLines->GETOrderLineList('', false, $Id);
 		// IF OrderAcknowledgment is avaiable
 		$ARList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, $Id);
@@ -387,38 +388,27 @@
 		$IoList = $InvoiceOrder->GETInvoiceOrderList('',false, $Id);
 		$MakeIo = $bdd->GetCount(TABLE_ERP_ORDER_LIGNE,'id', 'WHERE ORDER_ID= '. $Id .' AND DELIVERED_REMAINING_QTY = 0 AND INVOICED_REMAINING_QTY > 0');
 
-		$GET = 'order';
-
 		$actionForm = 'index.php?page=order&order='. $Id  .'';
 		$DocumentType = 'ORDER_ID';
 	}
 	elseif(isset($_GET['OrderAcknowledgment']) AND !empty($_GET['OrderAcknowledgment'])){
-		$ActivateForm=false;
-		$reqList = $OrderAcknowledgment->GETOrderAcknowledgmentList('',false, 0);
+		
 		$reqLines = $OrderAcknowledgmentLines->GETOrderacknowledgmentlinesList('', false, $Id);
 		$GET = 'OrderAcknowledgment';
 		$actionForm = 'index.php?page=order&OrderAcknowledgment='.$Id  .'';
 		$DocumentType = 'ORDER_ACKNOWLEDGMENT_ID';
 	}
 	elseif(isset($_GET['DeliveryNotes']) AND !empty($_GET['DeliveryNotes'])){
-		$ActivateForm=false;
-		$reqList = $DeleveryNoteLines->GETDeleveryNoteList('',false, 0);
 		$reqLines = $DeleveryNoteLines->GETDeleveryNoteLinesList('', false, $Id);
 		$GET = 'DeliveryNotes';
 		$actionForm = 'index.php?page=order&DeliveryNotes='.$Id  .'';
 		$DocumentType = 'DELIVERY_NOTE_ID';
 	}
 	elseif(isset($_GET['InvoiceOrder']) AND !empty($_GET['InvoiceOrder'])){
-		$ActivateForm=false;
-		$reqList = $InvoiceOrderLines->GETInvoiceOrderList('',false, 0);
 		$reqLines = $InvoiceOrderLines->GETInvoiceOrderLinesList('', false, $Id);
 		$GET = 'InvoiceOrder';
 		$actionForm = 'index.php?page=order&InvoiceOrder='.$Id  .'';
 		$DocumentType = 'INVOICE_ID';
-	}
-	else{
-		$ActivateForm=true;
-		$GET = 'order';
 	}
 
 	if(isset($_GET['delete']) AND !empty($_GET['delete'])){

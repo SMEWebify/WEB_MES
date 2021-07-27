@@ -126,7 +126,7 @@
 			$ArticleTable = '';
 			$SubAssemblesTable = TABLE_ERP_STANDARD_SUB_ASSEMBLY;
 		}else{
-			header('Location: admin.php?page=manage-study');
+			header('Location: index.php?page=manage-study');
 		}
 
 		if(isset($_POST['AddORDER']) AND !empty($_POST['AddORDER'])){
@@ -290,12 +290,12 @@
 	}
 	elseif(isset($_GET['id']) AND !empty($_GET['id'])  or isset($_POST['CODEArticle']) AND !empty($_POST['CODEArticle'])){
 		$titleOnglet1 = '<button class="tablinks" onclick="openDiv(event, \'div1\')" id="defaultOpen">'. $langue->show_text('TableUpdateButton') .'</button>';
-		$actionForm = 'admin.php?page=manage-study&id='. $_GET['id'] .'&type='. $_GET['type'];
+		$actionForm = 'index.php?page=manage-study&id='. $_GET['id'] .'&type='. $_GET['type'];
 		$DisplayCode = '<input type="hidden" name="CODE" value="'. $Articledata->CODE .'">' .$Articledata->CODE;
 	}
 	else{
 		$titleOnglet1 = '<button class="tablinks" onclick="openDiv(event, \'div1\')" id="defaultOpen">'. $langue->show_text('TableAddArticleButton') .'</button>';
-		$actionForm = 'admin.php?page=manage-study$id=new&type=component';
+		$actionForm = 'index.php?page=manage-study$id=new&type=component';
 		$DisplayCode ='<input type="text" name="CODEArticle" required="required">';
 	}
 
@@ -320,7 +320,7 @@
 	<div id="div1" class="tabcontent" >
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $UI->GetSearchMenu($Article->GETArticleList('',false), 'admin.php?page=manage-study&id', $langue->show_text('FindArticle'), '&type=component' ); ?>
+				<?php echo $UI->GetSearchMenu($Article->GETArticleList('',false), 'index.php?page=manage-study&id', $langue->show_text('FindArticle'), '&type=component' ); ?>
 			</div>
 			<div class="column">
 				<form method="post" name="Company" action="<?= $actionForm ?>" class="content-form" enctype="multipart/form-data" >
@@ -702,7 +702,7 @@
 										</select>
 									</td>
 									<td><input type="number"  name="QT[]" value="<?= $data->QT ?>" step=".001"></td>
-									<td><a href="admin.php?page=manage-study&id=<?= $data->ARTICLE_ID ?>&type=<?= $_GET['type']?>">--></a></td>
+									<td><a href="index.php?page=manage-study&id=<?= $data->ARTICLE_ID ?>&type=<?= $_GET['type']?>">--></a></td>
 								</tr>
 								<?php $i++; endforeach; ?>
 								<tr>
@@ -836,7 +836,7 @@
 	else{ 
 ?>
 	<div id="div9" class="tabcontent" >
-			<form method="post" name="Unit" action="admin.php?page=manage-study" class="content-form" >
+			<form method="post" name="Unit" action="index.php?page=manage-study" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -891,7 +891,7 @@
 			</form>
 	</div>
 	<div id="div10" class="tabcontent" >
-			<form method="post" name="SubFamily" action="admin.php?page=manage-study" class="content-form" >
+			<form method="post" name="SubFamily" action="index.php?page=manage-study" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>

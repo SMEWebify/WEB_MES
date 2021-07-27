@@ -162,13 +162,13 @@
 		$Data= $Prestation->GETPrestation($_GET['prestation']);
 	?>
 	<div class="tab">
-		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/admin.php?page=manage-methodes';"><?=$langue->show_text('TitrePresta1'); ?></button>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=manage-methodes';"><?=$langue->show_text('TitrePresta1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitrePresta2'); ?> - <?= $Data->LABEL?> </button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitrePresta3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitrePresta4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="index.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
@@ -225,7 +225,7 @@
 		</form>
 	</div>
 	<div id="div2" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form" >
+		<form method="post" name="prestation" action="index.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form" >
 			<table class="content-table">
 				<thead>
 					<tr>
@@ -246,7 +246,7 @@
 		</form>
 	</div>
 	<div id="div3" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form">
+		<form method="post" name="prestation" action="index.php?page=manage-methodes&prestation=<?= $_GET['prestation'] ?>" class="content-form">
 			<table class="content-table">
 				<thead>
 					<tr>
@@ -284,7 +284,7 @@
 						if($data->TYPE_IMPUTATION == 6) $TypeImputation = $langue->show_text('TableSelect6');?>
 		
 							<tr>
-								<td><a href="admin.php?page=manage-methodes&prestation=<?=$_GET['prestation'] ?>&delete=<?= $data->Id ?>">X</a></td>
+								<td><a href="index.php?page=manage-methodes&prestation=<?=$_GET['prestation'] ?>&delete=<?= $data->Id ?>">X</a></td>
 								<td><?= $data->ORDRE ?></td>
 								<td> <?= $data->CODE_IMPUTATION ?> - <?= $data->LABEL_IMPUTATION ?></td>
 								<td><?= $data->LABEL_TVA ?></td>
@@ -345,14 +345,14 @@
 		$Data= $Resources->GETRessource($_GET['resources']);
 	?>
 	<div class="tab">
-		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/admin.php?page=manage-methodes';"><?=$langue->show_text('TitreRessource1'); ?></button>
+		<button class="tablinks" onclick="window.location.href = 'http://localhost/erp/public/index.php?page=manage-methodes';"><?=$langue->show_text('TitreRessource1'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div1')" id="defaultOpen"><?=$langue->show_text('TitreRessource2');  ?> - <?= $Data->LABEL?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('TitreRessource3'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div3')"><?=$langue->show_text('TitreRessource4'); ?></button>
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('TitreRessource5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="index.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
@@ -406,7 +406,7 @@
 		</form>
 	</div>
 	<div id="div2" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="index.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 				<thead>
 					<tr>
@@ -449,7 +449,7 @@
 		</div>
 	</div>
 	<div id="div4" class="tabcontent">
-		<form method="post" name="prestation" action="admin.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
+		<form method="post" name="prestation" action="index.php?page=manage-methodes&resources=<?= $_GET['resources'] ?>" class="content-form" enctype="multipart/form-data">
 			<table class="content-table"  style="width: 50%;">
 				<thead>
 					<tr>
@@ -485,7 +485,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div4')"><?=$langue->show_text('Title4'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent">
-		<form method="post" name="PosteCharge" action="admin.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
+		<form method="post" name="PosteCharge" action="index.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
 			<table class="content-table">
 					<thead>
 						<tr>
@@ -510,7 +510,7 @@
 							</td>
 							<td><input type="number" name="ORDREpresta[]" value="<?= $data->ORDRE ?>" id="number"></td>
 							<td><?= $data->CODE ?></td>
-							<td><a href="admin.php?page=manage-methodes&prestation=<?= $data->Id ?>"><?= $data->LABEL ?></a></td>
+							<td><a href="index.php?page=manage-methodes&prestation=<?= $data->Id ?>"><?= $data->LABEL ?></a></td>
 							<td>
 								<select name="TYPEpresta[]">
 									<option value="1" <?= selected($data->TYPE, 1) ?>><?=$langue->show_text('SelectProductive'); ?></option>
@@ -561,7 +561,7 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent">
-			<form method="post" name="Ressources" action="admin.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="Ressources" action="index.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -585,7 +585,7 @@
 							<td><input type="hidden" name="id_ressource[]" id="id_presta" value="<?=  $data->Id ?>"></td>
 							<td><input type="number" name="UpdateCODEressource[]" value="<?=  $data->ORDRE ?>" id="number"></td>
 							<td><?=  $data->CODE ?></td>
-							<td><a href="admin.php?page=manage-methodes&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
+							<td><a href="index.php?page=manage-methodes&resources=<?= $data->Id ?>"><?=  $data->LABEL ?></a></td>
 							<td>
 								<select name="UpdateMASKressource[]">
 									<option value="0" <?=  selected($data->MASK_TIME, 0) ?>><?=$langue->show_text('No'); ?></option>
@@ -634,7 +634,7 @@
 			</form>
 		</div>
 	<div id="div3" class="tabcontent">
-			<form method="post" name="Section" action="admin.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="Section" action="index.php?page=manage-methodes" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -710,7 +710,7 @@
 			</form>
 		</div>
 	<div id="div4" class="tabcontent">
-			<form method="post" name="Section" action="admin.php?page=manage-methodes" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-methodes" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>

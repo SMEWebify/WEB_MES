@@ -228,7 +228,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div5')" <?= $ParDefautDiv5 ?>><?=$langue->show_text('Title5'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
-		<form method="post" name="Section" action="admin.php?page=manage-time" class="content-form" >
+		<form method="post" name="Section" action="index.php?page=manage-time" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -313,7 +313,7 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-time" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-time" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -396,7 +396,7 @@
 			</form>
 	</div>
 	<div id="div3" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-time" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-time" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -475,7 +475,7 @@
 			</form>
 	</div>
 	<div id="div4" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-time" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-time" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -532,7 +532,7 @@
 			</form>
 	</div>
 	<div id="div5" class="tabcontent" >
-		<form method="post" name="Section" action="admin.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
+		<form method="post" name="Section" action="index.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -557,7 +557,7 @@
 							<td><input type="hidden" name="UpdateIdHourdlyModel[]" id="UpdateIdHourdlyModel" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="UpdateCODEHourdlyModel[]" value="<?= $data->CODE ?>" required="required"></td>
 							<td><input type="text" name="UpdateLABELHourdlyModel[]" value="<?= $data->LABEL ?>" required="required"></td>
-							<td><a href="admin.php?page=manage-time&HourdlyModel=<?= $data->id ?>">--></a></td>
+							<td><a href="index.php?page=manage-time&HourdlyModel=<?= $data->id ?>">--></a></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -583,7 +583,7 @@
 				//generate liste of detail timeline payement
 			?>
 			
-			<form method="post" name="Section" action="admin.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-time&HourdlyModel=<?= $_GET['HourdlyModel']  ?>" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>

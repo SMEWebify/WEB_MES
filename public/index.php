@@ -27,74 +27,18 @@
 	$auth = New Auth($bdd);
 	$User = $auth->User();
 
+    ob_start();
+
     if(isset($_GET['page'])){
-        $p = $_GET['page'];
+        //init xml for user language
+        $langue = new Language('Language', $_GET['page'], $User->LANGUAGE);
+        //load 
+        require '../pages/'. $_GET['page'] .'.php';
     }
     else{
-        $p = 'login';
-    }
-
-    ob_start();
-    if($p == 'home'){
-    	//init xml for user language
-        $langue = new Language('Language', 'index', $User->LANGUAGE);
-        require '../pages/home.php';
-    }
-    elseif($p == 'profil'){
         //init xml for user language
-        $langue = new Language('Language', 'profil', $User->LANGUAGE);
-        require '../pages/profil.php';
-    }
-    elseif($p == 'order'){
-    	//init xml for user language
-        $langue = new Language('Language', 'order', $User->LANGUAGE);
-        require '../pages/order.php';
-    }
-    elseif($p == 'quote'){
-    	//init xml for user language
-        $langue = new Language('Language', 'quote', $User->LANGUAGE);
-        require '../pages/quote.php';
-    }
-    elseif($p == 'planning'){
-    	//init xml for user language
-        $langue = new Language('Language', 'planning', $User->LANGUAGE);
-        require '../pages/planning.php';
-    }
-    elseif($p == 'companies'){
-    	//init xml for user language
-        $langue = new Language('Language', 'companies', $User->LANGUAGE);
-        require '../pages/companies.php';
-    }
-    elseif($p == 'purchase'){
-    	//init xml for user language
-        $langue = new Language('Language', 'purchase', $User->LANGUAGE);
-        require '../pages/purchase.php';
-    }
-    elseif($p == 'article'){
-    	//init xml for user language
-        $langue = new Language('Language', 'article', $User->LANGUAGE);
-        require '../pages/article.php';
-    }
-    elseif($p == 'quality'){
-    	//init xml for user language
-        $langue = new Language('Language', 'quality', $User->LANGUAGE);
-        require '../pages/quality.php';
-    }
-    elseif($p == 'document'){
-    	//init xml for user language
-        $langue = new Language('Language', 'document', $User->LANGUAGE);
-        require '../pages/document.php';
-        exit;
-    }
-    elseif($p == 'login'){
-    	//init xml for user language
         $langue = new Language('Language', 'login', $User->LANGUAGE);
         require '../pages/login.php';
-    }
-    else{
-    	//init xml for user language
-        $langue = new Language('Language', 'login', $User->LANGUAGE);
-        require '../pages/login.php'; 
     }
 
     $content = ob_get_clean();

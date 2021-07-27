@@ -138,7 +138,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div2')"><?=$langue->show_text('Title2'); ?></button>
 	</div>
 		<div id="div1" class="tabcontent" >
-			<form method="post" name="Employees" action="admin.php?page=manage-users" class="content-form">
+			<form method="post" name="Employees" action="index.php?page=manage-users" class="content-form">
 				<table class="content-table" >
 					<thead>
 						<tr>
@@ -206,7 +206,7 @@
 			</form>
 		</div>
 		<div id="div2" class="tabcontent">
-			<form method="post" name="Right" action="admin.php?page=manage-users" class="content-form">
+			<form method="post" name="Right" action="index.php?page=manage-users" class="content-form">
 				<table class="content-table" >
 					<thead>
 						<tr>

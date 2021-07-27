@@ -178,7 +178,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div6')" ><?=$langue->show_text('Title6'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-accounting" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-accounting" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -234,7 +234,7 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-accounting" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-accounting" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -274,7 +274,7 @@
 			</form>
 	</div>
 	<div id="div3" class="tabcontent">
-			<form method="post" name="Section" action="admin.php?page=manage-accounting" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-accounting" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -314,7 +314,7 @@
 			</form>
 	</div>
 	<div id="div4" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-accounting" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-accounting" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -389,7 +389,7 @@
 			</form>
 	</div>
 	<div id="div5" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-accounting" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-accounting" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -408,7 +408,7 @@
 							<td><input type="hidden" name="UpdateIdEcheancier[]" id="UpdateIdEcheancier" value="<?= $data->id ?>"></td>
 							<td><input type="text" name="CODE[]" value="<?= $data->CODE ?>" ></td>
 							<td><input type="text" name="LABEL[]" value="<?= $data->LABEL ?>" ></td>
-							<td><a href="admin.php?page=manage-accounting&Echeancier=<?= $data->id ?>">--></a></td>
+							<td><a href="index.php?page=manage-accounting&Echeancier=<?= $data->id ?>">--></a></td>
 						</tr>
 						<?php $i++; endforeach; ?>
 						<tr>
@@ -432,7 +432,7 @@
 			if(isset($_GET['Echeancier']) AND !empty($_GET['Echeancier'])){
 				//generate liste of detail timeline payement
 			?>
-			<form method="post" name="Section" action="admin.php?page=manage-accounting&Echeancier=<?= $_GET['Echeancier'] ?>" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-accounting&Echeancier=<?= $_GET['Echeancier'] ?>" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -503,7 +503,7 @@
 		?>
 	</div>
 	<div id="div6" class="tabcontent" >
-		<form method="post" name="Section" action="admin.php?page=manage-accounting" class="content-form" >
+		<form method="post" name="Section" action="index.php?page=manage-accounting" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>

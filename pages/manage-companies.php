@@ -291,11 +291,11 @@
 	if(!isset($_GET['id'])  AND  !isset($_POST['id'])){
 		$VerrouInput = ' disabled="disabled"  Value="-" ';
 		$ImputButton = ' Aucun client chargé';
-		$actionForm = 'admin.php?page=manage-companies';
+		$actionForm = 'index.php?page=manage-companies';
 	}
 	else{
 		$ImputButton = $Form->submit($langue->show_text('TableUpdateButton'));
-		$actionForm = 'admin.php?page=manage-companies&id='. $SteId .'';
+		$actionForm = 'index.php?page=manage-companies&id='. $SteId .'';
 	}
 ?>
 	<div class="tab">
@@ -316,7 +316,7 @@
 	<div id="div1" class="tabcontent">
 		<div class="row">
 			<div class="column-menu">
-				<?php echo $UI->GetSearchMenu($Companies->GetCustomerList('',false), 'admin.php?page=manage-companies&id', $langue->show_text('FindCompany') ); ?>
+				<?php echo $UI->GetSearchMenu($Companies->GetCustomerList('',false), 'index.php?page=manage-companies&id', $langue->show_text('FindCompany') ); ?>
 			</div>
 				<form method="post" name="Section" action="<?=$actionForm; ?>" class="content-form" enctype="multipart/form-data">
 					<table class="content-table">
@@ -666,7 +666,7 @@
 			</form>
 		</div>
 		<div id="div4" class="tabcontent">
-			<form method="post" name="prestation" action="admin.php?page=manage-companies&id=<?= $_GET['id'] ?>" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="prestation" action="index.php?page=manage-companies&id=<?= $_GET['id'] ?>" class="content-form" enctype="multipart/form-data">
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -687,7 +687,7 @@
 			</form>
 		</div>
 		<div id="div5" class="tabcontent">
-			<form method="post" name="prestation" action="admin.php?page=manage-companies&id=<?= $_GET['id'] ?>" class="content-form" enctype="multipart/form-data">
+			<form method="post" name="prestation" action="index.php?page=manage-companies&id=<?= $_GET['id'] ?>" class="content-form" enctype="multipart/form-data">
 				<table class="content-table"  style="width: 50%;">
 					<thead>
 						<tr>

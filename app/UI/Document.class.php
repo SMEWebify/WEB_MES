@@ -160,7 +160,7 @@ class Document Extends SQL  {
 
 				foreach ($this->GetQuery($query) as $data){
                     $this->DocumentList .= '<tr>
-						<td><a href="admin.php?page='. $page .'&id='. $IDTYPE .'&deleteFile='. $data->id .'" title="Supprimer la ligne">&#10007;</a></td>
+						<td><a href="index.php?page='. $page .'&id='. $IDTYPE .'&deleteFile='. $data->id .'" title="Supprimer la ligne">&#10007;</a></td>
 						<td>'. $data->LABEL .'</td>
 						<td>'. $data->DATE .'</td>
 						<td>'. $data->PATH_FILE .'</td>

@@ -158,7 +158,7 @@
 		<button class="tablinks" onclick="openDiv(event, 'div7')" <?=$ParDefautDiv7; ?>><?=$langue->show_text('Titre7'); ?></button>
 	</div>
 	<div id="div1" class="tabcontent" >
-			<form method="post" name="Company" action="admin.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
+			<form method="post" name="Company" action="index.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -278,7 +278,7 @@
 			</form>
 	</div>
 	<div id="div2" class="tabcontent" >
-		<form method="post" action="admin.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
+		<form method="post" action="index.php?page=manage-company" class="content-form" enctype="multipart/form-data" >
 			<table class="content-table">
 				<thead>
 					<tr>
@@ -308,7 +308,7 @@
 		</form>
 	</div>
 	<div id="div3" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -345,7 +345,7 @@
 			</form>
 	</div>
 	<div id="div4" class="tabcontent" >
-		<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
+		<form method="post" name="Section" action="index.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -371,9 +371,9 @@
 						foreach ($bdd->GetQuery($query) as $data):?>
 						<tr>
 							<td></td>
-							<td><a href="admin.php?page=manage-company&mail=<?= $data->Id ?>"><?= $data->CODE ?></a></td>
-							<td><a href="admin.php?page=manage-company&mail=<?= $data->Id ?>"><?= $data->LABEL ?></a></td>
-							<td><a href="admin.php?page=manage-company&mail=<?= $data->Id ?>"><?= $data->OBJET ?></a></td>
+							<td><a href="index.php?page=manage-company&mail=<?= $data->Id ?>"><?= $data->CODE ?></a></td>
+							<td><a href="index.php?page=manage-company&mail=<?= $data->Id ?>"><?= $data->LABEL ?></a></td>
+							<td><a href="index.php?page=manage-company&mail=<?= $data->Id ?>"><?= $data->OBJET ?></a></td>
 							<td><?= extrait($data->TEXT) ?></td>
 						</tr>
 						<?php $i++; endforeach; 
@@ -432,7 +432,7 @@
 			</form>
 	</div>
 	<div id="div5" class="tabcontent" >
-			<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
+			<form method="post" name="Section" action="index.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -511,7 +511,7 @@
 			</form>
 	</div>
 	<div id="div6" class="tabcontent" >
-				<form method="post" name="TimeLine" action="admin.php?page=manage-company" class="content-form" >
+				<form method="post" name="TimeLine" action="index.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -537,9 +537,9 @@
 						if($data->ETAT == 0){$EtatTimeLine = "Non publiée";}?>
 						<tr>
 							<td></td>
-							<td><a href="admin.php?page=manage-company&timeline=<?= $data->Id ?>"><?= $EtatTimeLine ?></a></td>
-							<td><a href="admin.php?page=manage-company&timeline=<?= $data->Id ?>"><?= extrait($data->TEXT) ?></a></td>
-							<td><a href="admin.php?page=manage-company&timeline=<?= $data->Id ?>"><?= format_temps($data->TIMESTAMP) ?></a></td>
+							<td><a href="index.php?page=manage-company&timeline=<?= $data->Id ?>"><?= $EtatTimeLine ?></a></td>
+							<td><a href="index.php?page=manage-company&timeline=<?= $data->Id ?>"><?= extrait($data->TEXT) ?></a></td>
+							<td><a href="index.php?page=manage-company&timeline=<?= $data->Id ?>"><?= format_temps($data->TIMESTAMP) ?></a></td>
 						</tr>
 						<?php $i++; endforeach; 
 						
@@ -594,7 +594,7 @@
 			</form>
 	</div>
 	<div id="div7" class="tabcontent">
-		<form method="post" name="Section" action="admin.php?page=manage-company" class="content-form" >
+		<form method="post" name="Section" action="index.php?page=manage-company" class="content-form" >
 				<table class="content-table">
 					<thead>
 						<tr>
@@ -628,7 +628,7 @@
 						foreach($scandir as $File){
 							if(preg_match("#\.(sql)$#",strtolower($File))){
 								echo '<tr>
-											<td><a href="admin.php?page=manage-company&amp;deleteDatabaseBackup='.$File .'" title="Supprimer la ligne">&#10007;</a></td>
+											<td><a href="index.php?page=manage-company&amp;deleteDatabaseBackup='.$File .'" title="Supprimer la ligne">&#10007;</a></td>
 											<td>'.$File .'</td>
 										</tr>';
 							}

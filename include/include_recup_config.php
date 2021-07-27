@@ -28,7 +28,7 @@ define('TABLE_ERP_CONTACT', 'companies_contact');
 define('TABLE_ERP_ACTIVITY_SECTOR', 'company_activity_sector');
 define('TABLE_ERP_COMPANY', 'company_setting');
 define('TABLE_ERP_RIGHTS', 'company_rights');
-define('TABLE_ERP_EMPLOYEES', 'company_user');
+define('TABLE_ERP_EMPLOYEES', 'company_users');
 define('TABLE_ERP_EMAIL', 'company_email_type');
 define('TABLE_ERP_INFO_GENERAL', 'company_timeline'); 
 define('TABLE_ERP_NUM_DOC', 'company_document_numbering');
@@ -50,12 +50,19 @@ define('TABLE_ERP_ORDER_DELIVERY_NOTE_LINES', 'order_delivery_note_lines');
 //DATA BASE ORDER INVOICE
 define('TABLE_ERP_ORDER_INVOICE', 'order_invoice');
 define('TABLE_ERP_ORDER_INVOICE_LINES', 'order_invoice_lines');
+//DATA BASE ORDER RETURN
+define('TABLE_ERP_ORDER_RETURN', 'orders_delivery_return');
+define('TABLE_ERP_ORDER_RETURN_LINES', 'orders_delivery_return_lines');
 
 // DATA PURCHASE REQUEST
 define('TABLE_ERP_PURCHASE_REQUEST', 'purchase_request');
 define('TABLE_ERP_PURCHASE_REQUEST_LINES', 'purchase_request_lines');
-
-
+// DATA PURCHASE ORDER
+define('TABLE_ERP_PURCHASE_ORDER', 'purchase_order');
+define('TABLE_ERP_PURCHASE_ORDER_LINES', 'purchase_order_lines');
+// DATA PURCHASE DELIVERY
+define('TABLE_ERP_PURCHASE_DELIVERY_NOTE', 'purchase_delivery_note');
+define('TABLE_ERP_PURCHASE_DELIVERY_NOTE_LINES', 'purchase_delivery_note_lines');
 
 
 //DATA BASE QUALITY
@@ -100,8 +107,6 @@ define('TABLE_ERP_TASK_REMAINING_TIME', 'order_remaining_time');
 //TOOL
 define('TABLE_ERP_TOOL', 'tool');
 
-//if turn off web site
-define ('MAINTENANCE', 0);
 
 //FOLDER
 define('PICTURE_FOLDER', 'images/');
@@ -112,37 +117,6 @@ define('STUDY_ARTICLE_FOLDER', 'Articles/');
 define('COMPANIES_FOLDER', 'Clients/');
 define('COMPANY_FOLDER', 'Company/');
 
-
-if(MAINTENANCE == 1)
-{
-	echo'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
-		<head>
-			<title-- Of line --</title>
-			<meta name="robots" content="index,follow,all"/>
-			<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-			<link rel="icon" type="images/ico" href="images/favicon.ico" />
-		</head>
-		<body style="background-color: #34495e;; color:white; margin-left:200px; text-align:left;">
-			<p> 
-				<br/>
-				Site en maintenance.<br/>
-				<br/>
-				Cela peut prendre quelques minutes à plusieures heures, veuillez nous excuser pour le dérangement occasionné.<br/>
-				Nous travaillons pour rétablir le site au plus vite.<br/>
-				<br/>
-				<br/>
-				L’équipe du site.<br/>
-				<br/>
-				<br/>
-				<pre>            /////</pre>
-				 <pre>         (o)-(o)</pre>
-				 -----ooO---(_)---Ooo--------------------------<br/>
-			</p>
-		</body>
-		</html>';
-	exit;	
-}
 
 /*
   error_reporting(0);  

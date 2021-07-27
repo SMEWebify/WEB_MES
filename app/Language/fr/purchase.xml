@@ -14,7 +14,7 @@
       <SubOrderLinkPage>Commandes | lignes de commande | AR | BL | Facture</SubOrderLinkPage>
       <SubPlanningLinkPage>Calendrier | Ressource | Section | Prestation</SubPlanningLinkPage>
       <SubCompaniesLinkPage>Société | Adresse | Contacts | Secteur d'activité | Commentaire</SubCompaniesLinkPage>
-      <SubPurchaseLinkPage>Demande de prix | Commande achat | AR | BL | Facture</SubPurchaseLinkPage>
+      <SubPurchaseLinkPage>Demande de prix | Commande achat | BL | Facture</SubPurchaseLinkPage>
       <SubArticleLinkPage>Article | Stock | Inventaire</SubArticleLinkPage>
       <SubQualityLinkPage>FNC | Action | Dérogation | Apareils de mesure</SubQualityLinkPage>
       <SubLogOutLinkPage>This disconnect from the application</SubLogOutLinkPage>
@@ -59,8 +59,7 @@
 
     <Title10>Commande achat</Title10>
     <Title6>Réception fournisseurs</Title6>
-    <Title8>Bon de livraison fournisseurs</Title8>
-    <Title9>Facture fournisseurs</Title9>
+    <Title8>Facture fournisseurs</Title8>
 
 <!-- table content --> 
   <TableNew>Créer un nouveau document pour le client :</TableNew> 

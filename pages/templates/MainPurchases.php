@@ -23,10 +23,6 @@
 									<td><?= $Form->input('text', 'LABEL_INDICE', $Maindata->LABEL_INDICE, $langue->show_text('TableLabelIndexplaceholder'), true) ?></td>
 								</tr>
 								<tr>
-									<td><?= $langue->show_text('TableCustomerReference')  ?></td>
-									<td  colspan="2"><?= $Form->input('text', 'REFERENCE', $Maindata->REFERENCE, $langue->show_text('TableCustomerReference'),$ActivateForm) ?></td>
-								</tr>
-								<tr>
 									<td><?= $langue->show_text('TableCreationDate')  ?></td>
 									<td  colspan="2"><?= $Maindata->DATE ?></td>
 								</tr>
@@ -40,16 +36,11 @@
 									<td><?= $langue->show_text('TableStatu') ?></td>
 									<td>
 										<select name="ETAT">
-											<?php if(isset($_GET['quote'])): ?>
+											<?php if(isset($_GET['PurchaseRequest'])): ?>
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
-											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelectWin') ?></option>
-											<option value="4" <?= selected($Maindata->ETAT, 4) ?>><?= $langue->show_text('SelectRefuse') ?></option>
-											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectDecline') ?></option>
-											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectClosed') ?></option>
-											<option value="7" <?= selected($Maindata->ETAT, 7) ?>><?= $langue->show_text('SelectObsolete') ?></option>
 											<?php endif ?>
-											<?php if(isset($_GET['order'])): ?>
+											<?php if(isset($_GET['PurchaseOrder'])): ?>
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectRun') ?></option>
 											<option value="3" <?= selected($Maindata->ETAT, 3) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
@@ -57,15 +48,11 @@
 											<option value="5" <?= selected($Maindata->ETAT, 5) ?>><?= $langue->show_text('SelectInvoice') ?></option>
 											<option value="6" <?= selected($Maindata->ETAT, 6) ?>><?= $langue->show_text('SelectStop') ?></option>
 											<?php endif ?>
-											<?php if(isset($_GET['OrderAcknowledgment'])): ?>
+											<?php if(isset($_GET['PurchaseDelivery'])): ?>
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 											<?php endif ?>
-											<?php if(isset($_GET['DeliveryNotes'])): ?>
-											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
-											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
-											<?php endif ?>
-											<?php if(isset($_GET['InvoiceOrder'])): ?>
+											<?php if(isset($_GET['SupplierInvoice'])): ?>
 											<option value="1" <?= selected($Maindata->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 											<option value="2" <?= selected($Maindata->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 											<?php endif ?>
@@ -83,36 +70,6 @@
 							</tbody>
 						</table>
 				</form>
-				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
-					<table class="content-table">
-						<thead>
-							<tr>
-								<th colspan="2" ><?=$langue->show_text('Title2-3'); ?></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><?= $langue->show_text('TableCondiList') ?></td>
-								<td><?= $Form->select('COND_REG_COMPANY_ID', '',  $Maindata->COND_REG_COMPANY_ID,$ActivateForm,$Maindata->COND_REG_LABEL, $PaymentCondition->GETPaymentConditionList(0, false))  ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableMethodList') ?></td>
-								<td><?= $Form->select('MODE_REG_COMPANY_ID', '',  $Maindata->MODE_REG_COMPANY_ID,$ActivateForm,$Maindata->MODE_REG_LABEL, $PaymentMethod->GETPaymentMethodList(0, false))  ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TimeLinePayement') ?></td>
-								<td><?= $Form->select('ECHEANCIER_ID', '',  $Maindata->ECHEANCIER_ID,$ActivateForm,$Maindata->ECHEANCIER_LABEL, $PaymentSchedule->GETPaymentScheduleList(0, false))  ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableDeleveryMode') ?></td>
-								<td><?= $Form->select('TRANSPORT_ID', '',  $Maindata->TRANSPORT_ID,$ActivateForm,$Maindata->TRANSPORT_LABEL, $Delevery->GETDeleveryList(0, false))  ?></td>
-							</tr>
-							<tr>
-								<td colspan="2"><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
-							</tr>
-						</tbody>
-					</table>
-				</form>
 			</div>
 			<div class="column">
 				<form method="post" name="Coment" action="<?=$actionForm; ?>" class="content-form" >
@@ -129,13 +86,9 @@
 									<?= $langue->show_text('TableUserCreate') ?>
 								</td>
 								<td><?= $Maindata->NOM_CREATOR ?> <?= $Maindata->PRENOM_CREATOR ?></td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableSalesManager') ?></td>
-								<td><?= $Form->select('RESP_COM_ID', '',  $Maindata->RESP_COM_ID,$ActivateForm, $Maindata->NOM_RESP_COM .'  '.$Maindata->PRENOM_RESP_COM , $Employees->GETEmployeesList($Maindata->RESP_COM_ID, false) )  ?></td>	</tr>
-							<tr>
-								<td><?= $langue->show_text('TableTechnicalManager') ?></td>
-								<td><?= $Form->select('RESP_TECH_ID', '',  $Maindata->RESP_TECH_ID,$ActivateForm, $Maindata->NOM_RESP_TECH .'  '.$Maindata->PRENOM_RESP_TECH , $Employees->GETEmployeesList($Maindata->RESP_TECH_ID, false) )  ?></td>
+							</tr><tr>
+								<td><?= $langue->show_text('TableBuyer') ?></td>
+								<td><?= $Form->select('BUYER_ID', '',  $Maindata->BUYER_ID,$ActivateForm, $Maindata->NOM_BUYER .'  '.$Maindata->PRENOM_BUYER , $Employees->GETEmployeesList($Maindata->BUYER_ID, false) )  ?></td>
 							</tr>
 							<tr>
 								<td colspan="2" ><?= $Form->submit($langue->show_text('TableUpdateButton'), $ActivateForm) ?></td>
@@ -154,7 +107,7 @@
 							<tr>
 								<td>
 									<input type="hidden" name="id" value="<?= $Maindata->id ?>">
-									<?= $langue->show_text('TableCustomer') ?>
+									<?= $langue->show_text('TableSupplier') ?>
 								</td>
 								<td><a href="index.php?page=companies&id=<?=  $Maindata->COMPANY_ID  ?>"><?=  $Maindata->CUSTOMER_LABEL  ?></a></td>
 							</tr>
@@ -167,18 +120,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td><?= $langue->show_text('TableAdresseDelevery') ?></td>
+								<td><?= $langue->show_text('TableAdresseSupplier') ?></td>
 								<td>
 									<select name="ADRESSE_ID">
-									<?=  $Address->GETAddressList($Maindata->ADRESSE_ID, true, $Maindata->COMPANY_ID,'AND ADRESS_LIV=\'1\'' ) ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td><?= $langue->show_text('TableAdresseInvoice') ?></td>
-								<td>
-									<select name="FACTURATION_ID">
-										<?=  $Address->GETAddressList($Maindata->FACTURATION_ID, true, $Maindata->COMPANY_ID,'AND ADRESS_FAC=\'1\'' ) ?>
+										<?=  $Address->GETAddressList($Maindata->ADRESSE_ID, true, $Maindata->COMPANY_ID ) ?>
 									</select>
 								</td>
 							</tr>
@@ -207,131 +152,6 @@
 						</tbody>
 					</table>
 				</form>
-		<?php if(isset($_GET['order']) && !empty($_GET['order'])){ ?>
-				<form method="post" name="Coment" action="index.php?page=order&OrderAcknowledgment=new" class="content-form" >
-					<table class="content-table" >
-						<thead>
-							<tr>
-								<th colspan="2" >
-									---------------------------------------------
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-				<?php 
-				//for converte ORDER TO ACKNOWLEGMENT 
-				if( $MakeAR > 0){?>
-							<tr>
-								<td>
-									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewOrderAcknowledgment',  $Numbering->getCodeNumbering(12),'', $ActivateForm) ?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ,'', $ActivateForm) ?>
-									<?= $Form->submit($langue->show_text('TableNewOrderAcknowledgment'), $ActivateForm) ?>
-								</td>
-							</tr>
-						
-				<?php } 
-				//DISPLAY ACKNOWLEGMENT 
-				if($ARList > 0){?>
-				
-						<?php foreach ($ARList as $dataAr): ?>
-							<tr>
-								<td>
-								<a  href="index.php?page=order&OrderAcknowledgment=<?= $dataAr->id ?>"><?= $dataAr->CODE ?></a>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-				<?php } ?>
-						</tbody>
-					</table>
-				</form>
-
-				<form method="post" name="Coment" action="index.php?page=order&DeliveryNotes=new" class="content-form" >
-					<table class="content-table" >
-						<thead>
-							<tr>
-								<th colspan="2" >
-								---------------------------------------------
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-				<?php
-				//for converte ORDER TO DELEVERY NOTE 
-				if( $MakeDn > 0){?>
-							<tr>
-								<td>
-									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewDeliveryNotes',  $Numbering->getCodeNumbering(3),'', $ActivateForm) ?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ,'', $ActivateForm) ?>
-									<?= $Form->submit($langue->show_text('TableNewDeliveryNotes'), $ActivateForm) ?>
-								</td>
-							</tr>
-						
-				<?php } 
-				//DISPLAY  DELEVERY NOTE 
-				if($DnList > 0){?>
-				
-						<?php foreach ($DnList as $dataDn): ?>
-							<tr>
-								<td>
-								<a  href="index.php?page=order&DeliveryNotes=<?= $dataDn->id ?>"><?= $dataDn->CODE ?></a>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-				<?php } ?>
-						</tbody>
-					</table>
-				</form>
-
-				<form method="post" name="Coment" action="index.php?page=order&InvoiceOrder=new" class="content-form" >
-					<table class="content-table" >
-						<thead>
-							<tr>
-								<th colspan="2" >
-								---------------------------------------------
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-				<?php
-				//for converte Invoice 
-				if( $MakeIo > 0){?>
-							<tr>
-								<td>
-									<?= $langue->show_text('TableCODE') ?> : <?= $Form->input('text', 'NewInvoiceOrder',  $Numbering->getCodeNumbering(9),'', $ActivateForm) ?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<?= $Form->input('hidden', 'ORDER_ID', $Maindata->id  ,'', $ActivateForm) ?>
-									<?= $Form->submit($langue->show_text('TableNewInvoiceOrder'), $ActivateForm) ?>
-								</td>
-							</tr>
-						
-				<?php } 
-				//DISPLAY  Invoice 
-				if($IoList > 0){?>
-				
-						<?php foreach ($IoList as $dataIn): ?>
-							<tr>
-								<td>
-								<a  href="index.php?page=order&InvoiceOrder=<?= $dataIn->id ?>"><?= $dataIn->CODE ?></a>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-				<?php } ?>
-						</tbody>
-					</table>
-				</form>
-
-		<?php } ?>
 			</div>
 		</div>
 	</div>
@@ -347,25 +167,31 @@
 					<tr>
 						<th></th>
 						<th><?= $langue->show_text('TableOrder')?></th>
+						<th><?= $langue->show_text('TableTask')?></th>
 						<th><?= $langue->show_text('TableArticle')?></th>
 						<th><?= $langue->show_text('TableLabel')?></th>
+						<th><?= $langue->show_text('TableTecSpecif')?></th>
 						<th><?= $langue->show_text('TableQty')?></th>
 						<th><?= $langue->show_text('TableUnit')?></th>
 						<th><?= $langue->show_text('TableUnitPrice')?></th>
 						<th><?= $langue->show_text('TableDiscount')?></th>
 						<th><?= $langue->show_text('TableTotal')?></th>
-						<th><?= $langue->show_text('TableRate')?></th>
-						<th><?= $langue->show_text('TableDelay')?></th>
 						<th><?= $langue->show_text('TableStatu')?></th>
 					</tr>
 				</thead>
 				<?php 
-				////DO NOT POSSIBLE TO ADD LINE ON BELLOW MODE ////
-				if(!isset($_GET['OrderAcknowledgment']) AND !isset($_GET['DeliveryNotes'] ) AND !isset($_GET['InvoiceOrder'] )): ?>
+				////THIS CODE IS FOR ADD LINE, DO NOT POSSIBLE TO ADD LINE ON BELLOW MODE ////
+				if(!isset($_GET['SupplierReception']) AND !isset($_GET['SupplierInvoice'] )): ?>
 				<tbody>
 					<tr>
 						<td>+</td>
 						<td><input type="number" name="" id="AddORDRELigne" placeholder="10"  value="10"></td>
+						<td>
+							<input list="Task" name="AddTaskLigne" id="AddTaskLigne">
+							<datalist id="Task">
+								<?= $ListeTask ?>
+							</datalist>
+						</td>
 						<td>
 							<input list="Article" name="AddARTICLELigne" id="AddARTICLELigne">
 							<datalist id="Article">
@@ -373,13 +199,12 @@
 							</datalist>
 						</td>
 						<td><input type="text"  name="" id="AddLABELLigne" placeholder="Désignation"></td>
+						<td><input type="text"  name="" id="AddTechSpecifLigne" placeholder="Désignation"></td>
 						<td><input type="number"  name="" id="AddQTLigne" placeholder="1"  value="1"></td>
 						<td><?= $Form->select('AddUNITLigne', 'AddUNITLigne', '',$ActivateForm,'', $Unit->GetUnitList(0, false) )  ?></td>
 						<td><input type="number"  name="" id="AAddPrixLigne" step=".001" placeholder="10 €"  value="0"></td>
 						<td><input type="number"  name="" id="AddRemiseLigne" min="0" max="100" step=".001" placeholder="0 %" value="0"></td>
 						<td></td>
-						<td><?= $Form->select('AddTVALigne', 'AddTVALigne', '',$ActivateForm,'', $VAT->GETVATList(0, false) )  ?></td>
-						<td><input type="date" name="" id="AddDELAISigne"></td>
 						<td><input type="button" class="add" value="<?= $langue->show_text('Addline') ?>"></td>
 					</tr>
 					<tr>
@@ -394,7 +219,7 @@
 					</tr>
 					<?php endif ?>
 					<?php
-						////LIGNE LIST FOR QUOTE CONVERT TO ORDER  ////
+						
 						$i =0;
 						$tableauTVA = array();
 						foreach ($reqLines as $data): 
@@ -415,6 +240,7 @@
 								$tableauTVA[$data->TVA_ID] = array($TotalLigneHTEnCours, $data->TAUX, $TotalLigneTVAEnCours, $TotalLigneTTCEnCours);
 							}
 
+							////LIGNE LIST FOR QUOTE CONVERT TO ORDER  ////
 							$LignePourCommande .='
 							<tr>
 								<td>
@@ -438,31 +264,30 @@
 								</td>
 								<td><?= $Form->input('number', 'UpdateORDRELigne[]',  $data->ORDRE, '', $ActivateForm)  ?></td>
 								<td>
+									<input list="Task" name="UpdateIdTaskLigne[]" id="UpdateIdTaskLigne" value="<?= $data->TASK_ID ?>">
+									<datalist id="Task">
+										<?= $ListeTask ?>
+									</datalist>
+								</td>
+								<td>
 									<input list="Article" name="UpdateIDArticleLigne[]" id="UpdateIDArticleLigne" value="<?= $data->ARTICLE_CODE ?>">
 									<datalist id="Article">
 										<?= $ListeArticle ?>
 									</datalist>
 								</td>
 								<td><?= $Form->input('text', 'UpdateLABELLigne[]', $data->LABEL,'', $ActivateForm) ?></td>
+								<td><?= $Form->input('text', 'UpdateTECHNICAL_SPECIFICATIONLigne[]', $data->TECHNICAL_SPECIFICATION,'', $ActivateForm) ?></td>
 								<td><?= $Form->input('number', 'UpdateQTLigne[]', $data->QT,'', $ActivateForm) ?></td>
 								<td><?= $Form->select('UpdateUNITLigne[]', '',  $data->UNIT_ID,$ActivateForm,$data->LABEL_UNIT, $Unit->GetUnitList($data->UNIT_ID, false) )  ?></td>
 								<td><?= $Form->input('number', 'UpdatePrixLigne[]', $data->PRIX_U,'', $ActivateForm, ' step=".001"') ?></td>
 								<td><?= $Form->input('number', 'UpdateRemiseLigne[]', $data->DISCOUNT,'', $ActivateForm, ' min="0" max="100" step=".001"') ?></td>
-								<td><?= $TotalLigneHTEnCours ?> €</td>
-								<td><?= $Form->select('UpdateTVALigne[]', '',  $data->TVA_ID,$ActivateForm,$data->LABEL_TVA, $VAT->GETVATList($data->TVA_ID, false) )  ?></td>
-								<td><?= $Form->input('date', 'UpdateDELAISLigne[]',  $data->DELAIS,'', $ActivateForm) ?></td>
-								<td>
+								<td><?= $TotalLigneHTEnCours ?> €</td><td>
 									<select  name="UpdateETATLigne[]">
-										<?php if(isset($_GET['quote'])): ?>
+										<?php if(isset($_GET['PurchaseRequest'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
-										<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelectWin') ?></option>
-										<option value="4" <?= selected($data->ETAT, 4) ?>><?= $langue->show_text('SelectRefuse') ?></option>
-										<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectDecline') ?></option>
-										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectClosed') ?></option>
-										<option value="7" <?= selected($data->ETAT, 7) ?>><?= $langue->show_text('SelectObsolete') ?></option>
 										<?php endif ?>
-										<?php if(isset($_GET['order'])): ?>
+										<?php if(isset($_GET['PurchaseOrder'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectRun') ?></option>
 										<option value="3" <?= selected($data->ETAT, 3) ?>><?= $langue->show_text('SelecPartialDelivery') ?></option>
@@ -470,15 +295,11 @@
 										<option value="5" <?= selected($data->ETAT, 5) ?>><?= $langue->show_text('SelectInvoice') ?></option>
 										<option value="6" <?= selected($data->ETAT, 6) ?>><?= $langue->show_text('SelectStop') ?></option>
 										<?php endif ?>
-										<?php if(isset($_GET['OrderAcknowledgment'])): ?>
+										<?php if(isset($_GET['PurchaseDelivery'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 										<?php endif ?>
-										<?php if(isset($_GET['DeliveryNotes'])): ?>
-										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
-										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
-										<?php endif ?>
-										<?php if(isset($_GET['InvoiceOrder'])): ?>
+										<?php if(isset($_GET['SupplierInvoice'])): ?>
 										<option value="1" <?= selected($data->ETAT, 1) ?>><?= $langue->show_text('SelectOpen') ?></option>
 										<option value="2" <?= selected($data->ETAT, 2) ?>><?= $langue->show_text('SelectSend') ?></option>
 										<?php endif ?>
@@ -486,48 +307,6 @@
 								</td>
 							</tr>	
 							
-							<tr>			
-								<td colspan="12">
-									<table id="TechnicalCutRow<?= $i ?>" style="display : none;">
-										<thead>
-											<tr>
-												<th></th>
-												<th><?=$langue->show_text('TableLabel'); ?></th>
-												<th><?=$langue->show_text('TableService'); ?></th>
-												<th><?=$langue->show_text('TableSettingTime'); ?></th>
-												<th><?=$langue->show_text('TableProductTime'); ?></th>
-												<th><?=$langue->show_text('TableProductCost'); ?></th>
-												<th><?=$langue->show_text('TableSalePrice'); ?></th>
-												<th><?=$langue->show_text('TableStatu'); ?></th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php $j = 0; foreach ($Task->GETTechnicalCut($data->id, $_GET['page']) as $DataTechnicalCut): ?>
-											<tr>
-												<td>#<?=  $DataTechnicalCut->id ?></td>
-												<td><?=  $DataTechnicalCut->LABEL ?></td>
-												<td><?=  $DataTechnicalCut->LABEL_SERVICE ?></td>
-												<td><?=  $DataTechnicalCut->SETING_TIME ?></td>
-												<td><?=  $DataTechnicalCut->UNIT_TIME  ?></td>
-												<td><?=  $DataTechnicalCut->UNIT_COST  ?></td>
-												<td><?=  $DataTechnicalCut->UNIT_PRICE ?></td>
-												<td><?=  $DataTechnicalCut->ETAT ?></td>
-											</tr>
-											<?php $j++; endforeach; 
-											if($j == 0):  ?>
-												<tr>
-													<td colspan="8"><?=$langue->show_text('TableNoData'); ?></td>
-												</tr>
-											<?php endif?>
-											<tr>
-												<td colspan="8">	
-													<a href="index.php?page=manage-study&amp;id=<?= $data->id ?>&amp;type=<?= $GET ?>&amp;<?= $GET ?>Id=<?= $_GET[$GET] ?>" title="Découpage technique">&#10144;</a>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
 					<?php $i++; endforeach; 
 					if($i == 0):  ?>
 							<tr>
