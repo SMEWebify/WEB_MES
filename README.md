@@ -1,5 +1,12 @@
 # WEB ERP MES
 ##  Ressource and Manufacturing execution system  Web
+----------------------------------
+----------------------------------
+
+Pliz see new page/project : https://github.com/billyboy35/WebErpMesv2
+
+----------------------------------
+----------------------------------
 
 Version 1 in progress - See the projects page to see the progress.
 https://github.com/billyboy35/WEB_MES/projects/2
